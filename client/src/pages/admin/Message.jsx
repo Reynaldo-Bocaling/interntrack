@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Header() {
+function Message() {
   return (
     <div>
-      hello
+      admin message
     </div>
   )
 }
 
-export default Header
+export default Message
