@@ -83,9 +83,9 @@ function PrivateRoutes() {
               <Route index element={<StudentDashboard />} />
               <Route path="/MyProfile" element={<StudentMyProfile />} />
               <Route path="/attendance" element={<StudentAttendance />} />
-              <Route path="/records" element={<StudentRecords />} />
+              <Route path="/timeSheet" element={<StudentRecords />} />
               <Route path="/message" element={<StudentMessage />} />
-              <Route path="/announcment" element={<StudentAnnouncement />} />
+              <Route path="/announcement" element={<StudentAnnouncement />} />
             </Route>
           </Routes>
         </Suspense>

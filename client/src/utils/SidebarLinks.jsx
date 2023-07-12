@@ -1,39 +1,41 @@
-// import {
-//     FaHome,
-//     FaUser,
-//     FaChalkboardTeacher,
-//     FaBook,
-//     FaUserGraduate,
-//   } from "react-icons/fa";
-  
+import Logo from '../assets/icons/dashboard.png'
+import Profile from '../assets/icons/profile.png'
+import MyStudent from '../assets/icons/student.png'
+import Attendance from '../assets/icons/attendance.png'
+import Record from '../assets/icons/record.png'
+import Message from '../assets/icons/message.png'
+import Announcement from '../assets/icons/announcement.png'
+import Settings from '../assets/icons/settings.png'
+
 
   export const SidebarData = {
     student: [
-      { label: "Dashboard", url: "/", src: "dashboard" },
-      { label: "My profile", url: "/profile", src: "profile" },
-      { label: "Attendance", url: "/attendance", src: "profile" },
-      { label: "Records", url: "/record", src: "profile" },
-      { label: "Message", url: "/message", src: "profile" },
-      { label: "Announcement", url: "/announcement", src: "profile" },
+      { label: "Dashboard", url: "/",  img: Logo },
+      { label: "My profile", url: "/MyProfile", img: Profile},
+      { label: "Attendance", url: "/attendance", img: Attendance },
+      { label: "Time Sheet", url: "/timeSheet" },
+      { label: "Message", url: "/message", img: Message},
+      { label: "Announcement", url: "/announcement", img: Announcement },
     ],
     teacher: [
-      { label: "Dashboard", url: "/", src: "profile" },
-      { label: "My student", url: "/MyStudent", src: "profile" },
-      { label: "Attendance", url: "/attendance", src: "profile"},
-      { label: "record", url: "/record", src: "profile"},
-      { label: "message", url: "/message", src: "profile"},
-      { label: "announcement", url: "/announcement", src: "profile"},
-      { label: "settings", url: "/settings", src: "profile"},
+      { label: "Dashboard", url: "/",  img: Logo },
+      { label: "My profile", url: "/MyProfile", img:Profile },
+      { label: "My student", url: "/MyStudent", img: MyStudent},
+      { label: "Attendance", url: "/attendance",  img: Attendance},
+      { label: "Records", url: "/record", img: Record},
+      { label: "Message", url: "/message", img: Message},
+      { label: "Announcement", url: "/announcement", img: Announcement},
+      { label: "Settings", url: "/settings", img: Settings},
     ],
     admin: [
-      { label: "Dashboard", url: "/", src: "profile" },
-      { label: "Records", url: "/records", src: "profile" },
-      { label: "Request", url: "/request", src: "profile"},
-      { label: "Message", url: "/message", src: "profile"},
-      { label: "Announcement", url: "/announcement", src: "profile"},
-      { label: "Report", url: "/report", src: "profile"},
-      { label: "announcement", url: "/announcement", src: "profile"},
-      { label: "settings", url: "/settings", src: "profile"},
+      { label: "Dashboard", url: "/", img: Logo},
+      { label: "Records", url: "/records" },
+      { label: "Request", url: "/request"},
+      { label: "Message", url: "/message"},
+      { label: "Announcement", url: "/announcement"},
+      { label: "Report", url: "/report"},
+      { label: "announcement", url: "/announcement"},
+      { label: "settings", url: "/settings"},
     ],
   };
   

@@ -10,9 +10,9 @@ function Rootlayout() {
       <div>
         <Sidebar />
       </div>
-      <div className='flex flex-col bg-gray-50 w-full'>
+      <div className='flex flex-col w-full py-4 px-5'>
         <Header />
-        <div className='bg-white p-2 m-2 h-full rounded-lg'>
+        <div className='p-4 m-2 h-full rounded-lg'>
           <Outlet />
         </div>
       </div>
