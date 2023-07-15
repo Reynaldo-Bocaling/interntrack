@@ -48,7 +48,6 @@ function Sidebar() {
         animate={isOpen ? "open" : "closed"}
         className="bg-white shadow-xl text-gray pt-5 z-indez[998] h-screen md:relative fixed"
       >
-        {/* icon left */}
         <motion.div
           animate={
             isOpen
@@ -65,51 +64,35 @@ function Sidebar() {
             duration: 0,
           }}
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute top-7 -right-4 h-8 w-8 rounded-full flex items-center justify-center bg-gray-50 border-2 border-gray-100 cursor-pointer"
+          className="absolute top-7 -right-4 h-7 w-7 rounded-full flex items-center justify-center bg-gray-50 border-2 border-gray-100 cursor-pointer"
         >
-          <IoIosArrowBack size={20} />
+          <IoIosArrowBack size={18} />
         </motion.div>
+
 
         {/* logo */}
         <div
           className={`${
-            !isOpen && "border-b border-slate-300 mt-5"
-          } flex flex-col items-center gap-2 mx-2 pb-2`}
-        >
-          <img src={Logo} alt="Logo icon" width={40} />
-          <span
-            className={`${
-              !isOpen && "hidden"
-            } font-semibold text-xl whitespace-pre`}
-          >
+            !isOpen && "border-b border-slate-300 mt-5"} flex flex-col items-center gap-2 mx-2 pb-2`} >
+          <img src={Logo} alt="Logo icon" width={32} />
+          <span className={`${!isOpen && "hidden" } font-semibold text-lg whitespace-pre`} >
             InternTrack
           </span>
         </div>
 
+
+        {/* Menu */}
         <div className="flex flex-col">
-          <ul className=" flex flex-col gap-3 font-medium overflow-x-hidden px-2 py-5">
+          <ul className=" flex flex-col gap-3 font-medium py-6 px-4">
             {Menu?.map((link) => (
               <li key={link.label}>
-                <NavLink className="link" to={link.url}>
-                  <img src={link.img} alt="Logo" className="w-8" />
-                  <span className="text-base">{link.label}</span>
+                <NavLink className={`link `} to={link.url}>
+                 {<link.icon size={18} />}
+                  <span  className={`${!isOpen && "hidden"}  tracking-wide`}>{link.label}</span>
                 </NavLink>
               </li>
             ))}
           </ul>
-
-          {/* submemenu */}
-          {/* <div>
-            <div className="border-y py-5 border-slate-300">
-              <small className="pl-3 text-slate-500 inline-block mb-2">
-                - Messages
-              </small>
-            </div>
-          </div> */}
-          <Link className="flex items-center gap-3 pl-5 py-5 text-gray-500 bg-gray-100">
-            <BiLogOutCircle size={20} />
-            <span className="text-lg font-medium">logout</span>
-          </Link>
         </div>
       </motion.div>
     </div>

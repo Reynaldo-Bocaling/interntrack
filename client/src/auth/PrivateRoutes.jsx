@@ -7,9 +7,11 @@ const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
 // Teacher components
 const TeacherDashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 const TeacherMyprofile = lazy(() => import("../pages/Teacher/Myprofile"));
+const TeacherProfileInfo = lazy(() => import("../pages/Teacher/components/ProfileInfo"));
+const TeacherProfileSecurity = lazy(() => import("../pages/Teacher/components/ProfileSecurity"));
 const TeacherMyStudent = lazy(() => import("../pages/Teacher/MyStudent"));
-const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/components/MyStudent/Student_list"));
-const TeacherTime_sheets = lazy(() => import("../pages/Teacher/components/MyStudent/Time_sheets"));
+const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/components/Student_list"));
+const TeacherTime_sheets = lazy(() => import("../pages/Teacher/components/Time_sheets"));
 const TeacherAttendance = lazy(() => import("../pages/Teacher/Attendance"));
 const TeacherRecords = lazy(() => import("../pages/Teacher/Records"));
 const TeacherMessage = lazy(() => import("../pages/Teacher/Message"));
@@ -62,10 +64,13 @@ function PrivateRoutes() {
           <Routes>
             <Route path="/" element={<Rootlayout />}>
               <Route index element={<TeacherDashboard />} />
-              <Route path="/MyProfile" element={<TeacherMyprofile />} />
-              <Route path="/MyStudent" element={<TeacherMyStudent />}>
-                <Route path="MyStudent/list" element={TeacherStudent_list} />
-                <Route path="MyStudent/timeSheet" element={TeacherTime_sheets} />
+              <Route path="/profile/" element={<TeacherMyprofile />} >
+                <Route index element={<TeacherProfileInfo />} />
+                <Route path='/profile/security' element={<TeacherProfileSecurity />} />
+              </Route>
+              <Route path="/trainee/" element={<TeacherMyStudent />}>
+                <Route index element={<TeacherStudent_list />} />
+                <Route path="/trainee/timeSheet" element={<TeacherTime_sheets />} />
               </Route>
               <Route path="/attendance" element={<TeacherAttendance />} />
               <Route path="/record" element={<TeacherRecords />} />

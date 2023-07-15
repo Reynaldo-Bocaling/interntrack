@@ -1,38 +1,38 @@
-import Logo from '../assets/icons/dashboard.png'
-import Profile from '../assets/icons/profile.png'
-import MyStudent from '../assets/icons/student.png'
-import Attendance from '../assets/icons/attendance.png'
-import Record from '../assets/icons/record.png'
-import Message from '../assets/icons/message.png'
-import Announcement from '../assets/icons/announcement.png'
-import Settings from '../assets/icons/settings.png'
+import {MdOutlineDashboard} from 'react-icons/md'
+import {FaRegUser} from 'react-icons/fa'
+import {PiUsersThree, PiStudentBold} from 'react-icons/pi'
+import {AiOutlineMessage} from 'react-icons/ai'
+import {MdOutlineAnnouncement} from 'react-icons/md'
+import {TbFileDatabase} from 'react-icons/tb'
+import {LuFileSpreadsheet} from 'react-icons/lu'
+import {FiSettings} from 'react-icons/fi'
 
 
   export const SidebarData = {
     student: [
-      { label: "Dashboard", url: "/",  img: Logo },
-      { label: "My profile", url: "/MyProfile", img: Profile},
-      { label: "Attendance", url: "/attendance", img: Attendance },
-      { label: "Time Sheet", url: "/timeSheet" },
-      { label: "Message", url: "/message", img: Message},
-      { label: "Announcement", url: "/announcement", img: Announcement },
+      { label: "Dashboard", url: "/",  icon: MdOutlineDashboard },
+      { label: "My profile", url: "/MyProfile", icon: FaRegUser},
+      { label: "Attendance", url: "/attendance", icon: PiUsersThree },
+      { label: "Time Sheet", url: "/timeSheet", icon: LuFileSpreadsheet },
+      { label: "Message", url: "/message", icon: AiOutlineMessage},
+      { label: "Announcement", url: "/announcement", icon: MdOutlineAnnouncement },
     ],
     teacher: [
-      { label: "Dashboard", url: "/",  img: Logo },
-      { label: "My profile", url: "/MyProfile", img:Profile },
-      { label: "My student", url: "/MyStudent", img: MyStudent},
-      { label: "Attendance", url: "/attendance",  img: Attendance},
-      { label: "Records", url: "/record", img: Record},
-      { label: "Message", url: "/message", img: Message},
-      { label: "Announcement", url: "/announcement", img: Announcement},
-      { label: "Settings", url: "/settings", img: Settings},
+      { label: "Dashboard", url: "/",  icon: MdOutlineDashboard },
+      { label: "My profile", url: "/Profile/", icon: FaRegUser },
+      { label: "Trainee", url: "/trainee", icon: PiStudentBold},
+      { label: "Attendance", url: "/attendance",  icon: PiUsersThree},
+      { label: "Records", url: "/record", icon: TbFileDatabase},
+      { label: "Message", url: "/message", icon: AiOutlineMessage},
+      { label: "Announcement", url: "/announcement", icon: MdOutlineAnnouncement},
+      { label: "Settings", url: "/settings", icon: FiSettings},
     ],
     admin: [
-      { label: "Dashboard", url: "/", img: Logo},
+      { label: "Dashboard", url: "/", icon: MdOutlineDashboard},
       { label: "Records", url: "/records" },
       { label: "Request", url: "/request"},
-      { label: "Message", url: "/message"},
-      { label: "Announcement", url: "/announcement"},
+      { label: "Message", url: "/message", AiOutlineMessage},
+      { label: "Announcement", url: "/announcement", MdOutlineAnnouncement},
       { label: "Report", url: "/report"},
       { label: "announcement", url: "/announcement"},
       { label: "settings", url: "/settings"},
