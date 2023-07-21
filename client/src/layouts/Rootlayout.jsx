@@ -1,18 +1,18 @@
 import React, { lazy } from 'react'
 import { Outlet } from 'react-router-dom'
 
-const Sidebar = lazy(() => import('./components/Sidebar'))
+const Sidebar = lazy(() => import('./components/sidebar/Sidebar'))
 const Header = lazy(() => import('./components/Header'))
 
 function Rootlayout() {
   return (
-    <div className='flex w-screen overflow-x-hidden'>
+    <div className='flex min-h-screen w-screen overflow-x-hidden'>
       <div>
         <Sidebar />
       </div>
-      <div className='flex flex-col w-full py-4 px-5'>
+      <div className='flex flex-col w-full'>
         <Header />
-        <div className='p-4 m-2 h-full max-w-full'>
+        <div className='relative p-4 h-full max-w-full  bg-gray-50'>
           <Outlet />
         </div>
       </div>

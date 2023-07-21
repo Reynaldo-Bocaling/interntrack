@@ -48,7 +48,7 @@ function PrivateRoutes() {
       {Role === "Admin" ? (
         <Suspense>
           <Routes>
-            <Route path="/" element={<Rootlayout />}>
+            <Route path="/" element={<Rootlayout  />}>
               <Route index element={<AdminDashboard />} />
               <Route path="/records" element={<AdminRecords />} />
               <Route path="/request" element={<AdminRequest />} />
@@ -62,16 +62,15 @@ function PrivateRoutes() {
       ) : Role === "Teacher" ? (
         <Suspense>
           <Routes>
-            <Route path="/" element={<Rootlayout />}>
+            <Route path="/" element={<Rootlayout role={Role} />}>
               <Route index element={<TeacherDashboard />} />
               <Route path="/profile/" element={<TeacherMyprofile />} >
                 <Route index element={<TeacherProfileInfo />} />
-                <Route path='/profile/security' element={<TeacherProfileSecurity />} />
+                <Route path="/profile/security" element={<TeacherProfileSecurity />} />
               </Route>
-              <Route path="/trainee/" element={<TeacherMyStudent />}>
-                <Route index element={<TeacherStudent_list />} />
-                <Route path="/trainee/timeSheet" element={<TeacherTime_sheets />} />
-              </Route>
+              <Route path="/student-list" element={<TeacherStudent_list />} />
+              <Route path="/timeSheet" element={<TeacherTime_sheets />} />
+
               <Route path="/attendance" element={<TeacherAttendance />} />
               <Route path="/record" element={<TeacherRecords />} />
               <Route path="/message" element={<TeacherMessage />} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { BiSearchAlt2 } from "react-icons/bi";
 import { ImFileExcel } from "react-icons/im";
+import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 const Time_sheets = () => {
   const [students, setStudents] = useState([]);
 
@@ -48,8 +49,8 @@ const Time_sheets = () => {
   };
 
   return (
-    <div className="h-full rounded-lg max-w-[1100px]">
-      <div className="flex items-center justify-between">
+    <div className="h-full rounded-lg  max-w-[1020px]">
+      <div className="flex items-center justify-between w-full">
         <sypan className="text-2xl font-semibold tracking-wider">
           Timesheet
         </sypan>
@@ -69,8 +70,8 @@ const Time_sheets = () => {
 
           {/* export timesheet */}
 
-          <button className="flex items-center gap-2 bg-green-600 text-white font-semibold text-sm py-2 px-4 rounded-lg hover:bg-green-500">
-            <ImFileExcel />
+          <button className="flex items-center gap-2 bg-green-600 text-white font-semibold tracking-wider text-sm py-2 px-3 rounded-lg hover:bg-green-500">
+            <PiMicrosoftExcelLogoFill size={20} />
             Export
           </button>
         </div>
