@@ -6,7 +6,6 @@ import { NavLink } from "react-router-dom";
 // icons/logo
 import Logo from "../../../assets/icons/logo.png";
 import { IoIosArrowBack } from "react-icons/io";
-// import { BiLogOutCircle } from "react-icons/bi";
 import { BiChevronDown } from "react-icons/bi";
 
 function Sidebar() {
@@ -29,7 +28,7 @@ function Sidebar() {
   // sidebar animate
   const sidebar_animation = {
     open: {
-      width: "16.5rem",
+      width: "16rem",
       transition: {
         damping: 40,
       },
@@ -58,7 +57,7 @@ function Sidebar() {
       <motion.div
         variants={sidebar_animation}
         animate={isOpen ? "open" : "closed"}
-        className="bg-white shadow-xl shadow-gray-100 text-gray pt-5 z-indez[998] w-[16.5rem] h-screen md:relative fixed z-10"
+        className="sidebar fixed z-20 top-0 left-0 bg-white shadow-xl shadow-gray-100 pt-5 w-[16rem] h-screen overflow-y-auto"
       >
         <motion.div
           animate={
@@ -109,13 +108,11 @@ function Sidebar() {
               >
                 <span
                   className={`${
-                    item.space && `-top-7`
-                  } text-[0.670rem] font-medium absolute -top-5 text-gray-400`}
-                >
+                    item.space? '-top-5' : ''} text-[0.670rem] font-medium absolute -top-6 text-gray-400`} >
                   {item.extraText && item.extraText}
                 </span>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-sm tracking-wide text-slate-400-100">
                     <item.icon size={item.size ? item.size : ""} />
                     {item.label}
                   </div>

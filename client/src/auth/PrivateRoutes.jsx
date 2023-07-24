@@ -13,6 +13,7 @@ const TeacherMyStudent = lazy(() => import("../pages/Teacher/MyStudent"));
 const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/components/Student_list"));
 const TeacherTime_sheets = lazy(() => import("../pages/Teacher/components/Time_sheets"));
 const TeacherAttendance = lazy(() => import("../pages/Teacher/Attendance"));
+const TeacherAttendanceRequest = lazy(() => import("../pages/Teacher/AttendanceRequest"));
 const TeacherRecords = lazy(() => import("../pages/Teacher/Records"));
 const TeacherMessage = lazy(() => import("../pages/Teacher/Message"));
 const TeacherAnnouncement = lazy(() => import("../pages/Teacher/Announcement"));
@@ -72,6 +73,7 @@ function PrivateRoutes() {
               <Route path="/timeSheet" element={<TeacherTime_sheets />} />
 
               <Route path="/attendance" element={<TeacherAttendance />} />
+              <Route path="/AttendanceRequest" element={<TeacherAttendanceRequest />} />
               <Route path="/record" element={<TeacherRecords />} />
               <Route path="/message" element={<TeacherMessage />} />
               <Route path="/announcement" element={<TeacherAnnouncement />} />

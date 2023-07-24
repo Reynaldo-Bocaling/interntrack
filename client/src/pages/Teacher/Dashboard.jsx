@@ -6,6 +6,7 @@ import { BsCalendar2CheckFill, BsCalendarMinusFill } from "react-icons/bs";
 import LineChart from "./components/charts/LineChart";
 import Piechart from "./components/charts/PieChart";
 import Calendar from "./components/calendar/Calendar";
+import { Link } from "react-router-dom";
 function Dashboard() {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
@@ -59,11 +60,14 @@ function Dashboard() {
                 Trainor Dashboard
               </small>
             </div>
+            
+
+            {/* count */}
             <div className="total-count h-32 flex items-center justify-between py-3">
               {totalCountBox.map((totalItems, index) => (
                 <div
                   key={index}
-                  className="h-full w-[32%] flex items-center gap-5 bg-white rounded-lg p-5 shadow-2xl shadow-blue-50"
+                  className="relative h-full w-[32%] flex items-center gap-5 bg-white rounded-lg p-5 shadow-2xl shadow-blue-50 border border-gray-100"
                 >
                   <span
                     className={`${totalItems.bgColor} ${totalItems.textColor} h-9 w-9 flex items-center justify-center   rounded-md `}
@@ -78,27 +82,27 @@ function Dashboard() {
                       {totalItems.label}
                     </p>
                   </div>
+
+
+                  {/* count link */}
+                  <Link className="absolute top-2 right-4 text-[0.67rem] text-blue-500 font-medium">View</Link>
                 </div>
               ))}
             </div>
 
-            <div className="graph-box h-80 p-4 shadow-lg bg-white shadow-gray-200 rounded-md overflow-hidden">
+            {/* graph */}
+            <div className="graph-box h-auto p-4 shadow-lg bg-white shadow-gray-200 rounded-md border border-gray-100">
               <h1 className=" text-base      font-semibold text-gray-700 ">
                 Weekly hours spent
               </h1>
               <LineChart />
             </div>
-
-                <div className="text-gray-700 text-sm tracking-wider mt-3">
-                  Charting Your Growth: <span className="font-semibold">InternTrack</span> - Your OJT Journey Begins Here
-                </div>
-            
-            {/* add rgba color background */}
          
-
           </main>
+
+
           <div className="right-side w-[31%] flex flex-col gap-[3%]">
-            <div className="min-h-[60%] max-w-full p-4 bg-white shadow-lg shadow-green-50 rounded-md">
+            <div className="min-h-[60%] max-w-full p-4 bg-white shadow-lg shadow-green-50 rounded-md border border-gray-100">
               <div className="text-sm font-medium tracking-wide mb-2 flex items-center gap-1">
                 {" "}
                 <FcCalendar />
@@ -106,8 +110,11 @@ function Dashboard() {
               </div>
               <Calendar />
             </div>
-            <div className="h-[35%] max-w-full p-4 bg-white shadow-lg shadow-gray-100 rounded-md">
-            <Piechart />
+
+
+            {/* piechart */}
+            <div className="h-[35%] max-w-full p-4 bg-white shadow-lg shadow-gray-100 rounded-md border border-gray-100">
+              <Piechart />
             </div>
           </div>
         </div>
