@@ -67,8 +67,6 @@
     scrollbar-width: none; 
   }
   
-
-
 .sidebar::-webkit-scrollbar {
     display: none;
   }

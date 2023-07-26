@@ -34,7 +34,7 @@ import {BsCalendarCheck} from 'react-icons/bs'
         size: 16,
         subMenu: [
           { label: "Daily logs", url: "/Attendance"},
-          { label: "Attendance request", url: "/AttendanceRequest" },
+          { label: "Attendance request", url: "/Attendance-request" },
         ],
       },
       { label: "My trainee",  

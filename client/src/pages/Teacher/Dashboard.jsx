@@ -29,6 +29,7 @@ function Dashboard() {
       icon: FaClipboardList,
       textColor: "text-blue-500",
       bgColor: "bg-blue-100",
+      shadow: "shadow-blue-50"
     },
     {
       label: "Present today",
@@ -36,6 +37,7 @@ function Dashboard() {
       icon: BsCalendar2CheckFill,
       textColor: "text-green-500",
       bgColor: "bg-green-100",
+      shadow: "shadow-green-50"
     },
     {
       label: "Absent today",
@@ -43,6 +45,7 @@ function Dashboard() {
       icon: BsCalendarMinusFill,
       textColor: "text-red-500",
       bgColor: "bg-red-100",
+      shadow: "shadow-red-50"
     },
   ];
   return (
@@ -50,10 +53,10 @@ function Dashboard() {
       <div className="m-1 ">
         <div className="flex gap-[2%] mt-1 min-h-[550px]">
           {/* dashboard content */}
-          <main className="flex flex-col w-[65%] gap-2 relative  overflow-hidden">
+          <main className="flex flex-col w-[65%] gap-2 relative ">
             {/* title */}
             <div className="left-content flex flex-col gap-2">
-              <h1 className="text-xl font-bold tracking-wider text-gray-700">
+              <h1 className="text-xl font-semibold tracking-wider text-gray-700">
                 Trainor overview
               </h1>
               <small className="text-blue-500 font-semibold tracking-wider">
@@ -67,7 +70,7 @@ function Dashboard() {
               {totalCountBox.map((totalItems, index) => (
                 <div
                   key={index}
-                  className="relative h-full w-[32%] flex items-center gap-5 bg-white rounded-lg p-5 shadow-2xl shadow-blue-50 border border-gray-100"
+                  className={`${totalItems.shadow} relative h-full w-[32%] flex items-center gap-5 bg-white rounded-lg p-5 shadow-2xl border border-slate-100`}
                 >
                   <span
                     className={`${totalItems.bgColor} ${totalItems.textColor} h-9 w-9 flex items-center justify-center   rounded-md `}
@@ -91,7 +94,7 @@ function Dashboard() {
             </div>
 
             {/* graph */}
-            <div className="graph-box h-auto p-4 shadow-lg bg-white shadow-gray-200 rounded-md border border-gray-100">
+            <div className="graph-box h-auto p-4 shadow-lg bg-white shadow-slate-200 rounded-md border border-gray-100">
               <h1 className=" text-base      font-semibold text-gray-700 ">
                 Weekly hours spent
               </h1>
@@ -102,7 +105,7 @@ function Dashboard() {
 
 
           <div className="right-side w-[31%] flex flex-col gap-[3%]">
-            <div className="min-h-[60%] max-w-full p-4 bg-white shadow-lg shadow-green-50 rounded-md border border-gray-100">
+            <div className="min-h-[60%] max-w-full p-4 bg-white shadow-2xl shadow-blue-50 rounded-md border border-gray-100">
               <div className="text-sm font-medium tracking-wide mb-2 flex items-center gap-1">
                 {" "}
                 <FcCalendar />
@@ -113,7 +116,7 @@ function Dashboard() {
 
 
             {/* piechart */}
-            <div className="h-[35%] max-w-full p-4 bg-white shadow-lg shadow-gray-100 rounded-md border border-gray-100">
+            <div className="h-[35%] max-w-full p-4 bg-white shadow-lg shadow-slate-200 rounded-md border border-gray-100">
               <Piechart />
             </div>
           </div>

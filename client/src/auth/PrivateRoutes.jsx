@@ -13,7 +13,9 @@ const TeacherMyStudent = lazy(() => import("../pages/Teacher/MyStudent"));
 const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/components/Student_list"));
 const TeacherTime_sheets = lazy(() => import("../pages/Teacher/components/Time_sheets"));
 const TeacherAttendance = lazy(() => import("../pages/Teacher/Attendance"));
-const TeacherAttendanceRequest = lazy(() => import("../pages/Teacher/AttendanceRequest"));
+const TeacherAttendanceRequestIndex = lazy(() => import("../pages/Teacher/Attendance-Request/index"));
+const TeacherAttendanceRequest = lazy(() => import("../pages/Teacher/Attendance-Request/AttendanceRequest"));
+const TeacherAttendanceView = lazy(() => import("../pages/Teacher/Attendance-Request/ViewAttendanceRequest"));
 const TeacherRecords = lazy(() => import("../pages/Teacher/Records"));
 const TeacherMessage = lazy(() => import("../pages/Teacher/Message"));
 const TeacherAnnouncement = lazy(() => import("../pages/Teacher/Announcement"));
@@ -61,7 +63,7 @@ function PrivateRoutes() {
         </Suspense>
 
       ) : Role === "Teacher" ? (
-        <Suspense>
+        <Suspense fallback={<h1>Loading</h1>}>
           <Routes>
             <Route path="/" element={<Rootlayout role={Role} />}>
               <Route index element={<TeacherDashboard />} />
@@ -73,7 +75,10 @@ function PrivateRoutes() {
               <Route path="/timeSheet" element={<TeacherTime_sheets />} />
 
               <Route path="/attendance" element={<TeacherAttendance />} />
-              <Route path="/AttendanceRequest" element={<TeacherAttendanceRequest />} />
+              <Route path="/Attendance-request/" element={<TeacherAttendanceRequestIndex />} >
+                <Route index element={<TeacherAttendanceRequest />} />
+                <Route path="/Attendance-request/view" element={<TeacherAttendanceView />} />
+              </Route>
               <Route path="/record" element={<TeacherRecords />} />
               <Route path="/message" element={<TeacherMessage />} />
               <Route path="/announcement" element={<TeacherAnnouncement />} />
