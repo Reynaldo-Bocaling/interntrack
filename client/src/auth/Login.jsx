@@ -20,7 +20,7 @@ function Login() {
               <label htmlFor="password" className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
             </div>
 
-            <button className="button">Login</button>
+            <button className="button bg-blue-500 py-2 px-4 rounded-lg text-white text-base font-medium tracking-wider">Login</button>
             <span className="mt-4 block text-sm text-center font-medium text-gray-500 hover:underline focus:outline-none focus:ring-2 focus:ring-rose-500"> Forgot your password? <span className="text-blue-500"></span> </span>
 
           </form>

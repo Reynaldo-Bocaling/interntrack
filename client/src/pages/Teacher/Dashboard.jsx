@@ -7,21 +7,8 @@ import LineChart from "./components/charts/LineChart";
 import Piechart from "./components/charts/PieChart";
 import Calendar from "./components/calendar/Calendar";
 import { Link } from "react-router-dom";
+
 function Dashboard() {
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentDateTime(new Date());
-    }, 1000); // Update every second
-
-    return () => clearInterval(interval);
-  }, []);
-  const getMonthName = (date) => {
-    return date.toLocaleString("en-US", { month: "long" });
-  };
-
-  // total box
   const totalCountBox = [
     {
       label: "All",

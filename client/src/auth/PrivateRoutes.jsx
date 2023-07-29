@@ -1,9 +1,9 @@
 import React, { Suspense, lazy, useEffect, useState } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 
-// main
+// auth
 const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
-
+const Login = lazy(()=> import("./Login"))
 // Teacher components
 const TeacherDashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 const TeacherMyprofile = lazy(() => import("../pages/Teacher/Myprofile"));
@@ -40,67 +40,84 @@ const AdminReport = lazy(() => import("../pages/admin/Report"));
 
 function PrivateRoutes() {
   const [Role, setRole] = useState("");
+  const [isLogged, setIsLogged] = useState(false);
 
   useEffect(() => {
     setRole("Teacher");
+    // setIsLogged(true)
   });
 
 
   return (
     <div>
-      {Role === "Admin" ? (
+      {
+      
+      isLogged? (
         <Suspense>
           <Routes>
-            <Route path="/" element={<Rootlayout  />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="/records" element={<AdminRecords />} />
-              <Route path="/request" element={<AdminRequest />} />
-              <Route path="/message" element={<AdminMessage />} />
-              <Route path="/announcement" element={<AdminAnnouncement />} />
-              <Route path="/report" element={<AdminReport />} />
-              </Route>
-          </Routes>
-        </Suspense>
-
-      ) : Role === "Teacher" ? (
-        <Suspense fallback={<h1>Loading</h1>}>
-          <Routes>
-            <Route path="/" element={<Rootlayout role={Role} />}>
-              <Route index element={<TeacherDashboard />} />
-              <Route path="/profile/" element={<TeacherMyprofile />} >
-                <Route index element={<TeacherProfileInfo />} />
-                <Route path="/profile/security" element={<TeacherProfileSecurity />} />
-              </Route>
-              <Route path="/student-list" element={<TeacherStudent_list />} />
-              <Route path="/timeSheet" element={<TeacherTime_sheets />} />
-
-              <Route path="/attendance" element={<TeacherAttendance />} />
-              <Route path="/Attendance-request/" element={<TeacherAttendanceRequestIndex />} >
-                <Route index element={<TeacherAttendanceRequest />} />
-                <Route path="/Attendance-request/view" element={<TeacherAttendanceView />} />
-              </Route>
-              <Route path="/record" element={<TeacherRecords />} />
-              <Route path="/message" element={<TeacherMessage />} />
-              <Route path="/announcement" element={<TeacherAnnouncement />} />
-              <Route path="/settings" element={<TeacherSettings />} />
-            </Route>
-          </Routes>
-        </Suspense>
-
-      ) : (
-        <Suspense>
-          <Routes>
-            <Route path="/" element={<Rootlayout />}>
-              <Route index element={<StudentDashboard />} />
-              <Route path="/MyProfile" element={<StudentMyProfile />} />
-              <Route path="/attendance" element={<StudentAttendance />} />
-              <Route path="/timeSheet" element={<StudentRecords />} />
-              <Route path="/message" element={<StudentMessage />} />
-              <Route path="/announcement" element={<StudentAnnouncement />} />
-            </Route>
+            <Route path="/" element={<Login/>} />
           </Routes>
         </Suspense>
       )
+      : (
+
+        Role === "Admin" ? (
+          <Suspense>
+            <Routes>
+              <Route path="/" element={<Rootlayout  />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="/records" element={<AdminRecords />} />
+                <Route path="/request" element={<AdminRequest />} />
+                <Route path="/message" element={<AdminMessage />} />
+                <Route path="/announcement" element={<AdminAnnouncement />} />
+                <Route path="/report" element={<AdminReport />} />
+                </Route>
+            </Routes>
+          </Suspense>
+  
+        ) : Role === "Teacher" ? (
+          <Suspense fallback={<h1>Loading</h1>}>
+            <Routes>
+              <Route path="/" element={<Rootlayout role={Role} />}>
+                <Route index element={<TeacherDashboard />} />
+                <Route path="/profile/" element={<TeacherMyprofile />} >
+                  <Route index element={<TeacherProfileInfo />} />
+                  <Route path="/profile/security" element={<TeacherProfileSecurity />} />
+                </Route>
+                <Route path="/student-list" element={<TeacherStudent_list />} />
+                <Route path="/timeSheet" element={<TeacherTime_sheets />} />
+  
+                <Route path="/attendance" element={<TeacherAttendance />} />
+                <Route path="/Attendance-request/" element={<TeacherAttendanceRequestIndex />} >
+                  <Route index element={<TeacherAttendanceRequest />} />
+                  <Route path="/Attendance-request/view" element={<TeacherAttendanceView />} />
+                </Route>
+                <Route path="/record" element={<TeacherRecords />} />
+                <Route path="/message" element={<TeacherMessage />} />
+                <Route path="/announcement" element={<TeacherAnnouncement />} />
+                <Route path="/settings" element={<TeacherSettings />} />
+              </Route>
+            </Routes>
+          </Suspense>
+  
+        ) : (
+          <Suspense>
+            <Routes>
+              <Route path="/" element={<Rootlayout />}>
+                <Route index element={<StudentDashboard />} />
+                <Route path="/MyProfile" element={<StudentMyProfile />} />
+                <Route path="/attendance" element={<StudentAttendance />} />
+                <Route path="/timeSheet" element={<StudentRecords />} />
+                <Route path="/message" element={<StudentMessage />} />
+                <Route path="/announcement" element={<StudentAnnouncement />} />
+              </Route>
+            </Routes>
+          </Suspense>
+        )
+      )
+     
+
+     
       }
       <div>
         <Outlet />

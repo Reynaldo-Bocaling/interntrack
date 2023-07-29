@@ -37,12 +37,18 @@
 
 
 .link { 
-    @apply relative p-2 py-3  rounded-lg gap-3 items-center text-base tracking-wide hover:bg-gray-100 md:cursor-pointer cursor-default duration-300 text-gray-600;
+    @apply relative p-2 py-3 rounded-lg gap-3 items-center text-base tracking-wide hover:bg-gray-100 md:cursor-pointer cursor-default duration-300 text-gray-600;
+
 }
 
 .link.active {
     @apply  text-blue-600 after:content-[''] after:absolute after:w-[3px] after:h-[80%] after:top-0 after:-right-3 after:bg-blue-500 after:rounded-l-md;
 }
+
+
+
+
+
 
 .filterLink {
     @apply bg-gray-100 rounded-t py-1 px-4
