@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import profile from "../../../assets/images/dp.png";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { Student } from "../services/StudentList";
+import { Student } from "../../DummyData/StudentList";
 import { FcCalendar } from "react-icons/fc";
 import { BsDot } from "react-icons/bs";
 import { Link } from "react-router-dom";

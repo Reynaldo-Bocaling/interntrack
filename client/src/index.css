@@ -37,15 +37,20 @@
 
 
 .link { 
-    @apply relative p-2 py-3 rounded-lg gap-3 items-center text-base tracking-wide hover:bg-gray-100 md:cursor-pointer cursor-default duration-300 text-gray-600;
+    @apply relative flex items-center gap-3 text-base tracking-wide rounded-lg hover:bg-blue-50 md:cursor-pointer cursor-default ;
 
 }
 
 .link.active {
-    @apply  text-blue-600 after:content-[''] after:absolute after:w-[3px] after:h-[80%] after:top-0 after:-right-3 after:bg-blue-500 after:rounded-l-md;
+    @apply text-blue-500  font-medium  bg-blue-50
 }
 
-
+.StudentBtn{
+    @apply text-gray-600 flex items-center gap-1 text-base tracking-wider font-semibold
+}
+.StudentBtn.active{
+    @apply text-blue-500 border-b-2 border-blue-500 pb-2
+}
 
 
 
@@ -57,6 +62,9 @@
     @apply text-blue-500 border-b-[2px] border-blue-500
 }
 
+.taskLink.active{
+    @apply text-blue-500 border-b-[2.2px] border-blue-500
+}
 .link.button {
     @apply text-white text-sm tracking-wide font-medium backdrop:text-white   bg-gradient-to-r from-[#1391F8] to-[#2BA0FF] shadow-md shadow-blue-500/50 rounded-full py-[12px];
 }
@@ -77,4 +85,16 @@
     display: none;
   }
 
+  
+
+
+  .cover {
+    background-image: url(./assets//images/cover.png);
+    /* background-size: 80%;
+    background-repeat: no-repeat;*/
+    background-position: left 30%; 
+    height: 180px;
+    width: 100%;
+    
+  }
   

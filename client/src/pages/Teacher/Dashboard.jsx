@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { FcCalendar } from "react-icons/fc";
 import { FaClipboardList } from "react-icons/fa";
 import { BsCalendar2CheckFill, BsCalendarMinusFill } from "react-icons/bs";
-import LineChart from "./components/charts/LineChart";
-import Piechart from "./components/charts/PieChart";
-import Calendar from "./components/calendar/Calendar";
+import LineChart from "../../components/charts/LineChart";
+import Piechart from "../../components/charts/PieChart";
+import Calendar from "../../components/calendar/Calendar";
 import { Link } from "react-router-dom";
 
 function Dashboard() {
@@ -81,8 +81,8 @@ function Dashboard() {
             </div>
 
             {/* graph */}
-            <div className="graph-box h-auto p-4 shadow-lg bg-white shadow-slate-200 rounded-md border border-gray-100">
-              <h1 className=" text-base      font-semibold text-gray-700 ">
+            <div className="graph-box h-auto p-4 shadow-lg  shadow-slate-200 rounded-md border border-gray-100">
+              <h1 className=" text-base font-semibold text-gray-700 ">
                 Weekly hours spent
               </h1>
               <LineChart />

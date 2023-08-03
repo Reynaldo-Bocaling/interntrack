@@ -7,7 +7,7 @@ const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
 
 function App() {
   return (
-    <Suspense fallback={<h1>Loading</h1>}>
+    <Suspense fallback={<h1>helllooooo</h1>}>
       <Routes>
         <Route path="/welcome-to-InternTrack" element={<LandingPage />} />
         <Route path="*" element={<PrivateRoutes />} />

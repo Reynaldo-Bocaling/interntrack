@@ -4,19 +4,37 @@ import { Routes, Route, Outlet } from "react-router-dom";
 // auth
 const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
 const Login = lazy(()=> import("./Login"))
+
+// Student information components
+const UploadTask = lazy(() => import("../components/Student-Task/UploadTask"));
+const AllUploadTask = lazy(() => import("../components/Student-Task/UploadAllTask"));
+const TodayUploadTask = lazy(() => import("../components/Student-Task/UploadTodayTask"));
+
+
+// view Student info components
+const StudentInfoView = lazy(() =>  import("../components/Student-Info/index"));
+const StudentInfo = lazy(() =>  import("../components/Student-Info/StudentIfo"));
+const StudentRequirements = lazy(() =>  import("../components/Student-Info/StudentRequirements"));
+const StudentTask = lazy(() =>  import("../components/Student-Info/StudentTask"));
+const StudentTimesheet = lazy(() =>  import("../components/Student-Info/StudentTimeSheet"));
+
+
+
 // Teacher components
 const TeacherDashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 const TeacherMyprofile = lazy(() => import("../pages/Teacher/Myprofile"));
-const TeacherProfileInfo = lazy(() => import("../pages/Teacher/components/ProfileInfo"));
-const TeacherProfileSecurity = lazy(() => import("../pages/Teacher/components/ProfileSecurity"));
-const TeacherMyStudent = lazy(() => import("../pages/Teacher/MyStudent"));
-const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/components/Student_list"));
-const TeacherTime_sheets = lazy(() => import("../pages/Teacher/components/Time_sheets"));
-const TeacherAttendance = lazy(() => import("../pages/Teacher/Attendance"));
+const TeacherProfileInfo = lazy(() => import("../pages/Teacher/ProfileInfo"));
+const TeacherProfileSecurity = lazy(() => import("../pages/Teacher/ProfileSecurity"));
+const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/Student_list"));
+
+const TeacherTime_sheets = lazy(() => import("../pages/Teacher/Time_sheets"));
+const TeacherAttendance = lazy(() => import("../pages/Teacher/DailyLogs"));
 const TeacherAttendanceRequestIndex = lazy(() => import("../pages/Teacher/Attendance-Request/index"));
 const TeacherAttendanceRequest = lazy(() => import("../pages/Teacher/Attendance-Request/AttendanceRequest"));
 const TeacherAttendanceView = lazy(() => import("../pages/Teacher/Attendance-Request/ViewAttendanceRequest"));
-const TeacherRecords = lazy(() => import("../pages/Teacher/Records"));
+const TeacherLeave = lazy(() => import("../pages/Teacher/LeaveRequest"));
+const TeacherApproveLeave = lazy(() => import("../pages/Teacher/ApproveLeave"));
+const TeacherFailedLeave = lazy(() => import("../pages/Teacher/FailedLeave"));
 const TeacherMessage = lazy(() => import("../pages/Teacher/Message"));
 const TeacherAnnouncement = lazy(() => import("../pages/Teacher/Announcement"));
 const TeacherSettings = lazy(() => import("../pages/Teacher/Settings"));
@@ -24,18 +42,22 @@ const TeacherSettings = lazy(() => import("../pages/Teacher/Settings"));
 // Student components
 const StudentDashboard = lazy(() => import("../pages/Student/Dashboard"));
 const StudentMyProfile = lazy(() => import("../pages/Student/MyProfile"));
-const StudentAttendance = lazy(() => import("../pages/Student/Attendance"));
-const StudentRecords = lazy(() => import("../pages/Student/Records"));
+const StudentDailyLog = lazy(() => import("../pages/Student/DailyLog"));
+const StudentAttendanceRequest = lazy(() => import("../pages/Student/AttendanceRequest"));
+const StudentAttendanceSummary = lazy(() => import("../pages/Student/Summary"));
+const StudentTaskUpload = lazy(() => import("../pages/Student/TaskUpload"));
+const StudentWeeklyReport = lazy(() => import("../pages/Student/WeeklyReport"));
+const StudentLeaveRequest = lazy(() => import("../pages/Student/LeaveRequest"));
 const StudentMessage = lazy(() => import("../pages/Student/Message"));
 const StudentAnnouncement = lazy(() => import("../pages/Student/Announcement"));
 
 // Super admin components
-const AdminDashboard = lazy(() => import("../pages/admin/Dashboard"));
-const AdminRecords = lazy(() => import("../pages/admin/Records"));
-const AdminRequest = lazy(() => import("../pages/admin/Request"));
-const AdminMessage = lazy(() => import("../pages/admin/Message"));
-const AdminAnnouncement = lazy(() => import("../pages/admin/Announcement"));
-const AdminReport = lazy(() => import("../pages/admin/Report"));
+const AdminDashboard = lazy(() => import("../pages/coordinator/Dashboard"));
+const AdminRecords = lazy(() => import("../pages/coordinator/Records"));
+const AdminRequest = lazy(() => import("../pages/coordinator/Request"));
+const AdminMessage = lazy(() => import("../pages/coordinator/Message"));
+const AdminAnnouncement = lazy(() => import("../pages/coordinator/Announcement"));
+const AdminReport = lazy(() => import("../pages/coordinator/Report"));
 
 
 function PrivateRoutes() {
@@ -53,7 +75,7 @@ function PrivateRoutes() {
       {
       
       isLogged? (
-        <Suspense>
+        <Suspense fallback={<h1>Login Loading</h1>}>
           <Routes>
             <Route path="/" element={<Login/>} />
           </Routes>
@@ -62,7 +84,6 @@ function PrivateRoutes() {
       : (
 
         Role === "Admin" ? (
-          <Suspense>
             <Routes>
               <Route path="/" element={<Rootlayout  />}>
                 <Route index element={<AdminDashboard />} />
@@ -73,10 +94,8 @@ function PrivateRoutes() {
                 <Route path="/report" element={<AdminReport />} />
                 </Route>
             </Routes>
-          </Suspense>
   
         ) : Role === "Teacher" ? (
-          <Suspense fallback={<h1>Loading</h1>}>
             <Routes>
               <Route path="/" element={<Rootlayout role={Role} />}>
                 <Route index element={<TeacherDashboard />} />
@@ -86,33 +105,47 @@ function PrivateRoutes() {
                 </Route>
                 <Route path="/student-list" element={<TeacherStudent_list />} />
                 <Route path="/timeSheet" element={<TeacherTime_sheets />} />
-  
-                <Route path="/attendance" element={<TeacherAttendance />} />
+                <Route path="/task-upload/" element={<UploadTask />} >
+                  <Route index element={<AllUploadTask/>} />
+                  <Route path="/task-upload/today" element={<TodayUploadTask/>} />
+                </Route>
+                <Route path="/student/" element={<StudentInfoView />}>
+                  <Route index element={<StudentInfo/>} />
+                  <Route path="/student/requirement" element={<StudentRequirements/>} />
+                  <Route path="/student/task" element={<StudentTask/>} />
+                  <Route path="/student/timesheet" element={<StudentTimesheet/>} />
+                </Route>
+                <Route path="/daily-logs" element={<TeacherAttendance />} />
                 <Route path="/Attendance-request/" element={<TeacherAttendanceRequestIndex />} >
                   <Route index element={<TeacherAttendanceRequest />} />
                   <Route path="/Attendance-request/view" element={<TeacherAttendanceView />} />
                 </Route>
-                <Route path="/record" element={<TeacherRecords />} />
+                <Route path="/leave-request" element={<TeacherLeave/>}>
+                  <Route index element={<TeacherApproveLeave />} />
+                  <Route path="/leave-request/failed" element={<TeacherFailedLeave />} />
+                </Route>
                 <Route path="/message" element={<TeacherMessage />} />
                 <Route path="/announcement" element={<TeacherAnnouncement />} />
                 <Route path="/settings" element={<TeacherSettings />} />
               </Route>
             </Routes>
-          </Suspense>
   
         ) : (
-          <Suspense>
             <Routes>
               <Route path="/" element={<Rootlayout />}>
                 <Route index element={<StudentDashboard />} />
                 <Route path="/MyProfile" element={<StudentMyProfile />} />
-                <Route path="/attendance" element={<StudentAttendance />} />
-                <Route path="/timeSheet" element={<StudentRecords />} />
+                <Route path="/daily-logs" element={<StudentDailyLog />} />
+                <Route path="/attendance-request" element={<StudentAttendanceRequest />} />
+                <Route path="/attendance-summary" element={<StudentAttendanceSummary />} />
+                <Route path="/task-upload" element={<StudentTaskUpload />} />
+                <Route path="/timesheet" element={<StudentTimesheet />} />
+                <Route path="/weekly-report" element={<StudentWeeklyReport />} />
+                <Route path="/leave-request" element={<StudentLeaveRequest />} />
                 <Route path="/message" element={<StudentMessage />} />
                 <Route path="/announcement" element={<StudentAnnouncement />} />
               </Route>
             </Routes>
-          </Suspense>
         )
       )
      

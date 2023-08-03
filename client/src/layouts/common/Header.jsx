@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { SidebarData } from "./SidebarLinks";
-import Dp from "../../../assets/images/dp.png";
+import Dp from "../../assets/images/dp.png";
 import { MdNotificationsNone } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 
-import { BiMessageRounded, BiSearch } from "react-icons/bi";
-function Header() {
+import { BiSearch } from "react-icons/bi";
+function Header({toggleIsOpen}) {
   const [Role, setRole] = useState([]);
   const Menu = SidebarData[Role] || [];
 
@@ -21,8 +21,8 @@ function Header() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-[16rem] z-10 h-[60px] w-full bg-white shadow-sm">
-      <div className="p-3 pt-3  flex items-center justify-between px-7 w-[78%] sm:w-[78%] lg:w-[78%]">
+    <div className={`${toggleIsOpen? 'pl-[16rem]': 'pl-[4rem]'} fixed top-0 left-0 h-[60px] w-full duration-300 z-10 bg-white shadow-sm shadow-slate-100`}>
+      <div className="p-3 pt-3  flex items-center justify-between px-7 w-full">
         <div className="text-[1.1rem] font-normal">
           Welcome back, <span className="font-semibold">Admin</span>
         </div>
