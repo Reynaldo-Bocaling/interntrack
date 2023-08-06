@@ -39,230 +39,43 @@ function ViewAttendanceRequest() {
               </tr>
             </thead>
             <tbody>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
+              
+              
+
+
+        {Array.from({ length: 8 }, () => (
+          <tr className="h-14">
+              <td className="text-sm tracking-wide pl-2">1234</td>
+                  <td className="text-sm tracking-wide pl-2">
+                    <div className="profile flex items-center gap-3">
+                      <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
+                        <img
+                          src={profile}
+                          alt=""
+                          width={30}
+                          className="rounded-full mx-[0.35rem]"
+                        />
+                      </div>
+                      <span className="mt-2 text-sm font-semibold">
+                        Reynaldo Bocaling
+                      </span>
                     </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
+                  </td>
+                  <td className="text-sm tracking-wide pl-2">8:00</td>
+                  <td className="text-sm tracking-wide pl-2">4:00 out</td>
+                  <td className="text-sm tracking-wide pl-10">8 hrs</td>
+                  <td className="text-sm tracking-wide pl-2">January 02</td>
+                  <td className="text-sm tracking-wide pl-2">
+                  <div className=" flex items-center">
+                  <span>Online</span>
+                    <BsDot size={30} className="text-green-500"/>
                   </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
-                    </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
-                  </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
-                    </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
-                  </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
-                    </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
-                  </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
-                    </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
-                  </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
-                    </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
-                  </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
-                    </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
-                  </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
-              <tr className="h-14">
-                <td className="text-sm tracking-wide pl-2">1234</td>
-                <td className="text-sm tracking-wide pl-2">
-                  <div className="profile flex items-center gap-3">
-                    <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                      <img
-                        src={profile}
-                        alt=""
-                        width={30}
-                        className="rounded-full mx-[0.35rem]"
-                      />
-                    </div>
-                    <span className="mt-2 text-sm font-semibold">
-                      Reynaldo Bocaling
-                    </span>
-                  </div>
-                </td>
-                <td className="text-sm tracking-wide pl-2">8:00</td>
-                <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                <td className="text-sm tracking-wide pl-2">January 02</td>
-                <td className="text-sm tracking-wide pl-2">
-                 <div className=" flex items-center">
-                 <span>Online</span>
-                  <BsDot size={30} className="text-green-500"/>
-                 </div>
-                </td>
-              </tr>
+              </td>
+            </tr>
+        ))}
+
+
+
              
              
             </tbody>

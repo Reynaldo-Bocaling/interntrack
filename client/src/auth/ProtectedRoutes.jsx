@@ -5,10 +5,17 @@ import { Routes, Route, Outlet } from "react-router-dom";
 const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
 const Login = lazy(()=> import("./Login"))
 
+
+// test
+const Task = lazy(() => import("../components/Student-Task/StudentTask"));
+
+
+
 // Student information components
 const UploadTask = lazy(() => import("../components/Student-Task/UploadTask"));
 const AllUploadTask = lazy(() => import("../components/Student-Task/UploadAllTask"));
 const TodayUploadTask = lazy(() => import("../components/Student-Task/UploadTodayTask"));
+const ViewUploadTask = lazy(() => import("../components/Student-Task/ViewUploadTask"));
 
 
 // view Student info components
@@ -105,10 +112,13 @@ function PrivateRoutes() {
                 </Route>
                 <Route path="/student-list" element={<TeacherStudent_list />} />
                 <Route path="/timeSheet" element={<TeacherTime_sheets />} />
-                <Route path="/task-upload/" element={<UploadTask />} >
+
+                <Route path="/StudentTask" element={<Task />} />
+                <Route path="/ViewedStudentTask" element={<ViewUploadTask />} />
+                {/* <Route path="/task-upload/" element={<UploadTask />} >
                   <Route index element={<AllUploadTask/>} />
                   <Route path="/task-upload/today" element={<TodayUploadTask/>} />
-                </Route>
+                </Route> */}
                 <Route path="/student/" element={<StudentInfoView />}>
                   <Route index element={<StudentInfo/>} />
                   <Route path="/student/requirement" element={<StudentRequirements/>} />

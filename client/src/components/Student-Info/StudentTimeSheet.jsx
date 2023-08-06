@@ -1,6 +1,8 @@
 import React from 'react'
 
-function StudentTimeSheet() {
+import {InfoIcons, RequirementIcons,TaskIcons, ClockIcons } from "../../React-Icons";
+
+const StudentTimeSheet = () => {
   return (
     <div>
       <h1>StudentRequirements</h1>

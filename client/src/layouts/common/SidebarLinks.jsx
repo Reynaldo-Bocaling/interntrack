@@ -83,7 +83,7 @@ import {CgFileDocument} from 'react-icons/cg'
         subMenu: [
           { label: "Trainee list", url: "/student-list" },
           { label: "Timesheet", url: "/timeSheet" },
-          { label: "Task uploads", url: "/task-upload" },
+          { label: "Task uploads", url: "/StudentTask" },
         ],
       },
       { 

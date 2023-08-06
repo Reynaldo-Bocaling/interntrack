@@ -32,8 +32,6 @@ function AttendanceRequest() {
   
   return (
     <div>
-     
-
       <main className="container mt-5 flex flex-col gap-2">
         {/* Item 1 */}
 
@@ -66,8 +64,15 @@ function AttendanceRequest() {
                       </span>
                       <small className="text-gray-500 flex items-center">
                         {item.status}
-                        <BsDot size={30} className={item.status ==='Online'? 'text-green-500': 'text-red-500'}/>
-                        </small>
+                        <BsDot
+                          size={30}
+                          className={
+                            item.status === "Online"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }
+                        />
+                      </small>
                     </div>
                   </div>
 
@@ -113,7 +118,10 @@ function AttendanceRequest() {
                     <button className="py-2 px-10 text-sm text-white bg-sky-500 rounded-full border-[2px] border-sky-500 hover:opacity-[0.9]">
                       Confirm All
                     </button>
-                    <Link to="/Attendance-request/view" className="py-2 px-10 text-sm text-sky-500 rounded-full border-[2px] border-sky-500 hover:bg-sky-50">
+                    <Link
+                      to="/Attendance-request/view"
+                      className="py-2 px-10 text-sm text-sky-500 rounded-full border-[2px] border-sky-500 hover:bg-sky-50"
+                    >
                       Check
                     </Link>
                   </div>

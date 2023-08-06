@@ -73,7 +73,7 @@ function Sidebar({toggleIsOpen, toggleSetIsOpen}) {
                   className={`link p-3 cursor-pointer flex flex-col items-center`}
                   >
                     <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-base tracking-wide text-[#686475]">
+                      <div className="flex items-center gap-2 text-base tracking-wide text-[#4c4b50]">
                         <item.icon size={item.size && item.size} />
                        {toggleIsOpen && item.label}
                       </div>

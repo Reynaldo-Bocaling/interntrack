@@ -2,10 +2,12 @@
 import {HiLocationMarker, HiUser, HiOutlineDocumentDuplicate} from 'react-icons/hi'
 import {MdEmail, MdOutlineNumbers, MdAssignmentInd, MdAssuredWorkload} from 'react-icons/md'
 import {FaTransgender} from 'react-icons/fa'
-import {BsCheck, BsFillTelephoneFill} from 'react-icons/bs'
+import {BsCheck, BsFillTelephoneFill, BsDot, BsArrowRightShort} from 'react-icons/bs'
 import {BiLinkAlt, BiInfoCircle} from 'react-icons/bi'
 import {GoTasklist} from 'react-icons/go'
 import {AiOutlineFieldTime} from 'react-icons/ai'
+import {FiMaximize, FiMinimize} from 'react-icons/fi'
+import {RiArrowLeftSLine} from 'react-icons/ri'
 
 
 
@@ -82,5 +84,31 @@ export const TaskIcons = () =>{
 export const ClockIcons = () =>{
     return(
         <AiOutlineFieldTime />
+    )
+}
+
+export const MaximizeIcons = () =>{
+    return(
+        <FiMaximize size={18} />
+    )
+}
+export const MinimizeIcons = () =>{
+    return(
+        <FiMinimize size={18} />
+    )
+}
+export const DotIcons = () =>{
+    return(
+        <BsDot />
+    )
+}
+export const ExitIcons = () =>{
+    return(
+        <BsArrowRightShort size={28} />
+    )
+}
+export const ArrowLeft = () =>{
+    return(
+        <RiArrowLeftSLine size={19} />
     )
 }

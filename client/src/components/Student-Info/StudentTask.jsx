@@ -1,6 +1,9 @@
 import React from 'react'
+import {InfoIcons, RequirementIcons,TaskIcons, ClockIcons } from "../../React-Icons";
 
-function StudentTask() {
+
+
+const  StudentTask = () => {
   return (
     <div>
       <div className='container'>
