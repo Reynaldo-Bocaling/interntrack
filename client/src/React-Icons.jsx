@@ -1,9 +1,9 @@
 
 import {HiLocationMarker, HiUser, HiOutlineDocumentDuplicate} from 'react-icons/hi'
-import {MdEmail, MdOutlineNumbers, MdAssignmentInd, MdAssuredWorkload} from 'react-icons/md'
+import {MdEmail, MdOutlineNumbers, MdAssignmentInd, MdAssuredWorkload, MdOutlineUpdate} from 'react-icons/md'
 import {FaTransgender} from 'react-icons/fa'
 import {BsCheck, BsFillTelephoneFill, BsDot, BsArrowRightShort} from 'react-icons/bs'
-import {BiLinkAlt, BiInfoCircle} from 'react-icons/bi'
+import {BiLinkAlt, BiInfoCircle, BiSearch} from 'react-icons/bi'
 import {GoTasklist} from 'react-icons/go'
 import {AiOutlineFieldTime} from 'react-icons/ai'
 import {FiMaximize, FiMinimize} from 'react-icons/fi'
@@ -12,11 +12,22 @@ import {RiArrowLeftSLine} from 'react-icons/ri'
 
 
 
+export const TimeIcon = () => {
+    return(
+        <MdOutlineUpdate />
+    )
+}
 export const LocationIcon = () => {
     return(
         <HiLocationMarker />
     )
 }
+export const SearchIcon = () => {
+    return(
+        <BiSearch />
+    )
+}
+
 export const UserIcon = () => {
     return(
         <HiUser />

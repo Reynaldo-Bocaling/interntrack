@@ -5,6 +5,7 @@ import { BiSearch } from "react-icons/bi";
 
 function index() {
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [SearchInput ,  setSearchInput] = useState('')
   return (
     <div>
        <div className=" flex items-center justify-between">
@@ -48,6 +49,8 @@ function index() {
               type="text"
               className="mt-1 block w-52 text-xs py-[8px] outline-none placeholder-slate-400"
               placeholder="Search.."
+              onChange={(e)=> setSearchInput(e.target.value)}
+
             />
           </div>
         </div>
@@ -55,7 +58,7 @@ function index() {
 
 
       <div>
-        <Outlet />
+        <Outlet context={{searchVal: SearchInput}} />
       </div>
     </div>
   )

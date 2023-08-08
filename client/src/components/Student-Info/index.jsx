@@ -64,7 +64,7 @@ const index = () => {
         
       </div>
       <div className="pt-3 bg-white">
-        <Outlet />
+        <Outlet  />
       </div>
     </div>
   );

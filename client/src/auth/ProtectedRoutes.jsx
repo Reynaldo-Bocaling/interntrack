@@ -25,6 +25,8 @@ const StudentRequirements = lazy(() =>  import("../components/Student-Info/Stude
 const StudentTask = lazy(() =>  import("../components/Student-Info/StudentTask"));
 const StudentTimesheet = lazy(() =>  import("../components/Student-Info/StudentTimeSheet"));
 
+// timesheet
+const Timesheets = lazy(() => import("../components/StudentTimesheets/Time_sheets"));
 
 
 // Teacher components
@@ -34,7 +36,6 @@ const TeacherProfileInfo = lazy(() => import("../pages/Teacher/ProfileInfo"));
 const TeacherProfileSecurity = lazy(() => import("../pages/Teacher/ProfileSecurity"));
 const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/Student_list"));
 
-const TeacherTime_sheets = lazy(() => import("../pages/Teacher/Time_sheets"));
 const TeacherAttendance = lazy(() => import("../pages/Teacher/DailyLogs"));
 const TeacherAttendanceRequestIndex = lazy(() => import("../pages/Teacher/Attendance-Request/index"));
 const TeacherAttendanceRequest = lazy(() => import("../pages/Teacher/Attendance-Request/AttendanceRequest"));
@@ -111,7 +112,7 @@ function PrivateRoutes() {
                   <Route path="/profile/security" element={<TeacherProfileSecurity />} />
                 </Route>
                 <Route path="/student-list" element={<TeacherStudent_list />} />
-                <Route path="/timeSheet" element={<TeacherTime_sheets />} />
+                <Route path="/timeSheet" element={<Timesheets />} />
 
                 <Route path="/StudentTask" element={<Task />} />
                 <Route path="/ViewedStudentTask" element={<ViewUploadTask />} />

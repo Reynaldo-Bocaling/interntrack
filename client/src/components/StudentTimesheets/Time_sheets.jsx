@@ -78,7 +78,9 @@ const Time_sheets = () => {
       </div>
 
       <div className="overflow-x-auto h-[500px] mt-3 border rounded-lg">
-        <table className="h-auto min-w-max">
+        {
+          !students? (
+            <table className="h-auto min-w-max">
           <colgroup>
             <col style={{ width: "100px" }} />
             <col style={{ width: "120px" }} />
@@ -149,6 +151,10 @@ const Time_sheets = () => {
             ))}
           </tbody>
         </table>
+          ): (
+            <h1 className="text-2xl text-center py-5">No Data</h1>
+          )
+        }
       </div>
     </div>
   );

@@ -81,7 +81,8 @@
     scrollbar-width: none; 
   }
   
-.sidebar::-webkit-scrollbar {
+.sidebar::-webkit-scrollbar,
+.studentTask::-webkit-scrollbar {
     display: none;
   }
 
@@ -90,8 +91,6 @@
 
   .cover {
     background-image: url(./assets//images/cover.png);
-    /* background-size: 80%;
-    background-repeat: no-repeat;*/
     background-position: left 30%; 
     height: 180px;
     width: 100%;
