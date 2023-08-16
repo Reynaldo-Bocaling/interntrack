@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import {InfoIcons, RequirementIcons,TaskIcons, ClockIcons } from "../../React-Icons";
+import {InfoIcons, RequirementIcons,TaskIcons, ClockIcons } from "../ReactIcon/React-Icons";
 
 import { BsChatDots, BsFillTrash3Fill } from "react-icons/bs";
 

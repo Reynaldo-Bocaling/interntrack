@@ -73,7 +73,7 @@ function Sidebar({toggleIsOpen, toggleSetIsOpen}) {
                   className={`link p-3 cursor-pointer flex flex-col items-center`}
                   >
                     <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-base tracking-wide text-[#4c4b50]">
+                      <div className="link gap-2 tracking-wide text-[#4c4b50]">
                         <item.icon size={item.size && item.size} />
                        {toggleIsOpen && item.label}
                       </div>
@@ -85,14 +85,14 @@ function Sidebar({toggleIsOpen, toggleSetIsOpen}) {
                     </div>
                     {toggleIsOpen && (
                         item.subMenu && openSubmenus.includes(index) && (
-                          <div className="w-full flex flex-col gap-1 rounded-lg duration-1000">
+                          <div className="w-full flex flex-col gap-1 rounded-lg duration-1000 ">
                             {item.subMenu.map((subItem, subIndex) => (
                               <NavLink
                                 className="link p-3"
                                 to={subItem.url}
                                 key={subIndex}
                               >
-                                <span className="flex  items-center gap-2 text-gray-500">
+                                <span className="flex  items-center gap-2 text-[#4c4b50]">
                                   <BsFillCircleFill size={7} className="text-blue-500" />
                                   {subItem.label}
                                 </span>

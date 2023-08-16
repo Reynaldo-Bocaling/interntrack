@@ -1,5 +1,5 @@
 import React from "react";
-import {LocationIcon, EmailIcons, NumberIcons, GenderIcons, IDIcons, DepartmentIcons, PhoneIcons } from "../../React-Icons";
+import {LocationIcon, EmailIcons, NumberIcons, GenderIcons, IDIcons, DepartmentIcons, PhoneIcons } from "../../components/ReactIcon/React-Icons";
 
 const StudentIfo = () => {
   const InfoList = {

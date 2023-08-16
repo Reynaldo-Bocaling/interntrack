@@ -66,12 +66,12 @@ import {CgFileDocument} from 'react-icons/cg'
       { label: "Dashboard", 
         url: "/", 
         icon: RxDashboard,
-        size: 18,
+        size: 16,
         extraText: "HOME"
       },
       { label: "Attendance",   
       icon: RxCalendar, 
-        size: 18,
+        size: 16,
         subMenu: [
           { label: "Daily logs", url: "/daily-logs"},
           { label: "Attendance request", url: "/Attendance-request" },
@@ -79,7 +79,7 @@ import {CgFileDocument} from 'react-icons/cg'
       },
       { label: "My trainee",  
       icon: TbUserSearch, 
-        size: 20,
+        size: 18,
         subMenu: [
           { label: "Trainee list", url: "/student-list" },
           { label: "Timesheet", url: "/timeSheet" },
@@ -91,19 +91,19 @@ import {CgFileDocument} from 'react-icons/cg'
         url: "/leave-request",
         icon: TbCalendarCancel, 
         dropIcon:BiChevronDown,
-        size: 20,
+        size: 18,
       },
       { label: "Messages", 
         url:  "/message",  
         icon: AiOutlineMessage,
-        size: 19,
+        size: 17,
         space: true,
         extraText: "MESSAGES",
       },
       { label: "Announcements", 
         url: "/announcement",    
         icon: CgFileDocument,
-        size: 19
+        size: 17
     }
         
     ],

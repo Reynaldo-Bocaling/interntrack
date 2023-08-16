@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {TimeIcon } from "../../React-Icons";
+import {TimeIcon } from "../../components/ReactIcon/React-Icons";
 import { NavLink } from 'react-router-dom';
 
 import pic from '../../assets/images/task1.jpg'

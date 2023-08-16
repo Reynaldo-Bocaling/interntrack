@@ -1,89 +1,123 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { MdOutlineArrowBackIosNew } from "react-icons/md";
-import profile from "../../assets/images/dp.png";
-import {BsDot} from 'react-icons/bs'
+import React, { useState } from "react";
+import DailyLogItem from "../../components/DailyLogs/DailyLogsItems";
+import { userData } from "../../services/AttendanceRequestData";
+import { BiSearch } from "react-icons/bi";
+import { BsDot } from "react-icons/bs";
+import { createColumnHelper } from "@tanstack/react-table";
 
-function ViewAttendanceRequest() {
+const DailyLogs = () => {
+  const [currentDate] = useState(new Date());
+  const [searchInput, setSearchInput] = useState("");
+  const columnHelper = createColumnHelper();
+  
+  const data = userData
+    .map(
+      ({
+        id,
+        firstname,
+        middleName,
+        lastname,
+        picture,
+        status,
+        timesheet,
+      }) => ({
+        id,
+        name: `${firstname} ${middleName[0]}. ${lastname}`,
+        status,
+        picture,
+        date: currentDate.toLocaleDateString("en-US", { month: "long", day: "2-digit",}),
+        timeIn: `${timesheet.find((item) => item.date === currentDate.toLocaleDateString("en-US", {month: "long", day: "2-digit"}))?.timeIn} hrs`,
+        timeOut: `${timesheet.find((item) => item.date === currentDate.toLocaleDateString("en-US", {month: "long", day: "2-digit", }) )?.timeOut} hrs`,
+        totalHours: `${ timesheet.find((item) =>  item.date === currentDate.toLocaleDateString("en-US", { month: "long", day: "2-digit", }) )?.totalHours } hrs`,
+      })
+    )
+    .filter((item) =>
+      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
+    );
+
+
+  const columns = [
+    columnHelper.accessor("id", {
+      id: "id",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "ID",
+    }),
+    columnHelper.accessor("name", {
+      id: "name",
+      cell: (info) => (
+        <div className="flex items-center gap-3">
+          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
+            <img src={info.row.original.picture} alt="error" />
+          </div>
+          <span className="font-semibold tracking-wider">
+            {info.row.original.name}
+          </span>
+        </div>
+      ),
+      header: "Name",
+    }),
+    columnHelper.accessor("timeIn", {
+      id: "timeIn",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Time in",
+    }),
+    columnHelper.accessor("timeOut", {
+      id: "timeOut",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Time out",
+    }),
+    columnHelper.accessor("totalHours", {
+      id: "totalHours",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Total hours",
+    }),
+    columnHelper.accessor("date", {
+      id: "date",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Date",
+    }),
+    columnHelper.accessor("status", {
+      id: "status",
+      cell: (info) => (
+          <div className="relative">
+          {info.getValue() !== 0 ? (
+            <span className="text-green-500 font-medium tracking-wide flex items-center gap-1 justify-center w-[100px] bg-green-100 py-[2px] rounded-full">
+              Online
+              <BsDot size={25} />
+            </span>
+          ) : (
+            <span className="text-red-500 font-medium tracking-wide flex items-center gap-1 justify-center w-[100px] bg-red-100 py-[2px] rounded-full">
+              Offline
+              <BsDot size={25} />
+            </span>
+            
+          )}
+          </div>
+      ),
+      header: "Status",
+    }),
+  ];
+
   return (
     <div>
-       <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
-            Daily Logs
+          Daily Logs
         </h1>
-        <select className="h-10 w-52 px-2 shadow-md shadow-slate-200 rounded-lg border border-slate-200 cursor-pointer">
-          <option value="">January 02</option>
-          <option value="">January 03</option>
-          <option value="">January 04</option>
-          <option value="">January 05</option>
-          <option value="">January 06</option>
-        </select>
-       </div>
-      <div className="container flex flex-col gap-5 mt-5 bg-white shadow-lg shadow-slate-200 border border-slate-100 rounded-lg">
-
-        <div className=" border p-3 rounded-lg">
-          <table className="w-full">
-            <thead>
-              <tr className="h-12 border-b">
-                <th className="text-sm tracking-wide text-left pl-2">ID</th>
-                <th className="text-sm tracking-wide text-left pl-2">Name</th>
-                <th className="text-sm tracking-wide text-left pl-2">
-                  Time in
-                </th>
-                <th className="text-sm tracking-wide text-left pl-2">
-                  Time out
-                </th>
-                <th className="text-sm tracking-wide">Total hours</th>
-                <th className="text-sm tracking-wide text-left pl-2">Date</th>
-                <th className="text-sm tracking-wide text-left pl-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              
-              
-
-
-        {Array.from({ length: 8 }, () => (
-          <tr className="h-14">
-              <td className="text-sm tracking-wide pl-2">1234</td>
-                  <td className="text-sm tracking-wide pl-2">
-                    <div className="profile flex items-center gap-3">
-                      <div className=" mt-3 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                        <img
-                          src={profile}
-                          alt=""
-                          width={30}
-                          className="rounded-full mx-[0.35rem]"
-                        />
-                      </div>
-                      <span className="mt-2 text-sm font-semibold">
-                        Reynaldo Bocaling
-                      </span>
-                    </div>
-                  </td>
-                  <td className="text-sm tracking-wide pl-2">8:00</td>
-                  <td className="text-sm tracking-wide pl-2">4:00 out</td>
-                  <td className="text-sm tracking-wide pl-10">8 hrs</td>
-                  <td className="text-sm tracking-wide pl-2">January 02</td>
-                  <td className="text-sm tracking-wide pl-2">
-                  <div className=" flex items-center">
-                  <span>Online</span>
-                    <BsDot size={30} className="text-green-500"/>
-                  </div>
-              </td>
-            </tr>
-        ))}
-
-
-
-             
-             
-            </tbody>
-          </table>
+        <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 ">
+          <BiSearch />
+          <input
+            type="text"
+            placeholder="Search.."
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="outline-none text-sm"
+          />
         </div>
       </div>
+
+      <DailyLogItem data={data} columns={columns} />
     </div>
   );
-}
+};
 
-export default ViewAttendanceRequest;
+export default DailyLogs;

@@ -37,7 +37,7 @@
 
 
 .link { 
-    @apply relative flex items-center gap-3 text-base tracking-wide rounded-lg hover:bg-blue-50 md:cursor-pointer cursor-default ;
+    @apply relative flex items-center gap-2 text-sm tracking-wide rounded-lg hover:bg-blue-50 md:cursor-pointer cursor-default ;
 
 }
 

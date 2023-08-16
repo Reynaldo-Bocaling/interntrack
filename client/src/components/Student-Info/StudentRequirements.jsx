@@ -4,7 +4,7 @@ import nso from "../../assets/images/nso.jpg";
 import cv from "../../assets/images/cv.jpg";
 import philhealth from "../../assets/images/phil.jpg";
 
-import { CheckIcons } from "../../React-Icons";
+import { CheckIcons } from "../../components/ReactIcon/React-Icons";
 
 const StudentRequirements = () => {
   const Requiremens_list = [

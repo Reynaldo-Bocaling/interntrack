@@ -7,15 +7,12 @@ const Login = lazy(()=> import("./Login"))
 
 
 // test
-const Task = lazy(() => import("../components/Student-Task/StudentTask"));
-
-
-
-// Student information components
-const UploadTask = lazy(() => import("../components/Student-Task/UploadTask"));
-const AllUploadTask = lazy(() => import("../components/Student-Task/UploadAllTask"));
-const TodayUploadTask = lazy(() => import("../components/Student-Task/UploadTodayTask"));
+const Task = lazy(() => import("../pages/Teacher/StudentTask"));
 const ViewUploadTask = lazy(() => import("../components/Student-Task/ViewUploadTask"));
+
+// view
+const ViewAttendanceRequest = lazy(() => import("../components/attendance-request/ViewAttendance"));
+
 
 
 // view Student info components
@@ -25,8 +22,7 @@ const StudentRequirements = lazy(() =>  import("../components/Student-Info/Stude
 const StudentTask = lazy(() =>  import("../components/Student-Info/StudentTask"));
 const StudentTimesheet = lazy(() =>  import("../components/Student-Info/StudentTimeSheet"));
 
-// timesheet
-const Timesheets = lazy(() => import("../components/StudentTimesheets/Time_sheets"));
+
 
 
 // Teacher components
@@ -35,11 +31,9 @@ const TeacherMyprofile = lazy(() => import("../pages/Teacher/Myprofile"));
 const TeacherProfileInfo = lazy(() => import("../pages/Teacher/ProfileInfo"));
 const TeacherProfileSecurity = lazy(() => import("../pages/Teacher/ProfileSecurity"));
 const TeacherStudent_list = lazy(() =>  import("../pages/Teacher/Student_list"));
-
+const Timesheets = lazy(() => import("../pages/Teacher/Timesheet"));
 const TeacherAttendance = lazy(() => import("../pages/Teacher/DailyLogs"));
-const TeacherAttendanceRequestIndex = lazy(() => import("../pages/Teacher/Attendance-Request/index"));
-const TeacherAttendanceRequest = lazy(() => import("../pages/Teacher/Attendance-Request/AttendanceRequest"));
-const TeacherAttendanceView = lazy(() => import("../pages/Teacher/Attendance-Request/ViewAttendanceRequest"));
+const TeacherAttendanceRequest = lazy(() => import("../pages/Teacher/AttendanceRequest"));
 const TeacherLeave = lazy(() => import("../pages/Teacher/LeaveRequest"));
 const TeacherApproveLeave = lazy(() => import("../pages/Teacher/ApproveLeave"));
 const TeacherFailedLeave = lazy(() => import("../pages/Teacher/FailedLeave"));
@@ -116,10 +110,6 @@ function PrivateRoutes() {
 
                 <Route path="/StudentTask" element={<Task />} />
                 <Route path="/ViewedStudentTask" element={<ViewUploadTask />} />
-                {/* <Route path="/task-upload/" element={<UploadTask />} >
-                  <Route index element={<AllUploadTask/>} />
-                  <Route path="/task-upload/today" element={<TodayUploadTask/>} />
-                </Route> */}
                 <Route path="/student/" element={<StudentInfoView />}>
                   <Route index element={<StudentInfo/>} />
                   <Route path="/student/requirement" element={<StudentRequirements/>} />
@@ -127,10 +117,9 @@ function PrivateRoutes() {
                   <Route path="/student/timesheet" element={<StudentTimesheet/>} />
                 </Route>
                 <Route path="/daily-logs" element={<TeacherAttendance />} />
-                <Route path="/Attendance-request/" element={<TeacherAttendanceRequestIndex />} >
-                  <Route index element={<TeacherAttendanceRequest />} />
-                  <Route path="/Attendance-request/view" element={<TeacherAttendanceView />} />
-                </Route>
+                <Route path="/Attendance-request" element={<TeacherAttendanceRequest />} />
+                <Route path="/Attendance-request/view/:id" element={<ViewAttendanceRequest />} />
+                
                 <Route path="/leave-request" element={<TeacherLeave/>}>
                   <Route index element={<TeacherApproveLeave />} />
                   <Route path="/leave-request/failed" element={<TeacherFailedLeave />} />
