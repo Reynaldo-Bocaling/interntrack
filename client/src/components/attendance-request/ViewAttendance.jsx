@@ -4,7 +4,8 @@ import {MdOutlineArrowBackIosNew} from 'react-icons/md'
 import profile from "../../assets/images/dp.png";
 
 function ViewAttendanceRequest() {
-     const {id } = useParams()
+  const {id } = useParams();
+  
   return (
     <div>
       <div className='container flex flex-col gap-5 mt-5 bg-white shadow-lg shadow-slate-200 border border-slate-100 p-5 rounded-lg'>

@@ -7,8 +7,8 @@ function LeaveRequest() {
         <h1>Leave Request</h1>
       </div>
         <div>
-            <Link to="/leave-request">Approve</Link>
-            <Link to="/leave-request/failed">Denied</Link>
+            {/* <Link to="/leave-request">Approve</Link>
+            <Link to="/leave-request/failed">Denied</Link> */}
         </div>
 
         <div>

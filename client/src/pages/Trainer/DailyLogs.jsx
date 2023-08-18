@@ -35,7 +35,7 @@ const DailyLogs = () => {
       item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
     );
 
-
+console.log(data);
   const columns = [
     columnHelper.accessor("id", {
       id: "id",

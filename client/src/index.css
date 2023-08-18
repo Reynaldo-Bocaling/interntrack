@@ -82,7 +82,8 @@
   }
   
 .sidebar::-webkit-scrollbar,
-.studentTask::-webkit-scrollbar {
+.studentTask::-webkit-scrollbar, 
+.notification::-webkit-scrollbar {
     display: none;
   }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import pic from "../../assets/images/task1.jpg";
-import { ArrowLeft } from '../../React-Icons';
+import { ArrowLeft } from '../ReactIcon/React-Icons';
 import { NavLink } from 'react-router-dom';
 function ViewUploadTask() {
   return (

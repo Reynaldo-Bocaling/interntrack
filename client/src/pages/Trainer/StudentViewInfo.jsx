@@ -1,9 +1,11 @@
 import React from 'react'
-
+import StudentInfo from '../../components/Student-Info/index'
 function StudentViewInfo() {
+
+  
   return (
     <div>
-      <h1>StudentViewInfo</h1>
+      <StudentInfo />
     </div>
   )
 }
