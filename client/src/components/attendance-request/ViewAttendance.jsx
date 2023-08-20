@@ -4,7 +4,6 @@ import {MdOutlineArrowBackIosNew} from 'react-icons/md'
 import profile from "../../assets/images/dp.png";
 
 function ViewAttendanceRequest() {
-  const {id } = useParams();
   
   return (
     <div>

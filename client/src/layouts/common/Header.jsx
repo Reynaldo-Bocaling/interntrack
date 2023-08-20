@@ -19,20 +19,11 @@ function Header(props) {
     isOpenNotif,
     toggleProfile,
     isOpenProfile,
+    role
   } = props;
-  const [Role, setRole] = useState([]);
-  const Menu = SidebarData[Role] || [];
+  const Menu = SidebarData[role] || [];
 
-  useEffect(() => {
-    const getUserRole = async () => {
-      try {
-        setRole("teacher");
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUserRole();
-  }, []);
+
 
   // dummy notif data
   const Notif = [
@@ -64,7 +55,9 @@ function Header(props) {
   ];
 
   const NotifLength = Notif.filter((item) => item.NotifStatus === 1).length;
-
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
   return (
     <div
       className={`${
@@ -73,7 +66,7 @@ function Header(props) {
     >
       <div className="p-3 pt-3  flex items-center justify-between px-7 w-full">
         <div className="text-[1.1rem] font-normal">
-          Welcome back, <span className="font-semibold">Trainer</span>
+          Welcome back, <span className="font-medium tracking-wide pl-2">{capitalizeFirstLetter(role)}</span>
         </div>
 
         <div className="flex items-center justify-center gap-3">

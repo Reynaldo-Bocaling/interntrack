@@ -93,7 +93,7 @@ const AttendanceRequestItem = ({ data }) => {
                     Confirm All
                   </button>
                   <Link
-                    to={`/Attendance-request/view/${item.id}`}
+                    to="/Attendance-request/view"
                     className="py-2 px-10 text-sm text-sky-500 rounded-full border-[2px] border-sky-500 hover:bg-sky-50"
                   >
                     Check

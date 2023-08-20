@@ -86,7 +86,7 @@ const Task = ({ taskRecords, Fullscreen, close, isFullScreen }) => {
                       </div>
 
                       <NavLink
-                        to="/ViewedStudentTask"
+                        to="/StudentTask/view"
                         className="text-base font-semibold text-blue-500 py-2 px-2"
                       >
                         View

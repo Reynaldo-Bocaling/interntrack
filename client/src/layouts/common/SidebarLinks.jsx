@@ -5,7 +5,7 @@ import {AiOutlineMessage} from 'react-icons/ai'
 import {MdOutlineAnnouncement} from 'react-icons/md'
 import {TbUserSearch, TbCalendarCancel} from 'react-icons/tb'
 import {LuFileSpreadsheet} from 'react-icons/lu'
-import {FiSettings} from 'react-icons/fi'
+import {FiUsers} from 'react-icons/fi'
 import { NavLink } from "react-router-dom";
 import {BiChevronDown, BiCalendarExclamation} from 'react-icons/bi'
 import {BsCalendarCheck} from 'react-icons/bs'
@@ -69,6 +69,52 @@ import {CgFileDocument} from 'react-icons/cg'
         size: 16,
         extraText: "HOME"
       },
+      { label: "Trainer", 
+        url: "/Trainer-list",  
+        icon: FiUsers,
+        size: 16,
+      },
+      
+      { label: "My student",  
+      icon: TbUserSearch, 
+        size: 18,
+        subMenu: [
+          { label: "Daily logs", url: "/daily-logs"},
+          { label: "Student list", url: "/student-list" },
+          { label: "Timesheet", url: "/timeSheet" },
+          { label: "Task uploads", url: "/StudentTask" },
+        ],
+      },
+      { 
+        label: "Leave", 
+        url: "/leave-request",
+        icon: TbCalendarCancel, 
+        dropIcon:BiChevronDown,
+        size: 18,
+      },
+      { label: "Messages", 
+        url:  "/message",  
+        icon: AiOutlineMessage,
+        size: 17,
+        space: true,
+        extraText: "MESSAGES",
+      },
+      { label: "Announcements", 
+        url: "/announcement",    
+        icon: CgFileDocument,
+        size: 17
+    }
+        
+    ],
+
+
+    trainer: [
+      { label: "Dashboard", 
+        url: "/", 
+        icon: RxDashboard,
+        size: 16,
+        extraText: "HOME"
+      },
       { label: "Attendance",   
       icon: RxCalendar, 
         size: 16,
@@ -77,11 +123,11 @@ import {CgFileDocument} from 'react-icons/cg'
           { label: "Attendance request", url: "/Attendance-request" },
         ],
       },
-      { label: "My trainee",  
+      { label: "My student",  
       icon: TbUserSearch, 
         size: 18,
         subMenu: [
-          { label: "Trainee list", url: "/student-list" },
+          { label: "Student list", url: "/student-list" },
           { label: "Timesheet", url: "/timeSheet" },
           { label: "Task uploads", url: "/StudentTask" },
         ],

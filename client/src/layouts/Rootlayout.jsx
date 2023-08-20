@@ -5,7 +5,8 @@ import Sidebar from "./common/Sidebar";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
 
-const Rootlayout = () => {
+const Rootlayout = (props) => {
+  const {role} = props;
   const [isOpen, setIsOpen] = useState(true);
 
   const [isOpenNotif, setIsOpenNotif] = useState(false);
@@ -25,7 +26,7 @@ const Rootlayout = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-16-auto">
-      <Sidebar toggleIsOpen={isOpen} toggleSetIsOpen={toggleIsOpen} />
+      <Sidebar toggleIsOpen={isOpen} toggleSetIsOpen={toggleIsOpen} role={role} />
 
       <div className="bg-gray-50">
         <Header
@@ -34,6 +35,7 @@ const Rootlayout = () => {
           toggleProfile={toggleProfile}
           isOpenNotif={isOpenNotif}
           isOpenProfile={isOpenProfile}
+          role={role}
         />
 
         {/* main */}

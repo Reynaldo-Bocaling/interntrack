@@ -9,21 +9,10 @@ import { IoIosArrowBack } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
 import { BsFillCircleFill } from "react-icons/bs";
 
-function Sidebar({toggleIsOpen, toggleSetIsOpen}) {
-  const [Role, setRole] = useState([]);
+const Sidebar = (props) => {
+  const {toggleIsOpen, toggleSetIsOpen, role} = props;
   const [openSubmenus, setOpenSubmenus] = useState([]);
-  const Menu = SidebarData[Role] || [];
-
-  useEffect(() => {
-    const getUserRole = async () => {
-      try {
-        setRole("teacher");
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getUserRole();
-  }, []);
+  const Menu = SidebarData[role] || [];
 
   // submenu toggle
   const handleSubmenuToggle = (index) => {
