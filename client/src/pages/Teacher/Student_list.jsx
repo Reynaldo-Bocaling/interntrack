@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, {useState } from "react";
 import StudentItem from "../../components/StudentList/StudentItem";
 import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { FiEdit3 } from "react-icons/fi";
 import { BsPrinter } from "react-icons/bs";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
+import AssignStudentModal from "../../components/modals/AssignStudentModal";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [searchLength, setSearchLength] = useState(false);
 
   //   data
   const data = userData
@@ -123,21 +127,40 @@ const Student_list = () => {
         </h1>
         
         <div className="flex items-center gap-3">
-          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
-            <BiSearch />
-            <input
-              type="text"
-              placeholder="Search.."
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="outline-none text-sm"
-            />
+          <div 
+            className={`${searchLength? 'w-[250px]': 'w-[40px]'} h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          >
+            <BiSearch  
+            onClick={()=> setSearchLength(!searchLength)} 
+            
+            className={`${searchLength? 'text-blue-500': 'text-gray-600'} cursor-pointer`} />
+            {
+              searchLength && (
+                <input
+                  type="text"
+                  placeholder="Search.."
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="outline-none text-sm"
+                />
+              )
+            }
           </div>
+          <button 
+          onClick={()=> setModalIsOpen(true)}
+          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+              <AiOutlineUsergroupAdd size={17} />
+              <span className='font-semibold tracking-wider'>Assign Student</span>
+          </button>
           <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
               <BsPrinter size={17} />
               <span className='font-semibold tracking-wider'>Print</span>
           </button>
         </div>
       </div>
+
+      {/* modal asign student */}
+      <AssignStudentModal closeModal={()=> setModalIsOpen(false)} isOpen={modalIsOpen} />
+
 
       <StudentItem data={data} columns={columns} />
     </div>

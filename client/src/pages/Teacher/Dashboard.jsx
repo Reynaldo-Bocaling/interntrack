@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {FiUsers} from 'react-icons/fi'
+import {TbUsersGroup} from 'react-icons/tb'
 import { FcCalendar } from "react-icons/fc";
 import { PiDotsThreeCircle } from "react-icons/pi";
 import { BsDot } from "react-icons/bs";
@@ -15,15 +15,13 @@ function Dashboard() {
       url: '/daily-logs',
       count: 2,
       textColor: "text-blue-500",
-      bgColor: "bg-blue-100",
-      shadow: "shadow-blue-50"
+      shadow: "shadow-red-50"
     },
     {
       label: "Student",
       url: '/',
       count: 40,
       textColor: "text-green-500",
-      bgColor: "bg-green-100",
       shadow: "shadow-green-50"
     },
   ];
