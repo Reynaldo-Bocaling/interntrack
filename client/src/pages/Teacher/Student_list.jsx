@@ -9,7 +9,7 @@ import { BsPrinter } from "react-icons/bs";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import AssignStudentModal from "../../components/modals/AssignStudentModal";
+import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
