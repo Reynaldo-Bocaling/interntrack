@@ -1,56 +1,129 @@
 import React from "react";
 import {LocationIcon, EmailIcons, NumberIcons, GenderIcons, IDIcons, DepartmentIcons, PhoneIcons } from "../../components/ReactIcon/React-Icons";
+import InputText from "../forms/InputText/InputDisable";
 
 const StudentIfo = () => {
-  const InfoList = {
-    Personal_info: [
-      { label: "Student #", data: "SUM2020-02837", icon: IDIcons, FirstColumn: true, },
-      { label: "Email", data: "Reynaldobocaling@gmail.com", icon: EmailIcons, FirstColumn: true, },
-      { label: "Address", data: "Tabuating San Leonardo Nueva Ecija", icon: LocationIcon, FirstColumn: true },
-      { label: "Age", data: 21, icon: NumberIcons, FirstColumn: true },
-      { label: "Gender", data: "Male", icon: GenderIcons, SecondColumn: true },
-      { label: "Phone #", data: "63+9732823723", icon: PhoneIcons, SecondColumn: true },
-      { label: "Department", data: "WST Office", icon: DepartmentIcons, SecondColumn: true },
-    ],
-    Education: [
-      { label: "Elementary", data: "Tabuating San Leonardo Nueva Ecija" },
-      { label: "High School", data: "Tabuating San Leonardo Nueva Ecija" },
-      { label: "Senior High", data: "Tabuating San Leonardo Nueva Ecija" },
-    ],
-  };
 
   return (
     <div>
-      <div className="flex gap-12 px-5">
-        <div className="flex">
-
-          <div className="mt-1 flex flex-col gap-5">
-            <small className=" text-gray-400 tracking-wider">Personal</small>
-            {InfoList["Personal_info"].map((list, index) => (
-              <div key={index} className="flex flex-col gap-1">
-                <small className="text-blue-500 font-semibold tracking-wider flex items-center gap-1">
-                  <list.icon />
-                  {list.label}
-                </small>
-                <span className="text-[0.9rem] text-gray-700 tracking-wider">
-                  {list.data}
-                </span>
+      <div className="flex px-5 bg-slate-50 w-full">
+        <div className="flex items-start gap-7 w-full">
+          <div className="mt-1 flex flex-col gap-5 max-w-full w-[55%] border-r pr-7">
+            <small className=" text-gray-400 tracking-wider">Personal Information</small>
+            <div className="flex flex-wrap justify-between  gap-y-4">
+              <div>
+                <InputText
+                  label="Student no."
+                  value="SUM2020-02837"
+                  type="text"
+                />
               </div>
-            ))}
+              <div className="flex items-center gap-2 w-full">
+                <InputText 
+                label="Firstname" 
+                value="Reynaldo" 
+                type="text"
+                />
+                <InputText 
+                label="Middle" 
+                value="Flores" 
+                type="text" 
+                />
+                <InputText 
+                label="Lastname" 
+                value="Bocaling" 
+                type="text" />
+              </div>
+
+              <div className="w-full">
+                <InputText
+                  label="Email"
+                  value="ReynaldoBocaling@gmail.com"
+                  type="text"
+                />
+              </div>
+              
+              
+              <div className="w-full">
+                <InputText
+                  label="Address"
+                  value="San Leonardo, Nueva Ecija"
+                  type="text"
+                />
+              </div>
+
+              <div className="flex justify-center gap-3 w-full">
+                <InputText
+                  label="Gender"
+                  value="Male"
+                  type="text"
+                />
+
+                <InputText
+                  label="Birthday"
+                  value="December 31, 2000"
+                  type="text"
+                />
+              </div>
+
+             
+
+              <div className="w-full">
+                <InputText
+                  label="Contact no."
+                  value="09489974746"
+                  type="number"
+                />
+              </div>
+              <div className="w-full">
+                <InputText
+                  label="Department"
+                  value="CICT Office"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+
+          <div className="mt-1  flex flex-col gap-5 w-[45%]">
+            <small className=" text-gray-400 tracking-wider">Education</small>
+
+            <div className="flex flex-wrap justify-between  gap-y-4">
+
+            </div>
+              <div className="w-full">
+                <InputText
+                  label="Elementary"
+                  value="Tampo North Elementary School"
+                  type="text"
+                />
+              </div>
+              <div className="w-full">
+                <InputText
+                  label="High School"
+                  value="Juan R. Liwag Memorial High School"
+                  type="text"
+                />
+              </div>
+              <div className="w-full">
+                <InputText
+                  label="Senior High"
+                  value="Juan R. Liwag Memorial High School"
+                  type="text"
+                />
+              </div>
+              <div className="w-full">
+                <InputText
+                  label="College"
+                  value="Nueva Ecija University Science and Technology"
+                  type="text"
+                />
+              </div>
           </div>
         </div>
         
-        <div className="mt-1  flex flex-col gap-5">
-          <small className=" text-gray-400 tracking-wider">Education</small>
-          {InfoList["Education"].map((list, index) => (
-            <div key={index} className="flex flex-col gap-1">
-              <small className="text-blue-500 font-semibold tracking-wider">
-                {list.label}
-              </small>
-              <span className="text-gray-500 tracking-wide">{list.data}</span>
-            </div>
-          ))}
-        </div>
+        
 
       </div>
     </div>

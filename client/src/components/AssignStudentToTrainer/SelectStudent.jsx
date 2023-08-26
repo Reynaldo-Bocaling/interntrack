@@ -1,9 +1,13 @@
 import React from "react";
 import { LiaTimesSolid } from "react-icons/lia";
 
-function SelectStudent({ selectedItems, handleRemoveItem }) {
+function SelectStudent(props) {
+  const { selectedItems, handleRemoveItem, toggleTrainer } = props;
+
   return (
-    <div className="w-full border p-2">
+    <div 
+    onClick={toggleTrainer}
+    className="w-full border p-2">
       <div className="p-4">
         <h3 className="text-lg font-medium tracking-wide">
           Selected Students:

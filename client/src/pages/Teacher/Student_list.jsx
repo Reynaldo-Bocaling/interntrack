@@ -3,19 +3,22 @@ import StudentItem from "../../components/StudentList/StudentItem";
 import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { AiOutlineUsergroupAdd } from "react-icons/ai";
+import { AiOutlineUsergroupAdd,AiOutlineUserAdd } from "react-icons/ai";
 import { FiEdit3 } from "react-icons/fi";
+import { ImAttachment } from "react-icons/im";
 import { BsPrinter } from "react-icons/bs";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
+import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
+  const [AssignStudentModalIsOpen, setAssignStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
 
   //   data
@@ -146,7 +149,19 @@ const Student_list = () => {
             }
           </div>
           <button 
-          onClick={()=> setModalIsOpen(true)}
+          onClick={()=> alert("Import")}
+          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+              <ImAttachment size={15} />
+              <span className='font-semibold tracking-wider'>Import</span>
+          </button>
+          <button 
+          onClick={()=> setAddStudentModalIsOpen(true)}
+          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+              <AiOutlineUserAdd size={16} />
+              <span className='font-semibold tracking-wider'>Add</span>
+          </button>
+          <button 
+          onClick={()=> setAssignStudentModalIsOpen(true)}
           className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
               <AiOutlineUsergroupAdd size={17} />
               <span className='font-semibold tracking-wider'>Assign Student</span>
@@ -159,8 +174,8 @@ const Student_list = () => {
       </div>
 
       {/* modal asign student */}
-      <AssignStudentModal closeModal={()=> setModalIsOpen(false)} isOpen={modalIsOpen} />
-
+      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} />
+      <AddStudentModal isOpen={AddStudentModalIsOpen} closeModal={()=> setAddStudentModalIsOpen(false)} />
 
       <StudentItem data={data} columns={columns} />
     </div>

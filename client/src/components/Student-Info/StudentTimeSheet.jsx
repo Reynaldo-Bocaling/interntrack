@@ -34,7 +34,7 @@ function ViewAttendanceRequest() {
               <td className="text-sm tracking-wide pl-2">8:00</td>
               <td className="text-sm tracking-wide pl-2">4:00 out</td>
               <td className="text-sm tracking-wide pl-2">8 hrs</td>
-              <td className="text-sm tracking-wide pl-2 w-1/6 text-green-500">
+              <td className="text-sm font-medium tracking-wider pl-2 w-1/6 text-green-500">
                 Aprove
               </td>
             </tr>
@@ -43,7 +43,7 @@ function ViewAttendanceRequest() {
               <td className="text-sm tracking-wide pl-2">8:00</td>
               <td className="text-sm tracking-wide pl-2">4:00 out</td>
               <td className="text-sm tracking-wide pl-2">8 hrs</td>
-              <td className="text-sm tracking-wide pl-2 w-1/6 text-yellow-500">
+              <td className="text-sm font-medium tracking-wider pl-2 w-1/6 text-yellow-500">
                 Pending
               </td>
             </tr>

@@ -1,7 +1,13 @@
 import React from "react";
 import { DotIcons } from "../ReactIcon/React-Icons";
 
-const Table = ({ data, datalist, setId, setFullscreen }) => {
+const Table = (props) => {
+  const {
+    data,
+    datalist, 
+    setId, 
+    setFullscreen 
+  } = props;
   return (
     <>
       {data.length !== 0 ? (

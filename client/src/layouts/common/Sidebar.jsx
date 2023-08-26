@@ -59,11 +59,11 @@ const Sidebar = (props) => {
                 (
                   <div 
                   onClick={() => {handleSubmenuToggle(index)}}
-                  className={`link p-3 cursor-pointer flex flex-col items-center`}
+                  className={`${!toggleIsOpen? '0': 'p-3'} link cursor-pointer flex flex-col items-center`}
                   >
                     <div className="w-full flex items-center justify-between">
                       <div className="link gap-2 tracking-wide text-[#4c4b50]">
-                        <item.icon size={item.size && item.size} />
+                        <item.icon size={item.size && item.size} className="bg-blue-50 text-blue-500 h-[32px] w-[32px] p-2 rounded-md"  />
                        {toggleIsOpen && item.label}
                       </div>
                       <span>
@@ -103,8 +103,8 @@ const Sidebar = (props) => {
                       )
                     }
                     
-                    <NavLink to={item.url} className="link p-3 text-base tracking-wide text-slate-400-100 text-[#686475]">
-                      <item.icon size={item.size ? item.size : ""} />
+                    <NavLink to={item.url} className={`${!toggleIsOpen? '0': 'p-3'} link  text-base tracking-wide text-slate-400-100 text-[#686475]`}>
+                      <item.icon size={item.size ? item.size : ""} className="bg-blue-50 text-blue-500 h-[32px] w-[32px] p-2 rounded-md" />
                       {toggleIsOpen ?  item.label: ''}
                     </NavLink>
                   </div>

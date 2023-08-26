@@ -5,7 +5,6 @@ import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
-import { HiOutlineDownload } from "react-icons/hi";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";

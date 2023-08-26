@@ -63,7 +63,7 @@ const index = () => {
         </div>
         
       </div>
-      <div className="pt-3 bg-white">
+      <div className="pt-5 bg-slate-50">
         <Outlet  />
       </div>
     </div>

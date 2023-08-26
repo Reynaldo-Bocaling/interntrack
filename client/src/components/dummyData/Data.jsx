@@ -180,12 +180,12 @@ export const StudentList = [
         timeSheet: [
             {
                 id:30,
-                totalHours: 200,
+                totalHours: 8,
                 date: 'january 1 '
             },
             {
                 id:31,
-                totalHours: 100,
+                totalHours: 8,
                 date: 'january 2 '
             },
             {
@@ -260,7 +260,7 @@ export const StudentList = [
     },
     {
         id: 4,
-        name: 'Reynaldo Bocaling',
+        name: 'Lorie Oata',
         timeSheet: [
             {
                 id:46,
@@ -344,11 +344,11 @@ export const StudentList = [
     },
     {
         id: 5,
-        name: 'Reynaldo Bocaling',
+        name: 'Sita Mendoza',
         timeSheet: [
             {
                 id:60,
-                totalHours: 100,
+                totalHours: 0,
                 date: 'january 1 '
             },
             {
@@ -428,7 +428,7 @@ export const StudentList = [
     },
     {
         id: 6,
-        name: 'Reynaldo Bocaling',
+        name: 'Aljur Flores',
         timeSheet: [
             {
                 id:76,
@@ -512,11 +512,11 @@ export const StudentList = [
     },
     {
         id: 12,
-        name: 'Reynaldo Bocaling',
+        name: 'Juvy Lim',
         timeSheet: [
             {
                 id:91,
-                totalHours: 100,
+                totalHours: 7,
                 date: 'january 1 '
             },
             {
@@ -595,7 +595,7 @@ export const StudentList = [
     },
     {
         id: 7,
-        name: 'Reynaldo Bocaling',
+        name: 'Jebs Santos',
         timeSheet: [
             {
                 id:106,
@@ -678,7 +678,7 @@ export const StudentList = [
     },
     {
         id: 8,
-        name: 'Reynaldo Bocaling',
+        name: 'JB Aguilar',
         timeSheet: [
             {
                 id:130,
@@ -761,7 +761,7 @@ export const StudentList = [
     },
     {
         id: 9,
-        name: 'Reynaldo Bocaling',
+        name: 'Ruzzel Peralta',
         timeSheet: [
             {
                 id:146,
@@ -844,7 +844,7 @@ export const StudentList = [
     },
     {
         id: 10,
-        name: 'neil Bocaling',
+        name: 'Neil Velasquez',
         timeSheet: [
             {
                 id:161,

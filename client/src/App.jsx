@@ -1,11 +1,13 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
+
 // public routes
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
 const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
 
-function App() {
+
+const  App = () => {
   return (
     <Suspense
       fallback={

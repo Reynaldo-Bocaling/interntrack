@@ -156,21 +156,29 @@ const PrivateRoutes = () => {
         element: <TeacherAnnouncement />,
       },
       {
-        path: "/student",
-        element: (
-          <Trainer_StudentInfoView>
-            <Route index element={<StudentInfo />} />
-            <Route
-              path="/student/requirement"
-              element={<StudentRequirements />}
-            />
-            <Route path="/student/task" element={<StudentTask />} />
-            <Route path="/student/timesheet" element={<StudentTimesheet />} />
-          </Trainer_StudentInfoView>
-        ),
-      },
-    ],
-
+        path: "/student/",
+        element: <Teacher_StudentInfoView />,
+        children: [
+          {
+            path: "/student/",
+            element: <StudentInfo />,
+          },
+          {
+            path: "/student/requirement",
+            element: <StudentRequirements />,
+          },
+          {
+            path: "/student/task",
+            element: <StudentTask />,
+          },
+          {
+            path: "/student/timesheet",
+            element: <StudentTimesheet />,
+          },
+        ]
+      }
+    ]
+,
 
     trainer: [
       {
@@ -218,19 +226,29 @@ const PrivateRoutes = () => {
         element: <TrainerAnnouncement />,
       },
       {
-        path: "/student",
-        element: (
-          <Trainer_StudentInfoView>
-            <Route index element={<StudentInfo />} />
-            <Route
-              path="/student/requirement"
-              element={<StudentRequirements />}
-            />
-            <Route path="/student/task" element={<StudentTask />} />
-            <Route path="/student/timesheet" element={<StudentTimesheet />} />
-          </Trainer_StudentInfoView>
-        ),
-      },
+        path: "/student/",
+        element: <Teacher_StudentInfoView />,
+        children: [
+          {
+            path: "/student/",
+            element: <StudentInfo />,
+          },
+          {
+            path: "/student/requirement",
+            element: <StudentRequirements />,
+          },
+          {
+            path: "/student/task",
+            element: <StudentTask />,
+          },
+          {
+            path: "/student/timesheet",
+            element: <StudentTimesheet />,
+          },
+        ]
+      }
+      
+      
     ],
   };
 
@@ -240,8 +258,21 @@ const PrivateRoutes = () => {
     <div>
       <Routes>
         <Route path="/" element={isLogged ? <Login /> : <Rootlayout role={role} />}>
-          {userRoutes.map(({ path, element }) => (
-            <Route key={path} path={path} element={element} />
+          {userRoutes.map((route, index) => (
+            <Route 
+              key={index} 
+              path={route.path} 
+              element={route.element} 
+            >
+              {route.children && route.children.map((childRoute, childIndex) => (
+                <Route 
+                  key={childIndex}
+                  path={childRoute.path} 
+                  element={childRoute.element} 
+                />
+              ))
+                } 
+            </Route>
           ))}
         </Route>
       </Routes>
