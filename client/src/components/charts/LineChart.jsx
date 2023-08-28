@@ -1,8 +1,8 @@
-// components/Main/Main.jsx
+// components/Charts/ApexChart.jsx
 import React from 'react';
-import ApexChart from './Chart';
+import ReactApexChart from 'react-apexcharts';
 
-const index = ({ data }) => {
+const ApexChart = ({ data }) => {
   const options = {
     chart: {
       height: 350,
@@ -29,10 +29,10 @@ const index = ({ data }) => {
   };
 
   return (
-    <div>
-      <ApexChart data={data} options={options} />
+    <div id="chart">
+      <ReactApexChart options={options} series={data} type="area" height={350} />
     </div>
   );
 };
 
-export default index;
+export default ApexChart;

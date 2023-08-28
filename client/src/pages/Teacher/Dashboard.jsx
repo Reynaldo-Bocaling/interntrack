@@ -4,7 +4,7 @@ import { FcCalendar } from "react-icons/fc";
 import { LiaUsersSolid } from "react-icons/lia";
 import { PiDotsThreeCircle } from "react-icons/pi";
 import { BsDot } from "react-icons/bs";
-import ChartContainer from "../../components/charts";
+import LineChart from "../../components/charts/LineChart";
 import pic from "../../assets/images/dp.png";
 import { Link } from "react-router-dom";
 import DateNow from "../../components/Dates/DateNow";
@@ -120,7 +120,7 @@ function Dashboard() {
               <h1 className=" text-base font-semibold text-gray-700 ">
                 Weekly Attendance Overview
               </h1>
-              <ChartContainer data={DummyData} />
+              <LineChart data={DummyData} />
             </div>
           </main>
 

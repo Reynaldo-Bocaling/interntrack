@@ -34,9 +34,8 @@ import {CgFileDocument} from 'react-icons/cg'
         icon: TbUserSearch, 
         size: 20,
         subMenu: [
-          { label: "Trainee list", url: "/student-list" },
-          { label: "Timesheet", url: "/timeSheet" },
-          { label: "Task uploads", url: "/irregular" },
+          { label: "Weekly Reports", url: "/weekly-time-reports" },
+          { label: "Upload task", url: "/Upload-task" },
         ],
       },
       { 
@@ -58,6 +57,47 @@ import {CgFileDocument} from 'react-icons/cg'
         icon: CgFileDocument,
         size:19
       },
+        
+    ],
+
+
+    coordinator: [
+      { label: "Dashboard", 
+        url: "/", 
+        icon: RxDashboard,
+        size: 16,
+        extraText: "HOME"
+      },
+      { label: "Teacher", 
+        url: "/Teacher-list",  
+       icon: FiUsers,
+        size: 16,
+      }, 
+
+      { label: "Trainer", 
+        url: "/Trainer-list",  
+       icon: FiUsers,
+        size: 16,
+      }, 
+
+      { label: "Student", 
+        url: "/Student-list",  
+       icon: TbUserSearch,
+        size: 16,
+      }, 
+      
+      { label: "Messages", 
+        url:  "/message",  
+        icon: AiOutlineMessage,
+        size: 17,
+        space: true,
+        extraText: "MESSAGES",
+      },
+      { label: "Announcements", 
+        url: "/announcement",    
+        icon: CgFileDocument,
+        size: 17
+    }
         
     ],
 

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FcCalendar } from "react-icons/fc";
 import { FaClipboardList } from "react-icons/fa";
 import { BsCalendar2CheckFill, BsCalendarMinusFill } from "react-icons/bs";
-import ChartContainer from '../../components/charts'
+import LineChart from '../../components/charts/LineChart'
 
 import Calendar from "../../components/calendar/Calendar";
 import { Link } from "react-router-dom";
@@ -107,7 +107,7 @@ function Dashboard() {
               <h1 className=" text-base font-semibold text-gray-700 ">
               Weekly Attendance Overview
               </h1>
-              <ChartContainer data={DummyData} />
+              <LineChart data={DummyData} />
             </div>
          
           </main>

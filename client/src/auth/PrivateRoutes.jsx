@@ -24,7 +24,18 @@ const StudentRequirements = lazy(() => import("../components/Student-Info/Studen
 const StudentTask = lazy(() => import("../components/Student-Info/StudentTask"));
 const StudentTimesheet = lazy(() => import("../components/Student-Info/StudentTimeSheet"));
 
-// Trainer components
+// Student pages
+const StudentDashboard = lazy(() => import("../pages/Student/Dashboard"));
+const StudentTimesheets = lazy(() => import("../pages/Student/Timesheet"));
+const StudentDailylog = lazy(() => import("../pages/Student/DailyLogs"));
+const StudentUploadTask = lazy(() => import("../pages/Student/StudentTask"));
+const StudentAttendanceRequest = lazy(() => import("../pages/Student/AttendanceRequest"));
+const StudentLeave = lazy(() => import("../pages/Student/LeaveRequest"));
+const StudentMessage = lazy(() => import("../pages/Student/Message"));
+const StudentAnnouncement = lazy(() => import("../pages/Student/Announcement"));
+
+
+// Trainer pages
 const TrainerDashboard = lazy(() => import("../pages/Trainer/Dashboard"));
 const Trainer_Student_list = lazy(() => import("../pages/Trainer/Student_list"));
 const Trainer_StudentTimesheets = lazy(() => import("../pages/Trainer/Timesheet"));
@@ -37,7 +48,7 @@ const TrainerMessage = lazy(() => import("../pages/Trainer/Message"));
 const TrainerAnnouncement = lazy(() => import("../pages/Trainer/Announcement"));
 
 
-// Teacher components
+// Teacher pages
 const TeacherDashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 const Teacher_Trainer_list = lazy(() => import("../pages/Teacher/Trainer_list"));
 const Teacher_Trainer_Student_list = lazy(() => import("../pages/Teacher/Trainer_studentList.jsx"));
@@ -52,19 +63,26 @@ const TeacherMessage = lazy(() => import("../pages/Teacher/Message"));
 const TeacherAnnouncement = lazy(() => import("../pages/Teacher/Announcement"));
 
 
+// Coordinator pages
 
-
-
-
-
+const CoordinatorDashboard = lazy(() => import("../pages/Coordinator/Dashboard"));
+const Coordinator_Trainer_list = lazy(() => import("../pages/Coordinator/Trainer_list"));
+const Coordinator_Trainer_Student_list = lazy(() => import("../pages/Coordinator/Trainer_studentList.jsx"));
+const Coordinator_Student_list = lazy(() => import("../pages/Coordinator/Student_list"));
+const Coordinator_Teacher_list = lazy(() => import("../pages/Coordinator/Teacher_list"));
+const Coordinator_StudentTimesheets = lazy(() => import("../pages/Coordinator/Timesheet"));
+const Coordinator_studentDailylog = lazy(() => import("../pages/Coordinator/DailyLogs"));
+const Coordinator_StudentTask = lazy(() => import("../pages/Coordinator/StudentTask"));
+const Coordinator_StudentAttendanceRequest = lazy(() => import("../pages/Coordinator/AttendanceRequest"));
+const Coordinator_StudentInfoView = lazy(() => import("../pages/Coordinator/StudentViewInfo"));
+const Coordinator_StudentLeave = lazy(() => import("../pages/Coordinator/LeaveRequest"));
+const CoordinatorMessage = lazy(() => import("../pages/Coordinator/Message"));
+const CoordinatorAnnouncement = lazy(() => import("../pages/Coordinator/Announcement"));
 
 
 
 // dummy component
-const Dashboard = lazy(() => import("../pages/coordinator/Dashboard"));
-
-
-
+const Dashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 
 
 
@@ -87,7 +105,7 @@ const PrivateRoutes = () => {
   //    return <h1>error..</h1>
   // }
 
-  const role = "teacher";
+  const role = "coordinator";
 
   const roleRoutes = {
     admin: [
@@ -101,6 +119,87 @@ const PrivateRoutes = () => {
       },
     ],
 
+
+    coordinator: [
+      {
+        path: "/",
+        element: <CoordinatorDashboard />,
+      },
+      {
+        path: "/trainer-list",
+        element: <Coordinator_Trainer_list />,
+      },
+      {
+        path: "/teacher-list",
+        element: <Coordinator_Teacher_list />,
+      },
+      {
+        path: "/trainer-student-list",
+        element: <Coordinator_Trainer_Student_list />,
+      },
+      {
+        path: "/student-list",
+        element: <Coordinator_Student_list />,
+      },
+      {
+        path: "/timeSheet",
+        element: <Coordinator_StudentTimesheets />,
+      },
+      {
+        path: "/StudentTask",
+        element: <Coordinator_StudentTask />,
+      },
+      {
+        path: "/StudentTask/view",
+        element: <ViewUploadTask />,
+      },
+      {
+        path: "/daily-logs",
+        element: <Coordinator_studentDailylog />,
+      },
+      {
+        path: "/Attendance-request",
+        element: <Coordinator_StudentAttendanceRequest />,
+      },
+      {
+        path: "/Attendance-request/view",
+        element: <ViewAttendanceRequest />,
+      },
+      {
+        path: "/leave-request",
+        element: <Coordinator_StudentLeave />,
+      },
+      {
+        path: "/message",
+        element: <CoordinatorMessage />,
+      },
+      {
+        path: "/announcement",
+        element: <CoordinatorAnnouncement />,
+      },
+      {
+        path: "/student/",
+        element: <Coordinator_StudentInfoView />,
+        children: [
+          {
+            path: "/student/",
+            element: <StudentInfo />,
+          },
+          {
+            path: "/student/requirement",
+            element: <StudentRequirements />,
+          },
+          {
+            path: "/student/task",
+            element: <StudentTask />,
+          },
+          {
+            path: "/student/timesheet",
+            element: <StudentTimesheet />,
+          },
+        ]
+      }
+    ],
 
     teacher: [
       {
@@ -246,8 +345,47 @@ const PrivateRoutes = () => {
             element: <StudentTimesheet />,
           },
         ]
-      }
-      
+      }  
+    ],
+
+
+    student: [
+      {
+        path: "/",
+        element: <StudentDashboard />,
+      },
+      {
+        path: "/weekly-time-reports",
+        element: <StudentTimesheets />,
+      },
+      {
+        path: "/Upload-task",
+        element: <StudentUploadTask />,
+      },
+      {
+        path: "/StudentTask/view",
+        element: <ViewUploadTask />,
+      },
+      {
+        path: "/daily-logs",
+        element: <StudentDailylog />,
+      },
+      {
+        path: "/Attendance-request",
+        element: <StudentAttendanceRequest />,
+      },
+      {
+        path: "/leave-request",
+        element: <StudentLeave />,
+      },
+      {
+        path: "/message",
+        element: <StudentMessage />,
+      },
+      {
+        path: "/announcement",
+        element: <StudentAnnouncement />,
+      },
       
     ],
   };

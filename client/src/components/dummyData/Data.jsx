@@ -926,3 +926,122 @@ export const StudentList = [
         ]
     },
 ]
+
+
+
+
+
+
+export const Student = {
+        id: 1,
+        name: 'Angeline Untalan',
+        timeSheet: [
+            {
+                id:1,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
+                date: 'january 01 '
+            },
+            {
+                id:2,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 02 '
+            },
+            {
+                id:3,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 03 '
+            },
+            {
+                id:4,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 04 '
+            },
+            {
+                id:5,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 05 '
+            },
+            {
+                id:6,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 06 '
+            },
+            {
+                id:7,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 07 '
+            },
+            {
+                id:8,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 08 '
+            },
+            {
+                id:9,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 09 '
+            },
+            {
+                id:10,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 10 '
+            },
+            {
+                id:11,
+                timeIn: '6:00',
+                timeOut: '4:00',
+                totalHours: 6,
+                date: 'january 11 '
+            },
+            {
+                id:12,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 12'
+            },
+            {
+                id:13,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 13 '
+            },
+            {
+                id:14,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 14 '
+            },
+            {
+                id:15,
+                timeIn: '8:00',
+                timeOut: '4:00',
+                totalHours: 8,
+                date: 'january 15 '
+            },
+           
+            
+        ]
+    }
