@@ -33,6 +33,7 @@ const StudentAttendanceRequest = lazy(() => import("../pages/Student/AttendanceR
 const StudentLeave = lazy(() => import("../pages/Student/LeaveRequest"));
 const StudentMessage = lazy(() => import("../pages/Student/Message"));
 const StudentAnnouncement = lazy(() => import("../pages/Student/Announcement"));
+const StudentTimeLogs = lazy(() => import("../pages/Student/TimeLogs"));
 
 
 // Trainer pages
@@ -88,7 +89,7 @@ const Dashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 
 
 const PrivateRoutes = () => {
-  const [isLogged, setIsLogged] = useState(false);
+  const [isLogged, setIsLogged] = useState(true);
 
   // react query
   // const { data: getRole, isError, isLoading} = useQuery({
@@ -105,7 +106,7 @@ const PrivateRoutes = () => {
   //    return <h1>error..</h1>
   // }
 
-  const role = "coordinator";
+  const role = "";
 
   const roleRoutes = {
     admin: [
@@ -369,6 +370,10 @@ const PrivateRoutes = () => {
       {
         path: "/daily-logs",
         element: <StudentDailylog />,
+      },
+      {
+        path: "/time-log",
+        element: <StudentTimeLogs />,
       },
       {
         path: "/Attendance-request",

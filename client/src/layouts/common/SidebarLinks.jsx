@@ -25,9 +25,9 @@ import {CgFileDocument} from 'react-icons/cg'
         icon: RxCalendar, 
         size: 18,
         subMenu: [
+          { label: "Time logs", url: "/time-log"},
           { label: "Daily logs", url: "/daily-logs"},
           { label: "Attendance request", url: "/Attendance-request" },
-          { label: "Summary", url: "/attendance-summary" },
         ],
       },
       { label: "My Records",  

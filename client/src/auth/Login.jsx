@@ -1,30 +1,48 @@
 import React from "react";
 import Img from "../assets/icons/logo.png";
-import {HiOutlineMail} from 'react-icons/hi'
+import {MdOutlineMailLock} from 'react-icons/md'
+import {BiLockOpen} from 'react-icons/bi'
+
+import model from '../assets/images/LoginModel.png'
 function Login() {
+  
+  
+  
+  
+  
   return (
-    <div className="h-screen flex items-center justify-center">
-         
-          <form className="form">
-            <div className="flex items-center flex-col mb-5">
-              <img src={Img} alt="" width={55}/>
-              <span className="text-2xl font-semibold">InternTrack</span>
-            </div>
-          {/* <p className="text-lg font-semibold text-gray-700">Welcome back!</p> */}
-            <div className="relative">
-              <input id="email"  type="text" className="peer h-10 w-full bg-white border-b-2 text-sm border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-600" placeholder="Username"/>
-              <label htmlFor="email" className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email address</label>
-            </div>
-            <div className="relative">
-              <input id="password" type="password" className="peer h-10 w-full border-b-2 border-gray-300 text-sm text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-600" placeholder="Password" />
-              <label htmlFor="password" className="absolute left-0 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
-            </div>
+   <div className="w-screen h-screen flex items-center bg-white">
+    <div className="relative w-1/2 flex items-center justify-center">
+      <img src={model} alt="" className="max-w-[350px] z-20" />
+      <div>
+        <div className="absolute top-10 right-8 py-3 px-5 bg-white drop-shadow-md rounded-lg border border-slate-100 z-30">Track Your Progress</div>
+        <div className="absolute top-14 left-16 py-3 px-5 bg-white drop-shadow-md rounded-lg border border-slate-100 z-30">Track Your Progress</div>
+        <div className="absolute top-40 right-0 py-3 px-5 bg-white drop-shadow-md rounded-lg border border-slate-100 z-30">Track Your Progress</div>
+        <div className="absolute bottom-12 right-8 py-3 px-5 bg-white drop-shadow-md rounded-lg border border-slate-100 z-30">Track Your Progress</div>
+        <div className="absolute top-40 left-8 py-3 px-5 bg-white drop-shadow-md rounded-lg border border-slate-100 z-30">Track Your Progress</div>
+      </div>
 
-            <button className="button bg-blue-500 py-2 px-4 rounded-lg text-white text-base font-medium tracking-wider">Login</button>
-            <span className="mt-4 block text-sm text-center font-medium text-gray-500 hover:underline focus:outline-none focus:ring-2 focus:ring-rose-500"> Forgot your password? <span className="text-blue-500"></span> </span>
-
-          </form>
+      <div className="absolute z-1 h-[320px] w-[320px] bg-blue-500 rounded-full "></div>
+      <div className="absolute left-32 bottom-14 z-1 h-[40px] rotate-45 w-[100px] bg-yellow-500 rounded-full "></div>
+    </div>
+    <div className="w-1/2 h-screen bg-red-500 flex items-center justify-center">
+      <div className="flex flex-col bg-blue-500 p-5 gap-3">
+        <span className="font-semibold text-2xl">Welcome back!</span>
+        <small>Begin Enhancing Your OJT Experience Efficiently</small>
+        <div className="flex flex-col gap-4">
+          <div className="relative input bg-white w-full rounded-lg overflow-hidden">
+            <MdOutlineMailLock className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" />
+            <input type="text" placeholder="you@example.com" className="py-3 pl-10 text-sm" />
+          </div>
+          <div className="relative input bg-white w-full rounded-lg overflow-hidden">
+            <BiLockOpen className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-500" />
+            <input type="text" placeholder="At least 8 character" className="py-3 pl-10 text-sm" />
+          </div>
         </div>
+      </div>
+
+    </div>
+   </div>
   );
 }
 
