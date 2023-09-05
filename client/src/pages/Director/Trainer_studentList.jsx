@@ -1,51 +1,55 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
+import { useLocation, } from 'react-router-dom'
+
+
+
 import StudentItem from "../../components/StudentList/StudentItem";
-import { TrainerList } from "../../services/TrainerList";
-import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
+import { BiSearch, BiDotsVerticalRounded, } from "react-icons/bi";
+import { BsPrinter } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
-import { BsPrinter } from "react-icons/bs";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { HiOutlineDownload } from "react-icons/hi";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import {AiOutlineUserAdd } from "react-icons/ai";
-import AddTrainer from "../../components/AddTrainer/Addtrainer";
-import SelectCompany from "../../components/SelectCompany/SelectCompany";
 
-const Trainer_list = () => {
-  const [searchInput, setSearchInput] = useState("");
-  const columnHelper = createColumnHelper();
-  const [show, setShow] = useState(null);
-  const [AddTrainerModalIsOpen, setAddTrainerModalIsOpen] = useState(false);
-  //   data
-  const data = TrainerList.map(({
-    id, 
-    firstname, 
-    middleName,
-    lastname, 
-    email, 
-    gender, 
-    department, 
-    contact_number, 
-    picture,
-    studentList}) => ({
+
+
+
+const Trainer_studentList = () => {
+    
+    const location = useLocation();
+    const studentList = location.state.List;
+    const TrainerName = location.state.trainerName;
+    const columnHelper = createColumnHelper();
+    const [show, setShow] = useState(null);
+
+    const data = studentList.map(({
         id,
         firstname,
+        middleName,
+        lastname,
+        email,
+        gender,
+        department,
+        status,
+        picture,
+        timesheet        
+
+    }) => ({
+        id,
         name: `${firstname} ${middleName[0]}. ${lastname}`,
         email,
         gender,
         department,
-        contact_number,
-        totalStudent: studentList.length,
+        status,
         picture,
-        studentList
-       
-  })).filter((item) => item.name.toLowerCase().includes(searchInput));
+        totalHours: timesheet.reduce((acc, item)=> acc + item.totalHours, 0)
+    }))
 
-
-
-  //   columns
-  const columns = [
+//   columns
+const columns = [
     columnHelper.accessor("id", {
       id: "id",
       cell: (info) => <span>{info.getValue()}</span>,
@@ -80,11 +84,15 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Department",
     }),
-    columnHelper.accessor("totalStudent", {
-      id: "totalStudent",
+    columnHelper.accessor("totalHours", {
+      id: "totalHours",
       cell: (info) => (
         <div className="relative text-center">
-          <span className="font-medium -ml-8">{info.getValue()}</span>
+         <span className='-ml-10 font-medium tracking-wide'> {info.getValue()} hrs</span>
+            
+          
+
+          
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -95,7 +103,7 @@ const Trainer_list = () => {
           {show === info.row.original.id && (
             <div
               onClick={() => setShow(!show)}
-              className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
+              className="absolute top-3 right-7 h-[120px] w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
                 to="/student/"
@@ -104,16 +112,6 @@ const Trainer_list = () => {
                 <CgProfile size={17} />
                 Profile
               </NavLink>
-
-              <NavLink
-                to="/trainer-student-list"
-                state={{List: info.row.original.studentList, trainerName: info.row.original.firstname }}
-                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
-              >
-                <RiUserSearchLine size={17} />
-                Student list
-              </NavLink>
-
               <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
                 <FiEdit3 /> Update
               </NavLink>
@@ -124,7 +122,7 @@ const Trainer_list = () => {
           )}
         </div>
       ),
-      header: "Total student",
+      header: "Total hours",
     }),
   ];
 
@@ -134,10 +132,17 @@ const Trainer_list = () => {
 
   return (
     <div>
-       <div className="flex items-center justify-between px-2 mb-5">
-        <h1 className="text-xl font-bold tracking-wider text-gray-700">
-          Trainer list
-        </h1>
+      <div className="flex items-center justify-between px-2 mb-5">
+        <div className='flex flex-col gap-3 items-start'>
+            <NavLink to="/Trainer-list" className="text-blue-500 text-sm font-medium mb-2 rounded-full flex items-center ">
+              <MdKeyboardArrowLeft size={23} />
+              <span className='text-base font-semibold tracking-wider'>Back</span>
+              </NavLink>
+            <h1 className="text-xl font-semibold tracking-wider text-gray-700 flex items-center gap-5">
+            {TrainerName}'s
+            <span>Students</span>
+            </h1>
+        </div>
 
         <div className="flex items-center gap-3">
           <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
@@ -149,25 +154,17 @@ const Trainer_list = () => {
               className="outline-none text-sm"
             />
           </div>
-          <div className="flex items-center gap-3">
-            <button 
-            onClick={()=> setAddTrainerModalIsOpen(true)}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-                <AiOutlineUserAdd size={16} />
-                <span className='font-semibold tracking-wider'>Add</span>
-            </button>
-            <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-                <BsPrinter size={17} />
-                <span className='font-semibold tracking-wider'>Print</span>
-            </button>
-          </div>
+          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+              <BsPrinter size={17} />
+              <span className='font-semibold tracking-wider'>Print</span>
+          </button>
         </div>
       </div>
 
-      <StudentItem data={data} columns={columns} /> 
-      <AddTrainer isOpen={AddTrainerModalIsOpen} closeModal={()=> setAddTrainerModalIsOpen(false)} />
+      <StudentItem data={data} columns={columns} />
     </div>
   );
 };
 
-export default Trainer_list;
+export default Trainer_studentList;
+

@@ -75,7 +75,7 @@ const AssignStudentModal = (props) => {
     <>
       {isOpen && (
         <Modal
-          title={"Add Students"}
+          title={"Assign Students"}
           closeModal={closeModal}
           content={
             <div>

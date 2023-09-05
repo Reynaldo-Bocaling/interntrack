@@ -20,7 +20,6 @@ function PhoneNumber({size}) {
   return (
     <div>
       <div className='w-full'>
-      <small className='text-gray-400 tracking-wider'>PhoneNumber</small>
         <PhoneInput
           country={'ph'}
           value={phoneNumber}

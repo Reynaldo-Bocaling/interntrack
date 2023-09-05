@@ -188,18 +188,18 @@ const TimeSheetTable = ({data}) => {
                               (sum, entry) => sum + entry.totalHours,
                               0
                             ) >= 375
-                          ? "bg-blue-100"
+                          ? "bg-green-400"
                           : student.timeSheet.reduce(
                               (sum, entry) => sum + entry.totalHours,
                               0
                             ) >= 250
-                          ? "bg-red-200"
+                          ? "bg-yellow-400"
                           : student.timeSheet.reduce(
                               (sum, entry) => sum + entry.totalHours,
                               0
                             ) >= 125
-                          ? "bg-red-100"
-                          : "bg-red-200"
+                          ? "bg-orange-400"
+                          : "bg-red-400"
                       }`}
                     >
                       {student.timeSheet.reduce(

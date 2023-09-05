@@ -81,6 +81,20 @@ const CoordinatorMessage = lazy(() => import("../pages/Coordinator/Message"));
 const CoordinatorAnnouncement = lazy(() => import("../pages/Coordinator/Announcement"));
 
 
+// Director pages
+const DirectorDashboard = lazy(() => import("../pages/Director/Dashboard"));
+const DirectorCompanies = lazy(() => import("../pages/Director/Companies"));
+const Director_Trainer_Student_list = lazy(() => import("../pages/Director/Trainer_studentList"));
+const Director_Student_list = lazy(() => import("../pages/Director/Student_list"));
+const Director_StudentTimesheets = lazy(() => import("../pages/Director/Timesheet"));
+const Director_studentDailylog = lazy(() => import("../pages/Director/DailyLogs"));
+const Director_StudentTask = lazy(() => import("../pages/Director/StudentTask"));
+const Director_StudentAttendanceRequest = lazy(() => import("../pages/Director/AttendanceRequest"));
+const Director_StudentInfoView = lazy(() => import("../pages/Director/StudentViewInfo"));
+const Director_StudentLeave = lazy(() => import("../pages/Director/MOA"));
+const DirectorMessage = lazy(() => import("../pages/Director/Message"));
+const DirectorAnnouncement = lazy(() => import("../pages/Director/Announcement"));
+
 
 // dummy component
 const Dashboard = lazy(() => import("../pages/Teacher/Dashboard"));
@@ -89,7 +103,7 @@ const Dashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 
 
 const PrivateRoutes = () => {
-  const [isLogged, setIsLogged] = useState(true);
+  const [isLogged, setIsLogged] = useState(false);
 
   // react query
   // const { data: getRole, isError, isLoading} = useQuery({
@@ -106,7 +120,7 @@ const PrivateRoutes = () => {
   //    return <h1>error..</h1>
   // }
 
-  const role = "";
+  const role = "director";
 
   const roleRoutes = {
     admin: [
@@ -119,6 +133,84 @@ const PrivateRoutes = () => {
         element: <Dashboard />,
       },
     ],
+
+    director: [
+      {
+        path: "/",
+        element: <DirectorDashboard />,
+      },
+      {
+        path: "/Companies",
+        element: <DirectorCompanies />,
+      },
+      {
+        path: "/trainer-student-list",
+        element: <Director_Trainer_Student_list />,
+      },
+      {
+        path: "/student-list",
+        element: <Director_Student_list />,
+      },
+      {
+        path: "/timeSheet",
+        element: <Director_StudentTimesheets />,
+      },
+      {
+        path: "/StudentTask",
+        element: <Director_StudentTask />,
+      },
+      {
+        path: "/StudentTask/view",
+        element: <ViewUploadTask />,
+      },
+      {
+        path: "/daily-logs",
+        element: <Director_studentDailylog />,
+      },
+      {
+        path: "/Attendance-request",
+        element: <Director_StudentAttendanceRequest />,
+      },
+      {
+        path: "/Attendance-request/view",
+        element: <ViewAttendanceRequest />,
+      },
+      {
+        path: "/leave-request",
+        element: <Director_StudentLeave />,
+      },
+      {
+        path: "/message",
+        element: <DirectorMessage />,
+      },
+      {
+        path: "/announcement",
+        element: <DirectorAnnouncement />,
+      },
+      {
+        path: "/student/",
+        element: <Director_StudentInfoView />,
+        children: [
+          {
+            path: "/student/",
+            element: <StudentInfo />,
+          },
+          {
+            path: "/student/requirement",
+            element: <StudentRequirements />,
+          },
+          {
+            path: "/student/task",
+            element: <StudentTask />,
+          },
+          {
+            path: "/student/timesheet",
+            element: <StudentTimesheet />,
+          },
+        ]
+      }
+    ]
+,
 
 
     coordinator: [
