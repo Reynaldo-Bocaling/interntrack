@@ -2,15 +2,15 @@ import React from "react";
 import { LiaTimesSolid } from "react-icons/lia";
 
 function SelectStudent(props) {
-  const { selectedItems, handleRemoveItem, toggleTrainer } = props;
+  const { selectedItems, handleRemoveItem } = props;
 
   return (
     <div 
-    onClick={toggleTrainer}
+    // onClick={toggleTrainer}
     className="w-full border p-2">
       <div className="p-4">
         <h3 className="text-lg font-medium tracking-wide">
-          Selected Students:
+          Selected Students: {selectedItems.length > 0 && <span>( {selectedItems.length} )</span>} 
         </h3>
         <ul className="flex flex-wrap gap-3 mt-5">
           {selectedItems.length !== 0 ? (

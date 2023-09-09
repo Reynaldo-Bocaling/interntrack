@@ -174,7 +174,7 @@ import {CgFileDocument} from 'react-icons/cg'
       },
       { 
         label: "MOA", 
-        url: "/leave-request",
+        url: "/moa",
         icon: TbCalendarCancel, 
         dropIcon:BiChevronDown,
         size: 18,

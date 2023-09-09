@@ -97,5 +97,12 @@
     width: 100%;
     
   }
+  .company-cover {
+    background-image: url(./assets//images/companycover.png);
+    background-position: left 40%; 
+    height: 180px;
+    width: 100%;
+    
+  }
   
  

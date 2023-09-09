@@ -12,7 +12,34 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
 import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
-
+const companies = [
+  {
+    id: 1,
+    name: "7-Eleven2",
+    trainers: [
+      { id: 1, name: "Alex" },
+      { id: 2, name: "Roan" }
+    ],
+    areasOfAssignment: [
+      { id: 1, name: "Cashier", slots: 5 },
+      { id: 2, name: "OAR", slots: 3 },
+    ],
+  },
+  {
+    id: 2,
+    name: "SM",
+    trainers: [
+      { id: 3, name: "Drew" },
+      { id: 4, name: "Gel" }
+    ],
+    areasOfAssignment: [
+      { id: 3, name: "Guard", slots: 5 },
+      { id: 4, name: "Office", slots: 3 },
+      { id: 5, name: "Stores", slots: 3 },
+    ],
+  },
+  // ...Iba pang mga kumpanya
+]
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
@@ -20,6 +47,12 @@ const Student_list = () => {
   const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
   const [AssignStudentModalIsOpen, setAssignStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
+
+
+  
+
+
+
 
   //   data
   const data = userData
@@ -174,7 +207,7 @@ const Student_list = () => {
       </div>
 
       {/* modal asign student */}
-      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} />
+      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} companies={companies}  />
       <AddStudentModal isOpen={AddStudentModalIsOpen} closeModal={()=> setAddStudentModalIsOpen(false)} />
 
       <StudentItem data={data} columns={columns} />

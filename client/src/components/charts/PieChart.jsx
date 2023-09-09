@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-const CustomizedPieChart = ({ data }) => {
+const CustomizedPieChart = ({ data, labels, colors, title }) => {
   const options = {
     chart: {
       type: 'donut',
     },
-    colors: ['#2ECC71', '#FFA500', '#FF5733'], // Green, Orange, Red
-    labels: ['Hours Taken', 'Leave', 'Hours Remaining'],
+    colors: colors, 
+    labels: labels,
     plotOptions: {
       pie: {
         donut: {
@@ -16,7 +16,7 @@ const CustomizedPieChart = ({ data }) => {
             total: {
               show: true,
               showAlways: true,
-              label: 'Total',
+              label: title,
               fontSize: '14px',
               fontFamily: 'Helvetica, Arial, sans-serif',
               fontWeight: 600,
@@ -39,8 +39,8 @@ const CustomizedPieChart = ({ data }) => {
     },
     legend: {
       position: 'right',
-      offsetY: 100,  
-      offsetX: 0,  
+      offsetY: 100,
+      offsetX: 0,
     },
   };
 

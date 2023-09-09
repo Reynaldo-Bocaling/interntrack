@@ -36,6 +36,58 @@ const AddTrainer = (props) =>  {
 
 
 
+      companies: [
+        {
+          id: 1,
+          name: "7-Eleven",
+          areasOfAssignment: [
+            { id: 1, name: "Cashier", slots: 5 },
+            { id: 2, name: "OAR", slots: 3 },
+          ],
+        },
+        {
+          id: 2,
+          name: "SM",
+          areasOfAssignment: [
+            { id: 1, name: "Guard", slots: 3 },
+            { id: 2, name: "Office", slots: 7 },
+          ],
+        },
+      ];
+
+
+
+
+      const [selectedCompany, setSelectedCompany] = useState(null);
+      const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] = useState(null);
+      const [trainerName, setTrainerName] = useState('');
+      const [trainerContact, setTrainerContact] = useState('');
+      const [trainerEmail, setTrainerEmail] = useState('');
+
+
+const filteredAreasOfAssignment =
+    selectedCompany ? selectedCompany.areasOfAssignment : [];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (selectedCompany && selectedAreaOfAssignment && trainerName && trainerContact && trainerEmail) {
+      // Mag-collect ng impormasyon ng trainer
+      const newTrainer = {
+        company: selectedCompany.name,
+        area: selectedAreaOfAssignment.name,
+        name: trainerName,
+        contact: trainerContact,
+        email: trainerEmail,
+      };
+
+      // I-output ang collected na data sa console log
+      console.log('New Trainer Data:', newTrainer);
+
+      // Dapat dito ay isasave mo ito sa iyong backend o database
+    } else {
+      console.error('Please fill in all fields.');
+    }
+  };
 
 
     return (

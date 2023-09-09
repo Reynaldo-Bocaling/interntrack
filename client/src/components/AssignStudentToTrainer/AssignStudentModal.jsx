@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import SelectStudent from "./SelectStudent";
-import SelectTrainer from "./SelectTrainer";
 import Modal from "../Modals/Modal";
+import SelectCompanyTrainer from './SelectCompanyTrainer'
+
 
 
 const AssignStudentModal = (props) => {
-  const { closeModal, isOpen } = props;
+  
+
+
+  const { closeModal, isOpen,companies } = props;
  
   const [selectedItems, setSelectedItems] = useState([]);
   
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [selectedTrainer, setSelectedTrainer] = useState(null);
+  const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] = useState(null);
+
+
 
   const tableData = [
     {
@@ -49,14 +58,9 @@ const AssignStudentModal = (props) => {
     { id: 10, name: "Renz Alana", email: "Renz@gmail.com", gender: "female" },
   ];
 
-  const trainerList = [
-    { id: 1, name: "Roan Cochanco", totalStudent: "20 Students" },
-    { id: 2, name: "Gel Cunanan", totalStudent: "18 Students" },
-    { id: 3, name: "Drew Villegas", totalStudent: "23 Students" },
-    { id: 4, name: "Crist Unknown", totalStudent: "16 Students" },
-    { id: 5, name: "Gloria Alcantara", totalStudent: "14 Students" },
-  ];
 
+
+       // select student
   const handleItemClick = (item) => {
     setSelectedItems([...selectedItems, item]);
   };
@@ -71,6 +75,33 @@ const AssignStudentModal = (props) => {
   const isItemSelected = (item) =>
     selectedItems.some((selectedItem) => selectedItem.id === item.id);
 
+
+    
+
+
+ const handleAssign = () => {
+//  const assignData= {
+//   company: selectedCompany.name,
+//   trainer: selectedTrainer.name,
+//   area: selectedAreaOfAssignment.name,
+//   studentIds: selectedItems.map((student) => student.name),
+//  };
+//  console.log(assignData);
+
+const selectedStudentCount = selectedItems.length;
+const availableSlots = selectedAreaOfAssignment.slots;
+
+if (selectedStudentCount <= availableSlots) {
+ alert('success')
+} else {
+  alert(`Insufficient slots available for ${selectedAreaOfAssignment.name}`);
+
+}
+};
+
+
+
+
   return (
     <>
       {isOpen && (
@@ -79,16 +110,20 @@ const AssignStudentModal = (props) => {
           closeModal={closeModal}
           content={
             <div>
-              <SelectTrainer
-                options={trainerList}
-                removeSlected={() => setSelectedItems([])}
-                selectItem={selectedItems}
+              <SelectCompanyTrainer 
+              selectedCompany={selectedCompany}
+              setSelectedCompany={setSelectedCompany}
+              selectedTrainer={selectedTrainer}
+              setSelectedTrainer={setSelectedTrainer}
+              selectedAreaOfAssignment={selectedAreaOfAssignment}
+              setSelectedAreaOfAssignment={setSelectedAreaOfAssignment}
+              companies={companies}
+              onCLickAssign={handleAssign}
               />
-
+{/* <button className="bg-red-500" onClick={handleAssign}>assign</button> */}
               <SelectStudent
                 selectedItems={selectedItems}
                 handleRemoveItem={handleRemoveItem}
-                toggleTrainer={() => setIsSelectedTrainer(false)}
               />
 
               <div

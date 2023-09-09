@@ -38,7 +38,11 @@ function Dashboard() {
     },
   ];
 
+  // piechart info
   const piechartData = [325, 25, 150];
+  const colors = ['#2ECC71', '#FFA500', '#FF5733'];
+  const labels = ['Hours Taken', 'Leave', 'Hours Remaining'];
+
 
   return (
     <div>
@@ -55,7 +59,7 @@ function Dashboard() {
         {/* count box */}
         <div className="w-[50%] flex flex-col gap-[10px] shadow-xl shadow-green-50 bg-white rounded-lg relative border border-slate-200">
           <div className="h-[250px] w-[430px] pt-3">
-            <PieChart data={piechartData} />
+            <PieChart data={piechartData} colors={colors} labels={labels} title={'Total Hours'} />
           </div>
           <h1 className="absolute top-[20%] right-[18%] text-2xl">
             325 / 500 <span className="text-xs text-blue-500">hrs</span>

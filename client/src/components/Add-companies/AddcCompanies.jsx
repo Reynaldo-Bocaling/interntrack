@@ -33,7 +33,7 @@ const AddTrainer = (props) => {
       <Group mt="xs">
         <div>
           <TextInput
-            placeholder={`Position ${index + 1}`}
+            placeholder={`Area Assignment ${index + 1}`}
             withAsterisk
             className="w-[270px] mt-2"
             {...form.getInputProps(`available_positions.${index}.position`)}
@@ -145,7 +145,7 @@ const AddTrainer = (props) => {
                         onChange={setFile}
                         accept="image/png,image/jpeg"
                       >
-                        {(props) => <Button {...props}><RiAttachment2 /> Upload image</Button>}
+                        {(props) => <Button {...props}><RiAttachment2 /> Upload MOA</Button>}
                       </FileButton>
                     </Group>
 
@@ -158,7 +158,7 @@ const AddTrainer = (props) => {
 
                   <button
                     type="button"
-                    className="mt-12 text-sm font-medium tracking-wide text-white bg-blue-500 rounded-md py-2 w-full"
+                    className="mt-7 text-sm font-medium tracking-wide text-white bg-blue-500 rounded-md py-2 w-full"
                     onClick={()=> {alert('Success'),closeModal() }}
                   >
                     Submit
@@ -171,7 +171,8 @@ const AddTrainer = (props) => {
 
                   {fields.length > 0 ? (
                     <Group mb="xs">
-                      <span className="font-medium text-lg">Positions Available</span>
+                      <span className="font-medium text-lg">Area of assignment</span>
+                      
                     </Group>
                   ) : (
                     <Text color="dimmed" align="center">
@@ -192,7 +193,7 @@ const AddTrainer = (props) => {
                         })
                       }
                     >
-                      Add Position
+                      Add Area
                     </Button>
                  
 

@@ -24,6 +24,12 @@ const StudentRequirements = lazy(() => import("../components/Student-Info/Studen
 const StudentTask = lazy(() => import("../components/Student-Info/StudentTask"));
 const StudentTimesheet = lazy(() => import("../components/Student-Info/StudentTimeSheet"));
 
+// view componies info Reusable
+const CompanyInfo = lazy(() => import("../components/Company-info/CompanyInfo"));
+const CompanySlots = lazy(() => import("../components/Company-info/CompanySlots"));
+const CompanyMoa = lazy(() => import("../components/Company-info/CompanyMoa"));
+const CompanyStudents = lazy(() => import("../components/Company-info/CompanyStudents"));
+
 // Student pages
 const StudentDashboard = lazy(() => import("../pages/Student/Dashboard"));
 const StudentTimesheets = lazy(() => import("../pages/Student/Timesheet"));
@@ -84,14 +90,8 @@ const CoordinatorAnnouncement = lazy(() => import("../pages/Coordinator/Announce
 // Director pages
 const DirectorDashboard = lazy(() => import("../pages/Director/Dashboard"));
 const DirectorCompanies = lazy(() => import("../pages/Director/Companies"));
-const Director_Trainer_Student_list = lazy(() => import("../pages/Director/Trainer_studentList"));
-const Director_Student_list = lazy(() => import("../pages/Director/Student_list"));
-const Director_StudentTimesheets = lazy(() => import("../pages/Director/Timesheet"));
-const Director_studentDailylog = lazy(() => import("../pages/Director/DailyLogs"));
-const Director_StudentTask = lazy(() => import("../pages/Director/StudentTask"));
-const Director_StudentAttendanceRequest = lazy(() => import("../pages/Director/AttendanceRequest"));
-const Director_StudentInfoView = lazy(() => import("../pages/Director/StudentViewInfo"));
-const Director_StudentLeave = lazy(() => import("../pages/Director/MOA"));
+const DirectorMoa = lazy(() => import("../pages/Director/MOA"));
+const DirectorViewCompany = lazy(() => import("../pages/Director/ViewCompany"));
 const DirectorMessage = lazy(() => import("../pages/Director/Message"));
 const DirectorAnnouncement = lazy(() => import("../pages/Director/Announcement"));
 
@@ -120,7 +120,7 @@ const PrivateRoutes = () => {
   //    return <h1>error..</h1>
   // }
 
-  const role = "director";
+  const role = "teacher";
 
   const roleRoutes = {
     admin: [
@@ -144,40 +144,8 @@ const PrivateRoutes = () => {
         element: <DirectorCompanies />,
       },
       {
-        path: "/trainer-student-list",
-        element: <Director_Trainer_Student_list />,
-      },
-      {
-        path: "/student-list",
-        element: <Director_Student_list />,
-      },
-      {
-        path: "/timeSheet",
-        element: <Director_StudentTimesheets />,
-      },
-      {
-        path: "/StudentTask",
-        element: <Director_StudentTask />,
-      },
-      {
-        path: "/StudentTask/view",
-        element: <ViewUploadTask />,
-      },
-      {
-        path: "/daily-logs",
-        element: <Director_studentDailylog />,
-      },
-      {
-        path: "/Attendance-request",
-        element: <Director_StudentAttendanceRequest />,
-      },
-      {
-        path: "/Attendance-request/view",
-        element: <ViewAttendanceRequest />,
-      },
-      {
-        path: "/leave-request",
-        element: <Director_StudentLeave />,
+        path: "/moa",
+        element: <DirectorMoa />,
       },
       {
         path: "/message",
@@ -188,24 +156,28 @@ const PrivateRoutes = () => {
         element: <DirectorAnnouncement />,
       },
       {
-        path: "/student/",
-        element: <Director_StudentInfoView />,
+        path: "/moa",
+        element: <DirectorMoa />,
+      },
+      {
+        path: "/company/",
+        element: <DirectorViewCompany />,
         children: [
           {
-            path: "/student/",
-            element: <StudentInfo />,
+            path: "/company/",
+            element: <CompanyInfo />,
           },
           {
-            path: "/student/requirement",
-            element: <StudentRequirements />,
+            path: "/company/slots",
+            element: <CompanySlots />,
           },
           {
-            path: "/student/task",
-            element: <StudentTask />,
+            path: "/company/moa",
+            element: <CompanyMoa />,
           },
           {
-            path: "/student/timesheet",
-            element: <StudentTimesheet />,
+            path: "/company/students",
+            element: <CompanyStudents />,
           },
         ]
       }

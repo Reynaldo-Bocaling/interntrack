@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import CustomAutocomplete from './SelectCompany';
+import CustomAutocomplete from './Test';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 const data = {
   companies: [
@@ -37,6 +39,9 @@ function Main() {
   const [selectedTrainer, setSelectedTrainer] = useState(null);
   const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] = useState(null);
 
+  const [studentName, setStudentName] = useState('');
+  const [studentContact, setStudentContact] = useState('');
+  const [studentEmail, setStudentEmail] = useState('');
 
   const filteredTrainers =
     selectedCompany ? selectedCompany.trainers : [];
@@ -58,29 +63,29 @@ function Main() {
   };
 
   const handleAddStudent = () => {
-    // if (selectedCompany && selectedAreaOfAssignment && selectedTrainer) {
+    if (selectedCompany && selectedAreaOfAssignment && selectedTrainer && studentName && studentContact && studentEmail) {
       // Mag-collect ng impormasyon ng student
       const newStudentData = {
         company: selectedCompany.name,
         trainer: selectedTrainer.name,
         area: selectedAreaOfAssignment.name,
-        name: 'studentName',
-        contact: 'studentContact',
-        email: 'studentEmail',
+        name: studentName,
+        contact: studentContact,
+        email: studentEmail,
       };
 
       // I-output ang collected na data sa console log
       console.log('New Student Data:', newStudentData);
 
-    //   // Dapat dito ay isasave mo ito sa iyong backend o database
-    // } else {
-    //   console.error('Please fill in all fields.');
-    // }
+      // Dapat dito ay isasave mo ito sa iyong backend o database
+    } else {
+      console.error('Please fill in all fields.');
+    }
   };
 
   return (
-    <div className='p-5 flex flex-col gap-3'>
-      <div className='flex gap-3'>
+    <div className='p-5 flex flex-col gap-5'>
+      <div className='flex gap-5'>
       <CustomAutocomplete
         size={'w-[50%]'}
         options={data.companies}
@@ -98,10 +103,7 @@ function Main() {
           disabled={!selectedCompany}
         />
       </div>
-        
-        <div className='flex items-center gap-5'>
         <CustomAutocomplete
-        size={'w-[85%]'}
           options={filteredAreasOfAssignment}
           label="Choose an Area of Assignment"
           value={selectedAreaOfAssignment}
@@ -109,12 +111,8 @@ function Main() {
           disabled={!selectedCompany}
         />
 
-        <button onClick={handleAddStudent} className='w-[15%] bg-blue-500 py-3 px-5 rounded-lg text-white'>Assign</button>
-
-        </div>
-
       
-      {/* <button onClick={handleAddStudent}>Add Student</button> */}
+      <button onClick={handleAddStudent}>Add Student</button>
     </div>
   );
 }

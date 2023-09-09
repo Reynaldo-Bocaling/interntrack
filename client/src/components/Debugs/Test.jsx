@@ -11,7 +11,6 @@ function CustomAutocomplete({ options, label, value, onChange,size }) {
       options={options}
       getOptionLabel={(option) => option.name}
       value={value}
-
       onChange={onChange}
       renderOption={(props, option) => (
         <Box component="li" {...props}>
@@ -28,7 +27,7 @@ function CustomAutocomplete({ options, label, value, onChange,size }) {
             ...params.inputProps,
             autoComplete: "new-password",
           }}
-                  />
+        />
       )}
     />
   );
