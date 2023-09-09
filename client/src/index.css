@@ -62,6 +62,13 @@
     @apply text-blue-500 border-b-[2px] border-blue-500
 }
 
+.StudentListFilterLink {
+    @apply rounded-t py-1 px-4
+}
+.StudentListFilterLink.active {
+    @apply text-blue-500 border-b-[2px] border-blue-500
+}
+
 .taskLink.active{
     @apply text-blue-500 border-b-[2.2px] border-blue-500
 }

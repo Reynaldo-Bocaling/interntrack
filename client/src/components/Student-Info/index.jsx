@@ -1,13 +1,11 @@
 
 
 import React from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, Link } from "react-router-dom";
 import {InfoIcons, RequirementIcons,TaskIcons, ClockIcons } from "../ReactIcon/React-Icons";
-
+import { MdKeyboardArrowLeft,MdOutlineFormatListNumbered } from "react-icons/md";
 import { BsChatDots, BsFillTrash3Fill } from "react-icons/bs";
-
 import pic from "../../assets/images/dp.png";
-
 
 const index = () => {
     const link = [
@@ -20,7 +18,7 @@ const index = () => {
     <div className="rounded-xl overflow-hidden -mt-3 -ml-2">
       <div className="cover"></div>
 
-      <div className=" top flex items-center gap-3 border-b bg-white">
+      <div className=" relative top flex items-center gap-3 border-b bg-white">
         <div className=" ml-7 -mt-52 bg-white w-52 h-44 p-5 border-white right rounded-full shadow-md overflow-hidden">
           <img
             className=" w-44 h-44 object-cover object-center mb-2 rounded-lg"
@@ -61,7 +59,14 @@ const index = () => {
             ))}
           </div>
         </div>
-        
+          {/* back button */}
+          <Link 
+          to="/student-list/"
+          className="absolute bottom-[10px] -left-4 font-semibold tracking-wide text-blue-500 rounded-full px-7 py-2 flex items-center"
+        >
+          <MdKeyboardArrowLeft size={20} />
+          Back
+        </Link>
       </div>
       <div className="pt-5 bg-slate-50">
         <Outlet  />

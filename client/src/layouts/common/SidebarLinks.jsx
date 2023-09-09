@@ -68,6 +68,11 @@ import {CgFileDocument} from 'react-icons/cg'
         size: 16,
         extraText: "HOME"
       },
+      { label: "Companies", 
+      url: "/companies",  
+      icon: FiUsers,
+      size: 16,
+    },
       { label: "Teacher", 
         url: "/Teacher-list",  
        icon: FiUsers,
@@ -109,6 +114,11 @@ import {CgFileDocument} from 'react-icons/cg'
         size: 16,
         extraText: "HOME"
       },
+      { label: "Companies", 
+        url: "/companies",  
+        icon: FiUsers,
+        size: 16,
+      },
       { label: "Trainer", 
         url: "/Trainer-list",  
         icon: FiUsers,
@@ -147,8 +157,6 @@ import {CgFileDocument} from 'react-icons/cg'
         
     ],
 
-
-
     director: [
       { label: "Dashboard", 
         url: "/", 
@@ -161,17 +169,17 @@ import {CgFileDocument} from 'react-icons/cg'
         icon: FiUsers,
         size: 16,
       },
-      
-      { label: "My student",  
-      icon: TbUserSearch, 
-        size: 18,
-        subMenu: [
-          { label: "Daily logs", url: "/daily-logs"},
-          { label: "Student list", url: "/student-list" },
-          { label: "Timesheet", url: "/timeSheet" },
-          { label: "Task uploads", url: "/StudentTask" },
-        ],
+      { label: "Trainer list", 
+        url: "/trainer-list/",  
+        icon: FiUsers,
+        size: 16,
       },
+      { label: "Student list", 
+        url: "/student-list/",  
+        icon: FiUsers,
+        size: 16,
+      },
+     
       { 
         label: "MOA", 
         url: "/moa",

@@ -12,6 +12,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 0,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'CICT',
     timesheet: [
       {
         id: 1,
@@ -135,6 +139,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'CICT',
     timesheet: [
       {
         id: 1,
@@ -196,6 +204,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'CRIM',
     timesheet: [
       {
         id: 1,
@@ -257,6 +269,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'CRIM',
     timesheet: [
       {
         id: 1,
@@ -318,6 +334,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'EDUC',
     timesheet: [
       {
         id: 1,
@@ -379,6 +399,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'EDUC',
     timesheet: [
       {
         id: 1,
@@ -440,6 +464,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'NURSE',
     timesheet: [
       {
         id: 1,
@@ -501,6 +529,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'NURSE',
     timesheet: [
       {
         id: 1,
@@ -562,6 +594,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'NURSE',
     timesheet: [
       {
         id: 1,
@@ -623,6 +659,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'CRIM',
     timesheet: [
       {
         id: 1,
@@ -684,6 +724,10 @@ export const userData = [
     email: "rey@gmail.com",
     status: 1,
     picture: pic,
+    trainer: 'Alex',
+    company:'Neust',
+    areaofAssignment:'Office',
+    cource: 'CRIM',
     timesheet: [
       {
         id: 1,

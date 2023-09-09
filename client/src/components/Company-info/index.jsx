@@ -12,9 +12,10 @@ const index = ({data}) => {
     const link = [
         {label: 'Info', url: '/company/', icon: InfoIcons, state:data},
         {label: 'MOA', url: '/company/moa', icon: RequirementIcons, state:data},
-        {label: 'Student', url: '/company/students', icon: FiUsers, state:data},
         {label: 'Available', url: '/company/slots', icon: MdOutlineFormatListNumbered, state:data},
-    ]
+        {label: 'Students', url: '/company/students', icon: FiUsers, state:data},
+        {label: 'Trainers', url: '/company/trainers', icon: FiUsers, state:data},
+      ]
  
   return (
     <div className="rounded-xl overflow-hidden -mt-3 -ml-2">
