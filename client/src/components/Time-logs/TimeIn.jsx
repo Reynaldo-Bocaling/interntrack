@@ -1,51 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function TimeIn() {
-  const [canTimeIn, setCanTimeIn] = useState(false);
-  const [timeIn, setTimeIn] = useState(localStorage.getItem('timeIn'));
-
-  const checkTime = () => {
-    const now = new Date();
-    const hour = now.getHours();
-    // Kung gusto mo mag-Time In ng 8 AM to 4 PM:
-    // if (hour >= 8 && hour < 16) {
-    if (hour != 10) {
-      setCanTimeIn(true);
-    }
-  };
+  const [time, setTime] = useState('');
+  const [date, setDate] = useState('');
 
   useEffect(() => {
-    checkTime(); // Tawagin ang checkTime function sa pag-mount ng component
+    const updateTime = () => {
+      const now = new Date();
+
+      const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const monthsOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+      const dayOfWeek = daysOfWeek[now.getDay()];
+      const monthOfYear = monthsOfYear[now.getMonth()];
+
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+
+      const formattedTime = `${hours % 12}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${ampm}`;
+      const formattedDate = `${monthOfYear} ${now.getDate()}, ${now.getFullYear()}`;
+
+      setTime(formattedTime);
+      setDate(`${dayOfWeek}, ${formattedDate}`);
+    };
+
+    const interval = setInterval(updateTime, 1000);
+    updateTime();
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
-  const handleTimeIn = () => {
-    const now = new Date();
-    const formattedTime = now.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    });
-    localStorage.setItem('timeIn', formattedTime);
-    setTimeIn(formattedTime);
-    window.location.reload();
-  };
+  const progress = 50; 
 
   return (
-    <div>
-      <h2 className="text-lg font-semibold mb-2">Time In</h2>
-      <p className="mb-2">Time In is allowed between 8 AM and 4 PM.</p>
-      {timeIn ? (
-        <p>Last Time In: {timeIn}</p>
-      ) : canTimeIn ? (
-        <button
-          className="bg-blue-500 w-[180px] text-white px-4 py-2 rounded"
-          onClick={handleTimeIn}
-        >
-          Time In
-        </button>
-      ) : (
-        <p className='text-red-500'>Time In is not allowed at the moment.</p>
-      )}
+    <div className="TimeIn">
+   <h1 className='text-3xl'>{time}</h1>
+      
+      <h3>{date}</h3>
+
+     
+
+
+
+    
     </div>
   );
 }

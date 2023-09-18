@@ -1,14 +1,17 @@
 import React, { lazy, useState } from "react";
 import { Outlet } from "react-router-dom";
-
+import { useDisclosure } from "@mantine/hooks";
+import { Drawer, Group, Button, TextInput, Avatar } from "@mantine/core";
 import Sidebar from "./common/Sidebar";
+import StudentHeader from "./common/StudentHeader";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
+import StudentNavigate from "./common/StudentNavigation";
 
 const Rootlayout = (props) => {
-  const {role} = props;
+  const { role } = props;
   const [isOpen, setIsOpen] = useState(true);
-
+  const [opened, { open, close }] = useDisclosure(false); //MESSAGE
   const [isOpenNotif, setIsOpenNotif] = useState(false);
   const [isOpenProfile, setIsOpenProfile] = useState(false);
 
@@ -25,33 +28,58 @@ const Rootlayout = (props) => {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-16-auto">
-      <Sidebar toggleIsOpen={isOpen} toggleSetIsOpen={toggleIsOpen} role={role} />
+    <>
+      
+      {role !== "student2" ? (
+        <div>
+          <Header
+            toggleIsOpen={isOpen}
+            toggleNotif={toggleNotif}
+            toggleProfile={toggleProfile}
+            isOpenNotif={isOpenNotif}
+            isOpenProfile={isOpenProfile}
+            role={role}
+          />
 
-      <div className="bg-gray-50">
-        <Header
-          toggleIsOpen={isOpen}
-          toggleNotif={toggleNotif}
-          toggleProfile={toggleProfile}
-          isOpenNotif={isOpenNotif}
-          isOpenProfile={isOpenProfile}
-          role={role}
-        />
-
-        {/* main */}
-        <div
-          className={`${
-            isOpen ? "ml-[16rem]" : "ml-[4rem]"
-          } min-h-screen px-4  pt-20 pb-6 duration-300`}
-          onClick={() => {
-            setIsOpenNotif(false), setIsOpenProfile(false);
-          }}
-        >
-          <Outlet />
-          <Footer />
+          <Sidebar
+            toggleIsOpen={isOpen}
+            toggleSetIsOpen={toggleIsOpen}
+            role={role}
+          />
         </div>
+      ) : (
+        <div>
+          <StudentHeader isOpen={open}  />
+          <StudentNavigate />
+        </div>
+      )}
+
+      <div
+        className={`${
+          role !== "student2" && "ml-[16rem]"
+        } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50`}
+        onClick={() => {
+          setIsOpenNotif(false), setIsOpenProfile(false);
+        }}
+      >
+        <Drawer
+          position="right"
+          size="80%"
+          opened={opened}
+          onClose={close}
+          title={
+            <header className="mt-2">
+              <span className="text-xl font-semibold">Menu</span>
+            </header>
+          }
+        >
+         
+        </Drawer>
+
+        <Outlet />
+        <Footer />
       </div>
-    </div>
+    </>
   );
 };
 

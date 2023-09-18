@@ -61,6 +61,12 @@
 .filterLink.active {
     @apply text-blue-500 border-b-[2px] border-blue-500
 }
+.filterLinkStudent {
+    @apply   px-4
+}
+.filterLinkStudent.active {
+    @apply text-blue-500 border-b-[2px] border-blue-500 pb-3
+}
 
 .StudentListFilterLink {
     @apply rounded-t py-1 px-4
@@ -113,3 +119,38 @@
   }
   
  
+
+
+
+.student-link.active{
+    @apply text-blue-500 font-medium 
+}
+
+
+
+
+
+
+  .weekylreporttext{
+    /* transform: scale(0.8) ; */
+    /* background: #000; */
+    
+}
+
+
+
+
+  /* tabs */
+  .profile-tabs.active {
+    @apply relative text-blue-500 font-medium;
+  }
+
+  .profile-tabs.active::after{
+    content: '';
+    height: 2px ;
+    width: 100%;
+    background: rgb(59 130 246 / var(--tw-text-opacity));
+    position: absolute;
+    left: 0;
+    bottom: -14px;
+}

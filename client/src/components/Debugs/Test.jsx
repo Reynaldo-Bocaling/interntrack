@@ -1,36 +1,62 @@
 import React from 'react';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
+import { PDFViewer, PDFDownloadLink, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
-function CustomAutocomplete({ options, label, value, onChange,size }) {
+// Define your styles
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'row',
+    backgroundColor: '#E4E4E4',
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  content: {
+    fontSize: 12,
+    marginBottom: 5,
+  },
+});
+
+// Create your PDF content component
+const MyDocument = () => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.title}>Sample PDF Export</Text>
+        <Text style={styles.content}>This is some sample content in your PDF.</Text>
+        {/* Add more content here */}
+      </View>
+    </Page>
+  </Document>
+);
+
+// Create your export function
+const exportPDF = () => {
   return (
-    <Autocomplete
-    className={size}
-      options={options}
-      getOptionLabel={(option) => option.name}
-      value={value}
-      onChange={onChange}
-      renderOption={(props, option) => (
-        <Box component="li" {...props}>
-          <Avatar>{option.avatar}</Avatar>
-          <h1 className="pl-3 text-gray-700 text-sm">{option.name}</h1>
-        </Box>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={label}
-          fullWidth
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: "new-password",
-          }}
-        />
-      )}
-    />
+    <PDFDownloadLink document={<MyDocument />} fileName="sample.pdf">
+      {({ blob, url, loading, error }) =>
+        loading ? 'Loading document...' : 'Download PDF'
+      }
+    </PDFDownloadLink>
   );
-}
+};
 
-export default CustomAutocomplete;
+// Your main component
+const ExportPDF = () => {
+  return (
+    <div>
+      <PDFViewer width="100%" height="500">
+        <MyDocument />
+      </PDFViewer>
+      {exportPDF()}
+    </div>
+  );
+};
+
+export default ExportPDF;

@@ -107,7 +107,7 @@ function Dashboard() {
               <h1 className=" text-base font-semibold text-gray-700 ">
               Weekly Attendance Overview
               </h1>
-              <LineChart data={DummyData} />
+              <LineChart data={DummyData} sizeHeight={350} />
             </div>
          
           </main>

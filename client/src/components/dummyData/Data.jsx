@@ -10,51 +10,81 @@ export const StudentList = [
             {
                 id:1,
                 totalHours: 500,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 1 '
             },
             {
                 id:2,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 2 '
             },
             {
                 id:3,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 3 '
             },
             {
                 id:4,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 4 '
             },
             {
                 id:5,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 5 '
             },
             {
                 id:6,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 6 '
             },
             {
                 id:7,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 7 '
             },
             {
                 id:8,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 8 '
             },
             {
                 id:9,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 9 '
             },
             {
                 id:10,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 10 '
             },
 
@@ -64,26 +94,41 @@ export const StudentList = [
             {
                 id:11,
                 totalHours: 0,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 11 '
             },
             {
                 id:12,
                 totalHours: 0,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 12'
             },
             {
                 id:13,
                 totalHours: 0,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 13 '
             },
             {
                 id:14,
                 totalHours: 0,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 14 '
             },
             {
                 id:15,
                 totalHours: 0,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 15 '
             },
            
@@ -97,76 +142,121 @@ export const StudentList = [
             {
                 id:15,
                 totalHours: 1,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 13,
                 date: 'january 1 '
             },
             {
                 id:16,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 2 '
             },
             {
                 id:17,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 3 '
             },
             {
                 id:18,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 4 '
             },
             {
                 id:19,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 5 '
             },
             {
                 id:20,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 6 '
             },
             {
                 id:21,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 7 '
             },
             {
                 id:22,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 8 '
             },
             {
                 id:23,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 9 '
             },
             {
                 id:24,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 10 '
             },
             {
                 id:25,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 11 '
             },
             {
                 id:26,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 12'
             },
             {
                 id:27,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 13 '
             },
             {
                 id:28,
                 totalHours: 9,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 14 '
             },
             {
                 id:29,
                 totalHours: 8,
+                timeIn: '9:00',
+                timeOut: '4:00',
+                totalHours: 7,
                 date: 'january 15 '
             },
            

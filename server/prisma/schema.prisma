@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,154 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id                    Int @id @default(autoincrement())
+  username              String
+  password              String
+  role                  String
+  director              Director[]
+  coordinator           Coordinator[]
+  teacher               Teacher[]
+  trainer               Trainer[]
+  student               Student[]
+}
+
+model Director {
+  id                    Int @id @default(autoincrement())
+  name                  String
+  firstname             String
+  middlename            String
+  lastname              String
+  email                 String
+  contact               Int
+  adress                String
+  gender                String
+  status                Int
+  createAt              String
+  user_id               Int
+  user                  User @relation(fields: [user_id], references: [id])
+}
+
+model Coordinator {
+  id                    Int @id @default(autoincrement())
+  name                  String
+  firstname             String
+  middlename            String
+  lastname              String
+  email                 String
+  contact               Int
+  adress                String
+  gender                String
+  status                Int
+  createAt              String
+  teacher               Teacher[]
+  user_id               Int
+  user                  User @relation(fields: [user_id], references: [id])
+}
+
+model Teacher {
+  id                    Int @id @default(autoincrement())
+  firstname             String
+  middlename            String
+  lastname              String
+  email                 String
+  contact               Int
+  adress                String
+  gender                String
+  specialization        String
+  status                Int
+  createAt              String
+  user_id               Int
+  coordinator_id        Int
+  user                  User @relation(fields: [user_id], references: [id])
+  coordinator           Coordinator @relation(fields: [coordinator_id], references: [id])
+  student               Student?
+}
+
+model Trainer {
+  id                    Int @id @default(autoincrement())
+  firstname             String
+  middlename            String
+  lastname              String
+  email                 String
+  contact               Int
+  adress                String
+  gender                String
+  status                Int
+  createAt              String
+  company_id            Int
+  user_id               Int
+  company               Company @relation(fields: [company_id], references: [id])
+  user                  User @relation(fields: [user_id], references: [id])
+  student               Student?
+}
+
+model Student {
+  id                    Int @id @default(autoincrement())
+  firstname             String?
+  middlename            String?
+  lastname              String?
+  email                 String?
+  contact               Int?
+  adress                String?
+  gender                String?
+  course                String?
+  status                Int?
+  createAt              String
+  areaAssigned_id       Int @unique
+  trainer_id            Int @unique
+  teacher_id            Int @unique
+  user_id               Int
+  teacher               Teacher?  @relation(fields: [teacher_id], references: [id])
+  trainer               Trainer?  @relation(fields: [trainer_id], references: [id])
+  AreaOfAssignment      AreaOfAssignment?  @relation(fields: [areaAssigned_id], references: [id])
+  user                  User      @relation(fields: [user_id], references: [id])
+  timesheet             Timesheet[]
+  task                  Task[]
+}
+
+model Timesheet {
+  id                    Int      @id @default(autoincrement())
+  timeIn                String
+  timeOut               String
+  totalHours            Int
+  date                  String
+  createAt              String
+  student_id            Int
+  student               Student  @relation(fields: [student_id], references: [id])
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+  taskName              String
+  description           String
+  date                  String
+  createAt              String
+  student_id            Int
+  student               Student @relation(fields: [student_id], references: [id])
+}
+
+model Company {
+  id                    Int @id @default(autoincrement())
+  companyName           String
+  address               String
+  email                 String
+  contact               Int
+  moa                   String
+  createAt              String
+  areaOfAssignment      AreaOfAssignment[]
+  trainer               Trainer[]
+}
+
+model AreaOfAssignment {
+  id                    Int @id @default(autoincrement())
+  areaName              String
+  slot                  Int
+  createAt              String
+  company_id            Int
+  company               Company @relation(fields: [company_id], references: [id])
+  student               Student?
 }

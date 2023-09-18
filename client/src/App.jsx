@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
-import Test from "./components/SelectCompany/index";
+import Test from "./components/Debugs/Test";
 // public routes
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
 const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));

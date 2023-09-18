@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RiArrowUpDownLine } from "react-icons/ri";
 import { BiSearch } from "react-icons/bi";
 import { FiDownload } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 
 const TimeSheetTable = ({data}) => {
+  const navigate = useNavigate()
   const months = [
     "Jan",
     "Feb",
@@ -20,6 +22,7 @@ const TimeSheetTable = ({data}) => {
     "Dec",
   ];
 
+  
   const [sortOrder, setSortOrder] = useState("asc"); // Default sorting order
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -66,6 +69,8 @@ const TimeSheetTable = ({data}) => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+
 
   return (
     <div>
@@ -139,8 +144,9 @@ const TimeSheetTable = ({data}) => {
               <tbody className="text-gray-800 text-md tracking-wide">
                 {currentItems.map((student, index) => (
                   <tr
+                  onClick={()=> navigate('/view-timeSheet', {state: {data: student}})}
                     key={student.id}
-                    className={`h-12 ${index % 2 === 0 ? "bg-slate-50" : ""}`}
+                    className={`h-12  cursor-pointer hover:bg-slate-50`}
                   >
                     <td className="px-2 border-r border-b text-center font-medium">
                       {index+1}

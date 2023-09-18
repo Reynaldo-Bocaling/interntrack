@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
-const ApexChart = ({ data }) => {
+const ApexChart = ({ data, sizeHeight }) => {
   const options = {
     chart: {
       height: 350,
@@ -30,7 +30,7 @@ const ApexChart = ({ data }) => {
 
   return (
     <div id="chart">
-      <ReactApexChart options={options} series={data} type="area" height={350} />
+      <ReactApexChart options={options} series={data} type="area" height={sizeHeight} />
     </div>
   );
 };

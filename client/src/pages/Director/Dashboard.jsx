@@ -1,272 +1,196 @@
 import React, { useEffect, useState } from "react";
-import { TbUsersGroup } from "react-icons/tb";
+import { FiUsers } from "react-icons/fi";
 import { FcCalendar } from "react-icons/fc";
-import { LiaUsersSolid } from "react-icons/lia";
-import { PiDotsThreeCircle } from "react-icons/pi";
-import { BsDot } from "react-icons/bs";
-import LineChart from "../../components/charts/LineChart";
+import { PiBuildingsBold } from "react-icons/pi";
+import { HiOutlineBookOpen } from "react-icons/hi";
+import { BiDotsVerticalRounded } from "react-icons/bi";
+import { CircularProgressbar } from "react-circular-progressbar";
 import pic from "../../assets/images/dp.png";
 import { Link } from "react-router-dom";
 import DateNow from "../../components/Dates/DateNow";
-function Dashboard() {
-  const totalCountBox = [
-    {
-      label: "Trainer",
-      url: "/daily-logs",
-      count: 25,
-      textColor: "text-blue-500",
-      shadow: "shadow-red-50",
-    },
-    {
-      label: "Student",
-      url: "/",
-      count: 40,
-      textColor: "text-green-500",
-      shadow: "shadow-green-50",
-    },
-  ];
+import Avatar from "@mui/material/Avatar";
+import LineChart from "../../components/charts/LineChart";
+import coverDirector from "../../assets/images/DirectorCover.png";
+import ApexCharts from "react-apexcharts";
 
-  // dummydata for charts
+const Dashboard = () => {
   const DummyData = [
     {
-      name: "absent",
-      data: [21, 30, 18, 41, 32],
-      color: "#ff0000",
+      name: "Hours",
+      data: [30, 50, 75, 100, 125],
+      color: "#00C6FD",
       fillColor: "rgba(255, 0, 0, 0.3)",
-    },
-    {
-      name: "present",
-      data: [8, 25, 38, 20, 24],
-      color: "#1a75ff",
-      fillColor: "rgba(26, 117, 255, 0.3)",
     },
   ];
 
+  const countBox = [
+    {
+      label: "Student",
+      totalCount: 200,
+      icon: FiUsers,
+      iconBackground: "text-sky-500 bg-sky-100",
+      ShadowColor: "shadow-red-50",
+      extraText: [
+        { label: "Assigned", totalCount: 150, color: "text-green-500" },
+        { label: "Unassigned", totalCount: 50, color: "text-red-500" },
+      ],
+    },
+    {
+      label: "Coordinator",
+      totalCount: 25,
+      icon: FiUsers,
+      iconBackground: "text-green-500 bg-green-100",
+      ShadowColor: "shadow-green-50",
+    },
+    {
+      label: "Trainer",
+      totalCount: 75,
+      icon: FiUsers,
+      iconBackground: "text-violet-500 bg-violet-100",
+      ShadowColor: "shadow-red-50",
+    },
+    {
+      label: "Company",
+      totalCount: 35,
+      icon: PiBuildingsBold,
+      iconBackground: "text-orange-500 bg-orange-100",
+      ShadowColor: "shadow-blue-50",
+      extraText: [
+        { label: "Available slots", totalCount: 55, color: "text-green-500" },
+      ],
+    },
+  ];
+
+  const currentTeacher = [
+    {
+      id: 1,
+      name: "Reynaldo F. Bocaling",
+      contact: 988282222,
+      specializations: "Web",
+      totalStudent: 40,
+      status: 1,
+    },
+    {
+      id: 2,
+      name: "Reynaldo F. Bocaling",
+      contact: 988282222,
+      specializations: "Web",
+      totalStudent: 40,
+      status: 1,
+    },
+    {
+      id: 3,
+      name: "Reynaldo F. Bocaling",
+      contact: 988282222,
+      specializations: "Web",
+      totalStudent: 40,
+      status: 1,
+    },
+    {
+      id: 4,
+      name: "Reynaldo F. Bocaling",
+      contact: 988282222,
+      specializations: "Web",
+      totalStudent: 40,
+      status: 1,
+    },
+    {
+      id: 5,
+      name: "Reynaldo F. Bocaling",
+      contact: 988282222,
+      specializations: "Web",
+      totalStudent: 40,
+      status: 1,
+    },
+  ];
+
+  const percentage = 75;
+
   return (
-    <div className="min-h-full w-full">
-      <div className="m-1 ">
-        <div className="flex gap-[2%] mt-1 min-h-[550px]">
-          {/* dashboard content */}
-          <main className="flex flex-col w-[64%] gap-2 relative ">
-            {/* title */}
-              <div className="left-content flex  items-center justify-between">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-xl font-semibold tracking-wider text-gray-700">
-                    Director overview
-                  </h1>
-                  <small className="text-blue-500 font-semibold tracking-wider">
-                    Director Dashboard
-                  </small>  
-              </div>
-              <div className="flex items-center gap-3">
-                <FcCalendar />
-                <DateNow />
-              </div>
-            </div>
-
-            {/* total count */}
-            <div className="total-count flex justify-between gap-5 py-3 ">
-              <div className="felx flex-col gap-3 bg-white w-full h-full rounded-lg p-5 shadow-2xl border shadow-blue-50 border-slate-200">
-                <div className="text-gray-500 text-md font-medium tracking-wide mb-5">
-                  Student Assignment Status
-                </div>
-                <div className="flex flex-col gap-5">
-                  <div className="flex flex-col gap-3">
-                    <div className="font-medium">Assigned: <span className="pl-8 font-semibold">{'80%'}</span></div>
-                    <div className="h-2 w-full bg-gray-200 rounded-full">
-                      <div className="h-full w-[80%] bg-blue-500 rounded-full"></div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-3">
-                    <div className="font-medium">Unassigned: <span className="pl-3 font-semibold">{'20%'}</span></div>
-                    <div className="h-2 w-full bg-gray-200 rounded-full">
-                      <div className="h-full w-[20%] bg-red-500 rounded-full"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="right flex flex-col gap-3">
-                {totalCountBox.map((totalItems, index) => (
-                  <div
-                    key={index}
-                    className={`${totalItems.shadow} relative h-24 w-[280px] flex items-center gap-5 bg-white rounded-lg p-5 py-7 shadow-2xl border border-slate-200`}
-                  >
-                    <div>
-                      <p className="text-gray-500 text-md tracking-wider font-medium mb-2">
-                        {totalItems.label}
-                      </p>
-
-                      <h1 className="text-2xl text-gray-800 font-semibold tracking-wider mb-2">
-                        {totalItems.count}
-                      </h1>
-                    </div>
-
-                    {/* count link */}
-                    <Link
-                      to={totalItems.url}
-                      className="absolute top-2 right-4 text-[0.67rem] text-blue-500 font-medium"
-                    >
-                      View
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* graph */}
-            <div className="graph-box h-auto p-4 pr-2  bg-white rounded-md border border-slate-200">
-              <h1 className=" text-base font-semibold text-gray-700 ">
-                Weekly Attendance Overview
+    <>
+       <div className="left-content flex  items-center justify-between mb-4">
+            <div className="flex flex-col gap-2">
+              <h1 className="text-xl font-semibold tracking-wider text-gray-700">
+                Coordinator overview
               </h1>
-              <LineChart data={DummyData} />
+              <small className="text-blue-500 font-semibold tracking-wider">
+                Coordinator Dashboard
+              </small>
             </div>
-          </main>
-
-          {/* right side */}
-          <div className="right-side w-[35%] flex flex-col gap-[2%] ">
-            <div className="relative  max-w-full flex  flex-col p-4 bg-white shadow-2xl shadow-blue-50 rounded-md border px-7 py-7 border-slate-200">
-              <div className="flex items-center gap-5">
-                <div className="h-[50px] w-[50px] rounded-full overflow-hidden shadow-lg p-2 border border-slate-100">
-                  <img src={pic} alt="error" />
-                </div>
-
-                <div>
-                  <h4 className="text-xl font-semibold tracking-wider">
-                    Alex Cochanco
-                  </h4>
-                  <small className="text-blue-500 font-medium tracking-wide">
-                    Coordinator
-                  </small>
-                </div>
-              </div>
-
-              <div className="mt-6 flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-5">
-                    <LiaUsersSolid size={25} className="text-blue-400" />
-                    <span className=" font-medium tracking-wide">Teacher</span>
-                  </div>
-                  <span className="pl-5 text-gray-700 text-lg font-semibold">15</span>
-                </div>
-
-                <div className="flex items-center justify-between ap-3">
-                  <div className="flex gap-5">
-                    <LiaUsersSolid size={25} className="text-blue-400" />
-                    <span className=" font-medium tracking-wide">Trainer</span>
-                  </div>
-                 <span className="pl-5 text-gray-700 text-lg font-semibold">25</span>
-                </div>
-
-                <div className="flex items-center  justify-between">
-                  <div className="flex gap-5">
-                    <LiaUsersSolid size={25} className="text-blue-400" />
-                    <span className=" font-medium tracking-wide">Student</span>
-                  </div>
-                 <span className="pl-5 text-gray-700 text-lg font-semibold">120</span>
-                </div>
-              </div>
-
-              <button className="absolute top-5 right-3 text-blue-500 text-xs font-medium tracking-wide">
-                View
-              </button>
-            </div>
-
-            <div className=" max-w-full p-4 bg-white shadow-2xl shadow-red-50 rounded-md border border-slate-200">
-              <header className="flex justify-between mb-3">
-                <div className="left flex flex-col gap-3">
-                  <small className="font-medium tracking-wide">
-                    Student Hours{" "}
-                  </small>
-                  <h2 className="text-xl font-semibold tracking-wider">72%</h2>
-                </div>
-
-                <div className="right flex flex-col gap-3 items-center">
-                  <small className="font-medium tracking-wide">
-                    Top 3 Higher hours rate
-                  </small>
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={pic}
-                      alt="error"
-                      className="h-[40px] w-[40px] bg-yellow-400 p-1 rounded-full"
-                    />
-                    <img
-                      src={pic}
-                      alt="error"
-                      className="h-[40px] w-[40px] bg-violet-400 p-1 rounded-full"
-                    />
-                    <img
-                      src={pic}
-                      alt="error"
-                      className="h-[40px] w-[40px] bg-green-400 p-1 rounded-full"
-                    />
-                  </div>
-                </div>
-              </header>
-
-              <main>
-                <div className="left"></div>
-                <div className="right"></div>
-              </main>
-            </div>
-
-            <div className="h-[65%] max-w-full p-4 bg-white shadow-lg shadow-slate-100 rounded-md border border-slate-200">
-              <div className="flex items-center">
-                <span className="text-gray-500 tracking-wide">Active now</span>
-                <BsDot size={23} className="text-green-500" />
-              </div>
-
-              <div className="mt-5">
-                <ul className="list-none flex flex-col gap-4">
-                  <li className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={pic}
-                        alt="error"
-                        className="h-[40px] w-[40px] bg-yellow-400 p-1 rounded-full"
-                      />
-                      <div className="font-medium tracking-wide">
-                        Reynaldo F. Bocaling
-                      </div>
-                    </div>
-                    <PiDotsThreeCircle size={23} className="text-gray-500" />
-                  </li>
-                  <li className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={pic}
-                        alt="error"
-                        className="h-[40px] w-[40px] bg-violet-400 p-1 rounded-full"
-                      />
-                      <div className="font-medium tracking-wide">
-                        Reynaldo F. Bocaling
-                      </div>
-                    </div>
-                    <PiDotsThreeCircle size={23} className="text-gray-500" />
-                  </li>
-                  <li className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={pic}
-                        alt="error"
-                        className="h-[40px] w-[40px] bg-green-400 p-1 rounded-full"
-                      />
-                      <div className="font-medium tracking-wide">
-                        Reynaldo F. Bocaling
-                      </div>
-                    </div>
-                    <PiDotsThreeCircle size={23} className="text-gray-500" />
-                  </li>
-                </ul>
-              </div>
+            <div className="flex items-center gap-3">
+              <FcCalendar />
+              <DateNow />
             </div>
           </div>
+      <div className="grid grid-cols-6 grid-rows-3 gap-3">
+        <div className="relative col-span-4 h-[170px] bg-white rounded-lg p-3 shadow-xl overflow-hidden shadow-[#f4f2f2] border border-[#ecf0f1]">
+          <img
+            src={coverDirector}
+            alt=""
+            className="absolute -top-3 right-1 w-[200px]"
+          />
+
+          <div className="p-3">
+            <p className="">
+              Hello, <span className="font-semibold">Alex</span>
+            </p>
+            <p className="text-xs text-gray-500 max-w-[70%] w-full mt-3 tracking-wider">
+              Your centralized control for overseeing OJT programs, tracking
+              trainee progress, and accessing vital data and resources to ensure
+              a successful training experience."
+            </p>
+            <button className="bg-sky-100 text-sky-500 text-xs font-medium py-2 px-8 mt-4 rounded-lg">
+              View
+            </button>
+          </div>
+        </div>
+        <div className="col-span-4 row-span-2 bg-white rounded-lg  p-2 shadow-xl shadow-blue-50 border border-[#ecf0f1]">
+          <p className="text-base font-semibold mt-5 ml-4 mb-3">
+            Student Hours rate per week
+          </p>
+          <div>
+            <LineChart data={DummyData} sizeHeight={260} />
+          </div>
+        </div>
+        <div className="col-span-2 col-start-5 row-span-2 row-start-1 grid grid-cols-2 gap-3">
+          {countBox.map((item, index) => (
+            <div
+              key={index}
+              className="relative bg-white rounded-lg p-5 shadow-md shadow-[#f2f4f5] border border-[#ecf0f1]"
+            >
+              <BiDotsVerticalRounded className="absolute right-3 top-3" />
+              <div className={`${item.iconBackground} p-2 rounded-lg w-[33px]`}>
+                <item.icon size={18} />
+              </div>
+              <p className="text-xs text-gray-500 tracking-wide mt-5 mb-2">
+                {item.label}
+              </p>
+              <span className="text-lg font-bold">{item.totalCount}</span>
+              {item.extraText && (
+                <div className=" absolute  left-2 text-xs flex items-center justify-between gap-2 mt-1">
+                  {item.extraText.map((text, i) => (
+                    <p
+                      key={i}
+                      className={`${text.color} flex flex-col items-center justify-center`}
+                    >
+                      {text.label}:{" "}
+                      <span className="font-medium">{text.totalCount}</span>
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="col-span-2 col-start-5 row-span-1 row-start-3 bg-white rounded-lg p-3 shadow-xl shadow-blue-50 border border-[#ecf0f1]">
+          {/* <p className="text-base font-semibold mt-3 ml-3">
+                Student Hours rate per week
+              </p>
+            <LineChart data={DummyData} sizeHeight={100} /> */}
         </div>
       </div>
-    </div>
+    </>
   );
-}
+};
 
 export default Dashboard;

@@ -1,9 +1,8 @@
-import express from 'express';
+import express, { Response } from 'express';
 import cookieParser from 'cookie-parser';
-import teacher from './routes/teacher.route'
-import student from './routes/student.route'
-import auth from './routes/auth.route'
-
+import UserRoutes from './routes/UserRoute'
+import verifyToken from './middlewares/verifyToken';
+import { Login } from './utils/auth';
 class App {
     public server;
 
@@ -14,13 +13,16 @@ class App {
         this.routes();
     }
     middlewares() {
-        this.server.use(express.json())
-        this.server.use(cookieParser())
+        this.server.use(express.json());
+        this.server.use(cookieParser());
+        this.server.get('/verify', verifyToken, (req:any, res:Response) => {
+            res.json(req.user)
+        });
+       
     }
     routes() {
-        this.server.use('/teacher', teacher)
-        this.server.use('/teacher', student)
-        this.server.use('/auth', auth)
+        this.server.use('/', UserRoutes);
+        this.server.use('/auth', Login);
     }
 }
 

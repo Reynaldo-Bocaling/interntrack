@@ -10,7 +10,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import PhoneNumber from '../forms/InputText/PhoneNumber';
-import SelectCompany from '../SelectCompany/SelectCompany';
+import CustomAutocomplete from '../SelectCompany/SelectCompany';
 
 const AddTrainer = (props) =>  {
 
@@ -36,7 +36,7 @@ const AddTrainer = (props) =>  {
 
 
 
-      companies: [
+    const  companies= [
         {
           id: 1,
           name: "7-Eleven",
@@ -59,34 +59,37 @@ const AddTrainer = (props) =>  {
 
 
       const [selectedCompany, setSelectedCompany] = useState(null);
-      const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] = useState(null);
       const [trainerName, setTrainerName] = useState('');
       const [trainerContact, setTrainerContact] = useState('');
       const [trainerEmail, setTrainerEmail] = useState('');
 
 
-const filteredAreasOfAssignment =
-    selectedCompany ? selectedCompany.areasOfAssignment : [];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (selectedCompany && selectedAreaOfAssignment && trainerName && trainerContact && trainerEmail) {
-      // Mag-collect ng impormasyon ng trainer
-      const newTrainer = {
-        company: selectedCompany.name,
-        area: selectedAreaOfAssignment.name,
-        name: trainerName,
-        contact: trainerContact,
-        email: trainerEmail,
-      };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (selectedCompany && selectedAreaOfAssignment && trainerName && trainerContact && trainerEmail) {
+  //     // Mag-collect ng impormasyon ng trainer
+  //     const newTrainer = {
+  //       company: selectedCompany.name,
+  //       area: selectedAreaOfAssignment.name,
+  //       name: trainerName,
+  //       contact: trainerContact,
+  //       email: trainerEmail,
+  //     };
 
-      // I-output ang collected na data sa console log
-      console.log('New Trainer Data:', newTrainer);
+    
+  //     console.log('New Trainer Data:', newTrainer);
 
-      // Dapat dito ay isasave mo ito sa iyong backend o database
-    } else {
-      console.error('Please fill in all fields.');
-    }
+  //     // Dapat dito ay isasave mo ito sa iyong backend o database
+  //   } else {
+  //     console.error('Please fill in all fields.');
+  //   }
+  // };
+
+
+
+  const handleCompanyChange = (event, newValue) => {
+    setSelectedCompany(newValue);
   };
 
 
@@ -99,14 +102,17 @@ const filteredAreasOfAssignment =
             closeModal={closeModal}
             content={
               <div className="mt-5 px-5">
-                <div className="w-[270px]">
-                <small className="text-gray-400 tracking-wider">
-                    Full Name
+                <div className="w-[270px] flex flex-col ">
+                <small className="text-gray-400 tracking-wider mb-3 pl-1">
+                    Company
                   </small>
 
-                  <SelectCompany
-                    options={trainerList}
-                    placeholder={"Select company"}
+                  <CustomAutocomplete
+                    size={'w-[300px]'}
+                    options={companies}
+                    label="Choose a Company"
+                    value={selectedCompany}
+                    onChange={handleCompanyChange}
                   />
                 </div>
 
@@ -234,7 +240,10 @@ const filteredAreasOfAssignment =
                   <button className="text-white font-medium tracking-wide bg-blue-500 py-2 px-7 rounded-lg">
                     Cancel
                   </button>
-                  <button className="text-white font-medium tracking-wide bg-blue-500 py-2 px-7 rounded-lg">
+                  <button 
+                  onClick={()=> alert(selectedCompany.name)}
+                  className="text-white font-medium tracking-wide bg-blue-500 py-2 px-7 rounded-lg"
+                  >
                     Submit
                   </button>
                 </div>

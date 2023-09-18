@@ -25,7 +25,7 @@ import {CgFileDocument} from 'react-icons/cg'
         icon: RxCalendar, 
         size: 18,
         subMenu: [
-          { label: "Logs", url: "/time-log"},
+          { label: "Daily Log", url: "/daily-log"},
           { label: "Attendance request", url: "/Attendance-request" },
         ],
       },
@@ -154,6 +154,45 @@ import {CgFileDocument} from 'react-icons/cg'
         icon: CgFileDocument,
         size: 17
     }
+        
+    ],
+
+
+    SuperAdmin: [
+      { label: "Dashboard", 
+        url: "/", 
+        icon: RxDashboard,
+        size: 16,
+        extraText: "HOME"
+      },
+      { label: "Companies", 
+        url: "/Companies",  
+        icon: FiUsers,
+        size: 16,
+      },
+      { label: "Users",   
+      icon: RxCalendar, 
+        size: 16,
+        subMenu: [
+          { label: "Coordinator", url: "/Coordinator-list"},
+          { label: "Trainer", url: "/Trainer-list" },
+          { label: "Students", url: "/Student-list" },
+          { label: "Teacher", url: "/Teacher-list" },
+        ],
+      },
+      { label: "Messages", 
+        url:  "/message",  
+        icon: AiOutlineMessage,
+        size: 17,
+        space: true,
+        extraText: "MESSAGES",
+      },
+      { label: "Announcements", 
+        url: "/announcement",    
+        icon: CgFileDocument,
+        size: 17
+    },
+  
         
     ],
 
