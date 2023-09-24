@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Modal from "../Modals/Modal";
 import {RiAttachment2} from 'react-icons/ri'
 import { useForm } from "@mantine/form";
+import axios from 'axios'
 import {
   TextInput,
   FileButton,
@@ -20,10 +21,15 @@ import { IMaskInput } from "react-imask";
 
 const AddTrainer = (props) => {
   const { closeModal, isOpen } = props;
-  const [file, setFile] = useState('');
+  const [Moa, setMoa] = useState('');
+  const [CompanyName, setCompanyName] = useState('')
+  const [Address, setAddress] = useState('')
+  const [Email, setEmail] = useState('')
+  const [Contact, setContact] = useState('')
 
   const form = useForm({
     initialValues: {
+      
       available_positions: [{ position: "", slot: "", key: randomId() }],
     },
   });
@@ -59,11 +65,41 @@ const AddTrainer = (props) => {
     </div>
   ));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Ito ang bahagi kung paano mo ipapasa ang data sa server o iba pang bahagi ng iyong sistema.
-    console.log(formData);
-  };
+    
+    const formData = new FormData();
+    formData.append("pdfFile", Moa);
+    formData.append("companyName", CompanyName);
+    formData.append("address", Address);
+    formData.append("email", Email);
+    formData.append("contact", Contact);
+    
+    // area of assignmnet
+    formData.append(
+      "available_positions",
+      JSON.stringify(form.values.available_positions)
+    );
+    
+    try {
+      await axios.post("http://localhost:3001/addCompany", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    
+      alert("success");
+    } catch (error) {
+      console.log(error);
+    }
+ 
+    
+    
+    
+
+  }
+
+ 
 
   return (
     <>
@@ -88,19 +124,9 @@ const AddTrainer = (props) => {
                     labelProps={{
                       className: "mb-2 ",
                     }}
+                    onChange={(e)=> setCompanyName(e.target.value)}
                   />
                   </div>
-
-                  {/* <div className="flex flex-col gap-3 mb-3 mt-7">
-                      <label> Company name </label>
-                      <input
-                        type="text"
-                        name="companyName"
-                        className="border border-slate-400 h-10 w-[300px] rounded-md pl-3"
-                        value={formData.companyName}
-                        onChange={handleChange}
-                      />
-                    </div> */}
 
                   <div className="mt-3">
                   <TextInput
@@ -110,6 +136,7 @@ const AddTrainer = (props) => {
                     labelProps={{
                       className: "mb-2 ",
                     }}
+                    onChange={(e)=> setAddress(e.target.value)}
                   />
                   </div>
 
@@ -121,6 +148,7 @@ const AddTrainer = (props) => {
                     labelProps={{
                       className: "mb-2 ",
                     }}
+                    onChange={(e)=> setEmail(e.target.value)}
                   />
                   </div>
 
@@ -135,34 +163,22 @@ const AddTrainer = (props) => {
                       component={IMaskInput}
                       mask="+63 000 000-0000"
                       placeholder="Ex. 9xx xxx-xxxx"
+                      onChange={(e)=> setContact(e.target.value)}
                     />
                   </Input.Wrapper>
                   </div>
 
                   <div className="mt-3">
-                   <Group position="center" className="bg-slate-400 rounded-lg">
-                      <FileButton
-                        onChange={setFile}
-                        accept="image/png,image/jpeg"
-                      >
-                        {(props) => <Button {...props}><RiAttachment2 /> Upload MOA</Button>}
-                      </FileButton>
-                    </Group>
-
-                    {file && (
-                      <Text size="sm" align="center" mt="sm">
-                        Picked file: {file.name}
-                      </Text>
-                    )}
+                   <input type="file" onChange={(e)=> setMoa(e.target.files[0])}/>
                   </div>
 
-                  <button
-                    type="button"
+                  <input 
                     className="mt-7 text-sm font-medium tracking-wide text-white bg-blue-500 rounded-md py-2 w-full"
-                    onClick={()=> {alert('Success'),closeModal() }}
-                  >
+                    type="submit"
+                    
+                  />
                     Submit
-                  </button>
+                  
                 </div>
 
                 {/* available posotions */}

@@ -92,7 +92,7 @@ const selectedStudentCount = selectedItems.length;
 const availableSlots = selectedAreaOfAssignment.slots;
 
 if (selectedStudentCount <= availableSlots) {
- alert('success')
+alert('fd')
 } else {
   alert(`Insufficient slots available for ${selectedAreaOfAssignment.name}`);
 
@@ -100,7 +100,13 @@ if (selectedStudentCount <= availableSlots) {
 };
 
 
+// const handleclickk = () => {
+//   console.log(':company',selectedCompany.name)
+//   console.log('trainer',selectedTrainer.name)
+//   console.log('assign area',selectedAreaOfAssignment.name)
 
+
+// }
 
   return (
     <>
@@ -111,6 +117,7 @@ if (selectedStudentCount <= availableSlots) {
           content={
             <div>
               <SelectCompanyTrainer 
+              sList={selectedItems}
               selectedCompany={selectedCompany}
               setSelectedCompany={setSelectedCompany}
               selectedTrainer={selectedTrainer}
@@ -132,7 +139,7 @@ if (selectedStudentCount <= availableSlots) {
               ></div>
               <div className="w-full p-5">
                 <div className="flex items-center justify-between mb-5">
-                  <h2 className="text-lg font-semibold tracking-wide pl-5">
+                  <h2 className=" text-lg font-semibold tracking-wide pl-5">
                     Student List
                   </h2>
                   <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-100 border">

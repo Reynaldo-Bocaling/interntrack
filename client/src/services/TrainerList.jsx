@@ -8,7 +8,7 @@ export const TrainerList = [
         lastname: 'Cochanco',
         email: 'Alex@gmail.com',
         gender: 'Male',
-        department: 'CICT Building',
+    company: 'mercury',
         contact_number: '9999999',
         picture: pic,
         studentList: [
@@ -81,7 +81,7 @@ export const TrainerList = [
         lastname: 'Cochanco',
         email: 'roan@gmail.com',
         gender: 'Female',
-        department: 'CICT Building',
+        company: 'mercury',
         contact_number: '9999999',
         picture: pic,
         studentList: [

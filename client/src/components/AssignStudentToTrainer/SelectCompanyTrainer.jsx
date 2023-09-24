@@ -9,14 +9,15 @@ function SelectCompanyTrainer(props) {
         selectedAreaOfAssignment,
         setSelectedAreaOfAssignment,
         onCLickAssign,
-        companies
+        companies,
+        sList
     } = props;
 
 
     const filteredTrainers =
-    selectedCompany ? selectedCompany.trainers : [];
+    selectedCompany ? selectedCompany.trainer : [];
   const filteredAreasOfAssignment =
-    selectedCompany ? selectedCompany.areasOfAssignment : [];
+    selectedCompany ? selectedCompany.areaOfAssignment : [];
 
  
     const handleCompanyChange = (event, newValue) => {
@@ -35,20 +36,18 @@ function SelectCompanyTrainer(props) {
 
    
 
-      // const newData = 
-      //   {
-      //     company2: com
-      //   }
-      
-   
-      // const handleAddStudent = () => {
-      //   const data2 = [
-      //     {company: selectedCompany.name},
-      //     {trainer: selectedTrainer.name},
-      //     {area: selectedAreaOfAssignment.name},
-      //   ]
-      //   console.log([data2, ...]);
-      // };
+
+      const handleclickk = () => {
+          console.log(':company',selectedCompany.companyName)
+          console.log('trainer',selectedTrainer.firstname)
+          console.log('assign area',selectedAreaOfAssignment.areaName)
+          console.log(sList);
+        
+        
+        }
+        
+
+
 
       return (
         <div className='p-5 flex flex-col gap-3'>
@@ -59,7 +58,7 @@ function SelectCompanyTrainer(props) {
               label="Choose a Company"
               value={selectedCompany}
               onChange={handleCompanyChange}
-              
+              getOptionLabel={(option) => option.companyName}
             />
     
             <CustomAutocomplete
@@ -69,6 +68,7 @@ function SelectCompanyTrainer(props) {
               value={selectedTrainer}
               onChange={handleTrainerChange}
               disabled={!selectedCompany}
+              getOptionLabel={(option) => `${option.firstname} ${option.lastname}`}
             />
           </div>
     
@@ -80,18 +80,21 @@ function SelectCompanyTrainer(props) {
               value={selectedAreaOfAssignment}
               onChange={handleAreaChange}
               disabled={!selectedCompany}
+              getOptionLabel={(option) => option.areaName}
             />
            {selectedAreaOfAssignment && (
-  <p>Available Slots for {selectedAreaOfAssignment.name}: {selectedAreaOfAssignment.slots}</p>
+  <p>Available Slots for {selectedAreaOfAssignment.areaName}: {selectedAreaOfAssignment.slot}</p>
 )}
 
     
             <button
-            onClick={onCLickAssign}
+            onClick={handleclickk}
               className='w-[15%] bg-blue-500 py-3 px-5 rounded-lg text-white'
             >
               Assign
             </button>
+
+            
           </div>
         </div>
       );

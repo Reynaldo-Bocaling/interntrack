@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StudentItem from "../../components/StudentList/StudentItem";
-import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -10,37 +9,55 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import {AiOutlineUserAdd } from "react-icons/ai";
 import AddTrainer from "../../components/AddTrainer/Addtrainer";
-import SelectCompany from "../../components/SelectCompany/SelectCompany";
+import axios from "axios";
+import picture from '../../assets/images/dp.png'
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
+  const [company, setCompany] = useState([]);
+  const [trainerList, setTrainerList] = useState([]);
+
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
   const [AddTrainerModalIsOpen, setAddTrainerModalIsOpen] = useState(false);
   //   data
-  const data = TrainerList.map(({
+  const data = trainerList.map(({
     id, 
     firstname, 
-    middleName,
+    middlename,
     lastname, 
     email, 
     gender, 
-    department, 
-    contact_number, 
-    picture,
-    studentList}) => ({
+    companyName, 
+    contact,
+    student}) => ({
         id,
         firstname,
-        name: `${firstname} ${middleName[0]}. ${lastname}`,
+        name: `${firstname} ${middlename[0]}. ${lastname}`,
         email,
         gender,
-        department,
-        contact_number,
-        totalStudent: studentList.length,
+        companyName,
+        picture:picture,
+        contact,
+        totalStudent: student !== null? student.length : 0,
         picture,
-        studentList
+        student
        
   })).filter((item) => item.name.toLowerCase().includes(searchInput));
+
+
+  
+  useEffect(()=> {
+    const fetcher = async()=> {
+        const response  = await axios.get("http://localhost:3001/getCompanyList")
+        setCompany(response.data)
+
+        const trainerlist  = await axios.get("http://localhost:3001/getTrainerList")
+        setTrainerList(trainerlist.data)
+    }
+
+    fetcher()
+  }, [])
 
 
 
@@ -75,22 +92,22 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Gender",
     }),
-    columnHelper.accessor("department", {
-      id: "department",
+    columnHelper.accessor("companyName", {
+      id: "companyName",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Department",
+      header: "Company",
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
       cell: (info) => (
         <div className="relative text-center">
-          <span className="font-medium -ml-8">{info.getValue()}</span>
+          <span className="font-medium -ml-20">{info.getValue()}</span>
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
             className={`${
               show === info.row.original.id ? "text-blue-500" : "text-gray-500"
-            } absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
+            } absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
           />
           {show === info.row.original.id && (
             <div
@@ -165,7 +182,7 @@ const Trainer_list = () => {
       </div>
 
       <StudentItem data={data} columns={columns} /> 
-      <AddTrainer isOpen={AddTrainerModalIsOpen} closeModal={()=> setAddTrainerModalIsOpen(false)} />
+      <AddTrainer isOpen={AddTrainerModalIsOpen} companies={company} closeModal={()=> setAddTrainerModalIsOpen(false)} />
     </div>
   );
 };

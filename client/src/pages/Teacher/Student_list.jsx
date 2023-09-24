@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, {useEffect, useState } from "react";
 import StudentItem from "../../components/StudentList/StudentItem";
 import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
@@ -12,34 +12,11 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
 import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
-const companies = [
-  {
-    id: 1,
-    name: "7-Eleven2",
-    trainers: [
-      { id: 1, name: "Alex" },
-      { id: 2, name: "Roan" }
-    ],
-    areasOfAssignment: [
-      { id: 1, name: "Cashier", slots: 5 },
-      { id: 2, name: "OAR", slots: 3 },
-    ],
-  },
-  {
-    id: 2,
-    name: "SM",
-    trainers: [
-      { id: 3, name: "Drew" },
-      { id: 4, name: "Gel" }
-    ],
-    areasOfAssignment: [
-      { id: 3, name: "Guard", slots: 5 },
-      { id: 4, name: "Office", slots: 3 },
-      { id: 5, name: "Stores", slots: 3 },
-    ],
-  },
-  // ...Iba pang mga kumpanya
-]
+import logo from '../../assets/icons/logo.png'
+import axios from "axios";
+
+
+
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
@@ -47,11 +24,20 @@ const Student_list = () => {
   const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
   const [AssignStudentModalIsOpen, setAssignStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
-
+  const [importToggle, setImportToggle] = useState(false)
+  const [company, setCompany] = useState([]);
 
   
 
+ 
+  useEffect(()=> {
+    const fetcher = async()=> {
+        const response  = await axios.get("http://localhost:3001/getCompanyList")
+        setCompany(response.data)
+    }
 
+    fetcher()
+  }, [])
 
 
   //   data
@@ -182,7 +168,7 @@ const Student_list = () => {
             }
           </div>
           <button 
-          onClick={()=> alert("Import")}
+          onClick={()=> setImportToggle(true)}
           className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
               <ImAttachment size={15} />
               <span className='font-semibold tracking-wider'>Import</span>
@@ -207,10 +193,33 @@ const Student_list = () => {
       </div>
 
       {/* modal asign student */}
-      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} companies={companies}  />
+      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} companies={company}  />
       <AddStudentModal isOpen={AddStudentModalIsOpen} closeModal={()=> setAddStudentModalIsOpen(false)} />
 
       <StudentItem data={data} columns={columns} />
+
+      {/* import toggle modal */}
+      {
+        importToggle && (
+          <div className="importToggleContainer fixed top-0 left-0 h-screen w-screen z-50 flex items-center justify-center">
+            <div className="relative max-w-[600px] w-full h-[370px] rounded-lg shadow-lg  bg-white p-3 pt-12 flex flex-col items-center justify-center gap-5">
+              <div className="absolute top-0 left-0 w-full h-10 flex items-center justify-between px-3 bg-white border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <img src={logo} alt="" className="w-[25px]" />
+                <span className="font-medium tracking-wide">Import Student List</span>
+                </div>
+                <button onClick={() => setImportToggle(false)}>x</button>
+              </div>
+              <div>
+                <p className="text-green-500 flex gap-3 items-center">Student list <span className="text-[#000] font-semibold text-lg">20</span></p>
+              </div>
+              <div className="bg-slate-100 p-4 rounded-xl">
+                Attached excell file
+              </div>
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 };

@@ -194,7 +194,7 @@
     core-js-pure "^3.30.2"
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.10", "@babel/runtime@^7.22.6", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.18.3", "@babel/runtime@^7.20.13", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.10", "@babel/runtime@^7.22.6", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.7":
   version "7.22.11"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.22.11.tgz"
   integrity sha512-ee7jVNlWN09+KftVOu9n7S8gQzD/Z6hN/I8VBRXW4P1+Xe7kJGXMwu8vds4aGIMHZnNbdpSWCfZZtinytpcAvA==
@@ -1465,6 +1465,11 @@ base64-js@^1.1.2, base64-js@^1.3.0:
 base64-js@^1.3.1:
   version "1.5.1"
 
+big-integer@^1.6.16:
+  version "1.6.51"
+  resolved "https://registry.npmjs.org/big-integer/-/big-integer-1.6.51.tgz"
+  integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
+
 bin-links@^4.0.1:
   version "4.0.2"
   dependencies:
@@ -1500,6 +1505,20 @@ braces@^3.0.2, braces@~3.0.2:
   integrity sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==
   dependencies:
     fill-range "^7.0.1"
+
+broadcast-channel@^3.4.1:
+  version "3.7.0"
+  resolved "https://registry.npmjs.org/broadcast-channel/-/broadcast-channel-3.7.0.tgz"
+  integrity sha512-cIAKJXAxGJceNZGTZSBzMxzyOn72cVgPnKx4dc6LRjQgbaJUQqhy5rzL3zbMxkMWsGKkv2hSFkPRMEXfoMZ2Mg==
+  dependencies:
+    "@babel/runtime" "^7.7.2"
+    detect-node "^2.1.0"
+    js-sha3 "0.8.0"
+    microseconds "0.2.0"
+    nano-time "1.0.0"
+    oblivious-set "1.0.0"
+    rimraf "3.0.2"
+    unload "2.2.0"
 
 brotli@^1.3.2:
   version "1.3.3"
@@ -1878,6 +1897,11 @@ detect-node-es@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/detect-node-es/-/detect-node-es-1.1.0.tgz"
   integrity sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==
+
+detect-node@^2.0.4, detect-node@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/detect-node/-/detect-node-2.1.0.tgz"
+  integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
 
 dfa@^1.2.0:
   version "1.2.0"
@@ -2925,6 +2949,11 @@ jiti@^1.18.2:
   resolved "https://registry.npmjs.org/jiti/-/jiti-1.19.1.tgz"
   integrity sha512-oVhqoRDaBXf7sjkll95LHVS6Myyyb1zaunVwk4Z0+WPSW4gjS0pl01zYKHScTuyEhQsFxV5L4DR5r+YqSyqyyg==
 
+js-sha3@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.npmjs.org/js-sha3/-/js-sha3-0.8.0.tgz"
+  integrity sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
@@ -3199,6 +3228,14 @@ make-fetch-happen@^13.0.0:
     promise-retry "^2.0.1"
     ssri "^10.0.0"
 
+match-sorter@^6.0.2:
+  version "6.3.1"
+  resolved "https://registry.npmjs.org/match-sorter/-/match-sorter-6.3.1.tgz"
+  integrity sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    remove-accents "0.4.2"
+
 matchmediaquery@^0.3.0:
   version "0.3.1"
   resolved "https://registry.npmjs.org/matchmediaquery/-/matchmediaquery-0.3.1.tgz"
@@ -3223,6 +3260,11 @@ micromatch@^4.0.4, micromatch@^4.0.5:
   dependencies:
     braces "^3.0.2"
     picomatch "^2.3.1"
+
+microseconds@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmjs.org/microseconds/-/microseconds-0.2.0.tgz"
+  integrity sha512-n7DHHMjR1avBbSpsTBj6fmMGh2AGrifVV4e+WYc3Q9lO+xnSZ3NyhcBND3vzzatt05LFhoKFRxrIyklmLlUtyA==
 
 mime-db@1.52.0:
   version "1.52.0"
@@ -3322,6 +3364,13 @@ mz@^2.7.0:
     any-promise "^1.0.0"
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
+
+nano-time@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/nano-time/-/nano-time-1.0.0.tgz"
+  integrity sha512-flnngywOoQ0lLQOTRNexn2gGSNuM9bKj9RZAWSzhQ+UJYaAFG9bac4DW9VHjUAzrOaIcajHybCTHe/bkvozQqA==
+  dependencies:
+    big-integer "^1.6.16"
 
 nanoid@^3.3.6:
   version "3.3.6"
@@ -3609,6 +3658,11 @@ object.values@^1.1.6:
     call-bind "^1.0.2"
     define-properties "^1.1.4"
     es-abstract "^1.20.4"
+
+oblivious-set@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/oblivious-set/-/oblivious-set-1.0.0.tgz"
+  integrity sha512-z+pI07qxo4c2CulUHCDf9lcqDlMSo72N/4rLUpRXf6fu+q8vjt8y0xS+Tlf8NTJDdTXHbdeO1n3MlbctwEoXZw==
 
 once@^1.3.0:
   version "1.4.0"
@@ -3964,6 +4018,15 @@ react-phone-input-2@^2.15.1:
     lodash.startswith "^4.2.1"
     prop-types "^15.7.2"
 
+react-query@^3.39.3:
+  version "3.39.3"
+  resolved "https://registry.npmjs.org/react-query/-/react-query-3.39.3.tgz"
+  integrity sha512-nLfLz7GiohKTJDuT4us4X3h/8unOh+00MLb2yJoGTPjxKs2bc1iDhkNx2bd5MKklXnOD3NrVZ+J2UXujA5In4g==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    broadcast-channel "^3.4.1"
+    match-sorter "^6.0.2"
+
 react-refresh@^0.14.0:
   version "0.14.0"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.14.0.tgz"
@@ -4123,6 +4186,11 @@ regexp.prototype.flags@^1.4.3:
     define-properties "^1.2.0"
     functions-have-names "^1.2.3"
 
+remove-accents@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.npmjs.org/remove-accents/-/remove-accents-0.4.2.tgz"
+  integrity sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA==
+
 resolve-from@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/resolve-from/-/resolve-from-4.0.0.tgz"
@@ -4177,7 +4245,7 @@ reusify@^1.0.4:
   resolved "https://registry.npmjs.org/reusify/-/reusify-1.0.4.tgz"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-rimraf@^3.0.2:
+rimraf@^3.0.2, rimraf@3.0.2:
   version "3.0.2"
   resolved "https://registry.npmjs.org/rimraf/-/rimraf-3.0.2.tgz"
   integrity sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
@@ -4716,6 +4784,14 @@ unique-slug@^4.0.0:
   version "4.0.0"
   dependencies:
     imurmurhash "^0.1.4"
+
+unload@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npmjs.org/unload/-/unload-2.2.0.tgz"
+  integrity sha512-B60uB5TNBLtN6/LsgAf3udH9saB5p7gqJwcFfbOEZ8BcBHnGwCf6G/TGiEqkRAxX7zAFIUtzdrXQSdL3Q/wqNA==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    detect-node "^2.0.4"
 
 update-browserslist-db@^1.0.11:
   version "1.0.11"

@@ -14,7 +14,7 @@ function SelectTrainer(props) {
     };
 
     const handleAssign = () => {
-      alert("sucess")
+      alert("sucessd")
        removeSlected()
         setSelectedValue(null)
     }

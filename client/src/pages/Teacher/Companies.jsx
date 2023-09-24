@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { HiOutlineDotsVertical, HiOutlineEye } from "react-icons/hi";
 import { IconTrash } from "@tabler/icons-react";
@@ -9,7 +9,7 @@ import AddTrainer from "../../components/Add-companies/AddcCompanies";
 import sm from '../../assets/images/SM Logo.png'
 import sevenEleven from '../../assets/images/7eleven.jpg'
 import neust from '../../assets/images/neustLogo.png'
-
+import axios from "axios";
 
 const Companies = () => {
 
@@ -18,85 +18,39 @@ const Companies = () => {
 
   const navigate = useNavigate();
     // dummy data
-    const comapnyRecords = [
-      {id: 1, 
-        companyName: "7Eleven", 
-        Address: 'Cabanatuan', 
-        Contact: 999999, 
-        Email: 'SM@gmail.com',
-        profilePicture: sevenEleven,
-        CompanyDescription: 'small bussiness from us', 
-        AvailablePositions: [
-          {id: 1, position_title: 'Manager', slot: 5, department: 'office of admin'},
-          {id: 2, position_title: 'Cashier', slot: 3, department: 'Store'},
-          {id: 3, position_title: 'Guards', slot: 2, department: 'office of admin'},
-        ],
-        moa: [{id: 1, moaUploadFile: 'filename'}],
-        students:[
-          {id: 1, name: 'rey', position: 'guard', department: 'office', totalTimeTaken: 150, position: 'Manager'}
-        ]
-      },
-      {id: 2, 
-        companyName: "SM", 
-        Address: 'Cabanatuan', 
-        Contact: 999999, 
-        Email: 'SM@gmail.com',
-        profilePicture: sm,
-        CompanyDescription: 'largest bussiness from the phil', 
-        AvailablePositions: [
-          {id: 4, position_title: 'Cashier', slot: 7, department: 'Supermarket place'},
-          {id: 5, position_title: 'Guards', slot: 3, department: 'Lee stores'},
-          {id: 6, position_title: 'sales women', slot: 5, department: 'Lee stores'},
-        ],
-        moa: [{id: 1, moaUploadFile: 'filename'}],
-        students:[
-          {id: 1, name: 'rey', position: 'guard', department: 'office', totalTimeTaken: 150,  position: 'Manager'},
-        ]
-      },
-      {id: 3, 
-        companyName: "neust", 
-        Address: 'Sumacab', 
-        Contact: 999999, 
-        Email: 'NEUST@gmail.com',
-        profilePicture: neust,
-        CompanyDescription: 'School of nueva ecija ', 
-        AvailablePositions: [
-          {id: 7, position_title: 'OAR', slot: 3, department: 'Faculty'},
-          {id: 8, position_title: 'Checker', slot: 5, department: 'Faculty'},
-          {id: 9, position_title: 'Dean assistant', slot: 2, department: 'Dean office'},
-        ],
-        moa: [{id: 1, moaUploadFile: 'filename'}],
-        students:[
-          {id: 1, name: 'rey', position: 'guard', department: 'office', totalTimeTaken: 150,  position: 'Manager'}
-        ]
-      },
-    ]
-
-    const data = comapnyRecords.map(({
-      id,
-      companyName, 
-      Address, 
-      Contact,
-      Email,
-      CompanyDescription, 
-      AvailablePositions, 
-      profilePicture,
-      moa, 
-      students }) => ({
-        id, 
-        companyName, 
-        Address,
-        Contact,
-        Email,
-        profilePicture,
-        CompanyDescription,
-        AvailablePositions,
-        moa,
-        students,
-        slots:  AvailablePositions.reduce((total, items) => total + items.slot, 0)
-    }))
+   
 
 
+    const [tryData, setTryData] = useState([])
+
+    useEffect(()=> {
+      const fetch = async(e) => {
+        try {
+          const response = await axios.get('http://localhost:3001/getCompanyList');
+          setTryData(response.data)
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      fetch()
+    }, [])
+
+
+    const filtered =  tryData.map(({
+      companyName,
+      address,
+      email,
+      contact,
+      areaOfAssignment,
+      
+        })=> ({
+          companyName,
+          address,
+          email,
+          contact,
+          slots: areaOfAssignment.reduce((total, item) => total + item.slot, 0)
+        }))
+      console.log("FILTERRED" ,filtered);
 
   return (
     <div>
@@ -142,17 +96,17 @@ const Companies = () => {
           </thead>
           <tbody>
             {
-              data.map((item, index)=> (
+              filtered.map((item, index)=> (
                   <tr 
                   className="h-12"
                   key={item.id}>
                     <td  className="text-sm text-left pl-5 tracking-wide ">{index + 1}</td>
                     <td  className="text-sm text-left pl-5 tracking-wide ">{item.companyName}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.Address}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.Email}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.Contact}</td>
+                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.address}</td>
+                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.email}</td>
+                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.contact}</td>
                     <td  className="text-sm text-left pl-5 tracking-wide ">Moa Approve</td>
-                    <td  className="text-sm text-center font-semibold tracking-wide ">{item.students.length}</td>
+                    <td  className="text-sm text-center font-semibold tracking-wide ">{40}</td>
                     <td  className="text-sm text-left pl-9 tracking-wide " >
                       <div className="relative">
                         <span className="pr-10">{item.slots}</span>

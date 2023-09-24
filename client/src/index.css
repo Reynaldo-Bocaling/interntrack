@@ -154,3 +154,7 @@
     left: 0;
     bottom: -14px;
 }
+
+.importToggleContainer {
+    background: rgba(0,0, 0, 0.1);
+}

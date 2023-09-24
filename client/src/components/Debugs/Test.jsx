@@ -1,62 +1,40 @@
-import React from 'react';
-import { PDFViewer, PDFDownloadLink, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-// Define your styles
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'row',
-    backgroundColor: '#E4E4E4',
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  content: {
-    fontSize: 12,
-    marginBottom: 5,
-  },
-});
+const Import = () => {
+  const [file, setFile] = useState(null);
 
-// Create your PDF content component
-const MyDocument = () => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text style={styles.title}>Sample PDF Export</Text>
-        <Text style={styles.content}>This is some sample content in your PDF.</Text>
-        {/* Add more content here */}
-      </View>
-    </Page>
-  </Document>
-);
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+  };
 
-// Create your export function
-const exportPDF = () => {
-  return (
-    <PDFDownloadLink document={<MyDocument />} fileName="sample.pdf">
-      {({ blob, url, loading, error }) =>
-        loading ? 'Loading document...' : 'Download PDF'
-      }
-    </PDFDownloadLink>
-  );
-};
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('excelFile', file);
 
-// Your main component
-const ExportPDF = () => {
+      await axios.post('http://localhost:3001/addManyStudent', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      alert('File uploaded successfully!');
+    } catch (error) {
+     console.log(error);
+    }
+  };
+
+   
   return (
     <div>
-      <PDFViewer width="100%" height="500">
-        <MyDocument />
-      </PDFViewer>
-      {exportPDF()}
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload} disabled={!file}>
+        Upload Excel File
+      </button>
     </div>
   );
 };
 
-export default ExportPDF;
+export default Import;

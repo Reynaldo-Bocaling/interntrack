@@ -8,9 +8,14 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
   try {
     if (!token) return res.status(403).json({ message: "Unauthorized" });
 
-    const decoded: any = jwt.verify(token, secret_key);
+    const decoded:any = jwt.verify(token, secret_key);
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
+      include: {
+        student: true,
+        trainer: true,
+        teacher: true
+      }
     });
 
     if (!user) return res.status(403).json({ message: "Unauthorized" });
