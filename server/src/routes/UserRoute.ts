@@ -4,9 +4,8 @@ import multer from "multer";
 import verifyToken from "../middlewares/verifyToken";
 const routes = Router();
 const uploadMoa = multer({storage:multer.memoryStorage()}).single('pdfFile');
-const importStudents = multer({storage:multer.memoryStorage()}).single('excelFile');
 
-routes.post('/addManyStudent', importStudents ,UserController.addManyStudent);
+routes.post('/importStudent' ,UserController.importStudent);
 routes.post('/addCompany', uploadMoa ,UserController.addCompany);
 routes.post('/addTeacher' ,UserController.AddTeacherAccount);
 routes.post('/addTrainer' ,UserController.AddTrainerAccount);

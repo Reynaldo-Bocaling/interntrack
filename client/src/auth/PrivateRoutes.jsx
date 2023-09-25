@@ -553,6 +553,20 @@ const PrivateRoutes = () => {
       {
         path: "/student-list",
         element: <Teacher_Student_list />,
+         children: [
+          {
+            path: "/student-list/",
+            element: <All />,
+          },
+          {
+            path: "/student-list/Assigned",
+            element: <Assigned />,
+          },
+          {
+            path: "/student-list/UnAssigned",
+            element: <UnAssigned />,
+          },
+        ],
       },
       {
         path: "/timeSheet",

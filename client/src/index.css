@@ -158,3 +158,65 @@
 .importToggleContainer {
     background: rgba(0,0, 0, 0.1);
 }
+
+
+
+
+
+
+
+/* check animation in import excel */
+.circleImport {
+  animation: pulse 1500ms infinite;
+}
+
+@keyframes pulse {
+  0%{
+    box-shadow: #ecf0f1 0 0 0 0;
+  }
+  100%{
+    box-shadow: #f3f5f5 0 0 0 20px;
+  }
+}
+
+.check {
+  
+  transform: scale(0);
+  animation: scale-up 0.6s forwards;
+}
+
+@keyframes scale-up {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1.2);
+  }
+}
+
+.imageImport {
+  filter: grayscale(100%);
+
+  
+}
+.imageImport.rotate {
+  transform: rotate(25deg);
+}
+
+.clicktoUploadTextBlink {
+  animation: blink ease-in-out  1s infinite;
+}
+@keyframes blink{
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.7;
+  }
+  100% {
+   opacity: 0.9;
+  }
+}

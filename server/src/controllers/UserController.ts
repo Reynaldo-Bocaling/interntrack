@@ -3,104 +3,58 @@ import prisma from "../services/prisma";
 import argon2 from "argon2";
 import generateNewPassword  from "../services/generatePassword";
 
-import xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
-import { enUS, tr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import nodemailer from "nodemailer";
-
-interface ExcelRow {
-  firstname: string;
-  middlename: string;
-  lastname: string;
-  email: string;
-  contact: number,
-  adress: string,
-  gender: string,
-  course: string,
-}
-
-
-// interface CustomRequest extends Request {
-//   user?: {
-//     id: number;
-//     username: string;
-//     // Iba pang mga field depende sa iyong use case
-//   };
-// }
 
 
 export class UserController {
-  // add many student
-  static async addManyStudent(req: any, res: Response) {
+  
+  //newImport
+  static async importStudent(req: any, res: Response) {
+    const ExcelData = req.body.excelData;
     const newPassowrd = generateNewPassword();
-     
-
-
     try {
-      // const teacherid = req.user;
-      
-      const file = req.file;
-      if(!file) {
-        return res.status(400).json({message: 'No file uploaded'});
-      }
+      //node mailer
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: "reynaldobocaling@gmail.com",
+          pass: "scgypyshxqwxdvls",
+        },
+      });
 
-      const workbook = xlsx.read(file.buffer, {type: "buffer"});
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const excelData = xlsx.utils.sheet_to_json(worksheet) as ExcelRow[];
-      
-      let isValidData = true;
-
-      for (const data of excelData) {
-        if (!isDataValid(data)) {
-          isValidData = false;
-          console.log("error type");
-          break;
-        }
-      }
-
-      if (isValidData) {
-
-        //node mailer
-        const transporter = nodemailer.createTransport({
-          service: "Gmail",
-          auth: {
-            user: "reynaldobocaling@gmail.com",
-            pass: "scgypyshxqwxdvls",
+      for (const data of ExcelData) {
+        const createdUser = await prisma.user.create({
+          data: {
+            username: data.email,
+            password: await argon2.hash(newPassowrd),
+            role: "Student",
           },
         });
 
+        await prisma.student.create({
+          data: {
+            firstname: data.firstname,
+            middlename: data.middlename,
+            lastname: data.lastname,
+            email: data.email,
+            contact: data.contact,
+            adress: data.adress,
+            gender: data.gender,
+            course: data.gender,
 
-        for (const data of excelData) {
-          const createdUser = await prisma.user.create({
-            data: {
-              username: data.email,
-              password: await argon2.hash(newPassowrd),
-              role: "Student",
-            }
-          });
-
-          await prisma.student.create({
-            data: {
-              firstname: data.firstname,
-              middlename: data.middlename,
-              lastname: data.lastname,
-              email: data.email,
-              contact: data.contact,
-              adress: data.adress,
-              gender: data.gender,
-              course: data.gender,
-
-              user_id: createdUser.id,
-              createAt: 'sept',
-              timesheet: {
-                createMany: {
-                  data: generateTimeData(),
-                },
+            user_id: createdUser.id,
+            createAt: "sept",
+            timesheet: {
+              createMany: {
+                data: generateTimeData(),
               },
-            }
-          });
-        // Send email to the user
+            },
+          },
+        });
+
         const mailOptions = {
           from: "reynaldobocaling@gmail.com",
           to: data.email,
@@ -109,25 +63,16 @@ export class UserController {
         };
 
         await transporter.sendMail(mailOptions);
-        }
-        return res.status(200).json("success import");
-      } else {
-        return res.status(401).json("Failed import");
       }
 
+      return res.status(201).json("success");
     } catch (error) {
-      return res.status(403).json(error)
+      return res.status(201).json(error);
     }
   }
 
-
-
-
-
-
   // add company
   static async addCompany(req: any, res: Response) {
-    
     const { companyName, address, email, contact, available_positions } =
       req.body;
     const moaUpload = req.file.buffer.toString("base64");
@@ -162,14 +107,9 @@ export class UserController {
 
   // add teacher
   static async AddTeacherAccount(req: any, res: Response) {
-    
     const newPassowrd = generateNewPassword();
-    const {
-      firstname,
-      lastname,
-      email,
-    } = req.body;
-    
+    const { firstname, lastname, email } = req.body;
+
     try {
       await prisma.user.create({
         data: {
@@ -182,8 +122,8 @@ export class UserController {
               lastname,
               email,
               // Iba pang mga field ng teacher na dapat tumpak
-            }
-          }
+            },
+          },
         },
       });
       return res.status(200).json({ username: email, password: newPassowrd });
@@ -194,7 +134,6 @@ export class UserController {
 
   // add trainer
   static async AddTrainerAccount(req: any, res: Response) {
-
     const newPassowrd = generateNewPassword();
     const {
       company_id,
@@ -228,7 +167,7 @@ export class UserController {
           },
         },
       });
-      return res.status(200).json({username: email,password:newPassowrd});
+      return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
       return res.status(200).json(error);
     }
@@ -240,7 +179,7 @@ export class UserController {
       const response = await prisma.company.findMany({
         include: {
           areaOfAssignment: true,
-          trainer: true
+          trainer: true,
         },
       });
       return res.status(200).json(response);
@@ -263,34 +202,11 @@ export class UserController {
     }
   }
 
-   static async getId (req:any, res:Response) {
+  static async getId(req: any, res: Response) {
     const id = req.user.teacher[0].id;
-    res.json(id)
-   }
+    res.json(id);
+  }
 }
-
-
-
-
-// sanitized
-const isDataValid = (data: ExcelRow): boolean => {
-  if (/\d/.test(data.firstname)) {
-    return false;
-  }
-  if (/\d/.test(data.lastname)) {
-    return false;
-  }
-  // if (/\d/.test(data.name)) {
-  //   return false;
-  // }
-  // if (/\d/.test(data.section)) {
-  //   return false;
-  // }
-
-  return true;
-};
-
-
 
 
 // timesheet

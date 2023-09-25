@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 import Test from "./components/Debugs/Test";
+import Main from "./components/Debugs/Main";
+
 // public routes
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
 const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
@@ -31,6 +33,7 @@ const  App = () => {
         <Route path="/welcome-to-InternTrack" element={<LandingPage />} />
         <Route path="/*" element={<PrivateRoutes />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/main" element={<Main />} />
       </Routes>
     </Suspense>
   );

@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import UserRoutes from './routes/UserRoute'
 import verifyToken from './middlewares/verifyToken';
-import  Login  from './auth/auth';
+import  Login  from './utils/auth';
 class App {
     public server;
 
