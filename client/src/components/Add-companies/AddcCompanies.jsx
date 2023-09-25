@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import Modal from "../Modals/Modal";
-import {RiAttachment2} from 'react-icons/ri'
 import { useForm } from "@mantine/form";
-import axios from 'axios'
+import axios from "axios";
 import {
   TextInput,
-  FileButton,
   Input,
   Group,
   ActionIcon,
   Box,
   Text,
   Button,
-  Code,
   NumberInput,
 } from "@mantine/core";
 import { randomId } from "@mantine/hooks";
@@ -20,16 +17,15 @@ import { IconTrash } from "@tabler/icons-react";
 import { IMaskInput } from "react-imask";
 
 const AddTrainer = (props) => {
-  const { closeModal, isOpen } = props;
-  const [Moa, setMoa] = useState('');
-  const [CompanyName, setCompanyName] = useState('')
-  const [Address, setAddress] = useState('')
-  const [Email, setEmail] = useState('')
-  const [Contact, setContact] = useState('')
+  const { closeModal, isOpen, onAddCompany } = props;
+  const [Moa, setMoa] = useState("");
+  const [CompanyName, setCompanyName] = useState("");
+  const [Address, setAddress] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Contact, setContact] = useState("");
 
   const form = useForm({
     initialValues: {
-      
       available_positions: [{ position: "", slot: "", key: randomId() }],
     },
   });
@@ -67,39 +63,22 @@ const AddTrainer = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData();
     formData.append("pdfFile", Moa);
     formData.append("companyName", CompanyName);
     formData.append("address", Address);
     formData.append("email", Email);
     formData.append("contact", Contact);
-    
+
     // area of assignmnet
     formData.append(
       "available_positions",
       JSON.stringify(form.values.available_positions)
     );
-    
-    try {
-      await axios.post("http://localhost:3001/addCompany", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-    
-      alert("success");
-    } catch (error) {
-      console.log(error);
-    }
- 
-    
-    
-    
 
-  }
-
- 
+    onAddCompany(formData);
+  };
 
   return (
     <>
@@ -115,80 +94,75 @@ const AddTrainer = (props) => {
                 className="flex items-start gap-5 px-5"
               >
                 <div className="border-r pr-12 mr-5 w-[350px]">
-                <span className="font-medium text-lg">Company Details</span>
+                  <span className="font-medium text-lg">Company Details</span>
                   <div className="mt-5">
-                  <TextInput
-                    placeholder="Enter Company Name"
-                    label="Company Name"
-                    withAsterisk
-                    labelProps={{
-                      className: "mb-2 ",
-                    }}
-                    onChange={(e)=> setCompanyName(e.target.value)}
-                  />
-                  </div>
-
-                  <div className="mt-3">
-                  <TextInput
-                    placeholder="Enter Address"
-                    label=" Address"
-                    withAsterisk
-                    labelProps={{
-                      className: "mb-2 ",
-                    }}
-                    onChange={(e)=> setAddress(e.target.value)}
-                  />
-                  </div>
-
-                  <div className="mt-3">
-                  <TextInput
-                    placeholder="Enter Email Address"
-                    label="Email Address"
-                    withAsterisk
-                    labelProps={{
-                      className: "mb-2 ",
-                    }}
-                    onChange={(e)=> setEmail(e.target.value)}
-                  />
-                  </div>
-
-                  <div className="mt-3 mb-8">
-                  <Input.Wrapper
-                    label="Contact Number"
-                    required
-                    maw={320}
-                    mx="auto"
-                  >
-                    <Input
-                      component={IMaskInput}
-                      mask="+63 000 000-0000"
-                      placeholder="Ex. 9xx xxx-xxxx"
-                      onChange={(e)=> setContact(e.target.value)}
+                    <TextInput
+                      placeholder="Enter Company Name"
+                      label="Company Name"
+                      withAsterisk
+                      labelProps={{
+                        className: "mb-2 ",
+                      }}
+                      onChange={(e) => setCompanyName(e.target.value)}
                     />
-                  </Input.Wrapper>
                   </div>
-
                   <div className="mt-3">
-                   <input type="file" onChange={(e)=> setMoa(e.target.files[0])}/>
+                    <TextInput
+                      placeholder="Enter Address"
+                      label=" Address"
+                      withAsterisk
+                      labelProps={{
+                        className: "mb-2 ",
+                      }}
+                      onChange={(e) => setAddress(e.target.value)}
+                    />
                   </div>
-
-                  <input 
+                  <div className="mt-3">
+                    <TextInput
+                      placeholder="Enter Email Address"
+                      label="Email Address"
+                      withAsterisk
+                      labelProps={{
+                        className: "mb-2 ",
+                      }}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="mt-3 mb-8">
+                    <Input.Wrapper
+                      label="Contact Number"
+                      required
+                      maw={320}
+                      mx="auto"
+                    >
+                      <Input
+                        component={IMaskInput}
+                        mask="+63 000 000-0000"
+                        placeholder="Ex. 9xx xxx-xxxx"
+                        onChange={(e) => setContact(e.target.value)}
+                      />
+                    </Input.Wrapper>
+                  </div>
+                  <div className="mt-3">
+                    <input
+                      type="file"
+                      onChange={(e) => setMoa(e.target.files[0])}
+                    />
+                  </div>
+                  <input
                     className="mt-7 text-sm font-medium tracking-wide text-white bg-blue-500 rounded-md py-2 w-full"
                     type="submit"
-                    
                   />
-                    Submit
-                  
+                  Submit
                 </div>
 
                 {/* available posotions */}
                 <Box maw={500} mx="auto">
-                  
-
                   {fields.length > 0 ? (
                     <Group mb="xs">
-                      <span className="font-medium text-lg">Area of assignment</span>
-                      
+                      <span className="font-medium text-lg">
+                        Area of assignment
+                      </span>
                     </Group>
                   ) : (
                     <Text color="dimmed" align="center">
@@ -198,25 +172,18 @@ const AddTrainer = (props) => {
 
                   {fields}
 
-                 
-                    <Button
-                      className="bg-blue-500 mt-5"
-                      onClick={() =>
-                        form.insertListItem("available_positions", {
-                          position: "",
-                          slot: "",
-                          key: randomId(),
-                        })
-                      }
-                    >
-                      Add Area
-                    </Button>
-                 
-
-                  {/* <Text size="sm" weight={500} mt="md">
-                    Form values:
-                  </Text>
-                  <Code block>{JSON.stringify(form.values, null, 2)}</Code> */}
+                  <Button
+                    className="bg-blue-500 mt-5"
+                    onClick={() =>
+                      form.insertListItem("available_positions", {
+                        position: "",
+                        slot: "",
+                        key: randomId(),
+                      })
+                    }
+                  >
+                    Add Area
+                  </Button>
                 </Box>
               </form>
             </div>

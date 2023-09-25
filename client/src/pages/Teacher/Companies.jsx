@@ -9,34 +9,28 @@ import AddTrainer from "../../components/Add-companies/AddcCompanies";
 import sm from '../../assets/images/SM Logo.png'
 import sevenEleven from '../../assets/images/7eleven.jpg'
 import neust from '../../assets/images/neustLogo.png'
-import axios from "axios";
+import PulseLoader from "react-spinners/PulseLoader";
+import { getCompany } from "../../api/Api";
+import {useQuery } from "@tanstack/react-query";
+
 
 const Companies = () => {
 
-  const [AddTrainerModalIsOpen, setAddTrainerModalIsOpen] = useState(false);
   const [OpenTableMenu, setOpenTableMenu] = useState(null);
 
   const navigate = useNavigate();
-    // dummy data
-   
+  
+    const {
+      data,
+      isLoading,
+      isError,
+    } = useQuery({
+      queryKey: ["getCompany"],
+      queryFn: getCompany,
+    });
 
-
-    const [tryData, setTryData] = useState([])
-
-    useEffect(()=> {
-      const fetch = async(e) => {
-        try {
-          const response = await axios.get('http://localhost:3001/getCompanyList');
-          setTryData(response.data)
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      fetch()
-    }, [])
-
-
-    const filtered =  tryData.map(({
+ 
+    const filtered = data? data.map(({
       companyName,
       address,
       email,
@@ -49,12 +43,11 @@ const Companies = () => {
           email,
           contact,
           slots: areaOfAssignment.reduce((total, item) => total + item.slot, 0)
-        }))
-      console.log("FILTERRED" ,filtered);
+        })): []
 
   return (
     <div>
-       <div className="flex items-center justify-between px-2 mb-5" >
+      <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Company list
         </h1>
@@ -65,67 +58,114 @@ const Companies = () => {
             <input
               type="text"
               placeholder="Search.."
-             
               className="outline-none text-sm"
             />
           </div>
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-                <BsPrinter size={17} />
-                <span className='font-semibold tracking-wider'>Print</span>
+              <BsPrinter size={17} />
+              <span className="font-semibold tracking-wider">Print</span>
             </button>
           </div>
         </div>
       </div>
 
-
       {/* table */}
-      <div className="max-w-full p-2 border rounded-lg bg-white">
+      {
+        isError ? (
+        <h1 className="my-10 text-center py-5 border">Server Failed. Please try again later</h1>
+        ): (
+          <div className="max-w-full p-2 border rounded-lg bg-white">
         <table className="w-full">
           <thead>
             <tr className="h-14 border-b">
               <th className="text-sm font-semibold tracking-wide ">No.</th>
-              <th className="text-sm text-left pl-5 font-bold tracking-wide ">Company Name</th>
-              <th className="text-sm text-left pl-5 font-bold tracking-wide ">Address</th>
-              <th className="text-sm text-left pl-5 font-bold tracking-wide ">Email</th>
-              <th className="text-sm text-left pl-5 font-bold tracking-wide ">Contact</th>
-              <th className="text-sm text-left pl-5 font-bold tracking-wide ">Company status</th>
-              <th className="text-sm text-left pl-5 font-bold tracking-wide ">Total Students</th>
-              <th className="text-sm text-left pl-5 font-bold tracking-wide ">Available</th>
+              <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                Company Name
+              </th>
+              <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                Address
+              </th>
+              <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                Email
+              </th>
+              <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                Contact
+              </th>
+              <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                Company status
+              </th>
+              <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                Total Students
+              </th>
+              <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                Available
+              </th>
             </tr>
           </thead>
           <tbody>
-            {
-              filtered.map((item, index)=> (
-                  <tr 
-                  className="h-12"
-                  key={item.id}>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{index + 1}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.companyName}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.address}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.email}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">{item.contact}</td>
-                    <td  className="text-sm text-left pl-5 tracking-wide ">Moa Approve</td>
-                    <td  className="text-sm text-center font-semibold tracking-wide ">{40}</td>
-                    <td  className="text-sm text-left pl-9 tracking-wide " >
-                      <div className="relative">
-                        <span className="pr-10">{item.slots}</span>
-                        <div>
-                          <button 
+            {isLoading ? (
+              <tr className="h-16">
+                <td colSpan={8} className="text-center  h-12 w-full">
+                  <div className="mt-5">
+                    <PulseLoader
+                    color="#1892fc"
+                    margin={5}
+                    size={13}
+                    speedMultiplier={1}
+                    className="mx-auto"
+                  />
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              filtered.map((item, index) => (
+                <tr className="h-12" key={index}>
+                  <td className="text-sm text-left pl-5 tracking-wide ">
+                    {index + 1}
+                  </td>
+                  <td className="text-sm text-left pl-5 tracking-wide ">
+                    {item.companyName}
+                  </td>
+                  <td className="text-sm text-left pl-5 tracking-wide ">
+                    {item.address}
+                  </td>
+                  <td className="text-sm text-left pl-5 tracking-wide ">
+                    {item.email}
+                  </td>
+                  <td className="text-sm text-left pl-5 tracking-wide ">
+                    {item.contact}
+                  </td>
+                  <td className="text-sm text-left pl-5 tracking-wide ">
+                    Moa Approve
+                  </td>
+                  <td className="text-sm text-center font-semibold tracking-wide ">
+                    {40}
+                  </td>
+                  <td className="text-sm text-left pl-9 tracking-wide ">
+                    <div className="relative">
+                      <span className="pr-10">{item.slots}</span>
+                      <div>
+                        <button
                           className=" absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer hover:text-gray-700"
-                          onClick={()=> setOpenTableMenu((prev) => prev === item.id? null: item.id)}
-                          >
-                            <HiOutlineDotsVertical size={20}  />
-                          </button>
-                         {
-                          OpenTableMenu === item.id && (
-                            <div 
+                          onClick={() =>
+                            setOpenTableMenu((prev) =>
+                              prev === item.id ? null : item.id
+                            )
+                          }
+                        >
+                          <HiOutlineDotsVertical size={20} />
+                        </button>
+                        {OpenTableMenu === item.id && (
+                          <div
                             className="absolute flex flex-col justify-center gap-4 top-[30%] right-7 p-5 bg-white z-50 rounded-l-lg rounded-br-lg h-[100px] w-[130px] shadow-lg border"
-                            onClick={()=> setOpenTableMenu(null)}
-                            >
-                            <button 
-                            onClick={()=> navigate('/company', {state:item})}
-                            className="flex items-center gap-1 text-gray-700 font-medium tracking-wide hover:underline"
+                            onClick={() => setOpenTableMenu(null)}
+                          >
+                            <button
+                              onClick={() =>
+                                navigate("/company", { state: item })
+                              }
+                              className="flex items-center gap-1 text-gray-700 font-medium tracking-wide hover:underline"
                             >
                               <HiOutlineEye size={17} />
                               View
@@ -135,19 +175,18 @@ const Companies = () => {
                               Delete
                             </button>
                           </div>
-                          )
-                         }
-                        </div>
+                        )}
                       </div>
-                    </td>
-                  </tr>
+                    </div>
+                  </td>
+                </tr>
               ))
-            }
-           
+            )}
           </tbody>
         </table>
       </div>
-
+        )
+      }
     </div>
   );
 };

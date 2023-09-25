@@ -2,23 +2,15 @@ import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import SelectStudent from "./SelectStudent";
 import Modal from "../Modals/Modal";
-import SelectCompanyTrainer from './SelectCompanyTrainer'
-
-
+import SelectCompanyTrainer from "./SelectCompanyTrainer";
 
 const AssignStudentModal = (props) => {
-  
-
-
-  const { closeModal, isOpen,companies } = props;
- 
+  const { closeModal, isOpen, companies } = props;
   const [selectedItems, setSelectedItems] = useState([]);
-  
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [selectedTrainer, setSelectedTrainer] = useState(null);
-  const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] = useState(null);
-
-
+  const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] =
+    useState(null);
 
   const tableData = [
     {
@@ -58,9 +50,7 @@ const AssignStudentModal = (props) => {
     { id: 10, name: "Renz Alana", email: "Renz@gmail.com", gender: "female" },
   ];
 
-
-
-       // select student
+  // select student
   const handleItemClick = (item) => {
     setSelectedItems([...selectedItems, item]);
   };
@@ -75,38 +65,12 @@ const AssignStudentModal = (props) => {
   const isItemSelected = (item) =>
     selectedItems.some((selectedItem) => selectedItem.id === item.id);
 
-
-    
-
-
- const handleAssign = () => {
-//  const assignData= {
-//   company: selectedCompany.name,
-//   trainer: selectedTrainer.name,
-//   area: selectedAreaOfAssignment.name,
-//   studentIds: selectedItems.map((student) => student.name),
-//  };
-//  console.log(assignData);
-
-const selectedStudentCount = selectedItems.length;
-const availableSlots = selectedAreaOfAssignment.slots;
-
-if (selectedStudentCount <= availableSlots) {
-alert('fd')
-} else {
-  alert(`Insufficient slots available for ${selectedAreaOfAssignment.name}`);
-
-}
-};
-
-
-// const handleclickk = () => {
-//   console.log(':company',selectedCompany.name)
-//   console.log('trainer',selectedTrainer.name)
-//   console.log('assign area',selectedAreaOfAssignment.name)
-
-
-// }
+  const handleTryCLick = () => {
+    console.log(":company", selectedCompany.companyName);
+    console.log("trainer", selectedTrainer.firstname);
+    console.log("assign area", selectedAreaOfAssignment.areaName);
+    console.log(selectedItems);
+  };
 
   return (
     <>
@@ -116,27 +80,22 @@ alert('fd')
           closeModal={closeModal}
           content={
             <div>
-              <SelectCompanyTrainer 
-              sList={selectedItems}
-              selectedCompany={selectedCompany}
-              setSelectedCompany={setSelectedCompany}
-              selectedTrainer={selectedTrainer}
-              setSelectedTrainer={setSelectedTrainer}
-              selectedAreaOfAssignment={selectedAreaOfAssignment}
-              setSelectedAreaOfAssignment={setSelectedAreaOfAssignment}
-              companies={companies}
-              onCLickAssign={handleAssign}
+              <SelectCompanyTrainer
+                sList={selectedItems}
+                selectedCompany={selectedCompany}
+                setSelectedCompany={setSelectedCompany}
+                selectedTrainer={selectedTrainer}
+                setSelectedTrainer={setSelectedTrainer}
+                selectedAreaOfAssignment={selectedAreaOfAssignment}
+                setSelectedAreaOfAssignment={setSelectedAreaOfAssignment}
+                companies={companies}
+                onCLickAssign={handleTryCLick}
               />
-{/* <button className="bg-red-500" onClick={handleAssign}>assign</button> */}
               <SelectStudent
                 selectedItems={selectedItems}
                 handleRemoveItem={handleRemoveItem}
               />
 
-              <div
-                onClick={() => setIsSelectedTrainer(false)}
-                className="flex flex-col"
-              ></div>
               <div className="w-full p-5">
                 <div className="flex items-center justify-between mb-5">
                   <h2 className=" text-lg font-semibold tracking-wide pl-5">
@@ -207,6 +166,6 @@ alert('fd')
       )}
     </>
   );
-}
+};
 
 export default AssignStudentModal;

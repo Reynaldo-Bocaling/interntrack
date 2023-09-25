@@ -10,16 +10,11 @@ import { BsPrinter } from "react-icons/bs";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
-import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 
-const Unassigned = () => {
+const UnAssigned = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
-  const [AssignStudentModalIsOpen, setAssignStudentModalIsOpen] = useState(false);
-  const [searchLength, setSearchLength] = useState(false);
 
   //   data
   const data = userData
@@ -28,6 +23,9 @@ const Unassigned = () => {
       name: `${firstname} ${middleName[0]}. ${lastname}`,
       gender: "Male",
       email,
+      teacher:'alex',
+      trainer: 'alex',
+      company: 'alex',
       picture,
       department: "CICT Building",
       AccountStatus: 1,
@@ -62,18 +60,18 @@ const Unassigned = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
-    columnHelper.accessor("gender", {
-      id: "gender",
+    columnHelper.accessor("teacher", {
+      id: "teacher",
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Teacher",
     }),
-    columnHelper.accessor("gender", {
-      id: "gender",
+    columnHelper.accessor("trainer", {
+      id: "trainer",
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Trainer",
     }),
-    columnHelper.accessor("gender", {
-        id: "gender",
+    columnHelper.accessor("company", {
+        id: "company",
         cell: (info) => <span>{info.getValue()}</span>,
         header: "Company",
       }),
@@ -130,12 +128,10 @@ const Unassigned = () => {
 
   return (
     <div className="mt-3">
-      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} />
-      <AddStudentModal isOpen={AddStudentModalIsOpen} closeModal={()=> setAddStudentModalIsOpen(false)} />
 
       <StudentItem data={data} columns={columns} />
     </div>
   );
 };
 
-export default Unassigned;
+export default UnAssigned;

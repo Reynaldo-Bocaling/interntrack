@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import StudentItem from "../../components/StudentList/StudentItem";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -7,59 +7,86 @@ import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import {AiOutlineUserAdd } from "react-icons/ai";
-import AddTrainer from "../../components/AddTrainer/Addtrainer";
-import axios from "axios";
-import picture from '../../assets/images/dp.png'
-
+import { AiOutlineUserAdd } from "react-icons/ai";
+import AddTrainer from "../../components/AddTrainer/AddTrainer2";
+import picture from "../../assets/images/dp.png";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { createTrainerAccount, getTrainer, getCompany } from "../../api/Api";
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [company, setCompany] = useState([]);
-  const [trainerList, setTrainerList] = useState([]);
-
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
   const [AddTrainerModalIsOpen, setAddTrainerModalIsOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  // addtrainer mutatio
+  const { mutate, isLoading: AddLoading } = useMutation({
+    mutationFn: createTrainerAccount,
+    onSuccess: () => {
+      alert("success");
+      queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
+      setAddTrainerModalIsOpen(false)
+    },
+    onError: () => {
+      alert("failed");
+    },
+  });
+
+  // getTrainer list
+  const {
+    data: trainerlist,
+    isLoading: trainerListLoading,
+    isError: companyListError,
+  } = useQuery({
+    queryKey: ["getTrainerList"],
+    queryFn: getTrainer,
+  });
+
+  // getCompanies
+  const {
+    data: company,
+    isLoading: companyLoading,
+    isError: companyError,
+  } = useQuery({
+    queryKey: ["getCompany"],
+    queryFn: getCompany,
+  });
+
   //   data
-  const data = trainerList.map(({
-    id, 
-    firstname, 
-    middlename,
-    lastname, 
-    email, 
-    gender, 
-    companyName, 
-    contact,
-    student}) => ({
-        id,
-        firstname,
-        name: `${firstname} ${middlename[0]}. ${lastname}`,
-        email,
-        gender,
-        companyName,
-        picture:picture,
-        contact,
-        totalStudent: student !== null? student.length : 0,
-        picture,
-        student
-       
-  })).filter((item) => item.name.toLowerCase().includes(searchInput));
+  const data = trainerlist
+    ? trainerlist
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            gender,
+            companyName,
+            contact,
+            student,
+          }) => ({
+            id,
+            firstname,
+            name: `${firstname} ${middlename[0]}. ${lastname}`,
+            email,
+            gender,
+            companyName,
+            picture: picture,
+            contact,
+            totalStudent: student !== null ? student.length : 0,
+            picture,
+            student,
+          })
+        )
+        .filter((item) => item.name.toLowerCase().includes(searchInput))
+    : [];
 
-
-  
-  useEffect(()=> {
-    const fetcher = async()=> {
-        const response  = await axios.get("http://localhost:3001/getCompanyList")
-        setCompany(response.data)
-
-        const trainerlist  = await axios.get("http://localhost:3001/getTrainerList")
-        setTrainerList(trainerlist.data)
-    }
-
-    fetcher()
-  }, [])
-
-
+  const handleFormSubmit = async (trainerData) => {
+    mutate(trainerData);
+  };
 
   //   columns
   const columns = [
@@ -124,7 +151,10 @@ const Trainer_list = () => {
 
               <NavLink
                 to="/trainer-student-list"
-                state={{List: info.row.original.studentList, trainerName: info.row.original.firstname }}
+                state={{
+                  List: info.row.original.studentList,
+                  trainerName: info.row.original.firstname,
+                }}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <RiUserSearchLine size={17} />
@@ -151,7 +181,7 @@ const Trainer_list = () => {
 
   return (
     <div>
-       <div className="flex items-center justify-between px-2 mb-5">
+      <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Trainer list
         </h1>
@@ -167,22 +197,33 @@ const Trainer_list = () => {
             />
           </div>
           <div className="flex items-center gap-3">
-            <button 
-            onClick={()=> setAddTrainerModalIsOpen(true)}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-                <AiOutlineUserAdd size={16} />
-                <span className='font-semibold tracking-wider'>Add</span>
+            <button
+              onClick={() => setAddTrainerModalIsOpen(true)}
+              className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <AiOutlineUserAdd size={16} />
+              <span className="font-semibold tracking-wider">Add</span>
             </button>
             <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-                <BsPrinter size={17} />
-                <span className='font-semibold tracking-wider'>Print</span>
+              <BsPrinter size={17} />
+              <span className="font-semibold tracking-wider">Print</span>
             </button>
           </div>
         </div>
       </div>
 
-      <StudentItem data={data} columns={columns} /> 
-      <AddTrainer isOpen={AddTrainerModalIsOpen} companies={company} closeModal={()=> setAddTrainerModalIsOpen(false)} />
+      <StudentItem
+        data={data}
+        columns={columns}
+        isLoading={trainerListLoading}
+      />
+      <AddTrainer
+        isOpen={AddTrainerModalIsOpen}
+        companies={company}
+        closeModal={() => setAddTrainerModalIsOpen(false)}
+        onFormSubmit={handleFormSubmit}
+        isLoading={AddLoading}
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import StudentItem from "../../components/StudentList/StudentItem";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -7,62 +7,54 @@ import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import {AiOutlineUserAdd } from "react-icons/ai";
-import AddTrainer from "../../components/AddTrainer/Addtrainer";
-import axios from "axios";
-import picture from '../../assets/images/dp.png'
-
+import picture from "../../assets/images/dp.png";
+import { useQuery } from "@tanstack/react-query";
+import { getTrainer } from "../../api/Api";
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
-  const [company, setCompany] = useState([]);
-  const [trainerList, setTrainerList] = useState([]);
-
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
+
+  // getTrainer list
+  const {
+    data: trainerlist,
+    isLoading: trainerListLoading,
+    isError: companyListError,
+  } = useQuery({
+    queryKey: ["getTrainerList"],
+    queryFn: getTrainer,
+  });
+
   //   data
-  const data = trainerList.map(({
-    id, 
-    firstname, 
-    middlename,
-    lastname, 
-    address,
-    email, 
-    gender, 
-    companyName, 
-    contact,
-    student}) => ({
-        id,
-        name: `${firstname} ${middlename[0]}. ${lastname}`,
-        email,
-        gender,
-        address,
-        companyName,
-        picture:picture,
-        contact,
-        totalStudent: student = null? student.length : 0,
-        picture,
-        student
-       
-  })).filter((item) => item.name.toLowerCase().includes(searchInput));
-
-  
-
-console.log(trainerList);
-
-  
-  useEffect(()=> {
-    const fetcher = async()=> {
-        const response  = await axios.get("http://localhost:3001/selectCompany")
-        setCompany(response.data)
-
-        const trainerlist  = await axios.get("http://localhost:3001/getTrainerList")
-        setTrainerList(trainerlist.data)
-    }
-
-    fetcher()
-  }, [])
-
-
+  const data = trainerlist
+    ? trainerlist
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            gender,
+            companyName,
+            contact,
+            student,
+          }) => ({
+            id,
+            firstname,
+            name: `${firstname} ${middlename[0]}. ${lastname}`,
+            email,
+            gender,
+            companyName,
+            picture: picture,
+            contact,
+            totalStudent: student !== null ? student.length : 0,
+            picture,
+            student,
+          })
+        )
+        .filter((item) => item.name.toLowerCase().includes(searchInput))
+    : [];
 
   //   columns
   const columns = [
@@ -100,18 +92,17 @@ console.log(trainerList);
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Company",
     }),
-   
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
       cell: (info) => (
         <div className="relative text-center">
-          <span className="font-medium -ml-8">{info.getValue()}</span>
+          <span className="font-medium -ml-20">{info.getValue()}</span>
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
             className={`${
               show === info.row.original.id ? "text-blue-500" : "text-gray-500"
-            } absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
+            } absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
           />
           {show === info.row.original.id && (
             <div
@@ -128,7 +119,10 @@ console.log(trainerList);
 
               <NavLink
                 to="/trainer-student-list"
-                state={{List: info.row.original.studentList, trainerName: info.row.original.firstname }}
+                state={{
+                  List: info.row.original.studentList,
+                  trainerName: info.row.original.firstname,
+                }}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <RiUserSearchLine size={17} />
@@ -155,7 +149,7 @@ console.log(trainerList);
 
   return (
     <div>
-       <div className="flex items-center justify-between px-2 mb-5">
+      <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Trainer list
         </h1>
@@ -172,14 +166,18 @@ console.log(trainerList);
           </div>
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-                <BsPrinter size={17} />
-                <span className='font-semibold tracking-wider'>Print</span>
+              <BsPrinter size={17} />
+              <span className="font-semibold tracking-wider">Print</span>
             </button>
           </div>
         </div>
       </div>
 
-      <StudentItem data={data} columns={columns} /> 
+      <StudentItem
+        data={data}
+        columns={columns}
+        isLoading={trainerListLoading}
+      />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 import Test from "./components/Debugs/Test";
 import Main from "./components/Debugs/Main";
+import AddTrainer2 from "./components/AddTrainer/AddTrainer2";
 
 // public routes
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
@@ -34,6 +35,7 @@ const  App = () => {
         <Route path="/*" element={<PrivateRoutes />} />
         <Route path="/test" element={<Test />} />
         <Route path="/main" element={<Main />} />
+        <Route path="/trainer2" element={<AddTrainer2 />} />
       </Routes>
     </Suspense>
   );
