@@ -3,18 +3,21 @@ import { BiSearch } from "react-icons/bi";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { ImAttachment } from "react-icons/im";
 import { BsPrinter } from "react-icons/bs";
-import { NavLink, Outlet } from "react-router-dom";
 import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
 import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 import * as XLSX from "xlsx";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useDisclosure as ImportStudentDisclosure,
   useDisclosure as AddStudentDisclosure,
 } from "@nextui-org/react";
-import { getCompany, importStudent } from "../../api/Api";
+import { getCompany, getStudent, importStudent } from "../../api/Api";
 import ImportStudentModalUI from "../../components/Import-Student/ImportForm";
-
+import { Tabs } from "@mantine/core";
+import AllStudent from "../../components/StudentList-Filter/All";
+import AssignedStudent from "../../components/StudentList-Filter/Assigned";
+import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
+import picture from "../../assets/images/dp.png";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -24,12 +27,15 @@ const Student_list = () => {
   const [ImportData, setImportData] = useState(null);
   const [error, setError] = useState(null);
 
+  const queryClient = useQueryClient();
+
   // modal Import/add student
   const {
     isOpen: ImportIsOpen,
     onOpen: ImportStudentOnOpen,
     onClose: ImportStudentOnClose,
   } = ImportStudentDisclosure();
+  
   const {
     isOpen: AddIsOpen,
     onOpen: AddOnOpen,
@@ -46,6 +52,16 @@ const Student_list = () => {
     queryFn: getCompany,
   });
 
+  // getStudent list
+  const {
+    data: StudentList,
+    isLoading: StudentListLoading,
+    isError: StudentListError,
+  } = useQuery({
+    queryKey: ["getStudent"],
+    queryFn: getStudent,
+  });
+
   // mutate
   const { mutate, isLoading: importLoading } = useMutation({
     mutationFn: importStudent,
@@ -53,12 +69,12 @@ const Student_list = () => {
       alert("success");
       setImportData(null);
       setError(null);
+      queryClient.invalidateQueries({ queryKey: ["getStudent"] });
     },
     onError: () => {
       alert("failed");
     },
   });
-
 
   // import handle change
   const handleFileChange = (e) => {
@@ -91,18 +107,59 @@ const Student_list = () => {
     mutate(ImportData);
   };
 
-    // sanitation
-    const validateData = (data) => {
-      const nameRegex = /^[A-Za-z\s]+$/;
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
-      for (const row of data) {
-        if (!nameRegex.test(row.firstname) || !emailRegex.test(row.email)) {
-          return false;
-        }
+  // sanitation
+  const validateData = (data) => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    for (const row of data) {
+      if (!nameRegex.test(row.firstname) || !emailRegex.test(row.email)) {
+        return false;
       }
-      return true;
-    };
+    }
+    return true;
+  };
+
+  // Student data
+  const data = StudentList
+    ? StudentList.map(
+        ({
+          id,
+          firstname,
+          middlename,
+          lastname,
+          email,
+          teacher,
+          trainer,
+          AreaOfAssignment,
+        }) => ({
+          id,
+          name: `${firstname} ${middlename[0]}. ${lastname}`,
+          gender: "Male",
+          email,
+          teacher:
+            teacher || teacher !== null
+              ? `${teacher.firstname} ${teacher.lastname}`
+              : "Not Assigned",
+          trainer:
+            trainer || trainer !== null
+              ? `${trainer.firstname} ${trainer.lastname}`
+              : "Not Assigned",
+          company:
+            AreaOfAssignment || AreaOfAssignment !== null
+              ? AreaOfAssignment.company.companyName
+              : "Not Assigned",
+          picture: picture,
+          AreaOfAssigned:
+            AreaOfAssignment || AreaOfAssignment !== null
+              ? AreaOfAssignment.areaName
+              : "Not Assigned",
+          AccountStatus: !trainer || !AreaOfAssignment ? 0 : 1,
+        })
+      ).filter((item) =>
+        item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
+      )
+    : [];
 
   return (
     <div>
@@ -110,28 +167,6 @@ const Student_list = () => {
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Student list
         </h1>
-
-        
-      </div>
-
-      <div className="flex items-center justify-between px-2 mb-5">
-        <div className=" flex items-center gap-3">
-          <NavLink className="StudentListFilterLink" to="/student-list/">
-            All
-          </NavLink>
-          <NavLink
-            className="StudentListFilterLink"
-            to="/student-list/Assigned"
-          >
-            Assigned
-          </NavLink>
-          <NavLink
-            className="StudentListFilterLink"
-            to="/student-list/UnAssigned"
-          >
-            Unassigned
-          </NavLink>
-        </div>
 
         <div className="flex items-center gap-3">
           <div
@@ -182,7 +217,42 @@ const Student_list = () => {
         </div>
       </div>
 
-      
+      <div className="flex items-center justify-between">
+        <Tabs defaultValue="first" className="w-full">
+          <Tabs.List sx={{ borderColor: "#ecf0f1" }}>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="first"
+            >
+              All
+            </Tabs.Tab>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="second"
+            >
+              Assigned
+            </Tabs.Tab>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="third"
+            >
+              Unassigned
+            </Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel value="first" pt="xs">
+            <AllStudent data={data} isLoading={StudentListLoading} isError={StudentListError} />
+          </Tabs.Panel>
+          <Tabs.Panel value="second" pt="xs">
+            <AssignedStudent data={data} isLoading={StudentListLoading} isError={StudentListError} />
+          </Tabs.Panel>
+          <Tabs.Panel value="third" pt="xs">
+            <UnassignedStudent data={data} isLoading={StudentListLoading} isError={StudentListError} />
+          </Tabs.Panel>
+        </Tabs>
+        {/* </div> */}
+      </div>
+
       {/* import toggle modal */}
       <ImportStudentModalUI
         isOpen={ImportIsOpen}
@@ -207,14 +277,6 @@ const Student_list = () => {
         isOpen={AssignStudentModalIsOpen}
         companies={companyList}
       />
-
-
-
-
-
-      {/* ouput of all studnet table */}
-      <Outlet />
-
     </div>
   );
 };

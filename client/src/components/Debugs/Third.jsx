@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const colleges = [
+const collegesData = [
   {
     college_id: 1,
     college_desc: "College of Engineering",
@@ -77,6 +77,17 @@ function App() {
     setSelectedMajor(e.target.value);
   };
 
+  
+
+  // Extract colleges, programs, and majors from the data
+  const colleges = collegesData;
+  const programs = selectedCollege
+    ? colleges.find(college => college.college_id === parseInt(selectedCollege))
+    : [];
+  const majors = selectedProgram
+    ? programs.programs.find(program => program.prog_id === parseInt(selectedProgram))
+    : [];
+
   return (
     <div>
       <label>Select College: </label>
@@ -92,7 +103,7 @@ function App() {
           <label>Select Program: </label>
           <select value={selectedProgram || ''} onChange={handleProgramChange}>
             <option value="">Select</option>
-            {colleges.find(college => college.college_id === parseInt(selectedCollege)).programs.map(program => (
+            {programs.programs.map(program => (
               <option key={program.prog_id} value={program.prog_id}>{program.prog_desc}</option>
             ))}
           </select>
@@ -104,19 +115,16 @@ function App() {
           <label>Select Major: </label>
           <select value={selectedMajor || ''} onChange={handleMajorChange}>
             <option value="">Select</option>
-            {colleges
-              .find(college => college.college_id === parseInt(selectedCollege))
-              .programs.find(program => program.prog_id === parseInt(selectedProgram))
-              .majors.map(major => (
-                <option key={major.major_id} value={major.major_id}>{major.major_desc}</option>
-              ))}
+            {majors.majors.map(major => (
+              <option key={major.major_id} value={major.major_id}>{major.major_desc}</option>
+            ))}
           </select>
         </div>
       )}
 
       <div>
-        <h3>Selected College: {selectedCollege}</h3>
-        <h3>Selected Program: {selectedProgram}</h3>
+        <h3>Selected College: {programs.college_desc}</h3>
+        <h3>Selected Program: {majors.prog_desc}</h3>
         <h3>Selected Major: {selectedMajor}</h3>
       </div>
     </div>

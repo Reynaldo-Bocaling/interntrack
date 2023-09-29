@@ -6,9 +6,7 @@ import { Modal,
   Button, 
   Input ,
   Select, 
-  SelectItem,
-  RadioGroup, 
-  Radio
+  SelectItem
 } from "@nextui-org/react";
 
 const AddCoordinator = ({onSubmit , AddIsOpen, AddOnClose   }) => {
@@ -49,7 +47,7 @@ const AddCoordinator = ({onSubmit , AddIsOpen, AddOnClose   }) => {
           {(onClose) => (
             <>
               <ModalHeader className="text-base font-semibold flex flex-col gap-1">
-                Add Student Form
+                Add Coordinator Form
               </ModalHeader>
               <ModalBody>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5 py-4 px-2">
@@ -106,27 +104,7 @@ const AddCoordinator = ({onSubmit , AddIsOpen, AddOnClose   }) => {
                   </div>
                   
                     
-                  <div className="flex items-end gap-12">
-                  <Input
-                      type="text"
-                      label="Address"
-                      name="contact"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[60%]"
-                    />
-
-                  <RadioGroup
-                    label="Sex"
-                    orientation="horizontal"
-                  >
-                    <Radio value="buenos-aires">Male</Radio>
-                    <Radio value="sydney">Female</Radio>
-                  </RadioGroup>
-                  </div>
-
-                  <div className="mt-3 flex items-center gap-3">
+                  <div className="flex items-center gap-3">
                     <Select label=" College" className="max-w-xs" size="sm" isRequired>
                         <SelectItem  value="college1">
                         college1
@@ -143,7 +121,7 @@ const AddCoordinator = ({onSubmit , AddIsOpen, AddOnClose   }) => {
                         </SelectItem>
                     </Select>
                   </div>
-                  
+
                   <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
                     <Button color="danger" variant="flat" onPress={AddOnClose} className="font-medium tracking-wide px-2">
                       Cancel

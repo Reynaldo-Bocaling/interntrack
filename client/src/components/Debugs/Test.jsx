@@ -1,106 +1,186 @@
-import React, { useState } from 'react';
-import * as XLSX from 'xlsx';
-import axios from 'axios';
-import {useMutation} from '@tanstack/react-query';
-
-
-function App() {
-  const [excelFile, setExcelFile] = useState(null);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
-
-
-  // sanitation
-  const validateData = (data) => {
-    const nameRegex = /^[A-Za-z\s]+$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    for (const row of data) {
-      if (!nameRegex.test(row.firstname) || !emailRegex.test(row.email)) {
-        return false;
-      }
-    }
-
-    return true;
-  };
-
-
-  const { mutate, isLoading } = useMutation({
-    mutationFn: data => {
-      return axios.post('http://localhost:3001/importStudent', { excelData: data });
-    },
-    onSuccess: ()=> {
-      alert('Success')
-    },
-    onError: ()=> {
-      alert("failed")
-    }
-  })
-
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setExcelFile(file);
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const excelData = XLSX.utils.sheet_to_json(worksheet);
-
-        const isValid = validateData(excelData);
-
-        if(!isValid) {
-          setError("Invalid data in the excel file.")
-        }else{
-          setError(null);
-          setData(excelData);
-        }
-      };
-      reader.readAsArrayBuffer(file);
-    }
-  };
-
-  const handleImportExcel = () => {
-    mutate(data)
-
-  
-    
-  };
-
-  if(isLoading) {
-    return <h1>Processing..</h1>
-  }
-
-  return (
-    <div>
-      <h1>Import Excel File</h1>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleImportExcel} disbaled={error}>Import</button>
-
-      {error && <p className="error">{error}</p>}
-
-     <div className='bg-red-500 p-5 mt-10'>
+import React, { useState } from 'react'
+import {Select, SelectItem} from "@nextui-org/react";
+function Test() {
+  const colleges = [
+    {
+      college_id: 1,
+      college_desc: "College of Engineering",
+      programs: [
         {
-            data ? data.length: '0'
-        }
-        <div className='nt-5 bg-blue-500'>
+          prog_id: 101,
+          prog_desc: "Computer Science",
+          majors: [
             {
-                data? 
-                
-               data.map((item, index)=> (
-                    <h1 key={index}>{item.firstname}</h1>
-               ))
-                
-                : <h1>No data</h1>
+              major_id: 201,
+              major_desc: "Software Engineering"
+            },
+            {
+              major_id: 202,
+              major_desc: "Data Science"
             }
-        </div>
-     </div>
-    </div>
-  );
+          ]
+        },
+        {
+          prog_id: 102,
+          prog_desc: "Electrical Engineering",
+          majors: [
+            {
+              major_id: 203,
+              major_desc: "Power Systems"
+            },
+            {
+              major_id: 204,
+              major_desc: "Electronics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      college_id: 2,
+      college_desc: "College of Business",
+      programs: [
+        {
+          prog_id: 103,
+          prog_desc: "Marketing",
+          majors: [
+            {
+              major_id: 205,
+              major_desc: "Digital Marketing"
+            },
+            {
+              major_id: 206,
+              major_desc: "Finance"
+            }
+          ]
+        }
+      ]
+    }
+  ];
+
+
+
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [selectedProgram, setSelectedProgram] = useState(null);
+  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [selecteTry, setSelecteTry] = useState(null);
+
+
+const handleCollege = (e) => {
+  setSelectedCollege(e.target.value);
+  setSelectedProgram(null)
+  setSelectedMajor(null)
 }
 
-export default App;
+const handleProgram = (e) => {
+  setSelectedProgram(e.target.value);
+  setSelectedMajor(null)
+}
+
+
+
+const handleMajor = (e) => {
+  setSelectedMajor(e.target.value);
+  
+}
+
+
+
+  // const programFilter = colleges.find((colleges) => colleges.college_id === select)
+
+const handleTry = (e) => {
+  setSelecteTry(e.target.value)
+}
+
+
+
+
+
+const programs2 = selectedCollege
+? colleges.find(college => college.college_id === parseInt(selectedCollege))
+: [];
+const majors2 = selectedProgram
+? programs2.find(program => program.prog_id === parseInt(selectedProgram))
+: [];
+
+console.log('program', programs2);
+console.log('major', majors2);
+
+  
+  return (
+    <div className=' flex flex-col gap-5 p-5 h-screen w-screen bg-gray-200'>
+      <div className='flex flex-col gap-2'>
+        <small>College</small>
+        <Select 
+        label="Select an item" 
+        className="max-w-xs" 
+        onChange={handleCollege}
+        
+      >
+          {
+            colleges ? 
+            colleges.map((college) => (
+              <SelectItem key={college.college_id}  value={college.college_id}>{college.college_desc}</SelectItem>
+            )) : []
+          }
+        </Select>
+      </div>
+
+      <div className='flex flex-col gap-2'>
+        <small>Program</small>
+        <select value={selectedProgram || ''} onChange={handleProgram} className='py-3 w-[300px]'>
+          <option value="">Select</option>
+          {
+            selectedCollege &&
+            colleges.find((college) => college.college_id === parseInt(selectedCollege)).programs.map(program=> (
+              <option key={program.prog_id}  value={program.prog_id}>{program.prog_desc}</option>
+            ))
+          }
+        </select>
+      </div>
+
+
+      <div className='flex flex-col gap-2'>
+        <small>Program</small>
+        <select value={selectedMajor || ''} onChange={handleMajor} className='py-3 w-[300px]'>
+          <option value="">Select</option>
+          {
+            selectedProgram &&
+            colleges.find((college) => college.college_id === parseInt(selectedCollege)).programs.find(program => program.prog_id === parseInt(selectedProgram)).majors.map(major => (
+              <option key={major.major_id}  value={major.major_desc}>{major.major_desc}</option>
+            ))
+          }
+        </select>
+      </div>
+
+
+
+
+
+
+      <Select 
+        label="Select an item" 
+        className="max-w-xs" 
+        onChange={handleTry}
+        
+      >
+        {colleges.map((item) => (
+          <SelectItem key={item.college_id} value={item.college_id}>
+            {item.college_desc}
+          </SelectItem>
+        ))}
+      </Select>
+
+
+      <div>
+        <small className='mb-3'>Selected</small>
+        <h1>{selecteTry}</h1>
+        <h1>College : {selectedCollege && colleges.find(item => item.college_id === parseInt(selectedCollege)).college_desc}</h1>
+        <h1>Program : {selectedProgram && colleges.find(item => item.college_id === parseInt(selectedCollege)).programs.find(program => program.prog_id === parseInt(selectedProgram)).prog_desc}</h1>
+        <h1>Major : {selectedMajor}</h1>
+      </div>
+    </div>
+  )
+}
+
+export default Test

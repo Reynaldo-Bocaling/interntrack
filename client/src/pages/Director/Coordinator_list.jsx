@@ -9,12 +9,31 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import picture from "../../assets/images/dp.png";
 import { useQuery } from "@tanstack/react-query";
-import { getTrainer } from "../../api/Api";
+import { getTrainer, getDirector } from "../../api/Api";
+import { AiOutlineUserAdd } from "react-icons/ai";
+import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
+
+
+import {
+  useDisclosure as AddCoordinatorDisclosure,
+} from "@nextui-org/react";
+
+
+
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
+
+  const {
+    isOpen: AddIsOpen,
+    onOpen: AddOnOpen,
+    onClose: AddOnClose,
+  } = AddCoordinatorDisclosure();
+
+
+  
   // getTrainer list
   const {
     data: trainerlist,
@@ -25,42 +44,124 @@ const Trainer_list = () => {
     queryFn: getTrainer,
   });
 
-  //   data
-  const data = trainerlist
-    ? trainerlist
-        .map(
-          ({
-            id,
-            firstname,
-            middlename,
-            lastname,
-            email,
-            gender,
-            companyName,
-            contact,
-            student,
-          }) => ({
-            id,
-            firstname,
-            name: `${firstname} ${middlename[0]}. ${lastname}`,
-            email,
-            gender,
-            companyName,
-            picture: picture,
-            contact,
-            totalStudent: student !== null ? student.length : 0,
-            picture,
-            student,
-          })
-        )
-        .filter((item) => item.name.toLowerCase().includes(searchInput))
+  const {
+    data: coordinatorList,
+    isLoading: coordinatorLoading,
+    isError: coordinatoryError,
+  } = useQuery({
+    queryKey: ["getCoordinator"],
+    queryFn: getDirector,
+  });
+
+  const data = coordinatorList
+    ? coordinatorList[0].coordinator.map(
+        ({
+          firstname,
+          middlename,
+          lastname,
+          email,
+          address,
+          contact,
+          gender,
+          teacher,
+        }) => ({
+          name: `${firstname} ${middlename[0].toUpperCase()}. ${lastname}`,
+          email,
+          address,
+          contact,
+          gender,
+          picture: picture,
+          totalTeacher: teacher ? teacher.length : 0,
+          totalStudent: teacher.reduce(
+            (total, item) => total + item.student.length,
+            0
+          ),
+          studentlist: teacher ? teacher.flatMap(({ student }) => student) : [],
+        })
+      )
     : [];
+
+  // const AllStudents = coordinatorList
+  // ? coordinatorList[0].coordinator.flatMap(({teacher})=> teacher ? teacher.flatMap(({student})=> student) : [])
+  // : []
+
+  // console.log('coor', AllStudents);
+
+  // const allStudents = coordinatorList
+  // ? coordinatorList[0].coordinator
+  //     .flatMap(({ teacher }) =>
+  //       teacher
+  //         ? teacher.flatMap((t) => t.student)
+  //         : []
+  //     )
+  //     // .map(({ id, firstname, middlename, lastname, email, contact, address, gender, course }) => ({
+  //     //   id,
+  //     //   firstname,
+  //     //   middlename,
+  //     //   lastname,
+  //     //   email,
+  //     //   contact,
+  //     //   address,
+  //     //   gender,
+  //     //   course,
+  //     // }))
+  // : [];
+
+  // const allStudents = coordinatorList
+  // ? coordinatorList[0].coordinator.flatMap(({teacher}) =>teacher? teacher.flatMap(({student})=> student) : []) : []
+
+  const people = [
+    {
+      name: "John",
+      friends: [
+        { name: "Alice", father: "FatherNameAlice" },
+        { name: "Bob", father: "FatherNameBob" },
+      ],
+    },
+    {
+      name: "Alice",
+      friends: [{ name: "Charlie", father: "FatherNamecarlie" }],
+    },
+    {
+      name: "Bob",
+      friends: [
+        { name: "David", father: "FatherNamedavid" },
+        { name: "Eve", father: "FatherNameEve" },
+      ],
+    },
+    {
+      name: "Eve",
+      friends: [
+        { name: "Frank", father: "FatherNameFrank" },
+        { name: "Grace", father: "FatherNameGrace" },
+      ],
+    },
+  ];
+
+
+
+
+
+  const handleSubmit = (data) => {
+    console.log(data);
+  }
+
+
+
+
+  const allFather = people
+    ? people.flatMap(({ friends }) =>
+        friends ? friends.flatMap(({ father }) => father) : []
+      )
+    : [];
+  console.log("flatmap", allFather);
+  //output: ['FatherNameAlice', 'FatherNameBob', 'FatherNamecarlie', 'FatherNamedavid', 'FatherNameEve', 'FatherNameFrank', 'FatherNameGrace']
 
   //   columns
   const columns = [
     columnHelper.accessor("id", {
       id: "id",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span>{info.row.index + 1}</span>,
       header: "ID",
     }),
     columnHelper.accessor("name", {
@@ -82,16 +183,23 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
+    columnHelper.accessor("contact", {
+      id: "contact",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Contact",
+    }),
     columnHelper.accessor("gender", {
       id: "gender",
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Gender",
     }),
-    columnHelper.accessor("companyName", {
-      id: "companyName",
+
+    columnHelper.accessor("totalTeacher", {
+      id: "totalTeacher",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Company",
+      header: "Total Teacher",
     }),
+
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
       cell: (info) => (
@@ -151,7 +259,7 @@ const Trainer_list = () => {
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
-          Trainer list
+          Coordinator list
         </h1>
 
         <div className="flex items-center gap-3">
@@ -165,6 +273,14 @@ const Trainer_list = () => {
             />
           </div>
           <div className="flex items-center gap-3">
+          <button
+            onClick={AddOnOpen}
+            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
+            <AiOutlineUserAdd size={16} />
+            <span className="font-semibold tracking-wider">Add</span>
+          </button>
+
             <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
               <BsPrinter size={17} />
               <span className="font-semibold tracking-wider">Print</span>
@@ -178,6 +294,13 @@ const Trainer_list = () => {
         columns={columns}
         isLoading={trainerListLoading}
       />
+
+      <AddCoordinator
+        AddIsOpen={AddIsOpen}
+        AddOnClose={AddOnClose}
+        onSubmit={handleSubmit}
+      />
+
     </div>
   );
 };

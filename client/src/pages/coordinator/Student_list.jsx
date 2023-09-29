@@ -1,166 +1,116 @@
-import React, {useState } from "react";
-import StudentItem from "../../components/StudentList/StudentItem";
-import { userData } from "../../services/AttendanceRequestData";
-import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
-import { AiOutlineUsergroupAdd,AiOutlineUserAdd } from "react-icons/ai";
-import { FiEdit3 } from "react-icons/fi";
-import { ImAttachment } from "react-icons/im";
+import React, { useState } from "react";
+import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { createColumnHelper } from "@tanstack/react-table";
-import { NavLink } from "react-router-dom";
-import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
-import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
+import { useQuery } from "@tanstack/react-query";
+import { getStudent } from "../../api/Api";
+import picture from "../../assets/images/dp.png";
+import { Tabs } from "@mantine/core";
+import AllStudent from "../../components/StudentList-Filter/All";
+import AssignedStudent from "../../components/StudentList-Filter/Assigned";
+import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
-  const columnHelper = createColumnHelper();
-  const [show, setShow] = useState(null);
-  const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
-  const [AssignStudentModalIsOpen, setAssignStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
 
-  //   data
-  const data = userData
-    .map(({ id, firstname, middleName, lastname, email, picture }) => ({
-      id,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
-      gender: "Male",
-      email,
-      picture,
-      department: "CICT Building",
-      AccountStatus: 1,
-    }))
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-    );
+  const {
+    data: StudentList,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["getStudent"],
+    queryFn: getStudent,
+  });
 
-  //   columns
-  const columns = [
-    columnHelper.accessor("id", {
-      id: "id",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "ID",
-    }),
-    columnHelper.accessor("name", {
-      id: "name",
-      cell: (info) => (
-        <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
-          <span className="font-semibold tracking-wider">
-            {info.row.original.name}
-          </span>
-        </div>
-      ),
-      header: "Name",
-    }),
-    columnHelper.accessor("email", {
-      id: "email",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Email",
-    }),
-    columnHelper.accessor("gender", {
-      id: "gender",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Gender",
-    }),
-    columnHelper.accessor("department", {
-      id: "department",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Department",
-    }),
-    columnHelper.accessor("AccountStatus", {
-      id: "AccountStatus",
-      cell: (info) => (
-        <div className="relative">
-          {info.getValue() !== 0 ? (
-            <span className="text-green-500 font-medium tracking-wide bg-green-100 px-2 py-1 rounded-lg">
-              Assigned
-            </span>
-          ) : (
-            <span className="text-red-500 font-medium tracking-wide bg-red-100 px-2 py-1 rounded-lg duration-300 transition-all">
-              Unassign
-            </span>
-          )}
-          <BiDotsVerticalRounded
-            onClick={() => ShowFunction(info.row.original.id)}
-            size={20}
-            className={`${
-              show === info.row.original.id ? "text-blue-500" : "text-gray-500"
-            } absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
-          />
-          {show === info.row.original.id && (
-            <div
-              onClick={() => setShow(!show)}
-              className="absolute top-3 right-7 h-[120px] w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
-            >
-              <NavLink
-                to="/student/"
-                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
-              >
-                <CgProfile size={17} />
-                Profile
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink>
-            </div>
-          )}
-        </div>
-      ),
-      header: "AccountStatus",
-    }),
-  ];
+  const data = StudentList
+    ? StudentList
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            teacher,
+            trainer,
+            AreaOfAssignment,
+          }) => ({
+            id,
+            name: `${firstname} ${middlename[0]}. ${lastname}`,
+            gender: "Male",
+            email,
+            teacher: teacher || teacher !== null? `${teacher.firstname} ${teacher.lastname}` : "Not Assigned",
+            trainer:trainer || trainer !== null ? `${trainer.firstname} ${trainer.lastname}` : "Not Assigned",
+            company: AreaOfAssignment || AreaOfAssignment !== null  ? AreaOfAssignment.company.companyName : "Not Assigned",
+            picture: picture,
+            AreaOfAssigned: AreaOfAssignment || AreaOfAssignment !== null ? AreaOfAssignment.areaName : "Not Assigned",
+            AccountStatus: !trainer || !AreaOfAssignment ? 0 : 1,
+          })
+        )
+        .filter((item) =>
+          item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
+        )
+    : [];
 
-  const ShowFunction = (id) => {
-    setShow((prev) => (prev === id ? null : id));
-  };
-
+  // console.log("student list", StudentList);
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Student list
         </h1>
-        
+
         <div className="flex items-center gap-3">
-          <div 
-            className={`${searchLength? 'w-[250px]': 'w-[40px]'} h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          <div
+            className={`${
+              searchLength ? "w-[250px]" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
           >
-            <BiSearch  
-            onClick={()=> setSearchLength(!searchLength)} 
-            
-            className={`${searchLength? 'text-blue-500': 'text-gray-600'} cursor-pointer`} />
-            {
-              searchLength && (
-                <input
-                  type="text"
-                  placeholder="Search.."
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  className="outline-none text-sm"
-                />
-              )
-            }
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
+            />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
           </div>
 
           <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <BsPrinter size={17} />
-              <span className='font-semibold tracking-wider'>Print</span>
+            <BsPrinter size={17} />
+            <span className="font-semibold tracking-wider">Print</span>
           </button>
         </div>
       </div>
 
-      {/* modal asign student */}
-      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} />
-      <AddStudentModal isOpen={AddStudentModalIsOpen} closeModal={()=> setAddStudentModalIsOpen(false)} />
+      <div className="flex items-center justify-between">
+        <Tabs defaultValue="first" className="w-full">
+          <Tabs.List sx={{borderColor: '#ecf0f1'}}>
+            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="first">All</Tabs.Tab>
+            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="second">Assigned</Tabs.Tab>
+            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="third">Unassigned</Tabs.Tab>
+          </Tabs.List>
 
-      <StudentItem data={data} columns={columns} />
+          <Tabs.Panel value="first" pt="xs">
+            <AllStudent data={data} />
+          </Tabs.Panel>
+          <Tabs.Panel value="second" pt="xs">
+            <AssignedStudent data={data} />
+          </Tabs.Panel>
+          <Tabs.Panel value="third" pt="xs">
+            <UnassignedStudent data={data} />
+          </Tabs.Panel>
+        </Tabs>
+      </div>
+
+      <div></div>
     </div>
   );
 };

@@ -1,50 +1,91 @@
-import React, { useState } from "react";
+import React, {useState } from "react";
 import StudentItem from "../../components/StudentList/StudentItem";
-import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
-import { ImAttachment } from "react-icons/im";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-
+import { AiOutlineUserAdd } from "react-icons/ai";
+import AddTrainer from "../../components/AddTrainer/AddTrainer2";
+import picture from "../../assets/images/dp.png";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { createTrainerAccount, getTrainer, getCompany } from "../../api/Api";
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
-  const [searchLength, setSearchLength] = useState(false);
+  const [AddTrainerModalIsOpen, setAddTrainerModalIsOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  // addtrainer mutatio
+  const { mutate, isLoading: AddLoading } = useMutation({
+    mutationFn: createTrainerAccount,
+    onSuccess: () => {
+      alert("success");
+      queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
+      setAddTrainerModalIsOpen(false)
+    },
+    onError: () => {
+      alert("failed");
+    },
+  });
+
+  // getTrainer list
+  const {
+    data: trainerlist,
+    isLoading: trainerListLoading,
+    isError: companyListError,
+  } = useQuery({
+    queryKey: ["getTrainerList"],
+    queryFn: getTrainer,
+  });
+
+  // getCompanies
+  const {
+    data: company,
+    isLoading: companyLoading,
+    isError: companyError,
+  } = useQuery({
+    queryKey: ["getCompany"],
+    queryFn: getCompany,
+  });
 
   //   data
-  const data = TrainerList.map(
-    ({
-      id,
-      firstname,
-      middleName,
-      lastname,
-      email,
-      gender,
-      department,
-      contact_number,
-      picture,
-      studentList,
-    }) => ({
-      id,
-      firstname,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
-      email,
-      gender,
-      department,
-      contact_number,
-      totalStudent: studentList.length,
-      picture,
-      studentList,
-    })
-  ).filter((item) => item.name.toLowerCase().includes(searchInput));
+  const data = trainerlist
+    ? trainerlist
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            gender,
+            companyName,
+            contact,
+            student,
+          }) => ({
+            id,
+            firstname,
+            name: `${firstname} ${middlename[0]}. ${lastname}`,
+            email,
+            gender,
+            companyName,
+            picture: picture,
+            contact,
+            totalStudent: student !== null ? student.length : 0,
+            student,
+          })
+        )
+        .filter((item) => item.name.toLowerCase().includes(searchInput))
+    : [];
+
+  const handleFormSubmit = async (trainerData) => {
+    mutate(trainerData);
+  };
 
   //   columns
   const columns = [
@@ -77,22 +118,22 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Gender",
     }),
-    columnHelper.accessor("department", {
-      id: "department",
+    columnHelper.accessor("companyName", {
+      id: "companyName",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Department",
+      header: "Company",
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
       cell: (info) => (
         <div className="relative text-center">
-          <span className="font-medium -ml-8">{info.getValue()}</span>
+          <span className="font-medium -ml-20">{info.getValue()}</span>
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
             className={`${
               show === info.row.original.id ? "text-blue-500" : "text-gray-500"
-            } absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
+            } absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
           />
           {show === info.row.original.id && (
             <div
@@ -145,51 +186,42 @@ const Trainer_list = () => {
         </h1>
 
         <div className="flex items-center gap-3">
-          <div
-            className={`${
-              searchLength ? "w-[250px]" : "w-[40px]"
-            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
-          >
-            <BiSearch
-              onClick={() => setSearchLength(!searchLength)}
-              className={`${
-                searchLength ? "text-blue-500" : "text-gray-600"
-              } cursor-pointer`}
+          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
+            <BiSearch />
+            <input
+              type="text"
+              placeholder="Search.."
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="outline-none text-sm"
             />
-            {searchLength && (
-              <input
-                type="text"
-                placeholder="Search.."
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="outline-none text-sm"
-              />
-            )}
           </div>
-          <button
-            onClick={() => alert("Import")}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-          >
-            <ImAttachment size={15} />
-            <span className="font-semibold tracking-wider">Import</span>
-          </button>
-          <button
-            onClick={() => setAddStudentModalIsOpen(true)}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-          >
-            <AiOutlineUserAdd size={16} />
-            <span className="font-semibold tracking-wider">Add</span>
-          </button>
-          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-            <BsPrinter size={17} />
-            <span className="font-semibold tracking-wider">Print</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setAddTrainerModalIsOpen(true)}
+              className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <AiOutlineUserAdd size={16} />
+              <span className="font-semibold tracking-wider">Add</span>
+            </button>
+            <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+              <BsPrinter size={17} />
+              <span className="font-semibold tracking-wider">Print</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <StudentItem data={data} columns={columns} />
-      <AddStudentModal
-        isOpen={AddStudentModalIsOpen}
-        closeModal={() => setAddStudentModalIsOpen(false)}
+      <StudentItem
+        data={data}
+        columns={columns}
+        isLoading={trainerListLoading}
+      />
+      <AddTrainer
+        isOpen={AddTrainerModalIsOpen}
+        companies={company}
+        closeModal={() => setAddTrainerModalIsOpen(false)}
+        onFormSubmit={handleFormSubmit}
+        isLoading={AddLoading}
       />
     </div>
   );

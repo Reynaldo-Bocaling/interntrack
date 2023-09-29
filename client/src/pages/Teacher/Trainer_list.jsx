@@ -77,7 +77,6 @@ const Trainer_list = () => {
             picture: picture,
             contact,
             totalStudent: student !== null ? student.length : 0,
-            picture,
             student,
           })
         )

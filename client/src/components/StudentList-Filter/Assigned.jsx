@@ -1,38 +1,19 @@
 import React, {useState } from "react";
 import StudentItem from "../../components/StudentList/StudentItem";
-import { userData } from "../../services/AttendanceRequestData";
-import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
+import {BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { AiOutlineUsergroupAdd,AiOutlineUserAdd } from "react-icons/ai";
 import { FiEdit3 } from "react-icons/fi";
-import { ImAttachment } from "react-icons/im";
-import { BsPrinter } from "react-icons/bs";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 
-const Assigned = () => {
-  const [searchInput, setSearchInput] = useState("");
+const Student_list = ({data,isLoading, isError}) => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
-  //   data
-  const data = userData
-    .map(({ id, firstname, middleName, lastname, email, picture }) => ({
-      id,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
-      gender: "Male",
-      email,
-      teacher:'alex',
-      trainer: 'alex',
-      company: 'alex',
-      picture,
-      department: "CICT Building",
-      AccountStatus: 1,
-    }))
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-    );
+  const AssignedList = data.filter((item)=> item.trainer !== "Not Assigned" ||item.AreaOfAssigned !== "Not Assigned" || item.company !== "Not Assigned")
+
+  console.log('assigned', AssignedList);
 
   //   columns
   const columns = [
@@ -62,17 +43,17 @@ const Assigned = () => {
     }),
     columnHelper.accessor("teacher", {
       id: "teacher",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span className="text-xs">{info.getValue()}</span>,
       header: "Teacher",
     }),
     columnHelper.accessor("trainer", {
       id: "trainer",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span className={`${info.getValue() == "Not Assigned" && "text-red-500"} text-xs`}>{info.getValue()}</span>,
       header: "Trainer",
     }),
     columnHelper.accessor("company", {
         id: "company",
-        cell: (info) => <span>{info.getValue()}</span>,
+        cell: (info) => <span className={`${info.getValue() == "Not Assigned" && "text-red-500"} text-xs`}>{info.getValue()}</span>,
         header: "Company",
       }),
   
@@ -128,10 +109,16 @@ const Assigned = () => {
 
   return (
     <div className="mt-3">
-
-      <StudentItem data={data} columns={columns} />
+     {isError ? (
+        <h1 className="my-10 text-center py-5 border">
+          Server Failed. Please try again later
+        </h1>
+       ): (
+        <StudentItem data={AssignedList} isLoading={isLoading}  columns={columns}  />
+       )
+       }
     </div>
   );
 };
 
-export default Assigned;
+export default Student_list;

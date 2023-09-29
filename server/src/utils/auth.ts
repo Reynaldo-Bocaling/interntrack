@@ -1,7 +1,7 @@
-import prisma from "../services/prisma";
 import jwt from "jsonwebtoken";
 import argon2 from "argon2";
 import { Request, Response } from "express";
+import { prisma } from "../services/Services";
 
 const Login = async (req: Request, res: Response) => {
   const secret_key = process.env.JWT_SECRET_KEY!;

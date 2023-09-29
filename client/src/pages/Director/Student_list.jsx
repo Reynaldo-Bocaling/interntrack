@@ -1,29 +1,59 @@
 import React, { useState } from "react";
-import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
-import { NavLink, Outlet } from "react-router-dom";
-import { Select } from '@mantine/core';
+import { useQuery } from "@tanstack/react-query";
+import { getStudent } from "../../api/Api";
+import picture from "../../assets/images/dp.png";
+import { Tabs } from "@mantine/core";
+import AllStudent from "../../components/StudentList-Filter/All";
+import AssignedStudent from "../../components/StudentList-Filter/Assigned";
+import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchLength, setSearchLength] = useState(false);
 
-  //   data
-  const data = userData
-    .map(({ id, firstname, middleName, lastname, email, picture }) => ({
-      id,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
-      gender: "Male",
-      email,
-      picture,
-      department: "CICT Building",
-      AccountStatus: 1,
-    }))
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-    );
+  const {
+    data: StudentList,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["getStudent"],
+    queryFn: getStudent,
+  });
 
+  const data = StudentList
+    ? StudentList
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            teacher,
+            trainer,
+            AreaOfAssignment,
+          }) => ({
+            id,
+            name: `${firstname} ${middlename[0]}. ${lastname}`,
+            gender: "Male",
+            email,
+            teacher: teacher || teacher !== null? `${teacher.firstname} ${teacher.lastname}` : "Not Assigned",
+            trainer:trainer || trainer !== null ? `${trainer.firstname} ${trainer.lastname}` : "Not Assigned",
+            company: AreaOfAssignment || AreaOfAssignment !== null  ? AreaOfAssignment.company.companyName : "Not Assigned",
+            picture: picture,
+            AreaOfAssigned: AreaOfAssignment || AreaOfAssignment !== null ? AreaOfAssignment.areaName : "Not Assigned",
+            AccountStatus: !trainer || !AreaOfAssignment ? 0 : 1,
+          })
+        )
+        .filter((item) =>
+          item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
+        )
+    : [];
+
+  // console.log("student list", StudentList);
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
@@ -61,34 +91,26 @@ const Student_list = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="mb-5 flex items-center gap-3">
-          <NavLink className="StudentListFilterLink" to="/student-list/">
-            All
-          </NavLink>
-          <NavLink className="StudentListFilterLink" to="/student-list/Assigned">
-            Assigned
-          </NavLink>
-          <NavLink
-            className="StudentListFilterLink"
-            to="/student-list/UnAssigned"
-          >
-            Unassigned
-          </NavLink>
-        </div>
+        <Tabs defaultValue="first" className="w-full">
+          <Tabs.List sx={{borderColor: '#ecf0f1'}}>
+            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="first">All</Tabs.Tab>
+            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="second">Assigned</Tabs.Tab>
+            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="third">Unassigned</Tabs.Tab>
+          </Tabs.List>
 
-        <Select
-          placeholder="Select Course"
-          className="w-[250px]"
-          data={[
-            { value: 'cict', label: 'CICT' },
-            { value: 'crim', label: 'CRIM' },
-            { value: 'nurse', label: 'NURSE' },
-            { value: 'educ', label: 'EDUC' },
-          ]}
-        />
+          <Tabs.Panel value="first" pt="xs">
+            <AllStudent data={data} />
+          </Tabs.Panel>
+          <Tabs.Panel value="second" pt="xs">
+            <AssignedStudent data={data} />
+          </Tabs.Panel>
+          <Tabs.Panel value="third" pt="xs">
+            <UnassignedStudent data={data} />
+          </Tabs.Panel>
+        </Tabs>
       </div>
 
-      <Outlet />
+      <div></div>
     </div>
   );
 };

@@ -1,29 +1,18 @@
 import { Request, Response } from "express";
-import prisma from "../services/prisma";
 import argon2 from "argon2";
-import generateNewPassword  from "../services/generatePassword";
-
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
-import nodemailer from "nodemailer";
-
+import { generateNewPassword, transporter, prisma } from "../services/Services";
 
 export class UserController {
   
+  // POST
   //newImport
   static async importStudent(req: any, res: Response) {
     const ExcelData = req.body.excelData;
     const newPassowrd = generateNewPassword();
     try {
-      //node mailer
-      const transporter = nodemailer.createTransport({
-        service: "Gmail",
-        auth: {
-          user: "reynaldobocaling@gmail.com",
-          pass: "scgypyshxqwxdvls",
-        },
-      });
 
       for (const data of ExcelData) {
         const createdUser = await prisma.user.create({
@@ -41,12 +30,14 @@ export class UserController {
             lastname: data.lastname,
             email: data.email,
             contact: data.contact,
-            adress: data.adress,
+            address: data.address,
             gender: data.gender,
-            course: data.gender,
-
+            campus: 'Sumacab',
+            college: data.firstname,
+            program:data.firstname,
+            major: data.firstname,
+            teacher_id: 1,
             user_id: createdUser.id,
-            createAt: "sept",
             timesheet: {
               createMany: {
                 data: generateTimeData(),
@@ -92,6 +83,7 @@ export class UserController {
           email,
           contact: 99,
           moaUpload,
+          director_id: 1,
           areaOfAssignment: {
             createMany: {
               data: areasToInsert,
@@ -106,10 +98,18 @@ export class UserController {
   }
 
   // add teacher
-  static async AddTeacherAccount(req: any, res: Response) {
+  static async AddTeacher(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const { firstname, lastname, email } = req.body;
-
+    const {
+      firstname,
+      middlename,
+      lastname,
+      email,
+      address,
+      contact,
+      gender,
+      specialization
+    } = req.body;
     try {
       await prisma.user.create({
         data: {
@@ -119,32 +119,35 @@ export class UserController {
           teacher: {
             create: {
               firstname,
+              middlename,
               lastname,
               email,
-              // Iba pang mga field ng teacher na dapat tumpak
+              contact: Number(contact),
+              campus: 'Sumacab',
+              college: 'CICT',
+              program: 'BSIT',
+              major: 'Web',
+              coordinator_id: 1,
             },
           },
         },
       });
       return res.status(200).json({ username: email, password: newPassowrd });
-    } catch (error) {
-      return res.status(200).json(error);
+    } catch (error:any) {
+      return res.status(500).json(error.message);
     }
   }
 
   // add trainer
-  static async AddTrainerAccount(req: any, res: Response) {
+  static async AddTrainer(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
     const {
       company_id,
-      companyName,
       firstname,
       middlename,
       lastname,
       email,
-      address,
       contact,
-      gender,
     } = req.body;
     try {
       await prisma.user.create({
@@ -158,11 +161,9 @@ export class UserController {
               middlename,
               lastname,
               email,
-              address,
               contact: Number(contact),
-              gender,
+              companyName: 'SM',
               company_id,
-              companyName,
             },
           },
         },
@@ -173,7 +174,9 @@ export class UserController {
     }
   }
 
-  // get company list
+
+  // GET
+  // get list
   static async getCompanyList(req: any, res: Response) {
     try {
       const response = await prisma.company.findMany({
@@ -188,7 +191,6 @@ export class UserController {
     }
   }
 
-  // get trainer list
   static async getTrainerList(req: any, res: Response) {
     try {
       const response = await prisma.trainer.findMany({
@@ -202,10 +204,78 @@ export class UserController {
     }
   }
 
-  static async getId(req: any, res: Response) {
-    const id = req.user.teacher[0].id;
-    res.json(id);
+  static async getDirectorList(req: any, res:Response){
+    try {
+      const response = await prisma.director.findMany({
+        include: {
+          coordinator: {
+            include: {
+              teacher: {
+                include: {
+                  student: true
+                }
+              }
+            }
+          }
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
   }
+
+  static async getCoordinatorList(req: any, res:Response){}
+
+  static async getTeacherList(req: Request, res:Response){
+    try {
+      const response = await prisma.teacher.findMany({
+        include: {
+          student: true,
+          coordinator: true
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  // get student list
+  static async getStudentList(req: Request, res:Response){
+    try {
+      const response = await prisma.student.findMany({
+        include: {
+          teacher: true,
+          trainer: true,
+          AreaOfAssignment: {
+            include: {
+              company: true
+            }
+          },
+          timesheet:true,
+          task: true
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+
+  // get user info
+  static async getDirector(req: any, res:Response){}
+  static async getCoordinator(req: any, res:Response){}
+  static async getTeacher(req: any, res:Response){}
+  static async getStudent(req: any, res:Response){}
+
+
+
+  // static async getId(req: any, res: Response) {
+  //   const id = req.user.teacher[0].id;
+  //   res.json(id);
+  // }
 }
 
 

@@ -11,46 +11,95 @@ import { NavLink } from "react-router-dom";
 import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 import { ImAttachment } from "react-icons/im";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getTeacher } from "../../api/Api";
+import picture from '../../assets/images/dp.png'
+import { useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+import AddTeacherModal from '../../components/add-teacher/AddTeacher'
+import {createTeacherAccount} from  '../../api/Api.jsx'
 
-const Trainer_list = () => {
+
+
+const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
   const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
 
+
+  //modal add teacher
+  const {
+    isOpen: AddIsOpen,
+    onOpen: AddTeacherOnOpen,
+    onClose: AddTeacherOnClose,
+  } = AddTeacherDisclosure();
+
+  const queryClient = useQueryClient();
+
+  const {mutate, isLoading: AddTeacherLoading, isError: AddTeacherError} = useMutation({
+    mutationFn: createTeacherAccount,
+    onSuccess: ()=> {
+      alert("success")
+      queryClient.invalidateQueries({ queryKey: ["getTeacher"] });
+    },
+    onError: ()=> {
+      alert('failed')
+    }
+  })
+
+  const  {
+    data: teacherList
+  } = useQuery({
+    queryKey: ["getTeacher"],
+    queryFn: getTeacher
+  });
+
+
   //   data
-  const data = TrainerList.map(
+  const data = teacherList ? teacherList.map(
     ({
       id,
       firstname,
-      middleName,
+      middlename,
       lastname,
       email,
       gender,
-      department,
-      contact_number,
-      picture,
-      studentList,
+      specialization,
+      contact,
+      status,
+      student,
+      coordinator
     }) => ({
       id,
       firstname,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
+      name: `${firstname} ${middlename[0]}. ${lastname}`,
       email,
       gender,
-      department,
-      contact_number,
-      totalStudent: studentList.length,
-      picture,
-      studentList,
+      specialization,
+      contact,
+      status,
+      totalStudent: 2,
+      picture: picture,
+      studentList: student,
+      coordinator: `${coordinator.firstname} ${coordinator.middlename}`,
     })
-  ).filter((item) => item.name.toLowerCase().includes(searchInput));
+  ).filter((item) => item.name.toLowerCase().includes(searchInput)) : []
 
-  //   columns
+
+
+  const handleSubmit = (formData) => {
+      mutate(formData)
+  }
+
+
+
+
+
   const columns = [
     columnHelper.accessor("id", {
       id: "id",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span>{info.row.index + 1}</span>,
       header: "ID",
     }),
     columnHelper.accessor("name", {
@@ -77,10 +126,10 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Gender",
     }),
-    columnHelper.accessor("department", {
-      id: "department",
+    columnHelper.accessor("specialization", {
+      id: "specialization",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Department",
+      header: "Specialization",
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
@@ -165,15 +214,9 @@ const Trainer_list = () => {
               />
             )}
           </div>
+        
           <button
-            onClick={() => alert("Import")}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-          >
-            <ImAttachment size={15} />
-            <span className="font-semibold tracking-wider">Import</span>
-          </button>
-          <button
-            onClick={() => setAddStudentModalIsOpen(true)}
+            onClick={AddTeacherOnOpen}
             className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
           >
             <AiOutlineUserAdd size={16} />
@@ -187,12 +230,17 @@ const Trainer_list = () => {
       </div>
 
       <StudentItem data={data} columns={columns} />
-      <AddStudentModal
-        isOpen={AddStudentModalIsOpen}
-        closeModal={() => setAddStudentModalIsOpen(false)}
+     
+
+      <AddTeacherModal
+        AddIsOpen={AddIsOpen}
+        AddOnOpen={AddTeacherOnOpen}
+        AddOnClose={AddTeacherOnClose}
+        onSubmit={handleSubmit}
       />
+
     </div>
   );
 };
 
-export default Trainer_list;
+export default TeacherList;

@@ -21,13 +21,13 @@ const ViewTimesheets = lazy(() =>
 );
 
 // student list with filter components
-const All = lazy(() => import("../components/StudentList-Filter/All"));
-const Assigned = lazy(() =>
-  import("../components/studentList-Filter/Assigned")
-);
-const UnAssigned = lazy(() =>
-  import("../components/StudentList-Filter/UnAssigned")
-);
+// const All = lazy(() => import("../components/StudentList-Filter/All"));
+// const Assigned = lazy(() =>
+//   import("../components/studentList-Filter/Assigned")
+// );
+// const UnAssigned = lazy(() =>
+//   import("../components/StudentList-Filter/UnAssigned")
+// );
 
 // view Student info Reusable
 const StudentInfo = lazy(() => import("../components/Student-Info/StudentIfo"));
@@ -237,8 +237,8 @@ const DirectorStudentInfoView = lazy(() =>
 const Director_Trainer_Student_list = lazy(() =>
   import("../pages/Director/Trainer_studentList")
 );
-const Director_Trainer_list = lazy(() =>
-  import("../pages/Director/Trainer_list")
+const Director_Coordinator_list = lazy(() =>
+  import("../pages/Director/Coordinator_list")
 );
 
 // dummy component
@@ -332,8 +332,8 @@ const PrivateRoutes = () => {
         element: <DirectorMoa />,
       },
       {
-        path: "/trainer-list",
-        element: <Director_Trainer_list />,
+        path: "/coordinator-list",
+        element: <Director_Coordinator_list />,
       },
       {
         path: "/trainer-student-list",
@@ -352,22 +352,8 @@ const PrivateRoutes = () => {
         element: <DirectorMoa />,
       },
       {
-        path: "/student-list/",
-        element: <DirectorStudentList />,
-        children: [
-          {
-            path: "/student-list/",
-            element: <All />,
-          },
-          {
-            path: "/student-list/Assigned",
-            element: <Assigned />,
-          },
-          {
-            path: "/student-list/UnAssigned",
-            element: <UnAssigned />,
-          },
-        ],
+        path: "/student-list",
+        element: <DirectorStudentList />
       },
       {
         path: "/student/",
@@ -553,20 +539,6 @@ const PrivateRoutes = () => {
       {
         path: "/student-list",
         element: <Teacher_Student_list />,
-         children: [
-          {
-            path: "/student-list/",
-            element: <All />,
-          },
-          {
-            path: "/student-list/Assigned",
-            element: <Assigned />,
-          },
-          {
-            path: "/student-list/UnAssigned",
-            element: <UnAssigned />,
-          },
-        ],
       },
       {
         path: "/timeSheet",

@@ -22,92 +22,85 @@ model User {
 
 model Director {
   id                    Int @id @default(autoincrement())
-  name                  String
   firstname             String
   middlename            String
   lastname              String
   email                 String
   contact               Int
-  adress                String
-  gender                String
-  status                Int
-  createAt              String
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
+  coordinator           Coordinator[]
+  company               Company[]   
 }
 
 model Coordinator {
   id                    Int @id @default(autoincrement())
-  name                  String
   firstname             String
   middlename            String
   lastname              String
   email                 String
   contact               Int
-  adress                String
-  gender                String
-  status                Int
-  createAt              String
-  teacher               Teacher?
+  campus                String
+  college               String
+  program               String
+  teacher               Teacher[]
+  director_id           Int
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
+  director              Director @relation(fields: [director_id], references: [id]) 
 }
 
 model Teacher {
   id                    Int @id @default(autoincrement())
-  firstname             String?
-  middlename            String?
-  lastname              String?
-  email                 String?
-  contact               Int?
-  adress                String?
-  gender                String?
-  specialization        String?
-  status                Int?
-  createAt              String?
+  firstname             String
+  middlename            String
+  lastname              String
+  email                 String
+  contact               Int
+  campus                String
+  college               String
+  program               String
+  major                 String
   user_id               Int
-  coordinator_id        Int? @unique
+  coordinator_id        Int
   user                  User @relation(fields: [user_id], references: [id])
-  coordinator           Coordinator? @relation(fields: [coordinator_id], references: [id])
-  student               Student?
+  coordinator           Coordinator @relation(fields: [coordinator_id], references: [id])
+  student               Student[]
 }
 
 model Trainer {
   id                    Int @id @default(autoincrement())
-  firstname             String?
-  middlename            String?
-  lastname              String?
-  email                 String?
-  contact               Int?
-  address                String?
-  gender                String?
-  status                Int?
-  createAt              String?
-  companyName           String?
+  firstname             String
+  middlename            String
+  lastname              String
+  email                 String
+  contact               Int
+  companyName           String
   company_id            Int
   user_id               Int
   company               Company @relation(fields: [company_id], references: [id])
   user                  User @relation(fields: [user_id], references: [id])
-  student               Student?
+  student               Student[]
 }
 
 model Student {
   id                    Int @id @default(autoincrement())
-  firstname             String?
-  middlename            String?
-  lastname              String?
-  email                 String?
-  contact               Int?
-  adress                String?
-  gender                String?
-  course                String?
-  status                Int?
-  createAt              String
-  areaAssigned_id       Int? @unique
-  trainer_id            Int? @unique
-  teacher_id            Int? @unique
+  firstname             String
+  middlename            String
+  lastname              String
+  email                 String
+  contact               Int
+  address               String
+  gender                String
+  campus                String
+  college               String
+  program               String
+  major                 String
+  areaAssigned_id       Int?
+  trainer_id            Int?
+  teacher_id            Int
   user_id               Int
-  teacher               Teacher?  @relation(fields: [teacher_id], references: [id])
+  teacher               Teacher  @relation(fields: [teacher_id], references: [id])
   trainer               Trainer?  @relation(fields: [trainer_id], references: [id])
   AreaOfAssignment      AreaOfAssignment?  @relation(fields: [areaAssigned_id], references: [id])
   user                  User      @relation(fields: [user_id], references: [id])
@@ -121,7 +114,6 @@ model Timesheet {
   timeOut               String
   totalHours            Int
   date                  String
-  createAt              String?
   student_id            Int
   student               Student  @relation(fields: [student_id], references: [id])
 }
@@ -131,29 +123,60 @@ model Task {
   taskName              String
   description           String
   date                  String
-  createAt              String
   student_id            Int
   student               Student @relation(fields: [student_id], references: [id])
 }
 
 model Company {
   id                    Int @id @default(autoincrement())
-  companyName           String?
-  address               String?
-  email                 String?
-  contact               Int?
-  moaUpload                   String?
-  createAt              String?
+  companyName           String
+  address               String
+  email                 String
+  contact               Int
+  moaUpload             String
+  director_id           Int
+  director              Director @relation(fields: [director_id], references: [id])
   areaOfAssignment      AreaOfAssignment[]
   trainer               Trainer[]
 }
 
 model AreaOfAssignment {
   id                    Int @id @default(autoincrement())
-  areaName              String?
-  slot                  Int?
-  createAt              String?
+  areaName              String
+  slot                  Int
   company_id            Int
   company               Company @relation(fields: [company_id], references: [id])
-  student               Student?
+  student               Student[]
 }
+
+
+model Campus {
+  id Int @id @default(autoincrement())
+  campus_Location       String
+  college College[]
+}
+
+model College {
+  id Int @id @default(autoincrement())
+  college_description  String
+  campus_id            Int
+  campus Campus        @relation(fields: [campus_id], references: [id])
+  program              Program[]
+}
+
+model Program {
+  id Int @id @default(autoincrement())
+  program_description  String
+  college_id           Int
+  college College      @relation(fields: [college_id], references: [id])  
+  major                Major[]            
+}
+
+model Major {
+  id Int @id @default(autoincrement())
+  major_description    String
+  program_id           Int
+  program Program      @relation(fields: [program_id], references: [id])
+}
+
+
