@@ -1,180 +1,188 @@
 import React, { useState } from "react";
-import Modal from "../Modals/Modal";
-import { useForm } from "@mantine/form";
-import axios from "axios";
-import {
-  TextInput,
-  Input,
-  Group,
-  ActionIcon,
-  Box,
-  Text,
-  Button,
-  NumberInput,
-} from "@mantine/core";
-import { randomId } from "@mantine/hooks";
+import { Modal, 
+  ModalContent, 
+  ModalHeader, 
+  ModalBody, 
+  Button, 
+  Input ,
+  Tooltip
+} from "@nextui-org/react";
+import{ AiOutlineCloudUpload} from 'react-icons/ai'
+import{ BiCheck} from 'react-icons/bi'
 import { IconTrash } from "@tabler/icons-react";
-import { IMaskInput } from "react-imask";
+import { randomId } from "@mantine/hooks";
+import { useForm } from "@mantine/form";
+import {NumberInput} from "@mantine/core";
 
-const AddTrainer = (props) => {
-  const { closeModal, isOpen, onAddCompany } = props;
-  const [Moa, setMoa] = useState("");
-  const [CompanyName, setCompanyName] = useState("");
-  const [Address, setAddress] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Contact, setContact] = useState("");
+const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose   }) => {
 
-  const form = useForm({
-    initialValues: {
-      available_positions: [{ position: "", slot: "", key: randomId() }],
-    },
-  });
+      const [Moa, setMoa] = useState("");
+      const [CompanyName, setCompanyName] = useState("");
+      const [Address, setAddress] = useState("");
+      const [Email, setEmail] = useState("");
+      const [Contact, setContact] = useState("");
+    
+      const form = useForm({
+        initialValues: {
+          available_positions: [{ position: "", slot: "", key: randomId() }],
+        },
+      });
 
-  const fields = form.values.available_positions.map((item, index) => (
-    <div key={item.key} className="flex items-end gap-3">
-      <Group mt="xs">
-        <div>
-          <TextInput
-            placeholder={`Area Assignment ${index + 1}`}
-            withAsterisk
-            className="w-[270px] mt-2"
-            {...form.getInputProps(`available_positions.${index}.position`)}
-          />
+      const fields = form.values.available_positions.map((item, index) => (
+        <div key={item.key} className="flex items-center gap-3">
+            {/* <TextInput
+                placeholder={`Area Assignment ${index + 1}`}
+                withAsterisk
+                className="w-[270px] mt-2"
+                {...form.getInputProps(`available_positions.${index}.position`)}
+              /> */}
+            <Input
+              type="text"
+              label={`Area Assignment ${index + 1} `}
+              onChange={(e) => setCompanyName(e.target.value)}
+              size="sm"
+              isRequired
+              className="w-[270px]"
+              {...form.getInputProps(`available_positions.${index}.position`)}
+            />
+    
+            <NumberInput
+              defaultValue={80}
+              step={5}
+              min={0}
+              size="md"
+              className="w-[100px]"
+              placeholder="Slot"
+              {...form.getInputProps(`available_positions.${index}.slot`)}
+            />
+          <button
+            className="text-red-500"
+            onClick={() => form.removeListItem("available_positions", index)}
+          >
+            <IconTrash size="1.3rem" />
+          </button>
         </div>
-        <div>
-          <NumberInput
-            defaultValue={80}
-            step={5}
-            min={0}
-            className="w-[100px] mt-2"
-            placeholder="Slot"
-            {...form.getInputProps(`available_positions.${index}.slot`)}
-          />
-        </div>
-      </Group>
-      <ActionIcon
-        color="red"
-        onClick={() => form.removeListItem("available_positions", index)}
-      >
-        <IconTrash size="1rem" />
-      </ActionIcon>
-    </div>
-  ));
+      ));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("pdfFile", Moa);
-    formData.append("companyName", CompanyName);
-    formData.append("address", Address);
-    formData.append("email", Email);
-    formData.append("contact", Contact);
 
-    // area of assignmnet
-    formData.append(
-      "available_positions",
-      JSON.stringify(form.values.available_positions)
-    );
 
-    onAddCompany(formData);
-    // console.log('form', formData);
-  };
-
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        const formData = new FormData();
+        formData.append("pdfFile", Moa);
+        formData.append("companyName", CompanyName);
+        formData.append("address", Address);
+        formData.append("email", Email);
+        formData.append("contact", Contact);
+    
+        // area of assignmnet
+        formData.append(
+          "available_positions",
+          JSON.stringify(form.values.available_positions)
+        );
+    
+        onAddCompany(formData);
+        // console.log('form', formData);
+      };
+   
   return (
     <>
-      {isOpen && (
-        <Modal
-          title={"Add New Company"}
-          size=""
-          closeModal={closeModal}
-          content={
-            <div className="p-5">
+      <Modal
+        isOpen={AddIsOpen}
+        onOpenChange={AddOnClose}
+        placement="top-center"
+        className="max-w-[900px] h-[570px] overflow-y-auto"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="text-base font-semibold flex flex-col gap-1">
+                Add Teacher Form
+              </ModalHeader>
+              <ModalBody>
               <form
                 onSubmit={handleSubmit}
                 className="flex items-start gap-5 px-5"
               >
-                <div className="border-r pr-12 mr-5 w-[350px]">
-                  <span className="font-medium text-lg">Company Details</span>
-                  <div className="mt-5">
-                    <TextInput
-                      placeholder="Enter Company Name"
-                      label="Company Name"
-                      withAsterisk
-                      labelProps={{
-                        className: "mb-2 ",
-                      }}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                    />
-                  </div>
-                  <div className="mt-3">
-                    <TextInput
-                      placeholder="Enter Address"
-                      label=" Address"
-                      withAsterisk
-                      labelProps={{
-                        className: "mb-2 ",
-                      }}
-                      onChange={(e) => setAddress(e.target.value)}
-                    />
-                  </div>
-                  <div className="mt-3">
-                    <TextInput
-                      placeholder="Enter Email Address"
-                      label="Email Address"
-                      withAsterisk
-                      labelProps={{
-                        className: "mb-2 ",
-                      }}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
-                  <div className="mt-3 mb-8">
-                    <Input.Wrapper
-                      label="Contact Number"
-                      required
-                      maw={320}
-                      mx="auto"
-                    >
-                      <Input
-                        component={IMaskInput}
-                        mask="+63 000 000-0000"
-                        placeholder="Ex. 9xx xxx-xxxx"
-                        onChange={(e) => setContact(e.target.value)}
-                      />
-                    </Input.Wrapper>
-                  </div>
-                  <div className="mt-3">
-                    <input
-                      type="file"
-                      onChange={(e) => setMoa(e.target.files[0])}
-                    />
-                  </div>
-                  <input
-                    className="mt-7 text-sm font-medium tracking-wide text-white bg-blue-500 rounded-md py-2 w-full"
-                    type="submit"
+                <div className="border-r pr-12 mr-5 w-[350px] flex flex-col gap-5">
+                <span className="font-medium text-lg">
+                  Company Info
+                </span>
+                  <Input
+                    type="text"
+                    label="Company Name "
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    size="sm"
+                    isRequired
                   />
-                  Submit
+                  <Input
+                    type="text"
+                    label="Address "
+                    onChange={(e) => setAddress(e.target.value)}
+                    size="sm"
+                    isRequired
+                  />
+                  <Input
+                    type="text"
+                    label="Email "
+                    onChange={(e) => setEmail(e.target.value)}
+                    size="sm"
+                    isRequired
+                  />
+                  <Input
+                    type="number"
+                    label="Contact # "
+                    onChange={(e) => setContact(e.target.value)}
+                    size="sm"
+                    isRequired
+                  />
+
+                  <Tooltip content="Browse PDF file" closeDelay={0}>  
+                    <button className=" uploadMoa   relative overflow-hidden text-sm  w-full flex flex-col items-center justify-center gap-2">
+                      {
+                        Moa ? <BiCheck  size={30} className="addCompanyCheck text-green-500"/> : <AiOutlineCloudUpload  size={30} className=" addCompanyCheck text-[#7057fc]"/>
+                      }
+                    <span className="text-base "> Upload Moa</span>
+                      <input
+                          type="file"
+                          onChange={(e) => setMoa(e.target.files[0])}
+                          className="absolute scale-[3] opacity-0 cursor-pointer"
+                        />
+                    </button>
+                  </Tooltip>
+                  
+                   <Button
+                    className="text-sm text-white font-medium tracking-wide bg-blue-500 mt-1"
+                    type="submit"
+                  >
+                    Submit
+                  </Button>
+                  
+                  
                 </div>
 
                 {/* available posotions */}
-                <Box maw={500} mx="auto">
+                <div>
                   {fields.length > 0 ? (
-                    <Group mb="xs">
+                    <div>
                       <span className="font-medium text-lg">
                         Area of assignment
                       </span>
-                    </Group>
+                    </div>
                   ) : (
-                    <Text color="dimmed" align="center">
+                    <h1 color="dimmed" align="center">
                       No one here...
-                    </Text>
+                    </h1>
                   )}
 
-                  {fields}
+                  <div className="flex flex-col gap-4 mt-5">
+                    {fields}
+                  </div>
 
                   <Button
-                    className="bg-blue-500 mt-5"
+                    className="text-white font-medium tracking-wide bg-blue-500 mt-5"
                     onClick={() =>
                       form.insertListItem("available_positions", {
                         position: "",
@@ -183,16 +191,17 @@ const AddTrainer = (props) => {
                       })
                     }
                   >
-                    Add Area
+                    Add Row
                   </Button>
-                </Box>
+                </div>
               </form>
-            </div>
-          }
-        />
-      )}
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 };
 
-export default AddTrainer;
+export default CustomModal;

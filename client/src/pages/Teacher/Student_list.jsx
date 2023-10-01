@@ -11,7 +11,7 @@ import {
   useDisclosure as ImportStudentDisclosure,
   useDisclosure as AddStudentDisclosure,
 } from "@nextui-org/react";
-import { getCompany, getStudent, importStudent } from "../../api/Api";
+import { getCompanyList, getTeacher, importStudent } from "../../api/Api";
 import ImportStudentModalUI from "../../components/Import-Student/ImportForm";
 import { Tabs } from "@mantine/core";
 import AllStudent from "../../components/StudentList-Filter/All";
@@ -49,7 +49,7 @@ const Student_list = () => {
     isError,
   } = useQuery({
     queryKey: ["getCompany"],
-    queryFn: getCompany,
+    queryFn: getCompanyList,
   });
 
   // getStudent list
@@ -59,8 +59,49 @@ const Student_list = () => {
     isError: StudentListError,
   } = useQuery({
     queryKey: ["getStudent"],
-    queryFn: getStudent,
+    queryFn: getTeacher,
   });
+
+  const data = StudentList
+  ? StudentList.student.map(({
+    id,
+    firstname,
+    middlename,
+    lastname,
+    email,
+    contact,
+    address,
+    gender,
+    campus,
+    college,
+    program,
+    major,
+    profile,
+    accountStatus,
+    teacher,
+    trainer,
+    AreaOfAssignment
+  })=> ({
+    id,
+    middlename,
+    name: `${firstname} ${lastname}`,
+    email,
+    contact,
+    address,
+    gender,
+    campus,
+    college,
+    program,
+    major,
+    profile,
+    picture:picture,
+    company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
+    trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',
+    accountStatus,
+    studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
+    studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned'
+  }))
+   : []
 
   // mutate
   const { mutate, isLoading: importLoading } = useMutation({
@@ -121,45 +162,8 @@ const Student_list = () => {
   };
 
   // Student data
-  const data = StudentList
-    ? StudentList.map(
-        ({
-          id,
-          firstname,
-          middlename,
-          lastname,
-          email,
-          teacher,
-          trainer,
-          AreaOfAssignment,
-        }) => ({
-          id,
-          name: `${firstname} ${middlename[0]}. ${lastname}`,
-          gender: "Male",
-          email,
-          teacher:
-            teacher || teacher !== null
-              ? `${teacher.firstname} ${teacher.lastname}`
-              : "Not Assigned",
-          trainer:
-            trainer || trainer !== null
-              ? `${trainer.firstname} ${trainer.lastname}`
-              : "Not Assigned",
-          company:
-            AreaOfAssignment || AreaOfAssignment !== null
-              ? AreaOfAssignment.company.companyName
-              : "Not Assigned",
-          picture: picture,
-          AreaOfAssigned:
-            AreaOfAssignment || AreaOfAssignment !== null
-              ? AreaOfAssignment.areaName
-              : "Not Assigned",
-          AccountStatus: !trainer || !AreaOfAssignment ? 0 : 1,
-        })
-      ).filter((item) =>
-        item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-      )
-    : [];
+
+
 
   return (
     <div>
@@ -250,7 +254,6 @@ const Student_list = () => {
             <UnassignedStudent data={data} isLoading={StudentListLoading} isError={StudentListError} />
           </Tabs.Panel>
         </Tabs>
-        {/* </div> */}
       </div>
 
       {/* import toggle modal */}

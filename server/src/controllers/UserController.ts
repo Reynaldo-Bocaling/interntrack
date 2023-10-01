@@ -26,7 +26,7 @@ export class UserController {
           companyName,
           address,
           email,
-          contact: 99,
+          contact: Number(contact),
           moaUpload,
           director_id: 1,
           areaOfAssignment: {
@@ -412,7 +412,7 @@ export class UserController {
           }
         },
       });
-      return res.status(200).json({ message: response });
+      return res.status(200).json(response);
     } catch (error) {
       return res.status(500).json({ message: error });
     }

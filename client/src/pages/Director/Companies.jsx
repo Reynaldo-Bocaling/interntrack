@@ -12,11 +12,24 @@ import neust from "../../assets/images/neustLogo.png";
 import { getCompanyList, addCompany } from "../../api/Api";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
+import {useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
 
 const Companies = () => {
   const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
   const [OpenTableMenu, setOpenTableMenu] = useState(null);
+  
   const navigate = useNavigate();
+
+
+  const {
+    isOpen: AddIsOpen,
+    onOpen: AddTeacherOnOpen,
+    onClose: AddTeacherOnClose,
+  } = AddTeacherDisclosure();
+
+  
+
+
 
   const queryClient = useQueryClient();
 
@@ -90,7 +103,7 @@ const Companies = () => {
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setAddCompanyModalIsOpen(true)}
+              onClick={AddTeacherOnOpen}
               className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
             >
               <AiOutlineUserAdd size={16} />
@@ -217,6 +230,9 @@ const Companies = () => {
 
       {/* modal */}
       <AddCompanyComponents
+      AddIsOpen={AddIsOpen}
+      AddOnOpen={AddTeacherOnOpen}
+      AddOnClose={AddTeacherOnClose}
         isOpen={AddCompanyModalIsOpen}
         closeModal={() => setAddCompanyModalIsOpen(false)}
         onAddCompany={handleAddCompany}

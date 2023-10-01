@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
-import { getStudent } from "../../api/Api";
+import { getDirector } from "../../api/Api";
 import picture from "../../assets/images/dp.png";
 import { Tabs } from "@mantine/core";
 import AllStudent from "../../components/StudentList-Filter/All";
@@ -19,41 +19,61 @@ const Student_list = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["getStudent"],
-    queryFn: getStudent,
+    queryKey: ["getStudentList"],
+    queryFn: getDirector,
   });
 
-  const data = StudentList
-    ? StudentList
-        .map(
-          ({
-            id,
-            firstname,
-            middlename,
-            lastname,
-            email,
-            teacher,
-            trainer,
-            AreaOfAssignment,
-          }) => ({
-            id,
-            name: `${firstname} ${middlename[0]}. ${lastname}`,
-            gender: "Male",
-            email,
-            teacher: teacher || teacher !== null? `${teacher.firstname} ${teacher.lastname}` : "Not Assigned",
-            trainer:trainer || trainer !== null ? `${trainer.firstname} ${trainer.lastname}` : "Not Assigned",
-            company: AreaOfAssignment || AreaOfAssignment !== null  ? AreaOfAssignment.company.companyName : "Not Assigned",
-            picture: picture,
-            AreaOfAssigned: AreaOfAssignment || AreaOfAssignment !== null ? AreaOfAssignment.areaName : "Not Assigned",
-            AccountStatus: !trainer || !AreaOfAssignment ? 0 : 1,
-          })
-        )
-        .filter((item) =>
-          item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-        )
-    : [];
 
-  // console.log("student list", StudentList);
+  const data = StudentList
+    ? StudentList.coordinator.flatMap(({ teacher }) =>
+        teacher
+          ? teacher.flatMap(({ student }) =>
+              student ? student.map(({
+                id,
+                firstname,
+                middlename,
+                lastname,
+                email,
+                contact,
+                address,
+                gender,
+                campus,
+                college,
+                program,
+                major,
+                profile,
+                accountStatus,
+                teacher,
+                trainer,
+                AreaOfAssignment
+              }) => ({
+                id,
+                middlename,
+                name: `${firstname} ${lastname}`,
+                email,
+                contact,
+                address,
+                gender,
+                campus,
+                college,
+                program,
+                major,
+                profile,
+                picture:picture,
+                company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
+                trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',
+                accountStatus,
+                studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
+                studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned'
+              })) : []
+            )
+          : []
+      )
+    : []; 
+
+
+  console.log(data);
+
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">

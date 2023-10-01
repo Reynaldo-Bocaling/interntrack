@@ -44,11 +44,17 @@ const Student_list = () => {
     AreaOfAssignment
   })=> ({
     id,
+    middlename,
     name: `${firstname} ${lastname}`,
     email,
+    contact,
+    address,
+    gender,
+    campus,
     college,
     program,
     major,
+    profile,
     picture:picture,
     company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
     trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',

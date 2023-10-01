@@ -143,8 +143,8 @@ const Trainer_list = () => {
       header: "Students",
     }),
 
-    columnHelper.accessor("totalStudent", {
-      id: "totalStudent",
+    columnHelper.accessor("accountStatus", {
+      id: "accountStatus",
       cell: (info) => (
         <div className="relative text-center">
           <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
