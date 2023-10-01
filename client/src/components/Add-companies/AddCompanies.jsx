@@ -78,6 +78,7 @@ const AddTrainer = (props) => {
     );
 
     onAddCompany(formData);
+    // console.log('form', formData);
   };
 
   return (

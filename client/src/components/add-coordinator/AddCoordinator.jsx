@@ -17,9 +17,9 @@ const AddCoordinator = ({onSubmit , AddIsOpen, AddOnClose   }) => {
         lastname: '',
         email: '',
         contact: '',
-        address: '',
-        specialization: '',
-        gender: ''
+        campus : 'na',
+        college: 'na',
+        program:'na' ,
       });
     
       const handleChange = (e) => {
@@ -32,6 +32,7 @@ const AddCoordinator = ({onSubmit , AddIsOpen, AddOnClose   }) => {
 
       const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(formData);
         onSubmit(formData)
       }
    
@@ -107,14 +108,16 @@ const AddCoordinator = ({onSubmit , AddIsOpen, AddOnClose   }) => {
                   <div className="flex items-center gap-3">
                     <Select label=" College" className="max-w-xs" size="sm" isRequired>
                         <SelectItem  value="college1">
-                        college1
+                          college1
                         </SelectItem>
                     </Select>
+
                     <Select label=" Program" className="max-w-xs" size="sm" isRequired>
                         <SelectItem  value="college1">
                         college1
                         </SelectItem>
                     </Select>
+
                     <Select label=" Major" className="max-w-xs" size="sm" isRequired>
                         <SelectItem  value="college1">
                         college1

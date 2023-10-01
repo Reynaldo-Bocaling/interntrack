@@ -5,12 +5,11 @@ import { IconTrash } from "@tabler/icons-react";
 import { BsPrinter } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddCompany from "../../components/Add-companies/AddcCompanies"; //
+import AddCompanyComponents from "../../components/Add-companies/AddCompanies"; //
 import sm from "../../assets/images/SM Logo.png";
 import sevenEleven from "../../assets/images/7eleven.jpg";
 import neust from "../../assets/images/neustLogo.png";
-import axios from "axios";
-import { getCompany, addCompany } from "../../api/Api";
+import { getCompanyList, addCompany } from "../../api/Api";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -26,7 +25,7 @@ const Companies = () => {
     mutationFn: addCompany,
     onSuccess: () => {
       alert("success");
-      queryClient.invalidateQueries("getCompany");
+      queryClient.invalidateQueries("getCompanyList");
       setAddCompanyModalIsOpen(false);
     },
     onError: (error) => {
@@ -39,26 +38,40 @@ const Companies = () => {
     isLoading: companyLoading,
     isError: companyError,
   } = useQuery({
-    queryKey: ["getCompany"],
-    queryFn: getCompany,
+    queryKey: ["getCompanyList"],
+    queryFn: getCompanyList,
   });
 
   const handleAddCompany = async (formData) => {
     mutate(formData);
+    console.log(formData);
   };
 
   const filtered = company
     ? company.map(
-        ({ id, companyName, address, email, contact, areaOfAssignment }) => ({
+        ({ id, 
+          companyName, 
+          address, 
+          email, 
+          contact,
+          moaUpload,
+          profile,
+          trainer, 
+          areaOfAssignment
+         }) => ({
           id,
           companyName,
           address,
           email,
           contact,
+          moaUpload,
+          profile,
+          trainer,
           slots: areaOfAssignment.reduce((total, item) => total + item.slot, 0),
         })
       )
     : [];
+
 
   return (
     <div>
@@ -203,7 +216,7 @@ const Companies = () => {
       )}
 
       {/* modal */}
-      <AddCompany
+      <AddCompanyComponents
         isOpen={AddCompanyModalIsOpen}
         closeModal={() => setAddCompanyModalIsOpen(false)}
         onAddCompany={handleAddCompany}

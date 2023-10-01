@@ -6,62 +6,7 @@ import { enUS } from "date-fns/locale";
 import { generateNewPassword, transporter, prisma } from "../services/Services";
 
 export class UserController {
-  
   // POST
-  //newImport
-  static async importStudent(req: any, res: Response) {
-    const ExcelData = req.body.excelData;
-    const newPassowrd = generateNewPassword();
-    try {
-
-      for (const data of ExcelData) {
-        const createdUser = await prisma.user.create({
-          data: {
-            username: data.email,
-            password: await argon2.hash(newPassowrd),
-            role: "Student",
-          },
-        });
-
-        await prisma.student.create({
-          data: {
-            firstname: data.firstname,
-            middlename: data.middlename,
-            lastname: data.lastname,
-            email: data.email,
-            contact: data.contact,
-            address: data.address,
-            gender: data.gender,
-            campus: 'Sumacab',
-            college: data.firstname,
-            program:data.firstname,
-            major: data.firstname,
-            teacher_id: 1,
-            user_id: createdUser.id,
-            timesheet: {
-              createMany: {
-                data: generateTimeData(),
-              },
-            },
-          },
-        });
-
-        const mailOptions = {
-          from: "reynaldobocaling@gmail.com",
-          to: data.email,
-          subject: "IternTrack!",
-          text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
-        };
-
-        await transporter.sendMail(mailOptions);
-      }
-
-      return res.status(201).json("success");
-    } catch (error) {
-      return res.status(201).json(error);
-    }
-  }
-
   // add company
   static async addCompany(req: any, res: Response) {
     const { companyName, address, email, contact, available_positions } =
@@ -96,19 +41,94 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+ 
+  // add coordinator
+  static async AddCoordinator(req: any, res: Response) {
+    const newPassowrd = generateNewPassword();
+    const director_id = 1
+    const {
+      firstname,
+      middlename,
+      lastname,
+      email,
+      contact,
+      campus ,
+      college,
+      program,
+    } = req.body;
+    try {
+      await prisma.user.create({
+        data: {
+          username: email,
+          password: await argon2.hash(newPassowrd),
+          role: "teacher",
+          coordinator: {
+            create: {
+              firstname,
+              middlename,
+              lastname,
+              email,
+              contact: Number(contact),
+              campus,
+              college,
+              program,
+              director_id: director_id,
+              accountStatus: 0
+            },
+          },
+        },
+      });
+      return res.status(200).json({ username: email, password: newPassowrd });
+    } catch (error: any) {
+      return res.status(500).json(error.message);
+    }
+  } 
 
-  // add teacher
-  static async AddTeacher(req: any, res: Response) {
+  // add trainer
+  static async AddTrainer(req: any, res: Response) {
+    const newPassowrd = generateNewPassword();
+    const { company_id, firstname, middlename, lastname, email, contact } =
+      req.body;
+    try {
+      await prisma.user.create({
+        data: {
+          username: email,
+          password: await argon2.hash(newPassowrd),
+          role: "trainer",
+          trainer: {
+            create: {
+              firstname,
+              middlename,
+              lastname,
+              email,
+              contact: Number(contact),
+              companyName: "SM",
+              company_id,
+              accountStatus: 0
+            },
+          },
+        },
+      });
+      return res.status(200).json({ username: email, password: newPassowrd });
+    } catch (error) {
+      return res.status(200).json(error);
+    }
+  }
+
+   // add teacher
+   static async AddTeacher(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
     const {
       firstname,
       middlename,
       lastname,
       email,
-      address,
       contact,
-      gender,
-      specialization
+      campus ,
+      college,
+      program,
+      major,
+      accountStatus,
     } = req.body;
     try {
       await prisma.user.create({
@@ -123,71 +143,134 @@ export class UserController {
               lastname,
               email,
               contact: Number(contact),
-              campus: 'Sumacab',
-              college: 'CICT',
-              program: 'BSIT',
-              major: 'Web',
+              campus: "Sumacab",
+              college: "CICT",
+              program: "BSIT",
+              major: "Web",
               coordinator_id: 1,
+              accountStatus: 0
             },
           },
         },
       });
       return res.status(200).json({ username: email, password: newPassowrd });
-    } catch (error:any) {
+    } catch (error: any) {
       return res.status(500).json(error.message);
     }
   }
 
-  // add trainer
-  static async AddTrainer(req: any, res: Response) {
+   static async addSingleStudent(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
     const {
-      company_id,
       firstname,
       middlename,
       lastname,
       email,
       contact,
+      campus ,
+      college,
+      program,
+      major,
+      accountStatus,
     } = req.body;
     try {
       await prisma.user.create({
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: "trainer",
-          trainer: {
+          role: "teacher",
+          teacher: {
             create: {
               firstname,
               middlename,
               lastname,
               email,
               contact: Number(contact),
-              companyName: 'SM',
-              company_id,
+              campus: "Sumacab",
+              college: "CICT",
+              program: "BSIT",
+              major: "Web",
+              coordinator_id: 1,
+              accountStatus: 0
             },
           },
         },
       });
       return res.status(200).json({ username: email, password: newPassowrd });
-    } catch (error) {
-      return res.status(200).json(error);
+    } catch (error: any) {
+      return res.status(500).json(error.message);
     }
   }
 
+   //newImport
+   static async importStudent(req: any, res: Response) {
+    const ExcelData = req.body.excelData;
+    const newPassowrd = generateNewPassword();
+    try {
+      for (const data of ExcelData) {
+        const createdUser = await prisma.user.create({
+          data: {
+            username: data.email,
+            password: await argon2.hash(newPassowrd),
+            role: "Student",
+          },
+        });
+
+        await prisma.student.create({
+          data: {
+            firstname: data.firstname,
+            middlename: data.middlename,
+            lastname: data.lastname,
+            email: data.email,
+            contact: data.contact,
+            address: data.address,
+            gender: data.gender,
+            campus: "Sumacab",
+            college: 'CICT',
+            program: 'BSIT',
+            major: 'Web',
+            teacher_id: 1,
+            user_id: createdUser.id,
+            accountStatus: 0,
+            coordinator_id: 1,
+            timesheet: {
+              createMany: {
+                data: generateTimeData(),
+              },
+            },
+          },
+        });
+
+        const mailOptions = {
+          from: "reynaldobocaling@gmail.com",
+          to: data.email,
+          subject: "IternTrack!",
+          text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
+        };
+
+        await transporter.sendMail(mailOptions);
+      }
+
+      return res.status(201).json("success");
+    } catch (error) {
+      return res.status(201).json(error);
+    }
+  }
+
+  
 
   // GET
-  // get list
   static async getCompanyList(req: any, res: Response) {
     try {
       const response = await prisma.company.findMany({
         include: {
           areaOfAssignment: true,
-          trainer: true,
-        },
+          trainer: true
+        }
       });
-      return res.status(200).json(response);
+      return res.status(200).json(response)
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json(error)
     }
   }
 
@@ -195,87 +278,173 @@ export class UserController {
     try {
       const response = await prisma.trainer.findMany({
         include: {
-          student: true,
-        },
+          company: true,
+          student: true
+        }
       });
-      return res.status(200).json(response);
+      return res.status(200).json(response)
     } catch (error) {
-      return res.status(500).json(error);
+      return res.status(500).json(error)
     }
   }
 
-  static async getDirectorList(req: any, res:Response){
+  static async getDirector(req: any, res: Response) {
     try {
-      const response = await prisma.director.findMany({
+      const response = await prisma.director.findUnique({
+        where: {
+          id: 1,
+        },
         include: {
+          user: true,
           coordinator: {
             include: {
               teacher: {
                 include: {
-                  student: true
+                  student: {
+                    include: {
+                      teacher: true,
+                      trainer: true,
+                      AreaOfAssignment: {
+                        include: {
+                          company: {
+                            include: {
+                              trainer: true
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           }
-        }
+        },
       });
-      return res.status(200).json(response)
+      return res.status(200).json(response );
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json({ message: error });
     }
   }
 
-  static async getCoordinatorList(req: any, res:Response){}
-
-  static async getTeacherList(req: Request, res:Response){
+  static async getTrainer(req: any, res: Response) {
     try {
-      const response = await prisma.teacher.findMany({
+      const response = await prisma.trainer.findUnique({
+        where: {
+          id: 2,
+        },
         include: {
-          student: true,
-          coordinator: true
-        }
+          user: true,
+          student: {
+            include: {
+              teacher: true,
+              trainer: true,
+              // task: true,
+              // timesheet: true,
+              AreaOfAssignment: {
+                include: {
+                  company: true
+                }
+              }
+            }
+          }
+        },
       });
-      return res.status(200).json(response)
+      return res.status(200).json({ message: response });
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json({ message: error });
     }
   }
 
-  // get student list
-  static async getStudentList(req: Request, res:Response){
+  static async getCoordinator(req: any, res: Response) {
     try {
-      const response = await prisma.student.findMany({
+      const response = await prisma.coordinator.findUnique({
+        where: {
+          id: 1,
+        },
         include: {
+          user: true,
+          teacher: {
+            include: {
+              student: {
+                include: {
+                  teacher: true,
+                  trainer: true,
+                  // task: true,
+                  // timesheet: true
+                  AreaOfAssignment: {
+                    include: {
+                      company: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+      });
+      return res.status(200).json(response );
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
+
+  static async getTeacher(req: any, res: Response) {
+    try {
+      const response = await prisma.teacher.findUnique({
+        where: {
+          id: 1, //middlewares id req.user[0].teacher.id
+        },
+        include: {
+          user: true,
+          student: {
+            include: {
+              // task: true,
+              // timesheet: true
+              teacher: true,
+              trainer: true,
+              AreaOfAssignment: {
+                include: {
+                  company: true
+                }
+              }
+            }
+          }
+        },
+      });
+      return res.status(200).json({ message: response });
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
+
+  static async getStudent(req: any, res: Response) {
+    try {
+      const response = await prisma.student.findUnique({
+        where: {
+          id: 7, //middlewares id req.user.teacher[0].id
+        },
+        include: {
+          user: true,
+          // task: true,
+          // timesheet: true
+          timesheet: true,
           teacher: true,
-          trainer: true,
-          AreaOfAssignment: {
+          trainer:true,
+          AreaOfAssignment:{
             include: {
               company: true
             }
           },
-          timesheet:true,
-          task: true
-        }
+        },
       });
-      return res.status(200).json(response)
+      return res.status(200).json(response );
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json({ message: error });
     }
   }
 
-
-  // get user info
-  static async getDirector(req: any, res:Response){}
-  static async getCoordinator(req: any, res:Response){}
-  static async getTeacher(req: any, res:Response){}
-  static async getStudent(req: any, res:Response){}
-
-
-
-  // static async getId(req: any, res: Response) {
-  //   const id = req.user.teacher[0].id;
-  //   res.json(id);
-  // }
+ 
 }
 
 

@@ -11,7 +11,11 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import AddTrainer from "../../components/AddTrainer/AddTrainer2";
 import picture from "../../assets/images/dp.png";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import { createTrainerAccount, getTrainer, getCompany } from "../../api/Api";
+import {AddTrainerAccount, getTrainerList, getCompanyList } from "../../api/Api";
+import {Switch} from "@nextui-org/react";
+
+
+
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
@@ -21,8 +25,8 @@ const Trainer_list = () => {
   const queryClient = useQueryClient();
 
   // addtrainer mutatio
-  const { mutate, isLoading: AddLoading } = useMutation({
-    mutationFn: createTrainerAccount,
+  const { mutate, isLoading:AddLoading } = useMutation({
+    mutationFn: AddTrainerAccount,
     onSuccess: () => {
       alert("success");
       queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
@@ -40,7 +44,7 @@ const Trainer_list = () => {
     isError: companyListError,
   } = useQuery({
     queryKey: ["getTrainerList"],
-    queryFn: getTrainer,
+    queryFn: getTrainerList,
   });
 
   // getCompanies
@@ -49,10 +53,11 @@ const Trainer_list = () => {
     isLoading: companyLoading,
     isError: companyError,
   } = useQuery({
-    queryKey: ["getCompany"],
-    queryFn: getCompany,
+    queryKey: ["getCompanyList"],
+    queryFn: getCompanyList,
   });
 
+  
   //   data
   const data = trainerlist
     ? trainerlist
@@ -63,25 +68,31 @@ const Trainer_list = () => {
             middlename,
             lastname,
             email,
-            gender,
             companyName,
             contact,
-            student,
+            profile,
+            accountStatus,
+            company,
+            student
           }) => ({
             id,
             firstname,
-            name: `${firstname} ${middlename[0]}. ${lastname}`,
+            name: `${firstname} ${middlename ? middlename[0] : ''}. ${lastname}`,
             email,
-            gender,
             companyName,
             picture: picture,
             contact,
+            profile,
+            accountStatus,
+            company,
+            student,
             totalStudent: student !== null ? student.length : 0,
             student,
           })
         )
         .filter((item) => item.name.toLowerCase().includes(searchInput))
     : [];
+
 
   const handleFormSubmit = async (trainerData) => {
     mutate(trainerData);
@@ -113,10 +124,10 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
-    columnHelper.accessor("gender", {
-      id: "gender",
+    columnHelper.accessor("contact", {
+      id: "contact",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Gender",
+      header: "Contact",
     }),
     columnHelper.accessor("companyName", {
       id: "companyName",
@@ -125,9 +136,15 @@ const Trainer_list = () => {
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
+      cell: (info) => <div className="text-center">{info.getValue()}</div>,
+      header: "Students",
+    }),
+    columnHelper.accessor("totalStudent", {
+      id: "totalStudent",
       cell: (info) => (
         <div className="relative text-center">
-          <span className="font-medium -ml-20">{info.getValue()}</span>
+          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -170,7 +187,7 @@ const Trainer_list = () => {
           )}
         </div>
       ),
-      header: "Total student",
+      header: "Active",
     }),
   ];
 

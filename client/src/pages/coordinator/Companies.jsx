@@ -3,12 +3,11 @@ import { BiSearch } from "react-icons/bi";
 import { HiOutlineDotsVertical, HiOutlineEye } from "react-icons/hi";
 import { IconTrash } from "@tabler/icons-react";
 import { BsPrinter } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import AddCompany from "../../components/Add-companies/AddcCompanies"; //
+import { useNavigate } from "react-router-dom"; 
 import sm from "../../assets/images/SM Logo.png";
 import sevenEleven from "../../assets/images/7eleven.jpg";
 import neust from "../../assets/images/neustLogo.png";
-import { getCompany } from "../../api/Api";
+import { getCompanyList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
 
@@ -23,8 +22,8 @@ const Companies = () => {
     isLoading: companyLoading,
     isError: companyError,
   } = useQuery({
-    queryKey: ["getCompany"],
-    queryFn: getCompany,
+    queryKey: ["getCompanyList"],
+    queryFn: getCompanyList,
   });
 
   const filtered = company

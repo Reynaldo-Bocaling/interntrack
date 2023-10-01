@@ -12,11 +12,10 @@ import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 import { ImAttachment } from "react-icons/im";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getTeacher } from "../../api/Api";
+import { getCoordinator, addTeacher } from "../../api/Api";
 import picture from '../../assets/images/dp.png'
-import { useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
 import AddTeacherModal from '../../components/add-teacher/AddTeacher'
-import {createTeacherAccount} from  '../../api/Api.jsx'
 
 
 
@@ -38,10 +37,10 @@ const TeacherList = () => {
   const queryClient = useQueryClient();
 
   const {mutate, isLoading: AddTeacherLoading, isError: AddTeacherError} = useMutation({
-    mutationFn: createTeacherAccount,
+    mutationFn: addTeacher,
     onSuccess: ()=> {
       alert("success")
-      queryClient.invalidateQueries({ queryKey: ["getTeacher"] });
+      queryClient.invalidateQueries({ queryKey: ["getTeacherList"] });
     },
     onError: ()=> {
       alert('failed')
@@ -51,42 +50,37 @@ const TeacherList = () => {
   const  {
     data: teacherList
   } = useQuery({
-    queryKey: ["getTeacher"],
-    queryFn: getTeacher
+    queryKey: ["getTeacherList"],
+    queryFn: getCoordinator
   });
 
-
-  //   data
-  const data = teacherList ? teacherList.map(
-    ({
-      id,
-      firstname,
-      middlename,
-      lastname,
-      email,
-      gender,
-      specialization,
-      contact,
-      status,
-      student,
-      coordinator
-    }) => ({
-      id,
-      firstname,
-      name: `${firstname} ${middlename[0]}. ${lastname}`,
-      email,
-      gender,
-      specialization,
-      contact,
-      status,
-      totalStudent: 2,
-      picture: picture,
-      studentList: student,
-      coordinator: `${coordinator.firstname} ${coordinator.middlename}`,
-    })
-  ).filter((item) => item.name.toLowerCase().includes(searchInput)) : []
-
-
+  const data = teacherList 
+  ? teacherList.teacher.map(({
+    id,
+    firstname,
+    middlename,
+    lastname,
+    email,
+    contact,
+    campus,
+    college,
+    program,
+    major,
+    accountStatus,
+    student
+  })=> ({
+    id,
+    name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''} ${lastname}`,
+    email,
+    contact,
+    campus,
+    college,
+    program,
+    major,
+    picture: picture,
+    accountStatus,
+    totalStudent: student.length
+  })): []
 
   const handleSubmit = (formData) => {
       mutate(formData)
@@ -121,21 +115,38 @@ const TeacherList = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
-    columnHelper.accessor("gender", {
-      id: "gender",
+    columnHelper.accessor("campus", {
+      id: "campus",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Gender",
+      header: "Campus",
     }),
-    columnHelper.accessor("specialization", {
-      id: "specialization",
+    columnHelper.accessor("college", {
+      id: "college",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Specialization",
+      header: "College",
+    }),
+    columnHelper.accessor("program", {
+      id: "program",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Program",
+    }),
+    columnHelper.accessor("major", {
+      id: "major",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Major",
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
+      cell: (info) => <div className="text-center font-semibold">{info.getValue()}</div>,
+      header: "Students",
+    }),
+
+    columnHelper.accessor("accountStatus", {
+      id: "accountStatus",
       cell: (info) => (
         <div className="relative text-center">
-          <span className="font-medium -ml-8">{info.getValue()}</span>
+          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+            
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -178,7 +189,7 @@ const TeacherList = () => {
           )}
         </div>
       ),
-      header: "Total student",
+      header: "Active",
     }),
   ];
 

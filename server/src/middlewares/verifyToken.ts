@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import prisma from "../services/prisma";
 import jwt from "jsonwebtoken";
+import { prisma } from "../services/Services";
 
 const verifyToken = async (req: any, res: Response, next: NextFunction) => {
   const token = req.cookies.token;

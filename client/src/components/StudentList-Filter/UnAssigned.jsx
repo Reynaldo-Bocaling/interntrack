@@ -6,14 +6,15 @@ import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
+import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+
 
 const Student_list = ({data, isLoading, isError}) => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
-  const AssignedList = data.filter((item)=> item.trainer === "Not Assigned" ||item.AreaOfAssigned === "Not Assigned" || item.company === "Not Assigned")
+  const AssignedList = data.filter((item)=> item.studentTrainerStatus === "Unassigned" || item.studentAreaOfAssignment === "Unassigned")
 
-  console.log('assigned', AssignedList);
 
   //   columns
   const columns = [
@@ -41,35 +42,34 @@ const Student_list = ({data, isLoading, isError}) => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
-    columnHelper.accessor("teacher", {
-      id: "teacher",
-      cell: (info) => <span className="text-xs">{info.getValue()}</span>,
-      header: "Teacher",
-    }),
-    columnHelper.accessor("trainer", {
-      id: "trainer",
+    columnHelper.accessor("program", {
+      id: "program",
       cell: (info) => <span className={`${info.getValue() == "Not Assigned" && "text-red-500"} text-xs`}>{info.getValue()}</span>,
-      header: "Trainer",
+      header: "Program",
     }),
+    columnHelper.accessor("major", {
+        id: "major",
+        cell: (info) => <span className={`${info.getValue() == "Not Assigned" && "text-red-500"} text-xs`}>{info.getValue()}</span>,
+        header: "major",
+      }),
     columnHelper.accessor("company", {
         id: "company",
-        cell: (info) => <span className={`${info.getValue() == "Not Assigned" && "text-red-500"} text-xs`}>{info.getValue()}</span>,
+        cell: (info) => <span className='text-red-500'>Not assigned</span>,
         header: "Company",
       }),
+    columnHelper.accessor("trainer", {
+        id: "trainer",
+        cell: (info) => <span className='text-red-500'>Not assigned</span>,
+        header: "Trainer",
+      }),
   
-    columnHelper.accessor("AccountStatus", {
-      id: "AccountStatus",
+    columnHelper.accessor("accountStatus", {
+      id: "accountStatus",
       cell: (info) => (
         <div className="relative">
-          {info.getValue() !== 0 ? (
-            <span className="text-green-500 font-medium tracking-wide bg-green-100 px-2 py-1 rounded-lg">
-              Assigned
-            </span>
-          ) : (
-            <span className="text-red-500 font-medium tracking-wide bg-red-100 px-2 py-1 rounded-lg duration-300 transition-all">
-              Unassign
-            </span>
-          )}
+          
+          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -99,7 +99,7 @@ const Student_list = ({data, isLoading, isError}) => {
           )}
         </div>
       ),
-      header: "AccountStatus",
+      header: "Active",
     }),
   ];
 
@@ -109,7 +109,7 @@ const Student_list = ({data, isLoading, isError}) => {
 
   return (
     <div className="mt-3">
-     {isError ? (
+       {isError ? (
         <h1 className="my-10 text-center py-5 border">
           Server Failed. Please try again later
         </h1>

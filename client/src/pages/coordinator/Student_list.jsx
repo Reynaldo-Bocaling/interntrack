@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
-import { getStudent } from "../../api/Api";
+import { getCoordinator } from "../../api/Api";
 import picture from "../../assets/images/dp.png";
 import { Tabs } from "@mantine/core";
 import AllStudent from "../../components/StudentList-Filter/All";
@@ -19,41 +19,49 @@ const Student_list = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["getStudent"],
-    queryFn: getStudent,
+    queryKey: ["getStudentList"],
+    queryFn: getCoordinator,
   });
 
-  const data = StudentList
-    ? StudentList
-        .map(
-          ({
-            id,
-            firstname,
-            middlename,
-            lastname,
-            email,
-            teacher,
-            trainer,
-            AreaOfAssignment,
-          }) => ({
-            id,
-            name: `${firstname} ${middlename[0]}. ${lastname}`,
-            gender: "Male",
-            email,
-            teacher: teacher || teacher !== null? `${teacher.firstname} ${teacher.lastname}` : "Not Assigned",
-            trainer:trainer || trainer !== null ? `${trainer.firstname} ${trainer.lastname}` : "Not Assigned",
-            company: AreaOfAssignment || AreaOfAssignment !== null  ? AreaOfAssignment.company.companyName : "Not Assigned",
-            picture: picture,
-            AreaOfAssigned: AreaOfAssignment || AreaOfAssignment !== null ? AreaOfAssignment.areaName : "Not Assigned",
-            AccountStatus: !trainer || !AreaOfAssignment ? 0 : 1,
-          })
-        )
-        .filter((item) =>
-          item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-        )
-    : [];
+  const students = StudentList ? StudentList.teacher.flatMap(({student})=> 
+  student ? student.map(({
+    id,
+    firstname,
+    middlename,
+    lastname,
+    email,
+    contact,
+    address,
+    gender,
+    campus,
+    college,
+    program,
+    major,
+    profile,
+    accountStatus,
+    teacher,
+    trainer,
+    AreaOfAssignment
+  })=> ({
+    id,
+    name: `${firstname} ${lastname}`,
+    email,
+    college,
+    program,
+    major,
+    picture:picture,
+    company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
+    trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',
+    accountStatus,
+    studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
+    studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned' 
+  })): []
+  ) : []
 
-  // console.log("student list", StudentList);
+
+  console.log('students',students);
+
+
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
@@ -99,13 +107,13 @@ const Student_list = () => {
           </Tabs.List>
 
           <Tabs.Panel value="first" pt="xs">
-            <AllStudent data={data} />
+            <AllStudent data={students} />
           </Tabs.Panel>
           <Tabs.Panel value="second" pt="xs">
-            <AssignedStudent data={data} />
+            <AssignedStudent data={students} />
           </Tabs.Panel>
           <Tabs.Panel value="third" pt="xs">
-            <UnassignedStudent data={data} />
+            <UnassignedStudent data={students} />
           </Tabs.Panel>
         </Tabs>
       </div>

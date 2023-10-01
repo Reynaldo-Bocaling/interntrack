@@ -12,10 +12,12 @@ CREATE TABLE `User` (
 CREATE TABLE `Director` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstname` VARCHAR(191) NOT NULL,
-    `middlename` VARCHAR(191) NOT NULL,
+    `middlename` VARCHAR(191) NULL,
     `lastname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `contact` INTEGER NOT NULL,
+    `profile` VARCHAR(191) NULL,
+    `accountStatus` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -25,13 +27,15 @@ CREATE TABLE `Director` (
 CREATE TABLE `Coordinator` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstname` VARCHAR(191) NOT NULL,
-    `middlename` VARCHAR(191) NOT NULL,
+    `middlename` VARCHAR(191) NULL,
     `lastname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `contact` INTEGER NOT NULL,
     `campus` VARCHAR(191) NOT NULL,
     `college` VARCHAR(191) NOT NULL,
     `program` VARCHAR(191) NOT NULL,
+    `profile` VARCHAR(191) NULL,
+    `accountStatus` INTEGER NOT NULL,
     `director_id` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
 
@@ -42,7 +46,7 @@ CREATE TABLE `Coordinator` (
 CREATE TABLE `Teacher` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstname` VARCHAR(191) NOT NULL,
-    `middlename` VARCHAR(191) NOT NULL,
+    `middlename` VARCHAR(191) NULL,
     `lastname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `contact` INTEGER NOT NULL,
@@ -50,6 +54,8 @@ CREATE TABLE `Teacher` (
     `college` VARCHAR(191) NOT NULL,
     `program` VARCHAR(191) NOT NULL,
     `major` VARCHAR(191) NOT NULL,
+    `profile` VARCHAR(191) NULL,
+    `accountStatus` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
     `coordinator_id` INTEGER NOT NULL,
 
@@ -60,11 +66,13 @@ CREATE TABLE `Teacher` (
 CREATE TABLE `Trainer` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstname` VARCHAR(191) NOT NULL,
-    `middlename` VARCHAR(191) NOT NULL,
+    `middlename` VARCHAR(191) NULL,
     `lastname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `contact` INTEGER NOT NULL,
     `companyName` VARCHAR(191) NOT NULL,
+    `profile` VARCHAR(191) NULL,
+    `accountStatus` INTEGER NOT NULL,
     `company_id` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
 
@@ -75,7 +83,7 @@ CREATE TABLE `Trainer` (
 CREATE TABLE `Student` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `firstname` VARCHAR(191) NOT NULL,
-    `middlename` VARCHAR(191) NOT NULL,
+    `middlename` VARCHAR(191) NULL,
     `lastname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `contact` INTEGER NOT NULL,
@@ -85,10 +93,13 @@ CREATE TABLE `Student` (
     `college` VARCHAR(191) NOT NULL,
     `program` VARCHAR(191) NOT NULL,
     `major` VARCHAR(191) NOT NULL,
+    `accountStatus` INTEGER NOT NULL,
+    `profile` VARCHAR(191) NULL,
     `areaAssigned_id` INTEGER NULL,
     `trainer_id` INTEGER NULL,
     `teacher_id` INTEGER NOT NULL,
     `user_id` INTEGER NOT NULL,
+    `coordinator_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -124,6 +135,7 @@ CREATE TABLE `Company` (
     `email` VARCHAR(191) NOT NULL,
     `contact` INTEGER NOT NULL,
     `moaUpload` VARCHAR(191) NOT NULL,
+    `profile` VARCHAR(191) NULL,
     `director_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -194,6 +206,9 @@ ALTER TABLE `Trainer` ADD CONSTRAINT `Trainer_company_id_fkey` FOREIGN KEY (`com
 
 -- AddForeignKey
 ALTER TABLE `Trainer` ADD CONSTRAINT `Trainer_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Student` ADD CONSTRAINT `Student_coordinator_id_fkey` FOREIGN KEY (`coordinator_id`) REFERENCES `Coordinator`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Student` ADD CONSTRAINT `Student_teacher_id_fkey` FOREIGN KEY (`teacher_id`) REFERENCES `Teacher`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -23,10 +23,12 @@ model User {
 model Director {
   id                    Int @id @default(autoincrement())
   firstname             String
-  middlename            String
+  middlename            String?
   lastname              String
   email                 String
   contact               Int
+  profile               String?
+  accountStatus         Int
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
   coordinator           Coordinator[]
@@ -36,24 +38,27 @@ model Director {
 model Coordinator {
   id                    Int @id @default(autoincrement())
   firstname             String
-  middlename            String
+  middlename            String?
   lastname              String
   email                 String
   contact               Int
   campus                String
   college               String
   program               String
-  teacher               Teacher[]
+  profile               String?
+  accountStatus         Int
   director_id           Int
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
   director              Director @relation(fields: [director_id], references: [id]) 
+  teacher               Teacher[]
+  student               Student[]
 }
 
 model Teacher {
   id                    Int @id @default(autoincrement())
   firstname             String
-  middlename            String
+  middlename            String?
   lastname              String
   email                 String
   contact               Int
@@ -61,6 +66,8 @@ model Teacher {
   college               String
   program               String
   major                 String
+  profile               String?
+  accountStatus         Int
   user_id               Int
   coordinator_id        Int
   user                  User @relation(fields: [user_id], references: [id])
@@ -71,11 +78,13 @@ model Teacher {
 model Trainer {
   id                    Int @id @default(autoincrement())
   firstname             String
-  middlename            String
+  middlename            String?
   lastname              String
   email                 String
   contact               Int
   companyName           String
+  profile               String?
+  accountStatus         Int
   company_id            Int
   user_id               Int
   company               Company @relation(fields: [company_id], references: [id])
@@ -86,7 +95,7 @@ model Trainer {
 model Student {
   id                    Int @id @default(autoincrement())
   firstname             String
-  middlename            String
+  middlename            String?
   lastname              String
   email                 String
   contact               Int
@@ -96,10 +105,14 @@ model Student {
   college               String
   program               String
   major                 String
+  accountStatus         Int
+  profile               String?
   areaAssigned_id       Int?
   trainer_id            Int?
   teacher_id            Int
   user_id               Int
+  coordinator_id        Int
+  coordinator           Coordinator @relation(fields: [coordinator_id], references: [id])
   teacher               Teacher  @relation(fields: [teacher_id], references: [id])
   trainer               Trainer?  @relation(fields: [trainer_id], references: [id])
   AreaOfAssignment      AreaOfAssignment?  @relation(fields: [areaAssigned_id], references: [id])
@@ -134,10 +147,12 @@ model Company {
   email                 String
   contact               Int
   moaUpload             String
+  profile               String?
   director_id           Int
   director              Director @relation(fields: [director_id], references: [id])
   areaOfAssignment      AreaOfAssignment[]
   trainer               Trainer[]
+  
 }
 
 model AreaOfAssignment {

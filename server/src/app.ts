@@ -22,7 +22,7 @@ class App {
         }));
         this.server.use(cookieParser());
         this.server.get('/verify', verifyToken, (req:any, res:Response) => {
-            res.json(req.user.role)
+            res.json(req.user)
         });
        
     }

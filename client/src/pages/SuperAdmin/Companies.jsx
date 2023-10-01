@@ -5,7 +5,7 @@ import { IconTrash } from "@tabler/icons-react";
 import { BsPrinter } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import {AiOutlineUserAdd } from "react-icons/ai";
-import AddTrainer from "../../components/Add-companies/AddcCompanies";
+import AddTrainer from "../../components/Add-companies/AddCompanies";
 import sm from '../../assets/images/SM Logo.png'
 import sevenEleven from '../../assets/images/7eleven.jpg'
 import neust from '../../assets/images/neustLogo.png'

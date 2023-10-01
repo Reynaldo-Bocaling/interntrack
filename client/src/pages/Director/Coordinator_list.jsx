@@ -8,14 +8,12 @@ import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import picture from "../../assets/images/dp.png";
-import { useQuery } from "@tanstack/react-query";
-import { getTrainer, getDirector } from "../../api/Api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { AddCoordinatorAccount, getDirector } from "../../api/Api";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
-
-
-import {
-  useDisclosure as AddCoordinatorDisclosure,
+import { 
+  Switch , useDisclosure as AddCoordinatorDisclosure,
 } from "@nextui-org/react";
 
 
@@ -25,6 +23,20 @@ const Trainer_list = () => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
+  const queryClient = useQueryClient();
+
+
+  const {mutate} = useMutation({
+    mutationFn: AddCoordinatorAccount,
+    onSuccess: (data)=> {
+      console.log('myData', data);
+      alert('success');
+      queryClient.invalidateQueries({ queryKey: ["getCoordinatorList"] });
+    },
+    onError: ()=> {
+      alert('failed')
+    }
+  })
 
   const {
     isOpen: AddIsOpen,
@@ -33,43 +45,35 @@ const Trainer_list = () => {
   } = AddCoordinatorDisclosure();
 
 
-  
-  // getTrainer list
-  const {
-    data: trainerlist,
-    isLoading: trainerListLoading,
-    isError: companyListError,
-  } = useQuery({
-    queryKey: ["getTrainerList"],
-    queryFn: getTrainer,
-  });
-
   const {
     data: coordinatorList,
     isLoading: coordinatorLoading,
     isError: coordinatoryError,
   } = useQuery({
-    queryKey: ["getCoordinator"],
+    queryKey: ["getCoordinatorList"],
     queryFn: getDirector,
   });
 
+
+
   const data = coordinatorList
-    ? coordinatorList[0].coordinator.map(
+    ? coordinatorList.coordinator.map(
         ({
           firstname,
           middlename,
           lastname,
           email,
-          address,
+          campus,
+          college,
           contact,
-          gender,
           teacher,
+          accountStatus
         }) => ({
-          name: `${firstname} ${middlename[0].toUpperCase()}. ${lastname}`,
+          name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''}. ${lastname}`,
           email,
-          address,
+          campus,
+          college,
           contact,
-          gender,
           picture: picture,
           totalTeacher: teacher ? teacher.length : 0,
           totalStudent: teacher.reduce(
@@ -77,85 +81,18 @@ const Trainer_list = () => {
             0
           ),
           studentlist: teacher ? teacher.flatMap(({ student }) => student) : [],
+          accountStatus,
         })
       )
     : [];
-
-  // const AllStudents = coordinatorList
-  // ? coordinatorList[0].coordinator.flatMap(({teacher})=> teacher ? teacher.flatMap(({student})=> student) : [])
-  // : []
-
-  // console.log('coor', AllStudents);
-
-  // const allStudents = coordinatorList
-  // ? coordinatorList[0].coordinator
-  //     .flatMap(({ teacher }) =>
-  //       teacher
-  //         ? teacher.flatMap((t) => t.student)
-  //         : []
-  //     )
-  //     // .map(({ id, firstname, middlename, lastname, email, contact, address, gender, course }) => ({
-  //     //   id,
-  //     //   firstname,
-  //     //   middlename,
-  //     //   lastname,
-  //     //   email,
-  //     //   contact,
-  //     //   address,
-  //     //   gender,
-  //     //   course,
-  //     // }))
-  // : [];
-
-  // const allStudents = coordinatorList
-  // ? coordinatorList[0].coordinator.flatMap(({teacher}) =>teacher? teacher.flatMap(({student})=> student) : []) : []
-
-  const people = [
-    {
-      name: "John",
-      friends: [
-        { name: "Alice", father: "FatherNameAlice" },
-        { name: "Bob", father: "FatherNameBob" },
-      ],
-    },
-    {
-      name: "Alice",
-      friends: [{ name: "Charlie", father: "FatherNamecarlie" }],
-    },
-    {
-      name: "Bob",
-      friends: [
-        { name: "David", father: "FatherNamedavid" },
-        { name: "Eve", father: "FatherNameEve" },
-      ],
-    },
-    {
-      name: "Eve",
-      friends: [
-        { name: "Frank", father: "FatherNameFrank" },
-        { name: "Grace", father: "FatherNameGrace" },
-      ],
-    },
-  ];
-
 
 
 
 
   const handleSubmit = (data) => {
     console.log(data);
+    mutate(data)
   }
-
-
-
-
-  const allFather = people
-    ? people.flatMap(({ friends }) =>
-        friends ? friends.flatMap(({ father }) => father) : []
-      )
-    : [];
-  console.log("flatmap", allFather);
-  //output: ['FatherNameAlice', 'FatherNameBob', 'FatherNamecarlie', 'FatherNamedavid', 'FatherNameEve', 'FatherNameFrank', 'FatherNameGrace']
 
   //   columns
   const columns = [
@@ -188,23 +125,29 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Contact",
     }),
-    columnHelper.accessor("gender", {
-      id: "gender",
+    columnHelper.accessor("campus", {
+      id: "campus",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Gender",
+      header: "Campus",
+    }),
+    columnHelper.accessor("college", {
+      id: "college",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "College",
     }),
 
-    columnHelper.accessor("totalTeacher", {
-      id: "totalTeacher",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Total Teacher",
+ 
+    columnHelper.accessor("totalStudent", {
+      id: "totalStudent",
+      cell: (info) => <div className="text-center font-semibold text-xs pr-7">{info.getValue()}</div>,
+      header: "Students",
     }),
 
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
       cell: (info) => (
         <div className="relative text-center">
-          <span className="font-medium -ml-20">{info.getValue()}</span>
+          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -247,7 +190,7 @@ const Trainer_list = () => {
           )}
         </div>
       ),
-      header: "Total student",
+      header: "Active",
     }),
   ];
 
@@ -292,7 +235,7 @@ const Trainer_list = () => {
       <StudentItem
         data={data}
         columns={columns}
-        isLoading={trainerListLoading}
+        isLoading={coordinatorLoading}
       />
 
       <AddCoordinator
