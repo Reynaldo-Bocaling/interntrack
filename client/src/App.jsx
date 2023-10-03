@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
 import Test from "./components/Debugs/Test";
 import Main from "./components/Debugs/Main";
-import AddTrainer2 from "./components/AddTrainer/AddTrainer2";
 import Third from "./components/Debugs/Third";
 import Fourth from "./components/Debugs/Fourth";
 // public routes
@@ -36,7 +35,6 @@ const  App = () => {
         <Route path="/*" element={<PrivateRoutes />} />
         <Route path="/test" element={<Test />} />
         <Route path="/main" element={<Main />} />
-        <Route path="/trainer2" element={<AddTrainer2 />} />
         <Route path="/third" element={<Third />} />
         <Route path="/fourth" element={<Fourth />} />
       </Routes>

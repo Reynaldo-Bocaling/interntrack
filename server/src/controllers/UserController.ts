@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import argon2 from "argon2";
 import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
@@ -102,8 +102,7 @@ export class UserController {
               lastname,
               email,
               contact: Number(contact),
-              companyName: "SM",
-              company_id,
+              company_id: Number(company_id),
               accountStatus: 0
             },
           },
@@ -128,7 +127,6 @@ export class UserController {
       college,
       program,
       major,
-      accountStatus,
     } = req.body;
     try {
       await prisma.user.create({
@@ -143,10 +141,10 @@ export class UserController {
               lastname,
               email,
               contact: Number(contact),
-              campus: "Sumacab",
-              college: "CICT",
-              program: "BSIT",
-              major: "Web",
+              campus,
+              college,
+              program,
+              major,
               coordinator_id: 1,
               accountStatus: 0
             },
@@ -331,7 +329,7 @@ export class UserController {
     try {
       const response = await prisma.trainer.findUnique({
         where: {
-          id: 2,
+          id: 11,
         },
         include: {
           user: true,
@@ -339,8 +337,6 @@ export class UserController {
             include: {
               teacher: true,
               trainer: true,
-              // task: true,
-              // timesheet: true,
               AreaOfAssignment: {
                 include: {
                   company: true
@@ -350,7 +346,7 @@ export class UserController {
           }
         },
       });
-      return res.status(200).json({ message: response });
+      return res.status(200).json(response);
     } catch (error) {
       return res.status(500).json({ message: error });
     }
@@ -399,8 +395,6 @@ export class UserController {
           user: true,
           student: {
             include: {
-              // task: true,
-              // timesheet: true
               teacher: true,
               trainer: true,
               AreaOfAssignment: {
@@ -444,7 +438,71 @@ export class UserController {
     }
   }
 
+  static async getCampus(req: any, res: Response){
+    try {
+      const response = await prisma.campus.findMany({
+        include: {
+          college: {
+            include: {
+              program: {
+                include: {
+                  major: true
+                }
+              }
+            }
+          },
+
+        }
+      });
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
  
+
+  static async getStudentRecord(req: any, res: Response){
+    try {
+      const role:string = "trainer";
+      let students: any = [];
+      switch(role) {
+        case "teacher":
+          students = await prisma.student.findMany({
+            where: {
+              teacher_id: 1 //babaguhin pa ito  sa middleware kukuhanin
+            },
+            include: {
+              task: true,
+              timesheet: true
+            }
+          });
+          break;
+
+        case "trainer":
+          students = await prisma.student.findMany({
+            where: {
+              trainer_id: 11 //babaguhin pa ito  sa middleware kukuhanin
+            },
+            include: {
+              task: true,
+              timesheet: true
+            }
+          });
+          break;
+        
+        default: 
+        return res.status(500).json({message: 'Invalid role'})
+      }
+
+      return res.status(200).json(students)
+    } catch (error) {
+      return res.status(500).json({message: error})
+    }
+  }
+
+  static async getTimesheet(req: any, res: Response){
+    
+  }
 }
 
 

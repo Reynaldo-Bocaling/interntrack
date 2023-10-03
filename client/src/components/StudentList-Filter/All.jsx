@@ -1,5 +1,5 @@
 import React, {useState } from "react";
-import StudentItem from "../../components/StudentList/StudentItem";
+import TableFormat from "../ReusableTableFormat/TableFormat";
 import {BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -126,7 +126,7 @@ const Student_list = ({data, isLoading, isError}) => {
           Server Failed. Please try again later
         </h1>
        ): (
-        <StudentItem data={data} isLoading={isLoading}  columns={columns}  />
+        <TableFormat data={data} isLoading={isLoading}  columns={columns}  />
        )
        }
     </div>

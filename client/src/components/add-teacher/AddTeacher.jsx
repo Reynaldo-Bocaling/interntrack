@@ -9,19 +9,69 @@ import { Modal,
   SelectItem
 } from "@nextui-org/react";
 
+import { getCampus } from "../../api/Api";
+import { useQuery } from "@tanstack/react-query";
+
 const CustomModal = ({onSubmit , AddIsOpen, AddOnClose   }) => {
 
-      const [formData, setFormData] = useState({
-        firstname: '',
-        middlename: '',
-        lastname: '',
-        email: '',
-        contact: '',
-        address: '',
-        specialization: '',
-        gender: ''
-      });
+  const [selectedCampus, setSelectedCampus] = useState(null);
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [selectedProgram, setSelectedProgram] = useState(null);
+  const [selectedMajor, setSelectedMajor] = useState(null);
+
+
+  const [formData, setFormData] = useState({
+    firstname: "",
+    middlename: "",
+    lastname: "",
+    email: "",
+    contact: "",
+  });
+
+  const { data: CampusList } = useQuery({
+    queryKey: ["getCampus"],
+    queryFn: getCampus,
+  });
+
+
+  const campus = CampusList;
+  const college = selectedCampus
+    ? campus.find((college) => college.id === parseInt(selectedCampus))
+    : [];
+  const program = selectedCollege
+    ? college.college.find(
+        (program) => program.id === parseInt(selectedCollege)
+      )
+    : [];
+  const major = selectedCollege
+    ? program.program.find(
+        (major) => major.id === parseInt(selectedProgram)
+      )
+    : [];
+
+
+  const handleCampusChange = (e) => {
+    setSelectedCampus(e.target.value);
+    setSelectedCollege(null);
+    setSelectedProgram(null);
+    setSelectedMajor(null);
+  };
+  const handleCollegeChange = (e) => {
+    setSelectedCollege(e.target.value);
+    setSelectedProgram(null);
+    setSelectedMajor(null);
+  };
+  const handleProgramChange = (e) => {
+    setSelectedProgram(e.target.value);
+    setSelectedMajor(null);
+  };
+  const handleMajorChange = (e) => {
+    setSelectedMajor(e.target.value);
+  };
+
+
     
+
       const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -30,9 +80,18 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose   }) => {
         }));
       };
 
+
       const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(formData)
+
+        const campus = {
+          campus: college.campus_Location,
+          college: program.college_description,
+          program: major.program_description,
+          major: selectedMajor
+        };
+
+        onSubmit({...formData, ...campus})
       }
    
   return (
@@ -105,20 +164,66 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose   }) => {
                   
                     
                   <div className="flex items-center gap-3">
-                    <Select label=" College" className="max-w-xs" size="sm" isRequired>
-                        <SelectItem  value="college1">
-                        college1
-                        </SelectItem>
+                    <Select
+                      label="Campus"
+                      className="max-w-xs"
+                      size="sm"
+                      isRequired
+                      onChange={handleCampusChange}
+                    >
+                      {campus &&
+                        campus.map(({ id, campus_Location }) => (
+                          <SelectItem key={id}>{campus_Location}</SelectItem>
+                        ))
+                       }
                     </Select>
-                    <Select label=" Program" className="max-w-xs" size="sm" isRequired>
-                        <SelectItem  value="college1">
-                        college1
-                        </SelectItem>
+
+                    <Select
+                      label=" College"
+                      className="max-w-xs"
+                      size="sm"
+                      isRequired
+                      onChange={handleCollegeChange}
+                      isDisabled={!selectedCampus}
+                    >
+                      {selectedCampus &&
+                        college.college.map(({ id, college_description }) => (
+                          <SelectItem key={id}>
+                            {college_description}
+                          </SelectItem>
+                        ))}
                     </Select>
-                    <Select label=" Major" className="max-w-xs" size="sm" isRequired>
-                        <SelectItem  value="college1">
-                        college1
-                        </SelectItem>
+
+                    <Select
+                      label=" Program"
+                      className="max-w-xs"
+                      size="sm"
+                      isRequired
+                      onChange={handleProgramChange}
+                      isDisabled={!selectedCollege}
+                    >
+                      {selectedCollege &&
+                        program.program.map(({id, program_description }) => (
+                          <SelectItem key={id}>
+                            {program_description}
+                          </SelectItem>
+                        ))}
+                    </Select>
+
+                    <Select
+                      label="Major"
+                      className="max-w-xs"
+                      size="sm"
+                      isRequired
+                      onChange={handleMajorChange}
+                      isDisabled={!selectedCollege}
+                    >
+                      {selectedProgram &&
+                        major.major.map(({ major_description }) => (
+                          <SelectItem key={major_description}>
+                            {major_description}
+                          </SelectItem>
+                        ))}
                     </Select>
                   </div>
 

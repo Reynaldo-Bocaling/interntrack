@@ -1,32 +1,65 @@
 import React, { useState } from "react";
-import StudentItem from "../../components/StudentList/StudentItem";
-import { userData } from "../../services/AttendanceRequestData";
+import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import picture from "../../assets/images/dp.png";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
+import {useQuery} from '@tanstack/react-query'
+import { getTrainer } from "../../api/Api";
+import {Switch} from "@nextui-org/react";
+
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
+
+  const {data: StudentList, isLoading: studentListLoading} = useQuery({
+    queryKey: ["studentList"],
+    queryFn: getTrainer
+  })
+
+
+
   //   data
-  const data = userData
-    .map(({ id, firstname, middleName, lastname, email, picture }) => ({
-      id,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
-      gender: "Male",
-      email,
-      picture,
-      department: "CICT Building",
-      AccountStatus: 1,
-    }))
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-    );
+  const data = StudentList ?  StudentList.student.map(({
+    id,
+    firstname,
+    middlename,
+    lastname,
+    email,
+    contact,
+    address,
+    gender,
+    campus,
+    college,
+    program,
+    major,
+    profile,
+    accountStatus,
+    teacher,
+    AreaOfAssignment
+  })=> ({
+    id,
+    middlename,
+    name: `${firstname} ${lastname}`,
+    email,
+    contact,
+    address,
+    gender,
+    campus,
+    college,
+    program,
+    major,
+    profile,
+    picture:picture,
+    company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
+    accountStatus,
+  })): []
 
   //   columns
   const columns = [
@@ -54,29 +87,34 @@ const Student_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
-    columnHelper.accessor("gender", {
-      id: "gender",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Gender",
+    columnHelper.accessor("program", {
+      id: "program",
+      cell: (info) =>  <span>{info.getValue()}</span>,
+      header: "Program",
     }),
-    columnHelper.accessor("department", {
-      id: "department",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Department",
-    }),
-    columnHelper.accessor("AccountStatus", {
-      id: "AccountStatus",
+    columnHelper.accessor("major", {
+        id: "major",
+        cell: (info) =>  <span>{info.getValue()}</span>,
+        header: "major",
+      }),
+    columnHelper.accessor("company", {
+        id: "company",
+        cell: (info) => <span>{info.getValue()}</span>,
+        header: "Company",
+      }),
+    columnHelper.accessor("company", {
+        id: "company",
+        cell: (info) => <span>170 hrs</span>,
+        header: "Total Hours",
+      }),
+  
+    columnHelper.accessor("accountStatus", {
+      id: "accountStatus",
       cell: (info) => (
         <div className="relative">
-          {info.getValue() !== 0 ? (
-            <span className="text-green-500 font-medium tracking-wide bg-green-100 px-2 py-1 rounded-lg">
-              Assigned
-            </span>
-          ) : (
-            <span className="text-red-500 font-medium tracking-wide bg-red-100 px-2 py-1 rounded-lg duration-300 transition-all">
-              Unassign
-            </span>
-          )}
+          
+          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -106,7 +144,7 @@ const Student_list = () => {
           )}
         </div>
       ),
-      header: "AccountStatus",
+      header: "Active",
     }),
   ];
 
@@ -131,7 +169,7 @@ const Student_list = () => {
         </div>
       </div>
 
-      <StudentItem data={data} columns={columns} />
+      <TableFormat data={data} columns={columns} isLoading={studentListLoading} />
     </div>
   );
 };

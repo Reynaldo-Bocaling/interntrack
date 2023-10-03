@@ -3,7 +3,7 @@ import { useLocation, } from 'react-router-dom'
 
 
 
-import StudentItem from "../../components/StudentList/StudentItem";
+import StudentItem from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded, } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";

@@ -2,7 +2,7 @@ import React from "react";
 import BasicTable from "../React-table/BasicTable";
 import PulseLoader from "react-spinners/PulseLoader";
 
-const StudentListItem = ({ data, columns, isLoading }) => {
+const TableFormat = ({ data, columns, isLoading }) => {
   return (
     <div>
       {isLoading ? (
@@ -22,4 +22,4 @@ const StudentListItem = ({ data, columns, isLoading }) => {
   );
 };
 
-export default StudentListItem;
+export default TableFormat;

@@ -1,5 +1,5 @@
 import React, {useState } from "react";
-import StudentItem from "../../components/StudentList/StudentItem";
+import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -8,19 +8,24 @@ import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddTrainer from "../../components/AddTrainer/AddTrainer2";
+import AddTrainer from "../../components/AddTrainer/Addtrainer";
 import picture from "../../assets/images/dp.png";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import {AddTrainerAccount, getTrainerList, getCompanyList } from "../../api/Api";
-import {Switch} from "@nextui-org/react";
+import {Switch,useDisclosure as AddCoordinatorDisclosure} from "@nextui-org/react";
 
 
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
-  const [show, setShow] = useState(null);
-  const [AddTrainerModalIsOpen, setAddTrainerModalIsOpen] = useState(false);
+  const [show, setShow] = useState(null); //right side popup
+
+  const {
+    isOpen: AddIsOpen,
+    onOpen: AddOnOpen,
+    onClose: AddOnClose,
+  } = AddCoordinatorDisclosure();
 
   const queryClient = useQueryClient();
 
@@ -30,7 +35,6 @@ const Trainer_list = () => {
     onSuccess: () => {
       alert("success");
       queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
-      setAddTrainerModalIsOpen(false)
     },
     onError: () => {
       alert("failed");
@@ -68,7 +72,6 @@ const Trainer_list = () => {
             middlename,
             lastname,
             email,
-            companyName,
             contact,
             profile,
             accountStatus,
@@ -77,9 +80,9 @@ const Trainer_list = () => {
           }) => ({
             id,
             firstname,
-            name: `${firstname} ${middlename ? middlename[0] : ''}. ${lastname}`,
+            name: `${firstname} ${lastname}`,
             email,
-            companyName,
+            companyName: company.companyName,
             picture: picture,
             contact,
             profile,
@@ -92,6 +95,8 @@ const Trainer_list = () => {
         )
         .filter((item) => item.name.toLowerCase().includes(searchInput))
     : [];
+
+    console.log(data);
 
 
   const handleFormSubmit = async (trainerData) => {
@@ -139,8 +144,8 @@ const Trainer_list = () => {
       cell: (info) => <div className="text-center">{info.getValue()}</div>,
       header: "Students",
     }),
-    columnHelper.accessor("totalStudent", {
-      id: "totalStudent",
+    columnHelper.accessor("accountStatus", {
+      id: "accountStatus",
       cell: (info) => (
         <div className="relative text-center">
           <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
@@ -214,7 +219,7 @@ const Trainer_list = () => {
           </div>
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setAddTrainerModalIsOpen(true)}
+              onClick={AddOnOpen}
               className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
             >
               <AiOutlineUserAdd size={16} />
@@ -228,17 +233,17 @@ const Trainer_list = () => {
         </div>
       </div>
 
-      <StudentItem
+      <TableFormat
         data={data}
         columns={columns}
         isLoading={trainerListLoading}
       />
       <AddTrainer
-        isOpen={AddTrainerModalIsOpen}
+       
         companies={company}
-        closeModal={() => setAddTrainerModalIsOpen(false)}
-        onFormSubmit={handleFormSubmit}
-        isLoading={AddLoading}
+        onSubmit={handleFormSubmit}
+        AddIsOpen={AddIsOpen}
+        AddOnClose={AddOnClose}
       />
     </div>
   );

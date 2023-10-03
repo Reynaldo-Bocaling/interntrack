@@ -12,15 +12,6 @@ routes.post('/AddCoordinator' ,UserController.AddCoordinator);
 routes.post('/addTeacher' ,UserController.AddTeacher);
 routes.post('/addTrainer' ,UserController.AddTrainer);
 
-// get
-// get list routes
-// routes.get('/getCompanyList' ,UserController.getCompanyList);
-// routes.get('/getTrainerList' ,UserController.getTrainerList);
-// routes.get('/getCoordinatorList' ,UserController.getCoordinatorList);
-// routes.get('/getTeacherList' ,UserController.getTeacherList);
-// routes.get('/getStudentList' ,UserController.getStudentList);
-
-
 // get user info
 routes.get('/getCompanyList' ,UserController.getCompanyList);
 routes.get('/getTrainerList' ,UserController.getTrainerList);
@@ -29,5 +20,7 @@ routes.get('/getTeacher' ,UserController.getTeacher);
 routes.get('/getStudent' ,UserController.getStudent);
 routes.get('/getCoordinator' ,UserController.getCoordinator);
 routes.get('/getTrainer' ,UserController.getTrainer);
+routes.get('/getCampus' ,UserController.getCampus);
+routes.get('/getStudentRecord' ,UserController.getStudentRecord);
 
 export default routes   

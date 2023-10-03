@@ -1,5 +1,5 @@
 import React, {useState } from "react";
-import StudentItem from "../../components/StudentList/StudentItem";
+import StudentItem from "../../components/ReusableTableFormat/TableFormat";
 import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";

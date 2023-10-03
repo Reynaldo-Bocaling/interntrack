@@ -114,3 +114,20 @@ export const getStudent = async () => {
   }
 };
 
+export const getCampus = async() => {
+  try {
+    const response = await axios.get(`${url}getCampus`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+export const getStudentRecord = async() => {
+  try {
+    const response = await axios.get(`${url}getStudentRecord`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

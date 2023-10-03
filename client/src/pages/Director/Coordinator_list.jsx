@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import StudentItem from "../../components/StudentList/StudentItem";
+import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -232,7 +232,7 @@ const Trainer_list = () => {
         </div>
       </div>
 
-      <StudentItem
+      <TableFormat
         data={data}
         columns={columns}
         isLoading={coordinatorLoading}
