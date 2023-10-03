@@ -10,7 +10,9 @@ const  StudentTask = () => {
     <div>
       <div className='container py-2 px-5'>
         <header className='flex items-center justify-between mb-5'>
-          <span className='text-2xl text-gray-700 font-semibold tracking-wide'>Task</span>
+        <span className="text-xl text-gray-700 font-semibold tracking-wide">
+          Task
+        </span>
           
             <div className='bg-white p-1 px-3 py-2 flex items-center gap-2 rounded-full shadow-md shadow-slate-200 border border-gray-100'>
             <select  className='w-[220px] outline-none'>

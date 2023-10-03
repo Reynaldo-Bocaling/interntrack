@@ -20,26 +20,6 @@ const ViewTimesheets = lazy(() =>
   import("../components/StudentTimesheets/ViewTimesheets")
 );
 
-// student list with filter components
-// const All = lazy(() => import("../components/StudentList-Filter/All"));
-// const Assigned = lazy(() =>
-//   import("../components/studentList-Filter/Assigned")
-// );
-// const UnAssigned = lazy(() =>
-//   import("../components/StudentList-Filter/UnAssigned")
-// );
-
-// view Student info Reusable
-const StudentInfo = lazy(() => import("../components/Student-Info/StudentIfo"));
-const StudentRequirements = lazy(() =>
-  import("../components/Student-Info/StudentRequirements")
-);
-const StudentTask = lazy(() =>
-  import("../components/Student-Info/StudentTask")
-);
-const StudentTimesheet = lazy(() =>
-  import("../components/Student-Info/StudentTimeSheet")
-);
 
 // view componies info Reusable
 const CompanyInfo = lazy(() =>
@@ -262,7 +242,7 @@ const PrivateRoutes = () => {
   //    return <h1>error..</h1>
   // }
 
-  const role = "coordinator";
+  const role = "teacher";
 
   const roleRoutes = {
     SuperAdmin: [
@@ -295,27 +275,8 @@ const PrivateRoutes = () => {
         element: <SuperAdmin_Coordinator_list />,
       },
       {
-        path: "/student/",
-        element: <SuperAdmin_StudentInfoView />,
-        children: [
-          {
-            path: "/student/",
-            element: <StudentInfo />,
-          },
-          {
-            path: "/student/requirement",
-            element: <StudentRequirements />,
-          },
-          {
-            path: "/student/task",
-            element: <StudentTask />,
-          },
-          {
-            path: "/student/timesheet",
-            element: <StudentTimesheet />,
-          },
-        ],
-      },
+        path: "/view-student/:id",
+        element: <SuperAdmin_StudentInfoView />},
     ],
 
     director: [
@@ -356,27 +317,8 @@ const PrivateRoutes = () => {
         element: <DirectorStudentList />
       },
       {
-        path: "/student/",
-        element: <DirectorStudentInfoView />,
-        children: [
-          {
-            path: "/student/",
-            element: <StudentInfo />,
-          },
-          {
-            path: "/student/requirement",
-            element: <StudentRequirements />,
-          },
-          {
-            path: "/student/task",
-            element: <StudentTask />,
-          },
-          {
-            path: "/student/timesheet",
-            element: <StudentTimesheet />,
-          },
-        ],
-      },
+        path: "/view-student/:id",
+        element: <DirectorStudentInfoView /> },
       {
         path: "/company/",
         element: <DirectorViewCompany />,
@@ -470,27 +412,8 @@ const PrivateRoutes = () => {
         element: <CoordinatorAnnouncement />,
       },
       {
-        path: "/student/",
-        element: <Coordinator_StudentInfoView />,
-        children: [
-          {
-            path: "/student/",
-            element: <StudentInfo />,
-          },
-          {
-            path: "/student/requirement",
-            element: <StudentRequirements />,
-          },
-          {
-            path: "/student/task",
-            element: <StudentTask />,
-          },
-          {
-            path: "/student/timesheet",
-            element: <StudentTimesheet />,
-          },
-        ],
-      },
+        path: "/view-student/:id",
+        element: <Coordinator_StudentInfoView />},
       {
         path: "/company/",
         element: <CoordinatorViewCompany />,
@@ -581,27 +504,8 @@ const PrivateRoutes = () => {
         element: <TeacherAnnouncement />,
       },
       {
-        path: "/student/",
-        element: <Teacher_StudentInfoView />,
-        children: [
-          {
-            path: "/student/",
-            element: <StudentInfo />,
-          },
-          {
-            path: "/student/requirement",
-            element: <StudentRequirements />,
-          },
-          {
-            path: "/student/task",
-            element: <StudentTask />,
-          },
-          {
-            path: "/student/timesheet",
-            element: <StudentTimesheet />,
-          },
-        ],
-      },
+        path: "/view-student/:id",
+        element: <Teacher_StudentInfoView />},
       {
         path: "/company/",
         element: <TeacherViewCompany />,
@@ -679,27 +583,8 @@ const PrivateRoutes = () => {
         element: <TrainerAnnouncement />,
       },
       {
-        path: "/student/",
-        element: <Teacher_StudentInfoView />,
-        children: [
-          {
-            path: "/student/",
-            element: <StudentInfo />,
-          },
-          {
-            path: "/student/requirement",
-            element: <StudentRequirements />,
-          },
-          {
-            path: "/student/task",
-            element: <StudentTask />,
-          },
-          {
-            path: "/student/timesheet",
-            element: <StudentTimesheet />,
-          },
-        ],
-      },
+        path: "/view-student/:id",
+        element: <Teacher_StudentInfoView />},
     ],
 
     student: [

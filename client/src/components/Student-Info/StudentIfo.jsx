@@ -6,7 +6,7 @@ const StudentIfo = () => {
 
   return (
     <div>
-      <div className="flex px-5 bg-slate-50 w-full">
+      <div className="flex px-5  w-full py-5">
         <div className="flex items-start gap-7 w-full">
           <div className="mt-1 flex flex-col gap-5 max-w-full w-[55%] border-r pr-7">
             <small className=" text-gray-400 tracking-wider">Personal Information</small>

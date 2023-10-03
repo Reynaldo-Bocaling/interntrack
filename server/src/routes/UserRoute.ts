@@ -21,6 +21,7 @@ routes.get('/getStudent' ,UserController.getStudent);
 routes.get('/getCoordinator' ,UserController.getCoordinator);
 routes.get('/getTrainer' ,UserController.getTrainer);
 routes.get('/getCampus' ,UserController.getCampus);
-routes.get('/getStudentRecord' ,UserController.getStudentRecord);
+routes.get('/getStudentList' ,UserController.getStudentList);
+routes.get('/getStudentInfo/:id' ,UserController.getStudentInfo);
 
 export default routes   

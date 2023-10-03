@@ -123,9 +123,9 @@ export const getCampus = async() => {
   }
 }
 
-export const getStudentRecord = async() => {
+export const getStudentList = async() => {
   try {
-    const response = await axios.get(`${url}getStudentRecord`);
+    const response = await axios.get(`${url}getStudentList`);
     return response.data;
   } catch (error) {
     throw new Error(error.message);

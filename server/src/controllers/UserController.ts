@@ -461,7 +461,7 @@ export class UserController {
   }
  
 
-  static async getStudentRecord(req: any, res: Response){
+  static async getStudentList(req: any, res: Response){
     try {
       const role:string = "trainer";
       let students: any = [];
@@ -499,9 +499,22 @@ export class UserController {
       return res.status(500).json({message: error})
     }
   }
-
-  static async getTimesheet(req: any, res: Response){
-    
+  
+  
+  static async getStudentInfo(req: any, res: Response){
+    try {
+      const id = parseInt(req.params.id);
+      const response = await prisma.student.findUnique({
+        where: {id: id},
+        include: {
+          task:true,
+          timesheet: true
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
   }
 }
 

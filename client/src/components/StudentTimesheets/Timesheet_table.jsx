@@ -145,7 +145,7 @@ const TimeSheetTable = ({data}) => {
                 {currentItems.map((student, index) => (
                   <tr
                   onClick={()=> navigate('/view-timeSheet', {state: {data: student}})}
-                    key={student.id}
+                    key={index}
                     className={`h-12  cursor-pointer hover:bg-slate-50`}
                   >
                     <td className="px-2 border-r border-b text-center font-medium">

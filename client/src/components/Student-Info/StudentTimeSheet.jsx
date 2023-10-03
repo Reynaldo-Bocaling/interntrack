@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
 import profile from "../../assets/images/dp.png";
 import { StudentData } from "../../services/Data";
-function ViewAttendanceRequest() {
+
+function StudentTimesheet() {
   return (
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
@@ -54,4 +55,4 @@ function ViewAttendanceRequest() {
   );
 }
 
-export default ViewAttendanceRequest;
+export default StudentTimesheet;

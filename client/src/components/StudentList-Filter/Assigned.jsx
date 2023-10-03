@@ -83,7 +83,7 @@ const Student_list = ({data, isLoading, isError}) => {
               className="absolute top-3 right-7 h-[120px] w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to="/student/"
+                to={`/view-student/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
