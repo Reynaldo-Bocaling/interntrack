@@ -1,10 +1,30 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 
-function ViewAttendanceRequest() {
-  const location = useLocation();
-  const studentList = location.state;
-console.log(studentList);
+function ViewAttendanceRequest({data}) {
+
+  const studentList = data.areaOfAssignment
+  ?  data.areaOfAssignment.flatMap(({student})=> student
+  ? student.map(({
+    id,
+    firstname,
+    lastname,
+    AreaOfAssignment,
+    timesheet,
+    trainer
+
+  })=> ({
+    id,
+    name: `${firstname} ${lastname}`,
+    AreaOfAssignment: AreaOfAssignment.areaName,
+    timesheet: timesheet 
+    ? timesheet.reduce((total, item)=> total + item.totalHours, 0)
+    : [],
+    trainer: trainer? `${trainer.firstname} ${trainer.lastname}`: []
+
+  }))
+  :[])
+  :[]
+// console.log('student',studentList);
   return (
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
@@ -32,14 +52,14 @@ console.log(studentList);
             </tr>
           </thead>
           <tbody>
-            {studentList.students.length > 0 &&
-              studentList.students.map((item) => (
+            {studentList.length > 0 &&
+              studentList.map((item) => (
                 <tr className="h-14" key={item.id}>
                   <td className="text-sm tracking-wide pl-2">{item.id}</td>
                   <td className="text-sm tracking-wide pl-2">{item.name}</td>
-                  <td className="text-sm tracking-wide pl-2">{item.department}</td>
-                  <td className="text-sm tracking-wide pl-2">{item.totalTimeTaken}</td>
-                  <td className="text-sm tracking-wide pl-2">{item.totalTimeTaken}</td>
+                  <td className="text-sm tracking-wide pl-2">{item.AreaOfAssignment}</td>
+                  <td className="text-sm tracking-wide pl-2">{item.timesheet} hrs</td>
+                  <td className="text-sm tracking-wide pl-2">{item.trainer}</td>
                 </tr>
               ))}
           </tbody>

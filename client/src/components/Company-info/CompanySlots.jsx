@@ -1,12 +1,23 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-function CompanySlots() {
-  const location = useLocation();
-  const studentList = location.state;
-  // const piechartData = [ 15, 5];
-  const percentage = 75;
+function CompanySlots({data}) {
+
+
+  const slots = data? data : []
+
+  // const totalSlots = data ? data.totalSlots : 0;
+  // const usedSlots = data ? data.usedSlots : 0;
+
+  // // Kalkulahin ang percentage
+  // const percentage = totalSlots === 0 ? 0 : (usedSlots / totalSlots) * 100;
+
+const totalSlots = slots.reduce((total, item)=> total + item.slot, 0) //total slots saved 8
+const totalStudent = slots.reduce((total, item)=> total + item.student.length, 0) //total student 2
+
+
+const percentage = totalSlots === 0 ? 0 : (totalStudent / totalSlots) * 100;
+
   return (
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
@@ -40,20 +51,21 @@ function CompanySlots() {
                 </tr>
               </thead>
               <tbody>
-                {studentList.students.length > 0 &&
-                  studentList.students.map((item, index) => (
+                {slots.length > 0 &&
+                  slots.map((item, index) => (
                     <tr className="h-14" key={item.id}>
                       <td className="text-sm tracking-wide text-center border-r">
                         {index + 1}
                       </td>
                       <td className="text-sm tracking-wide pl-5 border-r">
-                        {item.name}
+                        {item.areaName}
                       </td>
                       <td className="text-sm text-center font-semibold tracking-wider border-r">
-                        15
+                        {item.student.length}
                       </td>
                       <td className="text-sm text-center font-semibold tracking-wider">
-                        5
+
+                        {item.slot === 0 ? 0 : item.slot - item.student.length}
                       </td>
                     </tr>
                   ))}
@@ -68,7 +80,7 @@ function CompanySlots() {
           <div className="w-48">
             <CircularProgressbar
               value={percentage}
-              text={`${percentage} / 100`}
+              text={`${totalStudent} / ${totalSlots}`}
               styles={{
                 path: { stroke: `#20D117` },
                 text: { fill: `#333`, fontSize: `0.8rem`, fontWeight: 600 },

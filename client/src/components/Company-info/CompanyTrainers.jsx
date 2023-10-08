@@ -1,10 +1,24 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 
-function ViewAttendanceRequest() {
-  const location = useLocation();
-  const studentList = location.state;
-console.log(studentList);
+function ViewAttendanceRequest({data}) {
+
+
+  const trainerList = data.trainer
+  ? data.trainer.map(({
+    id ,
+    firstname,
+     lastname,
+     email,
+     student
+  })=> ({
+    id,
+    name:`${firstname} ${lastname}`,
+    email,
+    student: student.length
+  }))
+:[]
+
+console.log(trainerList);
   return (
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
@@ -23,23 +37,21 @@ console.log(studentList);
               <th className="text-sm tracking-wide text-left pl-2">ID</th>
               <th className="text-sm tracking-wide text-left pl-2">Name</th>
               <th className="text-sm tracking-wide text-left pl-2">
-                Area Assigned
+                Email
               </th>
               <th className="text-sm tracking-wide text-left pl-2">
-                Total hours
+                Total Student
               </th>
-              <th className="text-sm tracking-wide text-left pl-2">Trainer</th>
             </tr>
           </thead>
           <tbody>
-            {studentList.students.length > 0 &&
-              studentList.students.map((item) => (
+            {trainerList.length > 0 &&
+              trainerList.map((item) => (
                 <tr className="h-14" key={item.id}>
                   <td className="text-sm tracking-wide pl-2">{item.id}</td>
                   <td className="text-sm tracking-wide pl-2">{item.name}</td>
-                  <td className="text-sm tracking-wide pl-2">{item.department}</td>
-                  <td className="text-sm tracking-wide pl-2">{item.totalTimeTaken}</td>
-                  <td className="text-sm tracking-wide pl-2">{item.totalTimeTaken}</td>
+                  <td className="text-sm tracking-wide pl-2">{item.email}</td>
+                  <td className="text-sm tracking-wide pl-2">{item.student}</td>
                 </tr>
               ))}
           </tbody>

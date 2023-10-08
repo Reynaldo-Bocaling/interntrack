@@ -13,6 +13,7 @@ import picture from "../../assets/images/dp.png";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import {AddTrainerAccount, getTrainerList, getCompanyList } from "../../api/Api";
 import {Switch,useDisclosure as AddCoordinatorDisclosure} from "@nextui-org/react";
+import PulseLloader from "react-spinners/PulseLoader";
 
 
 
@@ -96,8 +97,6 @@ const Trainer_list = () => {
         .filter((item) => item.name.toLowerCase().includes(searchInput))
     : [];
 
-    console.log(data);
-
 
   const handleFormSubmit = async (trainerData) => {
     mutate(trainerData);
@@ -163,7 +162,7 @@ const Trainer_list = () => {
               className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to="/student/"
+                to={`/view-trainer/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
@@ -200,9 +199,27 @@ const Trainer_list = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
+
+
+
+  if(companyListError){
+    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
+  }
+
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+      {companyLoading ? (
+        <h1 className="text-center my-14 py-5 border rounded-lg">
+          <PulseLloader
+            color="#a1892fc"
+            margin={5}
+            size={13}
+            speedMultiplier={1}
+            className="mx-auto"
+          />
+        </h1>
+      ) : (
+<div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Trainer list
         </h1>
@@ -232,6 +249,9 @@ const Trainer_list = () => {
           </div>
         </div>
       </div>
+
+      )}
+      
 
       <TableFormat
         data={data}

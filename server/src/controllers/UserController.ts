@@ -262,8 +262,22 @@ export class UserController {
     try {
       const response = await prisma.company.findMany({
         include: {
-          areaOfAssignment: true,
-          trainer: true
+          areaOfAssignment: {
+            include: {
+              student: {
+                include:{
+                  trainer:true,
+                  timesheet:true,
+                  AreaOfAssignment:true
+                }
+              }
+            }
+          },
+          trainer: {
+            include: {
+              student:true
+            }
+          }
         }
       });
       return res.status(200).json(response)
@@ -308,7 +322,7 @@ export class UserController {
                             include: {
                               trainer: true
                             }
-                          }
+                          },
                         }
                       }
                     }
@@ -508,7 +522,12 @@ export class UserController {
         where: {id: id},
         include: {
           task:true,
-          timesheet: true
+          timesheet: true,
+          AreaOfAssignment:{
+            include: {company:true}
+          },
+          teacher: true,
+          trainer: true
         }
       });
       return res.status(200).json(response)
@@ -521,8 +540,8 @@ export class UserController {
 
 // timesheet
 const generateTimeData = () => {
-  const startDate = new Date("2023-01-01");
-  const endDate = new Date("2023-05-31");
+  const startDate = new Date("2023-09-04");
+  const endDate = new Date("2023-12-15");
   const timeData = [];
 
   let currentDate = new Date(startDate);
@@ -530,9 +549,7 @@ const generateTimeData = () => {
     const dayOfWeek = currentDate.getDay();
 
     if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-      const formattedDate = format(currentDate, "MMMM dd", {
-        locale: enUS,
-      });
+      const formattedDate = format(currentDate, "yyyy-MM-dd");
 
       timeData.push({
         timeIn: "0:00",
@@ -546,3 +563,6 @@ const generateTimeData = () => {
 
   return timeData;
 };
+
+
+

@@ -72,7 +72,6 @@ const Student_list = () => {
     : []; 
 
 
-  console.log(data);
 
   return (
     <div>
@@ -119,13 +118,13 @@ const Student_list = () => {
           </Tabs.List>
 
           <Tabs.Panel value="first" pt="xs">
-            <AllStudent data={data} />
+            <AllStudent data={data}  isLoading={isLoading} isError={isError}  />
           </Tabs.Panel>
           <Tabs.Panel value="second" pt="xs">
-            <AssignedStudent data={data} />
+            <AssignedStudent data={data} isLoading={isLoading} isError={isError} />
           </Tabs.Panel>
           <Tabs.Panel value="third" pt="xs">
-            <UnassignedStudent data={data} />
+            <UnassignedStudent data={data} isLoading={isLoading} isError={isError} />
           </Tabs.Panel>
         </Tabs>
       </div>

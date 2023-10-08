@@ -14,9 +14,9 @@ const ModalSetup = (props) => {
         <div
           className={`relative ${
             fullScreen ? "max-w-screen h-screen" : "max-w-[900px] h-[570px]"
-          } w-full modal   bg-white rounded-xl shadow-xl transition-all pb-5 `}
+          } w-full modal   bg-white rounded-2xl shadow-xl transition-all pb-5 overflow-hidden`}
         >
-          <header className="absolute top-0 left-0 bg-gray-100 h-[50px] w-full flex items-center justify-between rounded-t-lg z-30 p-2 px-5 border-b border-slate-100">
+          <header className="absolute top-0 left-0 bg-white h-[50px] w-full flex items-center justify-between rounded-t-lg z-30 py-3 px-5 border-b border-slate-100">
             <div className="flex items-center gap-3">
               <img src={icon} alt="error" className="max-w-[30px]" />
               <span className="font-medium">{title}</span>
@@ -48,7 +48,7 @@ const ModalSetup = (props) => {
             </div>
           </header>
 
-          <main className=" max-h-full w-full overflow-y-auto pt-[50px]" >
+          <main className=" max-h-full w-full overflow-y-auto pt-[60px]" >
             {content}
           </main>
 

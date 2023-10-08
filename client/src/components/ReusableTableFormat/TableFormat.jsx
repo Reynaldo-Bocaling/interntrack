@@ -2,7 +2,12 @@ import React from "react";
 import BasicTable from "../React-table/BasicTable";
 import PulseLoader from "react-spinners/PulseLoader";
 
-const TableFormat = ({ data, columns, isLoading }) => {
+const TableFormat = ({ data, columns, isLoading, isError }) => {
+
+  if(isError){
+    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
+  }
+  
   return (
     <div>
       {isLoading ? (

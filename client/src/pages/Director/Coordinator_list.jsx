@@ -59,6 +59,7 @@ const Trainer_list = () => {
   const data = coordinatorList
     ? coordinatorList.coordinator.map(
         ({
+          id,
           firstname,
           middlename,
           lastname,
@@ -69,6 +70,7 @@ const Trainer_list = () => {
           teacher,
           accountStatus
         }) => ({
+          id,
           name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''}. ${lastname}`,
           email,
           campus,
@@ -161,7 +163,7 @@ const Trainer_list = () => {
               className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to="/student/"
+                to={`/view-coordinator/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
@@ -198,6 +200,13 @@ const Trainer_list = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
+
+
+
+
+  if(coordinatoryError){
+    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
+  }
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">

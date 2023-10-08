@@ -1,5 +1,6 @@
 import React from "react";
 import CustomAutocomplete from "../SelectCompany/SelectCompany";
+import { Button } from "@nextui-org/react";
 function SelectCompanyTrainer(props) {
   const {
     selectedCompany,
@@ -72,12 +73,13 @@ function SelectCompanyTrainer(props) {
           </p>
         )}
 
-        <button
+        <Button
           onClick={onCLickAssign}
-          className="w-[15%] bg-blue-500 py-3 px-5 rounded-lg text-white"
+          size="lg"
+          className="w-[15%] font-medium tracking-wide bg-blue-500 py-3 px-10  text-white rounded-xl"
         >
           Assign
-        </button>
+        </Button>
       </div>
     </div>
   );

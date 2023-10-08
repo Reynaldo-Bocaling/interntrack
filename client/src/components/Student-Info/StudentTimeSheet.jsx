@@ -1,56 +1,64 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { MdOutlineArrowBackIosNew } from "react-icons/md";
-import profile from "../../assets/images/dp.png";
-import { StudentData } from "../../services/Data";
+import { format } from "date-fns";
+const StudentTimesheet = ({data}) => {
 
-function StudentTimesheet() {
+  const calculateTotalHours = (timeSheet) => {
+    return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
+  };
+
+  const dateCount = data ? data : []
+  const groupedTimeSheet = [];
+  for (let i = 0; i <  dateCount.length; i += 5) {
+    groupedTimeSheet.push(data.slice(i, i + 5));
+  }
   return (
-    <div className="py-2 px-5">
-      <header className="flex items-center justify-between mb-5 px-2">
-        <span className="text-xl text-gray-700 font-semibold tracking-wide">
+    <div className="p-5">
+       <div className="text-xl text-gray-700 font-semibold tracking-wide mb-5">
           Timesheet
-        </span>
-
-        <div className="bg-white p-1 px-3 py-1 flex items-center gap-2 rounded-full shadow-md shadow-slate-200 border border-gray-100">
-        <input type="text" placeholder="Search"/>
         </div>
-      </header>
-      <div className="mt-2 border p-3 rounded-lg">
-        <table className="w-full">
-          <thead>
-            <tr className="h-12 border-b">
-              <th className="text-sm tracking-wide text-left pl-2">Date</th>
-              <th className="text-sm tracking-wide text-left pl-2">Time in</th>
-              <th className="text-sm tracking-wide text-left pl-2">Time out</th>
-              <th className="text-sm tracking-wide text-left pl-2">
-                Total hours
-              </th>
-              <th className="text-sm tracking-wide text-left pl-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="h-14">
-              <td className="text-sm tracking-wide pl-2">january 2</td>
-              <td className="text-sm tracking-wide pl-2">8:00</td>
-              <td className="text-sm tracking-wide pl-2">4:00 out</td>
-              <td className="text-sm tracking-wide pl-2">8 hrs</td>
-              <td className="text-sm font-medium tracking-wider pl-2 w-1/6 text-green-500">
-                Aprove
-              </td>
-            </tr>
-            <tr className="h-14">
-              <td className="text-sm tracking-wide pl-2">january 2</td>
-              <td className="text-sm tracking-wide pl-2">8:00</td>
-              <td className="text-sm tracking-wide pl-2">4:00 out</td>
-              <td className="text-sm tracking-wide pl-2">8 hrs</td>
-              <td className="text-sm font-medium tracking-wider pl-2 w-1/6 text-yellow-500">
-                Pending
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      {groupedTimeSheet.map((group, groupIndex) => (
+        <div key={groupIndex} className="border rounded-lg p-4 mb-4 bg-white">
+          <h3 className="text-base font-semibold">
+              {format(new Date(group[0].date), "MMMM dd")} - 
+            {format(new Date(group[group.length - 1].date), "MMMM dd")} 
+          </h3>
+          <table className="w-full mt-5 ">
+            <thead>
+              <tr className="h-12 border-b">
+                <th className="font-semibold tracking-wide text-left w-[25%] pl-5">Date</th>
+                <th className="font-semibold tracking-wide text-left w-[25%]">Time In</th>
+                <th className="font-semibold tracking-wide text-left w-[25%]">Time Out</th>
+                <th className="font-semibold tracking-wide text-left w-[25%]">Total Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+              {group.map((entry) => (
+                <tr key={entry.id} className="h-12">
+                  <td className="text-sm  tracking-widetext-left pl-5">{format(new Date(entry.date),"MMM dd")}</td>
+                  <td className="text-sm  tracking-widetext-left">{entry.timeIn} AM</td>
+                  <td className="text-sm  tracking-widetext-left">{entry.timeOut} PM</td>
+                  <td className="text-sm  tracking-widetext-left">{entry.totalHours} hrs</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot className="w-full border-t mt-5">
+              <tr className="h-12">
+                <td className="text-lg text-left pl-5 font-semibold">
+                  Total Hours
+                </td>
+                <td></td>
+                <td></td>
+                <td className="text-lg font-semibold">
+                  {calculateTotalHours(group)} hrs
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+          {/* <div className="pl-3 font-semibold tracking-wide mt-4 w-full text-right bg-red-500">
+            Total Hours: {calculateTotalHours(group)} hrs
+          </div> */}
+        </div>
+      ))}
     </div>
   );
 }

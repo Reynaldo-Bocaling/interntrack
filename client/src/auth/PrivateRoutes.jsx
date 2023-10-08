@@ -21,20 +21,29 @@ const ViewTimesheets = lazy(() =>
 );
 
 
-// view componies info Reusable
-const CompanyInfo = lazy(() =>
-  import("../components/Company-info/CompanyInfo")
+
+
+// view trainer resubale
+const TrainerInfoView = lazy(() =>
+  import("../components/Trainer-Info/index")
 );
-const CompanySlots = lazy(() =>
-  import("../components/Company-info/CompanySlots")
+
+const StudentInfoView = lazy(() =>
+  import("../components/Student-Info/index")
 );
-const CompanyMoa = lazy(() => import("../components/Company-info/CompanyMoa"));
-const CompanyStudents = lazy(() =>
-  import("../components/Company-info/CompanyStudents")
+const CoordinatorInfoView = lazy(() =>
+  import("../components/Coordinator-Info/index")
 );
-const CompanyTrainers = lazy(() =>
-  import("../components/Company-info/CompanyTrainers")
+const TeacherInfoView = lazy(() =>
+  import("../components/Teacher-Info/index")
 );
+
+
+
+
+
+
+
 
 // Student pages
 const StudentDashboard = lazy(() => import("../pages/Student/Dashboard"));
@@ -113,14 +122,14 @@ const Trainer_StudentTask = lazy(() => import("../pages/Trainer/StudentTask"));
 const Trainer_StudentAttendanceRequest = lazy(() =>
   import("../pages/Trainer/AttendanceRequest")
 );
-const Trainer_StudentInfoView = lazy(() =>
-  import("../pages/Trainer/StudentViewInfo")
-);
 const Trainer_StudentLeave = lazy(() =>
   import("../pages/Trainer/LeaveRequest")
 );
 const TrainerMessage = lazy(() => import("../pages/Trainer/Message"));
 const TrainerAnnouncement = lazy(() => import("../pages/Trainer/Announcement"));
+
+
+
 
 
 // Teacher pages
@@ -129,9 +138,6 @@ const TeacherrCompanies = lazy(() => import("../pages/Teacher/Companies"));
 const TeacherViewCompany = lazy(() => import("../pages/Director/ViewCompany"));
 const Teacher_Trainer_list = lazy(() =>
   import("../pages/Teacher/Trainer_list")
-);
-const Teacher_Trainer_Student_list = lazy(() =>
-  import("../pages/Teacher/Trainer_studentList.jsx")
 );
 const Teacher_Student_list = lazy(() =>
   import("../pages/Teacher/Student_list")
@@ -145,10 +151,8 @@ const Teacher_studentDailylog = lazy(() =>
 const Teacher_StudentTask = lazy(() => import("../pages/Teacher/StudentTask"));
 const Teacher_StudentAttendanceRequest = lazy(() =>
   import("../pages/Teacher/AttendanceRequest")
-);
-const Teacher_StudentInfoView = lazy(() =>
-  import("../pages/Teacher/StudentViewInfo")
-);
+)
+
 const Teacher_StudentLeave = lazy(() =>
   import("../pages/Teacher/LeaveRequest")
 );
@@ -166,9 +170,6 @@ const CoordinatorViewCompany = lazy(() =>
 );
 const Coordinator_Trainer_list = lazy(() =>
   import("../pages/Coordinator/Trainer_list")
-);
-const Coordinator_Trainer_Student_list = lazy(() =>
-  import("../pages/Coordinator/Trainer_studentList.jsx")
 );
 const Coordinator_Student_list = lazy(() =>
   import("../pages/Coordinator/Student_list")
@@ -188,9 +189,7 @@ const Coordinator_StudentTask = lazy(() =>
 const Coordinator_StudentAttendanceRequest = lazy(() =>
   import("../pages/Coordinator/AttendanceRequest")
 );
-const Coordinator_StudentInfoView = lazy(() =>
-  import("../pages/Coordinator/StudentViewInfo")
-);
+
 const Coordinator_StudentLeave = lazy(() =>
   import("../pages/Coordinator/LeaveRequest")
 );
@@ -211,9 +210,7 @@ const DirectorMessage = lazy(() => import("../pages/Director/Message"));
 const DirectorAnnouncement = lazy(() =>
   import("../pages/Director/Announcement")
 );
-const DirectorStudentInfoView = lazy(() =>
-  import("../pages/Director/StudentViewInfo")
-);
+
 const Director_Trainer_Student_list = lazy(() =>
   import("../pages/Director/Trainer_studentList")
 );
@@ -238,11 +235,10 @@ const PrivateRoutes = () => {
   // }
 
   // if(isError) {
-  //   // setIsLogged(true)
   //    return <h1>error..</h1>
   // }
 
-  const role = "teacher";
+  const role = "director";
 
   const roleRoutes = {
     SuperAdmin: [
@@ -318,34 +314,23 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <DirectorStudentInfoView /> },
+        element: <StudentInfoView /> 
+      },
       {
-        path: "/company/",
+        path: "/view-coordinator/:id",
+        element: <CoordinatorInfoView /> 
+      },
+      
+      {
+        path: "/view-company/:id",
         element: <DirectorViewCompany />,
-        children: [
-          {
-            path: "/company/",
-            element: <CompanyInfo />,
-          },
-          {
-            path: "/company/slots",
-            element: <CompanySlots />,
-          },
-          {
-            path: "/company/moa",
-            element: <CompanyMoa />,
-          },
-          {
-            path: "/company/students",
-            element: <CompanyStudents />,
-          },
-          {
-            path: "/company/trainers",
-            element: <CompanyTrainers />,
-          },
-        ],
+        
       },
     ],
+
+
+
+
     coordinator: [
       {
         path: "/",
@@ -364,13 +349,19 @@ const PrivateRoutes = () => {
         element: <Coordinator_Teacher_list />,
       },
       {
-        path: "/trainer-student-list",
-        element: <Coordinator_Trainer_Student_list />,
-      },
-      {
         path: "/student-list",
         element: <Coordinator_Student_list />,
       },
+      {
+        path: "/view-trainer/:id",
+        element: <TrainerInfoView />,
+      },
+       {
+        path: "/view-teacher/:id",
+        element: <TeacherInfoView /> 
+      },
+
+
       {
         path: "/timeSheet",
         element: <Coordinator_StudentTimesheets />,
@@ -413,32 +404,10 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <Coordinator_StudentInfoView />},
+        element: <StudentInfoView />},
       {
         path: "/company/",
         element: <CoordinatorViewCompany />,
-        children: [
-          {
-            path: "/company/",
-            element: <CompanyInfo />,
-          },
-          {
-            path: "/company/slots",
-            element: <CompanySlots />,
-          },
-          {
-            path: "/company/moa",
-            element: <CompanyMoa />,
-          },
-          {
-            path: "/company/students",
-            element: <CompanyStudents />,
-          },
-          {
-            path: "/company/trainers",
-            element: <CompanyTrainers />,
-          },
-        ],
       },
     ],
 
@@ -454,10 +423,6 @@ const PrivateRoutes = () => {
       {
         path: "/companies",
         element: <TeacherrCompanies />,
-      },
-      {
-        path: "/trainer-student-list",
-        element: <Teacher_Trainer_Student_list />,
       },
       {
         path: "/student-list",
@@ -478,6 +443,10 @@ const PrivateRoutes = () => {
       {
         path: "/StudentTask/view",
         element: <ViewUploadTask />,
+      },
+      {
+        path: "/view-trainer/:id",
+        element: <TrainerInfoView />,
       },
       {
         path: "/daily-logs",
@@ -505,34 +474,16 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <Teacher_StudentInfoView />},
+        element: <StudentInfoView />},
       {
         path: "/company/",
         element: <TeacherViewCompany />,
-        children: [
-          {
-            path: "/company/",
-            element: <CompanyInfo />,
-          },
-          {
-            path: "/company/slots",
-            element: <CompanySlots />,
-          },
-          {
-            path: "/company/moa",
-            element: <CompanyMoa />,
-          },
-          {
-            path: "/company/students",
-            element: <CompanyStudents />,
-          },
-          {
-            path: "/company/trainers",
-            element: <CompanyTrainers />,
-          },
-        ],
       },
     ],
+
+
+
+
     trainer: [
       {
         path: "/",
@@ -584,7 +535,7 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <Teacher_StudentInfoView />},
+        element: <StudentInfoView />},
     ],
 
     student: [

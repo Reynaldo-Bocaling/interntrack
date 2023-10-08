@@ -61,7 +61,9 @@ const Trainer_list = () => {
     queryFn: getCompanyList,
   });
 
-  
+  if(companyListError){
+    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
+  }
   //   data
   const data = trainerlist
     ? trainerlist
@@ -163,7 +165,7 @@ const Trainer_list = () => {
               className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to="/student/"
+                to={`/view-trainer/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />

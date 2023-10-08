@@ -1,20 +1,32 @@
-import React, { useEffect, useState } from "react";
-import CompanyView from "../../components/Company-info/index";
-import { useLocation, useNavigate } from "react-router-dom";
-const ViewCompany = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [data, setData] = useState([]);
+import React from 'react'
+import StudentInfo from '../../components/Company-info/index'
+import { useQuery } from '@tanstack/react-query'
+import { getCompanyList } from '../../api/Api'
+import { useParams } from 'react-router-dom'
 
-  useEffect(() => {
-    if (location.state != null) {
-      setData(location.state);
-    } else {
-      navigate("/companies");
-    }
-  }, []);
+const ViewCompany = () =>  {
 
-  return <div> {data != null && <CompanyView data={data} />} </div>;
-};
+  const {id} = useParams();
+  const {
+    data, 
+    isLoading,
+    isError
+  } = 
+  useQuery({
+    queryKey: ['companyInfo'],
+    queryFn: getCompanyList
+  })
 
-export default ViewCompany;
+  const companyInfo = data ? 
+  data.find((item)=> item.id == parseInt(id))
+  : []
+
+
+  return (
+    <div>
+      <StudentInfo data={companyInfo} editable={true} isLoading={isLoading} isError={isError} />
+    </div>
+  )
+}
+
+export default ViewCompany

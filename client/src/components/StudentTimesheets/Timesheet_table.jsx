@@ -3,7 +3,7 @@ import { RiArrowUpDownLine } from "react-icons/ri";
 import { BiSearch } from "react-icons/bi";
 import { FiDownload } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-
+import { format } from "date-fns";
 
 const TimeSheetTable = ({data}) => {
   const navigate = useNavigate()
@@ -109,7 +109,7 @@ const TimeSheetTable = ({data}) => {
                       colSpan={chunk.length + 1}
                       className="text-center border-r border-l font-semibold"
                     >
-                      {chunk[0]} - {chunk[chunk.length - 1]}
+                      {format(new Date(chunk[0]), "MMMM dd")} - {format(new Date(chunk[chunk.length - 1]), "MMMM dd")}
                     </th>
                   ))}
                   <th className="text-center"></th>

@@ -113,13 +113,13 @@ const Student_list = () => {
           </Tabs.List>
 
           <Tabs.Panel value="first" pt="xs">
-            <AllStudent data={students} />
+            <AllStudent data={students}  isLoading={isLoading} isError={isError} />
           </Tabs.Panel>
           <Tabs.Panel value="second" pt="xs">
-            <AssignedStudent data={students} />
+            <AssignedStudent data={students} isLoading={isLoading}  isError={isError} />
           </Tabs.Panel>
           <Tabs.Panel value="third" pt="xs">
-            <UnassignedStudent data={students} />
+            <UnassignedStudent data={students} isLoading={isLoading}  isError={isError} />
           </Tabs.Panel>
         </Tabs>
       </div>

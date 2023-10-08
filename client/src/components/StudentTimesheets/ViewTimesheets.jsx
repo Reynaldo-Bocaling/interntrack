@@ -5,11 +5,16 @@ import image from '../../assets/images/dp.png'
 import { Link, useLocation } from "react-router-dom";
 
 
-
 const WeeklyReport = () => {
+  const currentDate = new Date();
   const location = useLocation();
   const newData = location.state.data
-  const student = newData;
+
+  const student = {
+    name:newData.name,
+    timeSheet:newData.timeSheet.filter((item) => new Date(item.date) <= currentDate),
+  }
+  
 
   const calculateTotalHours = (timeSheet) => {
     return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
@@ -20,8 +25,6 @@ const WeeklyReport = () => {
     groupedTimeSheet.push(student.timeSheet.slice(i, i + 5));
   }
 
-
-console.log(student);
   return (
     <div>
      <Link 

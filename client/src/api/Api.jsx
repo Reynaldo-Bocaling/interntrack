@@ -123,6 +123,16 @@ export const getCampus = async() => {
   }
 }
 
+export const getStudentInfo = async(id) => {
+  try {
+    const response = await axios.get(`${url}getStudentInfo/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+
 export const getStudentList = async() => {
   try {
     const response = await axios.get(`${url}getStudentList`);

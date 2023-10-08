@@ -18,7 +18,7 @@ const Student_list = () => {
   const [show, setShow] = useState(null);
 
 
-  const {data: StudentList, isLoading: studentListLoading} = useQuery({
+  const {data: StudentList, isLoading: studentListLoading, isError} = useQuery({
     queryKey: ["studentList"],
     queryFn: getTrainer
   })
@@ -59,6 +59,7 @@ const Student_list = () => {
     picture:picture,
     company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
     accountStatus,
+    totalHours: 170
   })): []
 
   //   columns
@@ -102,9 +103,9 @@ const Student_list = () => {
         cell: (info) => <span>{info.getValue()}</span>,
         header: "Company",
       }),
-    columnHelper.accessor("company", {
-        id: "company",
-        cell: (info) => <span>170 hrs</span>,
+    columnHelper.accessor("totalHours", {
+        id: "totalHours",
+        cell: (info) => <span>{info.getValue()} hrs</span>,
         header: "Total Hours",
       }),
   
@@ -128,7 +129,7 @@ const Student_list = () => {
               className="absolute top-3 right-7 h-[120px] w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to="/student/"
+                to={`/view-student/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
@@ -169,7 +170,7 @@ const Student_list = () => {
         </div>
       </div>
 
-      <TableFormat data={data} columns={columns} isLoading={studentListLoading} />
+      <TableFormat isError={isError} data={data} columns={columns} isLoading={studentListLoading} />
     </div>
   );
 };
