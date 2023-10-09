@@ -3,14 +3,25 @@ import { BiSearch } from "react-icons/bi";
 import SelectStudent from "./SelectStudent";
 import Modal from "../Modals/Modal";
 import SelectCompanyTrainer from "./SelectCompanyTrainer";
+import { getTeacher, assignStudent } from "../../api/Api";
+import {
+  useDisclosure,
+} from "@nextui-org/react";
+
+import { useQuery, useMutation , useQueryClient} from "@tanstack/react-query";
 
 const AssignStudentModal = (props) => {
   const { closeModal, isOpen, companies } = props;
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState(null);
   const [selectedTrainer, setSelectedTrainer] = useState(null);
-  const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] =
-    useState(null);
+  const [selectedAreaOfAssignment, setSelectedAreaOfAssignment] = useState(null);
+  const queryClient = useQueryClient();
+
+  const selectStudent =  selectedItems ? selectedItems.map(({id})=> (id)) : []
+  const trainer_id = selectedTrainer ? selectedTrainer.id: 0;
+  const areaAssigned = selectedAreaOfAssignment ? selectedAreaOfAssignment.id : 0;
+
 
   const tableData = [
     {
@@ -50,6 +61,44 @@ const AssignStudentModal = (props) => {
     { id: 10, name: "Renz Alana", email: "Renz@gmail.com", gender: "female" },
   ];
 
+
+
+  // get student list 
+  const {data} = useQuery({
+    queryKey: ['getStudentList'],
+    queryFn: getTeacher
+  });
+
+  
+  // assign student query function
+  const { mutate} = useMutation({
+    mutationFn: assignStudent,
+    onSuccess: ()=> {
+      alert('success')
+      queryClient.invalidateQueries({queryKey: ['getStudentList']})
+    },
+    onError: ()=> {
+      alert('failed')
+    }
+  })
+
+ const studentUnassigned = data 
+ ? data.student.filter((item)=> item.trainer === null || item.AreaOfAssignment === null )
+ .map(({
+  id,
+  firstname,
+  lastname,
+  email,
+  gender
+ })=> ({
+  id,
+  name: `${firstname} ${lastname}`,
+  email,
+  gender
+ }))
+ : []
+
+
   // select student
   const handleItemClick = (item) => {
     setSelectedItems([...selectedItems, item]);
@@ -66,10 +115,18 @@ const AssignStudentModal = (props) => {
     selectedItems.some((selectedItem) => selectedItem.id === item.id);
 
   const handleTryCLick = () => {
-    console.log(":company", selectedCompany.companyName);
-    console.log("trainer", selectedTrainer.firstname);
-    console.log("assign area", selectedAreaOfAssignment.areaName);
-    console.log(selectedItems);
+    // console.log(":company", selectedCompany.id);
+    // console.log("trainer", selectedTrainer.id);
+    // console.log("assign area", selectedAreaOfAssignment.id);
+    // console.log(selectStudent);
+    mutate({
+      studentId: selectStudent, // Tiyakin na tama ang variable name dito
+      trainer_id,
+      areaAssigned_id: areaAssigned // Tiyakin na tama ang variable name dito
+    });
+    
+
+    // console.log({selectStudent, trainer_id, areaAssigned});
   };
 
   return (
@@ -132,12 +189,12 @@ const AssignStudentModal = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {tableData.map((item) => (
+                    {studentUnassigned.map((item) => (
                       <tr key={item.id} className={`cursor-pointer h-12`}>
                         <td className="text-left pl-5 text-sm">{item.id}</td>
-                        <td className="text-left pl-5 text-sm">{item.name}</td>
+                        <td className="capitalize text-left pl-5 text-sm">{item.name}</td>
                         <td className="text-left pl-5 text-sm">{item.email}</td>
-                        <td className="text-left pl-5 text-sm">
+                        <td className="capitalize text-left pl-5 text-sm">
                           {item.gender}
                         </td>
                         <td className="text-left pl-5 text-sm">

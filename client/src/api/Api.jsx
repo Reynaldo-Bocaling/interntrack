@@ -49,6 +49,22 @@ export const addCompany = async (formData) => {
   }
 };
 
+export const assignStudent = async({studentId, trainer_id, areaAssigned_id}) => {
+  try {
+    const response = await axios.put(`${url}assignStudent`, {
+      studentId,
+      trainer_id,
+      areaAssigned_id,
+    });
+    return response.data;    
+  } catch (error) {
+    
+  }
+}
+
+
+
+
 
 // GET Request
 export const getCompanyList = async () => {

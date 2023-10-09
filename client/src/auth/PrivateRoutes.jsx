@@ -238,7 +238,7 @@ const PrivateRoutes = () => {
   //    return <h1>error..</h1>
   // }
 
-  const role = "director";
+  const role = "teacher";
 
   const roleRoutes = {
     SuperAdmin: [
