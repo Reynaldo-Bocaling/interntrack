@@ -239,14 +239,14 @@ export class UserController {
           },
         });
 
-        const mailOptions = {
-          from: "reynaldobocaling@gmail.com",
-          to: data.email,
-          subject: "IternTrack!",
-          text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
-        };
+        // const mailOptions = {
+        //   from: "reynaldobocaling@gmail.com",
+        //   to: data.email,
+        //   subject: "IternTrack!",
+        //   text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
+        // };
 
-        await transporter.sendMail(mailOptions);
+        // await transporter.sendMail(mailOptions);
       }
 
       return res.status(201).json("success");
@@ -255,7 +255,35 @@ export class UserController {
     }
   }
 
-  
+
+
+  // assign Students
+
+  static async assignStudent(req: any, res: Response) {
+    const {
+       studentId,
+       trainer_id,
+       areaAssigned_id
+      } = req.body;
+
+      try {
+        const response = await prisma.student.updateMany({
+          where: {
+            id: {in: studentId}
+          },
+          data: {
+            trainer_id: Number(trainer_id),
+            areaAssigned_id: Number(areaAssigned_id)
+          }
+        })
+
+        return res.status(200).json(response)
+      } catch (error) {
+        return res.status(500).json(error)
+      }
+  }
+
+
 
   // GET
   static async getCompanyList(req: any, res: Response) {
@@ -556,6 +584,7 @@ const generateTimeData = () => {
         timeOut: "0:00",
         totalHours: 0,
         date: formattedDate,
+        logStatus:0
       });
     }
     currentDate.setDate(currentDate.getDate() + 1);

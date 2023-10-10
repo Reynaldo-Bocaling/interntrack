@@ -126,6 +126,7 @@ model Timesheet {
   timeOut               String
   totalHours            Int
   date                  String
+  logStatus             Int
   student_id            Int
   student               Student  @relation(fields: [student_id], references: [id])
 }

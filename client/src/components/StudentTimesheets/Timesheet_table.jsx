@@ -145,8 +145,8 @@ const TimeSheetTable = ({data}) => {
                 {currentItems.map((student, index) => (
                   <tr
                   onClick={()=> navigate('/view-timeSheet', {state: {data: student}})}
-                    key={index}
-                    className={`h-12  cursor-pointer hover:bg-slate-50`}
+                    key={student.id}
+                    className={`h-14  cursor-pointer hover:bg-slate-50`}
                   >
                     <td className="px-2 border-r border-b text-center font-medium">
                       {index+1}
@@ -160,14 +160,14 @@ const TimeSheetTable = ({data}) => {
                       <React.Fragment key={entry.id}>
                         <td
                           title={student.name}
-                          className={`border-b px-4 py-2 text-center cursor-pointer ${
+                          className={`border-b px-4 py-2  text-center cursor-pointer ${
                             entry.totalHours === 0 &&
                             index % chunkSize !== chunkSize - 1
-                              ? "bg-red-100"
+                              ? "bg-red-50"
                               : ""
                           }`}
                         >
-                          {entry.totalHours}
+                          {entry.totalHours} hrs
                         </td>
                         {(index + 1) % chunkSize === 0 && (
                           <td
@@ -178,7 +178,7 @@ const TimeSheetTable = ({data}) => {
                               .reduce(
                                 (sum, current) => sum + current.totalHours,
                                 0
-                              )}
+                              )} hrs
                           </td>
                         )}
                       </React.Fragment>
@@ -216,7 +216,7 @@ const TimeSheetTable = ({data}) => {
                         : student.timeSheet.reduce(
                             (sum, entry) => sum + entry.totalHours,
                             0
-                          )}
+                          )} hrs
                     </td>
                   </tr>
                 ))}

@@ -4,18 +4,48 @@ import { BsDot } from "react-icons/bs";
 import dp from "../../assets/images/dp.png";
 import { FcCalendar } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { getStudentList } from '../../api/Api'
+import {useQuery} from '@tanstack/react-query'
 
 const AttendanceRequestItem = ({ data }) => {
+   const currentDate = new Date(); 
   const [show, setShow] = useState(null);
   
   const handleFunc = (index) => {
     setShow((prev) => (prev === index ? null : index));
   };
 
+  const {data:StudentItem} = useQuery({
+    queryKey: ["getTimesheet"],
+    queryFn: getStudentList
+  });
+
+  const studentRequest =  StudentItem
+  ? StudentItem.map(({
+    id,
+    firstname,
+    lastname,
+    accountStatus,
+    timesheet
+  })=> ({
+    id,
+    firstname,
+    lastname,
+    accountStatus,
+    totalAllHoursRequest:timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).reduce((total, item) => total + item.totalHours, 0),
+    day:timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).length,
+    dayStart: timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).map(({date})=> ({date}))[0],
+    dayEnd: timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).map(({date})=> ({date}))[0],
+
+  }))
+  : []
+
+  console.log('attendace',studentRequest);
+
   return (
     <div>
-      {data.length > 0 ? (
-        data.map((item, index) => (
+      {studentRequest.length > 0 ? (
+        studentRequest.map((item, index) => (
           <div
             key={index}
             className="border rounded-xl bg-white mb-3 px-5 py-2 cursor-pointer"
@@ -29,8 +59,9 @@ const AttendanceRequestItem = ({ data }) => {
                   <img src={dp} alt="" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <h1 className="font-semibold text-base tracking-wider capitalize">
-                    {item.name}
+                  <h1 className="font-semibold text-base tracking-wider capitalize flex items-center gap-2">
+                    <span className="capitalize">{item.firstname}</span>
+                    <span className="capitalize">{item.lastname}</span>
                   </h1>
                   {item.status === 1 ? (
                     <small className="font-medium text-gray-600 tracking-wider flex items-center capitalize">
@@ -57,10 +88,10 @@ const AttendanceRequestItem = ({ data }) => {
               <div className="flex gap-5 items-center">
                 <div className="flex flex-col gap-1">
                   <div className="text-base font-medium tracking-wider">
-                    {item.totalDays} Days
+                    {item.day} Days
                   </div>
                   <p className="text-sm tracking-wider">
-                    {item.totalHours} Hours
+                    {item.totalAllHoursRequest} Hours
                   </p>
                 </div>
                 <div>
@@ -93,7 +124,7 @@ const AttendanceRequestItem = ({ data }) => {
                     Confirm All
                   </button>
                   <Link
-                    to="/Attendance-request/view"
+                    to="/Attendance-request/view/12"
                     className="py-2 px-10 text-sm text-sky-500 rounded-full border-[2px] border-sky-500 hover:bg-sky-50"
                   >
                     Check

@@ -11,6 +11,9 @@ routes.post('/addCompany', uploadMoa ,UserController.addCompany);
 routes.post('/AddCoordinator' ,UserController.AddCoordinator);
 routes.post('/addTeacher' ,UserController.AddTeacher);
 routes.post('/addTrainer' ,UserController.AddTrainer);
+routes.put('/assignStudent' ,UserController.assignStudent);
+
+
 
 // get user info
 routes.get('/getCompanyList' ,UserController.getCompanyList);

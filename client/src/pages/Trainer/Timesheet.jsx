@@ -13,12 +13,29 @@ function Timesheet() {
  
   const data = StudentTimesheet
   ?  StudentTimesheet.map(({
+    id,
     firstname,
     lastname,
     timesheet
   })=>({
+    id,
     name: `${firstname} ${lastname}`,
     timeSheet:timesheet
+    ? timesheet.map(({
+    id,
+    timeIn,
+    timeOut,
+    totalHours,
+    date,
+    logStatus
+    })=> ({
+      id,
+      timeIn: logStatus  !== 0 ? timeIn: 0,
+      timeOut: logStatus  !== 0 ? timeOut: 0,
+      totalHours: logStatus  !== 0 ? totalHours: 0,
+      date,
+    }))
+    : []
   })) : []
 
   return (

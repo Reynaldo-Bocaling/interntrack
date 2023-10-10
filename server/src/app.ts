@@ -17,7 +17,7 @@ class App {
         this.server.use(express.json());
         this.server.use(cors({
             origin: 'http://localhost:5173',
-            methods: ['POST', 'GET', 'DELETE', 'PATCH'],
+            methods: ['POST', 'GET', 'DELETE', 'PUT'],
             credentials: true 
         }));
         this.server.use(cookieParser());

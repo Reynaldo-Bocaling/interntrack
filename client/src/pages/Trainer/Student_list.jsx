@@ -8,7 +8,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import {useQuery} from '@tanstack/react-query'
-import { getTrainer } from "../../api/Api";
+import { getTrainer, getStudentList } from "../../api/Api";
 import {Switch} from "@nextui-org/react";
 
 
@@ -18,15 +18,20 @@ const Student_list = () => {
   const [show, setShow] = useState(null);
 
 
-  const {data: StudentList, isLoading: studentListLoading, isError} = useQuery({
-    queryKey: ["studentList"],
-    queryFn: getTrainer
-  })
+  const {data:StudentTimesheet,isLoading: studentListLoading, isError} = useQuery({
+    queryKey: ["getTimesheet"],
+    queryFn: getStudentList
+  });
+
+  // const {data: StudentList, isLoading: studentListLoading, isError} = useQuery({
+  //   queryKey: ["studentList"],
+  //   queryFn: getTrainer
+  // })
 
 
 
   //   data
-  const data = StudentList ?  StudentList.student.map(({
+  const data = StudentTimesheet ?  StudentTimesheet.map(({
     id,
     firstname,
     middlename,

@@ -238,7 +238,7 @@ const PrivateRoutes = () => {
   //    return <h1>error..</h1>
   // }
 
-  const role = "teacher";
+  const role = "trainer";
 
   const roleRoutes = {
     SuperAdmin: [
@@ -457,7 +457,7 @@ const PrivateRoutes = () => {
         element: <Teacher_StudentAttendanceRequest />,
       },
       {
-        path: "/Attendance-request/view",
+        path: "/Attendance-request/view/:id",
         element: <ViewAttendanceRequest />,
       },
       {
@@ -518,7 +518,7 @@ const PrivateRoutes = () => {
         element: <Trainer_StudentAttendanceRequest />,
       },
       {
-        path: "/Attendance-request/view",
+        path: "/Attendance-request/view/:id",
         element: <ViewAttendanceRequest />,
       },
       {

@@ -76,6 +76,11 @@ const AssignStudentModal = (props) => {
     onSuccess: ()=> {
       alert('success')
       queryClient.invalidateQueries({queryKey: ['getStudentList']})
+      setSelectedItems([])
+      setSelectedTrainer(null)
+      setSelectedAreaOfAssignment(null)
+      closeModal
+      
     },
     onError: ()=> {
       alert('failed')
