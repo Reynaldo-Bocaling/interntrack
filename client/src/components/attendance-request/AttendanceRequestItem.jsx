@@ -4,48 +4,54 @@ import { BsDot } from "react-icons/bs";
 import dp from "../../assets/images/dp.png";
 import { FcCalendar } from "react-icons/fc";
 import { Link } from "react-router-dom";
-import { getStudentList } from '../../api/Api'
-import {useQuery} from '@tanstack/react-query'
+import { format } from "date-fns";
 
 const AttendanceRequestItem = ({ data }) => {
-   const currentDate = new Date(); 
+    
   const [show, setShow] = useState(null);
   
   const handleFunc = (index) => {
     setShow((prev) => (prev === index ? null : index));
   };
 
-  const {data:StudentItem} = useQuery({
-    queryKey: ["getTimesheet"],
-    queryFn: getStudentList
-  });
 
-  const studentRequest =  StudentItem
-  ? StudentItem.map(({
-    id,
-    firstname,
-    lastname,
-    accountStatus,
-    timesheet
-  })=> ({
-    id,
-    firstname,
-    lastname,
-    accountStatus,
-    totalAllHoursRequest:timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).reduce((total, item) => total + item.totalHours, 0),
-    day:timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).length,
-    dayStart: timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).map(({date})=> ({date}))[0],
-    dayEnd: timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0).map(({date})=> ({date}))[0],
+  const studentAttendance = data
+  ? data
+      .filter((student) => student.timesheet.length > 0)
+      .sort((a, b) => a.lastname.localeCompare(b.lastname))
+      .map(({
+        id,
+        firstname,
+        lastname,
+        accountStatus,
+        timesheet
+      }) => ({
+        id,
+        firstname,
+        lastname,
+        accountStatus,
+        totalDays: timesheet.length,
+        totalHours: timesheet.reduce((total, day) => total + day.totalHours, 0),
+        startDate: timesheet[0].date,
+        endDate: timesheet[timesheet.length - 1].date,
+      }))
+  : [];
 
-  }))
-  : []
 
-  console.log('attendace',studentRequest);
+
+
+
+
+  
+ 
+
+  console.log('attendace',studentAttendance);
+
 
   return (
     <div>
-      {studentRequest.length > 0 ? (
-        studentRequest.map((item, index) => (
+      {studentAttendance.length > 0 ? (
+        studentAttendance.map((item, index) => (
           <div
             key={index}
             className="border rounded-xl bg-white mb-3 px-5 py-2 cursor-pointer"
@@ -60,24 +66,13 @@ const AttendanceRequestItem = ({ data }) => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <h1 className="font-semibold text-base tracking-wider capitalize flex items-center gap-2">
+                    <span className="capitalize">{item.lastname},</span>
                     <span className="capitalize">{item.firstname}</span>
-                    <span className="capitalize">{item.lastname}</span>
                   </h1>
-                  {item.status === 1 ? (
-                    <small className="font-medium text-gray-600 tracking-wider flex items-center capitalize">
-                      Online
-                      <span className="text-green-500">
-                        <BsDot size={22} />
-                      </span>
+                  
+                    <small className="text-[0.7rem] font-medium text-blue-500 tracking-wider flex items-center capitalize">
+                      SUM-{item.id}
                     </small>
-                  ) : (
-                    <small className="font-medium text-gray-600 tracking-wider flex items-center capitalize">
-                      Offline
-                      <span className="text-red-500">
-                        <BsDot size={22} />
-                      </span>
-                    </small>
-                  )}
                 </div>
               </div>
 
@@ -88,10 +83,10 @@ const AttendanceRequestItem = ({ data }) => {
               <div className="flex gap-5 items-center">
                 <div className="flex flex-col gap-1">
                   <div className="text-base font-medium tracking-wider">
-                    {item.day} Days
+                    {item.totalDays} Days
                   </div>
                   <p className="text-sm tracking-wider">
-                    {item.totalAllHoursRequest} Hours
+                    {item.totalHours} Hours
                   </p>
                 </div>
                 <div>
