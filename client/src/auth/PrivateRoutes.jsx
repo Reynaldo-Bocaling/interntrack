@@ -1,11 +1,14 @@
-import React, { Suspense, lazy, useState } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import React, { Suspense, lazy, useEffect, useState } from "react";
+import { Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { verifyToken } from "../api/Api";
+
 // auth
 const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
 const Login = lazy(() => import("./Login"));
+import PulseLoader from "react-spinners/PulseLoader";
 
-// test
+// testzy
 const ViewUploadTask = lazy(() =>
   import("../components/Student-Task/ViewUploadTask")
 );
@@ -20,30 +23,14 @@ const ViewTimesheets = lazy(() =>
   import("../components/StudentTimesheets/ViewTimesheets")
 );
 
-
-
-
 // view trainer resubale
-const TrainerInfoView = lazy(() =>
-  import("../components/Trainer-Info/index")
-);
+const TrainerInfoView = lazy(() => import("../components/Trainer-Info/index"));
 
-const StudentInfoView = lazy(() =>
-  import("../components/Student-Info/index")
-);
+const StudentInfoView = lazy(() => import("../components/Student-Info/index"));
 const CoordinatorInfoView = lazy(() =>
   import("../components/Coordinator-Info/index")
 );
-const TeacherInfoView = lazy(() =>
-  import("../components/Teacher-Info/index")
-);
-
-
-
-
-
-
-
+const TeacherInfoView = lazy(() => import("../components/Teacher-Info/index"));
 
 // Student pages
 const StudentDashboard = lazy(() => import("../pages/Student/Dashboard"));
@@ -74,11 +61,10 @@ const ViewWeeklyReport = lazy(() =>
 );
 const Records = lazy(() => import("../pages/Student2/Records"));
 const Info = lazy(() => import("../components/Student-profile/Information"));
-const Requirements = lazy(() => import("../components/Student-profile/Requirements"));
+const Requirements = lazy(() =>
+  import("../components/Student-profile/Requirements")
+);
 const Security = lazy(() => import("../components/Student-profile/Security"));
-
-
-
 
 // SuperAdmin pages
 const SuperAdminDashboard = lazy(() => import("../pages/SuperAdmin/Dashboard"));
@@ -98,14 +84,12 @@ const SuperAdmin_Coordinator_list = lazy(() =>
 const SuperAdmin_Teacher_list = lazy(() =>
   import("../pages/SuperAdmin/Teacher")
 );
-const SuperAdmin_Company = lazy(() =>
-  import("../pages/SuperAdmin/Companies")
-);
+const SuperAdmin_Company = lazy(() => import("../pages/SuperAdmin/Companies"));
 
 const SuperAdminMessage = lazy(() => import("../pages/SuperAdmin/Message"));
-const SuperAdminAnnouncement = lazy(() => import("../pages/SuperAdmin/Announcement"));
-
-
+const SuperAdminAnnouncement = lazy(() =>
+  import("../pages/SuperAdmin/Announcement")
+);
 
 // Trainer pages
 const TrainerDashboard = lazy(() => import("../pages/Trainer/Dashboard"));
@@ -128,10 +112,6 @@ const Trainer_StudentLeave = lazy(() =>
 const TrainerMessage = lazy(() => import("../pages/Trainer/Message"));
 const TrainerAnnouncement = lazy(() => import("../pages/Trainer/Announcement"));
 
-
-
-
-
 // Teacher pages
 const TeacherDashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 const TeacherrCompanies = lazy(() => import("../pages/Teacher/Companies"));
@@ -151,7 +131,7 @@ const Teacher_studentDailylog = lazy(() =>
 const Teacher_StudentTask = lazy(() => import("../pages/Teacher/StudentTask"));
 const Teacher_StudentAttendanceRequest = lazy(() =>
   import("../pages/Teacher/AttendanceRequest")
-)
+);
 
 const Teacher_StudentLeave = lazy(() =>
   import("../pages/Teacher/LeaveRequest")
@@ -218,27 +198,45 @@ const Director_Coordinator_list = lazy(() =>
   import("../pages/Director/Coordinator_list")
 );
 
-// dummy component
-const Dashboard = lazy(() => import("../pages/Teacher/Dashboard"));
-
 const PrivateRoutes = () => {
-  const [isLogged, setIsLogged] = useState(false);
+  const navigate = useNavigate();
+  const [isLogged, setIslogged] = useState(false);
 
-  // react query
-  // const { data: getRole, isError, isLoading} = useQuery({
-  //   queryKey: 'Role',
-  //   queryFn: 'getRole'
-  // });
+  const {
+    data: isRole,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["getRole"],
+    queryFn: verifyToken,
+  });
 
-  // if(isLoading) {
-  //   return <h1>Loading..</h1>
-  // }
+  useEffect(() => {
+    if (isRole === "Unauthorized" || isError) {
+      setIslogged(false);
+    } else {
+      setIslogged(true);
+    }
+  }, [isError, isRole, navigate]);
 
-  // if(isError) {
-  //    return <h1>error..</h1>
-  // }
+  if (isLoading) {
+    return (
+      <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
+        <div className="flex flex-col gap-4">
+          <PulseLoader
+            color="#03A8F5"
+            margin={8}
+            size={15}
+            speedMultiplier={1}
+          />
 
-  const role = "trainer";
+          <span className="text-gray-400 text-2xl tracking-wider font-medium">
+            Loading..
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   const roleRoutes = {
     SuperAdmin: [
@@ -246,7 +244,7 @@ const PrivateRoutes = () => {
         path: "/",
         element: <SuperAdminDashboard />,
       },
-       {
+      {
         path: "/Companies",
         element: <SuperAdmin_Company />,
       },
@@ -272,7 +270,8 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <SuperAdmin_StudentInfoView />},
+        element: <SuperAdmin_StudentInfoView />,
+      },
     ],
 
     director: [
@@ -310,26 +309,22 @@ const PrivateRoutes = () => {
       },
       {
         path: "/student-list",
-        element: <DirectorStudentList />
+        element: <DirectorStudentList />,
       },
       {
         path: "/view-student/:id",
-        element: <StudentInfoView /> 
+        element: <StudentInfoView />,
       },
       {
         path: "/view-coordinator/:id",
-        element: <CoordinatorInfoView /> 
+        element: <CoordinatorInfoView />,
       },
-      
+
       {
         path: "/view-company/:id",
         element: <DirectorViewCompany />,
-        
       },
     ],
-
-
-
 
     coordinator: [
       {
@@ -356,11 +351,10 @@ const PrivateRoutes = () => {
         path: "/view-trainer/:id",
         element: <TrainerInfoView />,
       },
-       {
+      {
         path: "/view-teacher/:id",
-        element: <TeacherInfoView /> 
+        element: <TeacherInfoView />,
       },
-
 
       {
         path: "/timeSheet",
@@ -404,7 +398,8 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <StudentInfoView />},
+        element: <StudentInfoView />,
+      },
       {
         path: "/company/",
         element: <CoordinatorViewCompany />,
@@ -474,15 +469,13 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <StudentInfoView />},
+        element: <StudentInfoView />,
+      },
       {
         path: "/company/",
         element: <TeacherViewCompany />,
       },
     ],
-
-
-
 
     trainer: [
       {
@@ -535,7 +528,8 @@ const PrivateRoutes = () => {
       },
       {
         path: "/view-student/:id",
-        element: <StudentInfoView />},
+        element: <StudentInfoView />,
+      },
     ],
 
     student: [
@@ -583,7 +577,7 @@ const PrivateRoutes = () => {
         path: "/",
         element: <Home />,
       },
-     
+
       {
         path: "/weeklyreport",
         element: <ViewWeeklyReport />,
@@ -643,14 +637,14 @@ const PrivateRoutes = () => {
     ],
   };
 
-  const userRoutes = roleRoutes[role] || [];
+  const userRoutes = roleRoutes[isRole] || [];
 
   return (
     <div>
       <Routes>
         <Route
           path="/"
-          element={isLogged ? <Login /> : <Rootlayout role={role} />}
+          element={!isLogged ? <Login /> : <Rootlayout role={isRole} />}
         >
           {userRoutes.map((route, index) => (
             <Route key={index} path={route.path} element={route.element}>

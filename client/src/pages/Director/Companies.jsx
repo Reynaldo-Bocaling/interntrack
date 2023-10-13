@@ -13,6 +13,7 @@ import { getCompanyList, addCompany } from "../../api/Api";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
 import {useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+import Swal from "sweetalert2";
 
 const Companies = () => {
   const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
@@ -37,12 +38,13 @@ const Companies = () => {
   const { mutate, isLoading } = useMutation({
     mutationFn: addCompany,
     onSuccess: () => {
-      alert("success");
+      Swal.fire("Success", "The company has been added", "success");
       queryClient.invalidateQueries("getCompanyList");
       setAddCompanyModalIsOpen(false);
     },
     onError: (error) => {
-      console.log(error);
+      Swal.fire("Error", "There was an issue adding the campany. \n Please check the information provided and try again.", "error");
+
     },
   });
   // getCompanies
@@ -236,6 +238,7 @@ const Companies = () => {
         isOpen={AddCompanyModalIsOpen}
         closeModal={() => setAddCompanyModalIsOpen(false)}
         onAddCompany={handleAddCompany}
+        isLoading={companyLoading}
       />
     </div>
   );

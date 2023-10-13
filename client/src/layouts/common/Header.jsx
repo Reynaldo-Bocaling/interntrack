@@ -54,10 +54,17 @@ function Header(props) {
     },
   ];
 
-  const NotifLength = Notif.filter((item) => item.NotifStatus === 1).length;
+
+
   const capitalizeFirstLetter = (string) => {
+  if (string && string.length > 0) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  } else {
+    return string;
   }
+}
+
+
   return (
     <div
       className={`${

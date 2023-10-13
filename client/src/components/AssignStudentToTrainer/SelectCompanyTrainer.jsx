@@ -12,6 +12,7 @@ function SelectCompanyTrainer(props) {
     onCLickAssign,
     companies,
     sList,
+    selectedStudent,
   } = props;
 
   const filteredTrainers = selectedCompany ? selectedCompany.trainer : [];
@@ -76,7 +77,18 @@ function SelectCompanyTrainer(props) {
         <Button
           onClick={onCLickAssign}
           size="lg"
-          className="w-[15%] font-medium tracking-wide bg-blue-500 py-3 px-10  text-white rounded-xl"
+          className={`${
+            selectedStudent === null ||
+            selectedTrainer === null ||
+            selectedAreaOfAssignment === null
+              ? "cursor-not-allowed"
+              : ""
+          } w-[15%] font-medium tracking-wide bg-blue-500 py-3 px-10  text-white rounded-xl`}
+          disabled={
+            selectedStudent == [] ||
+            selectedTrainer === null ||
+            selectedAreaOfAssignment === null
+          }
         >
           Assign
         </Button>

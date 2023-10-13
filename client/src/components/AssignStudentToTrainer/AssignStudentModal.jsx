@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 
 import { useQuery, useMutation , useQueryClient} from "@tanstack/react-query";
+import Swal from "sweetalert2";
 
 const AssignStudentModal = (props) => {
   const { closeModal, isOpen, companies } = props;
@@ -23,49 +24,9 @@ const AssignStudentModal = (props) => {
   const areaAssigned = selectedAreaOfAssignment ? selectedAreaOfAssignment.id : 0;
 
 
-  const tableData = [
-    {
-      id: 1,
-      name: "Angela Delos Santos",
-      email: "Angela@gmail.com",
-      gender: "female",
-    },
-    {
-      id: 2,
-      name: "Sunshine Perez",
-      email: "Sunshine@gmail.com",
-      gender: "female",
-    },
-    { id: 3, name: "Helen Hyband", email: "Helen@gmail.com", gender: "female" },
-    { id: 4, name: "Mia Alcantara", email: "Mia@gmail.com", gender: "female" },
-    {
-      id: 5,
-      name: "Justine Paul Mariano",
-      email: "Justine@gmail.com",
-      gender: "female",
-    },
-    { id: 6, name: "Xian Santos", email: "Xian@gmail.com", gender: "female" },
-    {
-      id: 7,
-      name: "Alfredo Suman",
-      email: "Alfredo@gmail.com",
-      gender: "female",
-    },
-    {
-      id: 8,
-      name: "Renalyn Peralta",
-      email: "Reynalun@gmail.com",
-      gender: "female",
-    },
-    { id: 9, name: "Symon Inggal", email: "Symon@gmail.com", gender: "female" },
-    { id: 10, name: "Renz Alana", email: "Renz@gmail.com", gender: "female" },
-  ];
-
-
-
   // get student list 
   const {data} = useQuery({
-    queryKey: ['getStudentList'],
+    queryKey: ['getStudent'],
     queryFn: getTeacher
   });
 
@@ -74,16 +35,15 @@ const AssignStudentModal = (props) => {
   const { mutate} = useMutation({
     mutationFn: assignStudent,
     onSuccess: ()=> {
-      alert('success')
-      queryClient.invalidateQueries({queryKey: ['getStudentList']})
+      Swal.fire("Success", "Congratulations! \n The student has been successfully assigned to the OJT program.", "success");
+      queryClient.invalidateQueries({queryKey: ['getStudent']})
       setSelectedItems([])
       setSelectedTrainer(null)
       setSelectedAreaOfAssignment(null)
-      closeModal
-      
+      closeModal()
     },
     onError: ()=> {
-      alert('failed')
+      Swal.fire("Error", "Opps!\n An error occured while asigning the student \n Please try again or contact support for assistance.", "error");
     }
   })
 
@@ -152,6 +112,7 @@ const AssignStudentModal = (props) => {
                 setSelectedAreaOfAssignment={setSelectedAreaOfAssignment}
                 companies={companies}
                 onCLickAssign={handleTryCLick}
+                selectedStudent={selectedItems}
               />
               <SelectStudent
                 selectedItems={selectedItems}

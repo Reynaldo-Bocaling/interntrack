@@ -12,19 +12,20 @@ routes.post('/AddCoordinator' ,UserController.AddCoordinator);
 routes.post('/addTeacher' ,UserController.AddTeacher);
 routes.post('/addTrainer' ,UserController.AddTrainer);
 routes.put('/assignStudent' ,UserController.assignStudent);
+routes.put('/attendanceRequest' ,UserController.attendanceRequest);
 
 
 
 // get user info
 routes.get('/getCompanyList' ,UserController.getCompanyList);
 routes.get('/getTrainerList' ,UserController.getTrainerList);
-routes.get('/getDirector' ,UserController.getDirector);
-routes.get('/getTeacher' ,UserController.getTeacher);
-routes.get('/getStudent' ,UserController.getStudent);
-routes.get('/getCoordinator' ,UserController.getCoordinator);
-routes.get('/getTrainer' ,UserController.getTrainer);
-routes.get('/getCampus' ,UserController.getCampus);
-routes.get('/getStudentList' ,UserController.getStudentList);
+routes.get('/getDirector',verifyToken ,UserController.getDirector);
+routes.get('/getTeacher' ,verifyToken ,UserController.getTeacher);
+routes.get('/getCoordinator' ,verifyToken, UserController.getCoordinator);
+routes.get('/getTrainer' ,verifyToken, UserController.getTrainer);
+routes.get('/getStudentList' , verifyToken,UserController.getStudentList);
+routes.get('/getStudent' ,verifyToken, UserController.getStudent);
 routes.get('/getStudentInfo/:id' ,UserController.getStudentInfo);
+routes.get('/getCampus' ,UserController.getCampus);
 
 export default routes   

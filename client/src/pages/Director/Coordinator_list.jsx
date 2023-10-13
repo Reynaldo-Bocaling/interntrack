@@ -15,7 +15,7 @@ import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
 import { 
   Switch , useDisclosure as AddCoordinatorDisclosure,
 } from "@nextui-org/react";
-
+import Swal from "sweetalert2";
 
 
 const Trainer_list = () => {
@@ -26,15 +26,14 @@ const Trainer_list = () => {
   const queryClient = useQueryClient();
 
 
-  const {mutate} = useMutation({
+  const {mutate, isLoading: AddCoordinatorLoading} = useMutation({
     mutationFn: AddCoordinatorAccount,
     onSuccess: (data)=> {
-      console.log('myData', data);
-      alert('success');
+      Swal.fire("Success", "The coordinator has been added", "success");
       queryClient.invalidateQueries({ queryKey: ["getCoordinatorList"] });
     },
     onError: ()=> {
-      alert('failed')
+      Swal.fire("Error", "There was an issue adding the coordinator. \n Please check the information provided and try again.", "error");
     }
   })
 
@@ -251,6 +250,7 @@ const Trainer_list = () => {
         AddIsOpen={AddIsOpen}
         AddOnClose={AddOnClose}
         onSubmit={handleSubmit}
+        isLoading={AddCoordinatorLoading}
       />
 
     </div>

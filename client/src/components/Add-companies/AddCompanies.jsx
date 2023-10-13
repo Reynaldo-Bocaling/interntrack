@@ -14,7 +14,7 @@ import { randomId } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
 import {NumberInput} from "@mantine/core";
 
-const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose   }) => {
+const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
 
       const [Moa, setMoa] = useState("");
       const [CompanyName, setCompanyName] = useState("");
@@ -157,7 +157,9 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose   }) => {
                     className="text-sm text-white font-medium tracking-wide bg-blue-500 mt-1"
                     type="submit"
                   >
-                    Submit
+                    { 
+                      isLoading  ? "Loading..." : "Submit"
+                     }
                   </Button>
                   
                   

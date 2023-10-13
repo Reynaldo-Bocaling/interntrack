@@ -9,7 +9,7 @@ import { Modal,
   SelectItem
 } from "@nextui-org/react";
 
-const AddTrainer = ({companies, onSubmit , AddIsOpen, AddOnClose   }) => {
+const AddTrainer = ({companies, onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
 
       const [formData, setFormData] = useState({
         company_id: '',
@@ -120,7 +120,9 @@ const AddTrainer = ({companies, onSubmit , AddIsOpen, AddOnClose   }) => {
                       Cancel
                     </Button>
                     <Button type="submit" color="primary" className="font-medium tracking-wide px-8">
-                      Add Now
+                     { 
+                      isLoading  ? "Loading..." : "Submit"
+                     }
                     </Button>
                   </div>
                 </form>

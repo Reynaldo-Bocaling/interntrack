@@ -18,6 +18,7 @@ import AllStudent from "../../components/StudentList-Filter/All";
 import AssignedStudent from "../../components/StudentList-Filter/Assigned";
 import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
 import picture from "../../assets/images/dp.png";
+import Swal from "sweetalert2";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -107,14 +108,13 @@ const Student_list = () => {
   const { mutate, isLoading: importLoading } = useMutation({
     mutationFn: importStudent,
     onSuccess: () => {
-      alert("success");
+      Swal.fire("Success", "Students has been successfully imported.", "success");
       setImportData(null);
       setError(null);
       queryClient.invalidateQueries({ queryKey: ["getStudent"] });
     },
     onError: () => {
-      alert("failed");
-    },
+      Swal.fire("Error", "There was an error during the student import process. \n Please review the data..", "error");    },
   });
 
   // import handle change

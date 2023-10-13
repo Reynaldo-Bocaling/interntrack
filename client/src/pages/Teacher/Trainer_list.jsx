@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -11,10 +11,16 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import AddTrainer from "../../components/AddTrainer/Addtrainer";
 import picture from "../../assets/images/dp.png";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import {AddTrainerAccount, getTrainerList, getCompanyList } from "../../api/Api";
-import {Switch,useDisclosure as AddCoordinatorDisclosure} from "@nextui-org/react";
-
-
+import {
+  AddTrainerAccount,
+  getTrainerList,
+  getCompanyList,
+} from "../../api/Api";
+import {
+  Switch,
+  useDisclosure as AddCoordinatorDisclosure,
+} from "@nextui-org/react";
+import Swal from "sweetalert2";
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -30,14 +36,14 @@ const Trainer_list = () => {
   const queryClient = useQueryClient();
 
   // addtrainer mutatio
-  const { mutate, isLoading:AddLoading } = useMutation({
+  const { mutate, isLoading: AddLoading } = useMutation({
     mutationFn: AddTrainerAccount,
     onSuccess: () => {
-      alert("success");
+      Swal.fire("Success", "The trainer has been added to the system", "success");
       queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
     },
     onError: () => {
-      alert("failed");
+      Swal.fire("Error", "There was an issue adding the trainer. \n Please check the information provided and try again.", "error");
     },
   });
 
@@ -61,8 +67,12 @@ const Trainer_list = () => {
     queryFn: getCompanyList,
   });
 
-  if(companyListError){
-    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
+  if (companyListError) {
+    return (
+      <h1 className="text-center my-10">
+        Server Failed. Please Try Again Later
+      </h1>
+    );
   }
   //   data
   const data = trainerlist
@@ -78,7 +88,7 @@ const Trainer_list = () => {
             profile,
             accountStatus,
             company,
-            student
+            student,
           }) => ({
             id,
             firstname,
@@ -98,8 +108,7 @@ const Trainer_list = () => {
         .filter((item) => item.name.toLowerCase().includes(searchInput))
     : [];
 
-    console.log(data);
-
+  console.log(data);
 
   const handleFormSubmit = async (trainerData) => {
     mutate(trainerData);
@@ -150,7 +159,14 @@ const Trainer_list = () => {
       id: "accountStatus",
       cell: (info) => (
         <div className="relative text-center">
-          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+          <Switch
+            isDisabled
+            className="mr-7"
+            size="sm"
+            defaultSelected={
+              info.row.original.accountStatus === 0 ? true : false
+            }
+          />
 
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
@@ -241,11 +257,11 @@ const Trainer_list = () => {
         isLoading={trainerListLoading}
       />
       <AddTrainer
-       
         companies={company}
         onSubmit={handleFormSubmit}
         AddIsOpen={AddIsOpen}
         AddOnClose={AddOnClose}
+        isLoading={AddLoading}
       />
     </div>
   );

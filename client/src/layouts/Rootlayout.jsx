@@ -29,56 +29,57 @@ const Rootlayout = (props) => {
 
   return (
     <>
-      
-      {role !== "student2" ? (
+      {role !== "Unauthorized" && (
         <div>
-          <Header
-            toggleIsOpen={isOpen}
-            toggleNotif={toggleNotif}
-            toggleProfile={toggleProfile}
-            isOpenNotif={isOpenNotif}
-            isOpenProfile={isOpenProfile}
-            role={role}
-          />
+          {role !== "student2" ? (
+            <div>
+              <Header
+                toggleIsOpen={isOpen}
+                toggleNotif={toggleNotif}
+                toggleProfile={toggleProfile}
+                isOpenNotif={isOpenNotif}
+                isOpenProfile={isOpenProfile}
+                role={role}
+              />
 
-          <Sidebar
-            toggleIsOpen={isOpen}
-            toggleSetIsOpen={toggleIsOpen}
-            role={role}
-          />
-        </div>
-      ) : (
-        <div>
-          <StudentHeader isOpen={open}  />
-          <StudentNavigate />
+              <Sidebar
+                toggleIsOpen={isOpen}
+                toggleSetIsOpen={toggleIsOpen}
+                role={role}
+              />
+            </div>
+          ) : (
+            <div>
+              <StudentHeader isOpen={open} />
+              <StudentNavigate />
+            </div>
+          )}
+
+          <div
+            className={`${
+              role !== "student2" && "ml-[16rem]"
+            } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50`}
+            onClick={() => {
+              setIsOpenNotif(false), setIsOpenProfile(false);
+            }}
+          >
+            <Drawer
+              position="right"
+              size="80%"
+              opened={opened}
+              onClose={close}
+              title={
+                <header className="mt-2">
+                  <span className="text-xl font-semibold">Menu</span>
+                </header>
+              }
+            ></Drawer>
+
+            <Outlet />
+            <Footer />
+          </div>
         </div>
       )}
-
-      <div
-        className={`${
-          role !== "student2" && "ml-[16rem]"
-        } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50`}
-        onClick={() => {
-          setIsOpenNotif(false), setIsOpenProfile(false);
-        }}
-      >
-        <Drawer
-          position="right"
-          size="80%"
-          opened={opened}
-          onClose={close}
-          title={
-            <header className="mt-2">
-              <span className="text-xl font-semibold">Menu</span>
-            </header>
-          }
-        >
-         
-        </Drawer>
-
-        <Outlet />
-        <Footer />
-      </div>
     </>
   );
 };

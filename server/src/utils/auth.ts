@@ -10,18 +10,22 @@ const Login = async (req: Request, res: Response) => {
     const user = await prisma.user.findFirst({
       where: { username: username },
     });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(200).json( "Invalid username. Please double check your username and try again.");
 
     const isValidPassword = await argon2.verify(user.password, password);
     if (!isValidPassword) {
-      return res.status(404).json({ message: "password incoorect" });
+      return res.status(200).json( "Incorrect password. Please ensure you've entered the correct password and try again.");
     }
 
     const token = jwt.sign({ id: user.id }, secret_key, { expiresIn: "7d" });
-    res.cookie("token", token, { httpOnly: true });
-    return res.status(200).json({ message: "Success Login" });
+    res.cookie("token", token, {
+      httpOnly: true,
+     
+      secure: true, 
+    });
+    return res.status(200).json("Success");
   } catch (error:any) {
-    return res.status(500).json({ message: error.message });
+    return res.status(200).json({ message: error.message });
   }
 };
 

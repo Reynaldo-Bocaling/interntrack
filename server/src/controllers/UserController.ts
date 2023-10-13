@@ -108,6 +108,17 @@ export class UserController {
           },
         },
       });
+
+       const mailOptions = {
+          from: "reynaldobocaling@gmail.com",
+          to: email,
+          subject: "IternTrack!",
+          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
       return res.status(200).json(error);
@@ -239,14 +250,14 @@ export class UserController {
           },
         });
 
-        // const mailOptions = {
-        //   from: "reynaldobocaling@gmail.com",
-        //   to: data.email,
-        //   subject: "IternTrack!",
-        //   text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
-        // };
+        const mailOptions = {
+          from: "reynaldobocaling@gmail.com",
+          to: data.email,
+          subject: "IternTrack!",
+          text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
+        };
 
-        // await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
       }
 
       return res.status(201).json("success");
@@ -258,7 +269,6 @@ export class UserController {
 
 
   // assign Students
-
   static async assignStudent(req: any, res: Response) {
     const {
        studentId,
@@ -283,6 +293,25 @@ export class UserController {
       }
   }
 
+
+  // attendance request
+  static async attendanceRequest(req: Request, res: Response){
+    const {id} = req.body;
+
+    try {
+      const response = await prisma.timesheet.update({
+        where: {
+          id : id
+        },
+        data: {
+          logStatus: 1
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
 
 
   // GET
@@ -505,13 +534,18 @@ export class UserController {
 
   static async getStudentList(req: any, res: Response){
     try {
-      const role:string = "trainer";
+      
+      const role:string = req.user.role;
+      const trainer_id = req.user.trainer[0]?.id;
+      const teacher_id = req.user.teacher[0]?.id;
       let students: any = [];
+
+
       switch(role) {
         case "teacher":
           students = await prisma.student.findMany({
             where: {
-              teacher_id: 1 //babaguhin pa ito  sa middleware kukuhanin
+              teacher_id: Number(teacher_id)
             },
             include: {
               task: true,
@@ -523,7 +557,7 @@ export class UserController {
         case "trainer":
           students = await prisma.student.findMany({
             where: {
-              trainer_id: 11 //babaguhin pa ito  sa middleware kukuhanin
+              trainer_id: Number(trainer_id)
             },
             include: {
               task: true,
@@ -535,6 +569,7 @@ export class UserController {
         default: 
         return res.status(500).json({message: 'Invalid role'})
       }
+     
 
       return res.status(200).json(students)
     } catch (error) {

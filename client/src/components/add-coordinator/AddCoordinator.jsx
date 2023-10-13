@@ -12,7 +12,7 @@ import {
 import { getCampus } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
-const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose }) => {
+const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
   const [selectedCampus, setSelectedCampus] = useState(null);
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [selectedProgram, setSelectedProgram] = useState(null);
@@ -215,7 +215,9 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose }) => {
                       color="primary"
                       className="font-medium tracking-wide px-8"
                     >
-                      Submit
+                      { 
+                      isLoading  ? "Loading..." : "Submit"
+                     }
                     </Button>
                   </div>
                 </form>

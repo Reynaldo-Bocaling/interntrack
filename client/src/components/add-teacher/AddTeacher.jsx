@@ -12,7 +12,7 @@ import { Modal,
 import { getCampus } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
-const CustomModal = ({onSubmit , AddIsOpen, AddOnClose   }) => {
+const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
 
   const [selectedCampus, setSelectedCampus] = useState(null);
   const [selectedCollege, setSelectedCollege] = useState(null);
@@ -232,7 +232,9 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose   }) => {
                       Cancel
                     </Button>
                     <Button type="submit" color="primary" className="font-medium tracking-wide px-8">
-                      Submit
+                    { 
+                      isLoading  ? "Loading..." : "Submit"
+                     }
                     </Button>
                   </div>
                 </form>

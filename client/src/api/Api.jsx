@@ -3,6 +3,18 @@ import axios from "axios";
 const url = "http://localhost:3001/";
 
 // POST Request
+
+// login
+export const auth = async (data) => {
+  try {
+    const response = await axios.post(`${url}auth`, data, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// import
 export const importStudent = async (data) => {
   try {
     const response = await axios.post(`${url}importStudent`, {
@@ -49,6 +61,8 @@ export const addCompany = async (formData) => {
   }
 };
 
+
+// assign student
 export const assignStudent = async({studentId, trainer_id, areaAssigned_id}) => {
   try {
     const response = await axios.put(`${url}assignStudent`, {
@@ -62,7 +76,15 @@ export const assignStudent = async({studentId, trainer_id, areaAssigned_id}) => 
   }
 }
 
-
+//attendance request
+export const attendanceRequest = async (id)=>{
+  try {
+    const response = await axios.put(`${url}attendanceRequest`, {id});
+    return response.data;    
+  } catch (error) {
+    
+  }
+}
 
 
 
@@ -87,7 +109,7 @@ export const getTrainerList = async () => {
 
 export const getDirector = async () => {
   try {
-    const response = await axios.get(`${url}getDirector`);
+    const response = await axios.get(`${url}getDirector`, { withCredentials: true });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -96,7 +118,7 @@ export const getDirector = async () => {
 
 export const getCoordinator = async () => {
   try {
-    const response = await axios.get(`${url}getCoordinator`);
+    const response = await axios.get(`${url}getCoordinator`, { withCredentials: true });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -105,7 +127,7 @@ export const getCoordinator = async () => {
 
 export const getTeacher = async () => {
   try {
-    const response = await axios.get(`${url}getTeacher`);
+    const response = await axios.get(`${url}getTeacher`, { withCredentials: true });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -114,7 +136,7 @@ export const getTeacher = async () => {
 
 export const getTrainer = async () => {
   try {
-    const response = await axios.get(`${url}getTrainer`);
+    const response = await axios.get(`${url}getTrainer`, { withCredentials: true });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -123,7 +145,7 @@ export const getTrainer = async () => {
 
 export const getStudent = async () => {
   try {
-    const response = await axios.get(`${url}getStudent`);
+    const response = await axios.get(`${url}getStudent`,{ withCredentials: true } );
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -151,9 +173,20 @@ export const getStudentInfo = async(id) => {
 
 export const getStudentList = async() => {
   try {
-    const response = await axios.get(`${url}getStudentList`);
+    const response = await axios.get(`${url}getStudentList`, { withCredentials: true });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
   }
 }
+
+
+export const verifyToken = async () => {
+  try {
+    const response = await axios.get(`${url}verify`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+

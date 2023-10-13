@@ -19,7 +19,7 @@ const Student_list = () => {
 
 
   const {data:StudentTimesheet,isLoading: studentListLoading, isError} = useQuery({
-    queryKey: ["getTimesheet"],
+    queryKey: ["getStudentTimesheet"],
     queryFn: getStudentList
   });
 

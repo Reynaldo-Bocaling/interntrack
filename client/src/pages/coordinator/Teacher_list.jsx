@@ -16,14 +16,13 @@ import { getCoordinator, addTeacher } from "../../api/Api";
 import picture from '../../assets/images/dp.png'
 import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
 import AddTeacherModal from '../../components/add-teacher/AddTeacher'
-
+import Swal from "sweetalert2";
 
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
 
 
@@ -39,11 +38,11 @@ const TeacherList = () => {
   const {mutate, isLoading: AddTeacherLoading, isError: AddTeacherError} = useMutation({
     mutationFn: addTeacher,
     onSuccess: ()=> {
-      alert("success")
+      Swal.fire("Success", "The teacher has been added to the system", "success");
       queryClient.invalidateQueries({ queryKey: ["getTeacherList"] });
     },
     onError: ()=> {
-      alert('failed')
+      Swal.fire("Error", "There was an issue adding the teacher. \n Please check the information provided and try again.", "error");
     }
   })
 
@@ -252,6 +251,7 @@ const TeacherList = () => {
         AddOnOpen={AddTeacherOnOpen}
         AddOnClose={AddTeacherOnClose}
         onSubmit={handleSubmit}
+        isLoading={AddTeacherLoading}
       />
 
     </div>
