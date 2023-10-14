@@ -53,6 +53,7 @@ const Student_list = () => {
     queryFn: getCompanyList,
   });
 
+  
   // getStudent list
   const {
     data: StudentList,

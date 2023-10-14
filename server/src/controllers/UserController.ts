@@ -28,7 +28,7 @@ export class UserController {
           email,
           contact: Number(contact),
           moaUpload,
-          director_id: 1,
+          director_id: 2,
           areaOfAssignment: {
             createMany: {
               data: areasToInsert,
@@ -37,15 +37,16 @@ export class UserController {
         },
       });
       return res.status(200).json(response);
-    } catch (error) {
-      return res.status(500).json(error);
+    } catch (error:any) {
+      return res.status(500).json(error.message);
     }
   }
  
   // add coordinator
   static async AddCoordinator(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const director_id = 1
+    const director_id = req.user.director[0]?.id;
+    
     const {
       firstname,
       middlename,
@@ -61,7 +62,7 @@ export class UserController {
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: "teacher",
+          role: "Coordinator",
           coordinator: {
             create: {
               firstname,
@@ -94,7 +95,7 @@ export class UserController {
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: "trainer",
+          role: "Trainer",
           trainer: {
             create: {
               firstname,
@@ -109,16 +110,6 @@ export class UserController {
         },
       });
 
-       const mailOptions = {
-          from: "reynaldobocaling@gmail.com",
-          to: email,
-          subject: "IternTrack!",
-          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
-        };
-
-        await transporter.sendMail(mailOptions);
-
-
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
       return res.status(200).json(error);
@@ -127,6 +118,7 @@ export class UserController {
 
    // add teacher
    static async AddTeacher(req: any, res: Response) {
+    const coordinator_id  = req.user.coordinator[0]?.id
     const newPassowrd = generateNewPassword();
     const {
       firstname,
@@ -144,7 +136,7 @@ export class UserController {
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: "teacher",
+          role: "Teacher",
           teacher: {
             create: {
               firstname,
@@ -156,7 +148,7 @@ export class UserController {
               college,
               program,
               major,
-              coordinator_id: 1,
+              coordinator_id: coordinator_id,
               accountStatus: 0
             },
           },
@@ -213,6 +205,8 @@ export class UserController {
 
    //newImport
    static async importStudent(req: any, res: Response) {
+    const teacher_id = req.user.teacher[0]?.id;
+
     const ExcelData = req.body.excelData;
     const newPassowrd = generateNewPassword();
     try {
@@ -238,10 +232,9 @@ export class UserController {
             college: 'CICT',
             program: 'BSIT',
             major: 'Web',
-            teacher_id: 1,
+            teacher_id: teacher_id,
             user_id: createdUser.id,
             accountStatus: 0,
-            coordinator_id: 1,
             timesheet: {
               createMany: {
                 data: generateTimeData(),
@@ -266,6 +259,79 @@ export class UserController {
     }
   }
 
+
+  // add super Admin 
+  static async addSuperAdmin(req: any, res: Response){
+    const newPassowrd = generateNewPassword();
+    const {
+      firstname,
+      middlename,
+      lastname,
+      email,
+      contact
+    } = req.body;
+
+    try {
+      await prisma.user.create({
+        data: {
+          username: email,
+          password: await argon2.hash(newPassowrd),
+          role: 'SuperAdmin',
+          superadmin: {
+            create: {
+              firstname,
+              middlename,
+              lastname,
+              email,
+              contact: Number(contact),
+              accountStatus: 0
+            }
+          }
+        }
+      });
+
+      return res.status(200).json({username: email, password: newPassowrd});
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+
+  // add director
+  static async addDirector(req: any, res: Response){
+    const newPassowrd = generateNewPassword();
+    const {
+      firstname,
+      middlename,
+      lastname,
+      email,
+      contact
+    } = req.body;
+
+    try {
+      await prisma.user.create({
+        data: {
+          username: email,
+          password: await argon2.hash(newPassowrd),
+          role: 'Director',
+          director: {
+            create: {
+              firstname,
+              middlename,
+              lastname,
+              email,
+              contact: Number(contact),
+              accountStatus: 0
+            }
+          }
+        }
+      });
+
+      return res.status(200).json({username: email, password: newPassowrd});
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
 
 
   // assign Students
@@ -314,80 +380,18 @@ export class UserController {
   }
 
 
+
   // GET
-  static async getCompanyList(req: any, res: Response) {
-    try {
-      const response = await prisma.company.findMany({
-        include: {
-          areaOfAssignment: {
-            include: {
-              student: {
-                include:{
-                  trainer:true,
-                  timesheet:true,
-                  AreaOfAssignment:true
-                }
-              }
-            }
-          },
-          trainer: {
-            include: {
-              student:true
-            }
-          }
-        }
-      });
-      return res.status(200).json(response)
-    } catch (error) {
-      return res.status(500).json(error)
-    }
-  }
-
-  static async getTrainerList(req: any, res: Response) {
-    try {
-      const response = await prisma.trainer.findMany({
-        include: {
-          company: true,
-          student: true
-        }
-      });
-      return res.status(200).json(response)
-    } catch (error) {
-      return res.status(500).json(error)
-    }
-  }
-
+// get director info
   static async getDirector(req: any, res: Response) {
+    const director_id = req.user.director[0]?.id
     try {
       const response = await prisma.director.findUnique({
         where: {
-          id: 1,
+          id: director_id,
         },
         include: {
           user: true,
-          coordinator: {
-            include: {
-              teacher: {
-                include: {
-                  student: {
-                    include: {
-                      teacher: true,
-                      trainer: true,
-                      AreaOfAssignment: {
-                        include: {
-                          company: {
-                            include: {
-                              trainer: true
-                            }
-                          },
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
         },
       });
       return res.status(200).json(response );
@@ -396,11 +400,13 @@ export class UserController {
     }
   }
 
+  // get trainer info
   static async getTrainer(req: any, res: Response) {
+    const trainer_id = req.user.trainer[0]?.id
     try {
       const response = await prisma.trainer.findUnique({
         where: {
-          id: 11,
+          id: trainer_id,
         },
         include: {
           user: true,
@@ -423,11 +429,13 @@ export class UserController {
     }
   }
 
+  // get coordinator info
   static async getCoordinator(req: any, res: Response) {
     try {
+      const coordinator_id = req.user.coordinator[0]?.id
       const response = await prisma.coordinator.findUnique({
         where: {
-          id: 1,
+          id: coordinator_id,
         },
         include: {
           user: true,
@@ -456,11 +464,13 @@ export class UserController {
     }
   }
 
+  // get teacher info
   static async getTeacher(req: any, res: Response) {
+    const teacher_id = req.user.teacher[0]?.id
     try {
       const response = await prisma.teacher.findUnique({
         where: {
-          id: 1, //middlewares id req.user[0].teacher.id
+          id: teacher_id,
         },
         include: {
           user: true,
@@ -483,11 +493,13 @@ export class UserController {
     }
   }
 
+  // get student info
   static async getStudent(req: any, res: Response) {
+    const studentId = req.user.student[0]?.id
     try {
       const response = await prisma.student.findUnique({
         where: {
-          id: 7, //middlewares id req.user.teacher[0].id
+          id: studentId, 
         },
         include: {
           user: true,
@@ -509,6 +521,7 @@ export class UserController {
     }
   }
 
+  // get campus info
   static async getCampus(req: any, res: Response){
     try {
       const response = await prisma.campus.findMany({
@@ -529,55 +542,10 @@ export class UserController {
     } catch (error) {
       return res.status(500).json(error)
     }
-  }
- 
-
-  static async getStudentList(req: any, res: Response){
-    try {
-      
-      const role:string = req.user.role;
-      const trainer_id = req.user.trainer[0]?.id;
-      const teacher_id = req.user.teacher[0]?.id;
-      let students: any = [];
-
-
-      switch(role) {
-        case "teacher":
-          students = await prisma.student.findMany({
-            where: {
-              teacher_id: Number(teacher_id)
-            },
-            include: {
-              task: true,
-              timesheet: true
-            }
-          });
-          break;
-
-        case "trainer":
-          students = await prisma.student.findMany({
-            where: {
-              trainer_id: Number(trainer_id)
-            },
-            include: {
-              task: true,
-              timesheet: true
-            }
-          });
-          break;
-        
-        default: 
-        return res.status(500).json({message: 'Invalid role'})
-      }
-     
-
-      return res.status(200).json(students)
-    } catch (error) {
-      return res.status(500).json({message: error})
-    }
-  }
+  }  
   
-  
+
+  // get student info
   static async getStudentInfo(req: any, res: Response){
     try {
       const id = parseInt(req.params.id);
@@ -598,16 +566,171 @@ export class UserController {
       return res.status(500).json(error)
     }
   }
+
+
+  
+
+  // get list
+  // get Director List
+  static async getDirectorList(req: any, res: Response) {
+    try {
+      const response = await prisma.director.findMany({});
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  // get Coordinator List
+  static async getCoordinatorList(req: any, res: Response) {
+    try {
+      const response = await prisma.coordinator.findMany({
+        include: {
+          teacher: {
+            include: {
+              student: {
+                include: {
+                  teacher: true,
+                  trainer: true,
+                  AreaOfAssignment: {
+                    include: {
+                      company: {
+                        include: {
+                          trainer: true
+                        }
+                      },
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+  
+  static async getStudentList(req: any, res: Response){
+    try {
+      const response = await prisma.student.findMany({
+        include: {
+          task: true,
+          timesheet: true,
+          trainer: true,
+          AreaOfAssignment:{
+            include: {
+              company: true
+            }
+          }
+        }
+      })
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json({message: error})
+    }
+  }
+
+  // get company list
+  static async getCompanyList(req: any, res: Response) {
+    try {
+      const response = await prisma.company.findMany({
+        include: {
+          areaOfAssignment: {
+            include: {
+              student: {
+                include:{
+                  trainer:true,
+                  timesheet:true,
+                  AreaOfAssignment:true
+                }
+              }
+            }
+          },
+          trainer: {
+            include: {
+              student:true
+            }
+          }
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  // get trainer list
+  static async getTrainerList(req: any, res: Response) {
+    try {
+      const response = await prisma.trainer.findMany({
+        include: {
+          company: true,
+          student: true
+        }
+      });
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+
+  static async getTeacherList(req:any, res:Response) {
+    try {
+      const response = await prisma.teacher.findMany({
+        include: {
+          student: true
+        }
+      })
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
 }
 
-
 // timesheet
+// const generateTimeData = () => {
+//   const startDate = new Date("2023-09-04");
+//   const endDate = new Date("2023-12-15");
+//   const timeData = [];
+
+//   let currentDate = new Date(startDate);
+//   let weekNumber = 1;
+
+//   while (currentDate <= endDate) {
+//     const dayOfWeek = currentDate.getDay();
+
+//     if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+//       const formattedDate = format(currentDate, "yyyy-MM-dd");
+
+//       timeData.push({
+//         timeIn: "0:00",
+//         timeOut: "0:00",
+//         totalHours: 0,
+//         date: formattedDate,
+//         logStatus:0
+//       });
+//     }
+//     currentDate.setDate(currentDate.getDate() + 1);
+//   }
+
+//   return timeData;
+// };
+
+
+
 const generateTimeData = () => {
   const startDate = new Date("2023-09-04");
   const endDate = new Date("2023-12-15");
   const timeData = [];
 
   let currentDate = new Date(startDate);
+  let weekCounter = 1;
+
   while (currentDate <= endDate) {
     const dayOfWeek = currentDate.getDay();
 
@@ -619,14 +742,20 @@ const generateTimeData = () => {
         timeOut: "0:00",
         totalHours: 0,
         date: formattedDate,
-        logStatus:0
+        logStatus: 0,
+        week: weekCounter,
       });
+
+      if (timeData.length % 5 === 0) {
+        weekCounter++;
+      }
     }
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
   return timeData;
 };
+
 
 
 

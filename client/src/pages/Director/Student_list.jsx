@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
-import { getDirector } from "../../api/Api";
+import { getStudentList } from "../../api/Api";
 import picture from "../../assets/images/dp.png";
 import { Tabs } from "@mantine/core";
 import AllStudent from "../../components/StudentList-Filter/All";
@@ -20,15 +20,13 @@ const Student_list = () => {
     error,
   } = useQuery({
     queryKey: ["getStudentList"],
-    queryFn: getDirector,
+    queryFn: getStudentList,
   });
 
 
   const data = StudentList
-    ? StudentList.coordinator.flatMap(({ teacher }) =>
-        teacher
-          ? teacher.flatMap(({ student }) =>
-              student ? student.map(({
+
+         ? StudentList.map(({
                 id,
                 firstname,
                 middlename,
@@ -45,7 +43,7 @@ const Student_list = () => {
                 accountStatus,
                 teacher,
                 trainer,
-                AreaOfAssignment
+                AreaOfAssignment,
               }) => ({
                 id,
                 middlename,
@@ -66,10 +64,8 @@ const Student_list = () => {
                 studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
                 studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned'
               })) : []
-            )
-          : []
-      )
-    : []; 
+            
+      
 
 
 

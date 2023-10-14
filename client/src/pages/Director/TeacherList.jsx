@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -7,94 +8,68 @@ import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import picture from "../../assets/images/dp.png";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddCoordinatorAccount, getCoordinatorList } from "../../api/Api";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
-import { 
-  Switch , useDisclosure as AddCoordinatorDisclosure,
-} from "@nextui-org/react";
-import Swal from "sweetalert2";
+import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getTeacherList } from "../../api/Api";
+import picture from '../../assets/images/dp.png'
+import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+import AddTeacherModal from '../../components/add-teacher/AddTeacher'
 
 
-const Trainer_list = () => {
+const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-
-  const queryClient = useQueryClient();
-
-
-  const {mutate, isLoading: AddCoordinatorLoading} = useMutation({
-    mutationFn: AddCoordinatorAccount,
-    onSuccess: (data)=> {
-      Swal.fire("Success", "The coordinator has been added", "success");
-      queryClient.invalidateQueries({ queryKey: ["getCoordinatorList"] });
-      console.log('coordinator',{username: data.username, password: data.password});
-    },
-    onError: ()=> {
-      Swal.fire("Error", "There was an issue adding the coordinator. \n Please check the information provided and try again.", "error");
-    }
-  })
-
-  const {
-    isOpen: AddIsOpen,
-    onOpen: AddOnOpen,
-    onClose: AddOnClose,
-  } = AddCoordinatorDisclosure();
+  const [searchLength, setSearchLength] = useState(false);
 
 
-  const {
-    data: coordinatorList,
-    isLoading: coordinatorLoading,
-    isError: coordinatoryError,
+
+
+  const  {
+    data: teacherList,
+    isLoading,
+    isError
   } = useQuery({
-    queryKey: ["getCoordinatorList"],
-    queryFn: getCoordinatorList,
+    queryKey: ["getTeacherList"],
+    queryFn: getTeacherList
   });
 
+  const data = teacherList 
+  ? teacherList.map(({
+    id,
+    firstname,
+    middlename,
+    lastname,
+    email,
+    contact,
+    campus,
+    college,
+    program,
+    major,
+    accountStatus,
+    student
+  })=> ({
+    id,
+    name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''} ${lastname}`,
+    email,
+    contact,
+    campus,
+    college,
+    program,
+    major,
+    picture: picture,
+    accountStatus,
+    totalStudent: student.length
+  })): []
 
 
-  const data = coordinatorList
-    ? coordinatorList.map(
-        ({
-          id,
-          firstname,
-          middlename,
-          lastname,
-          email,
-          campus,
-          college,
-          contact,
-          teacher,
-          accountStatus
-        }) => ({
-          id,
-          name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''}. ${lastname}`,
-          email,
-          campus,
-          college,
-          contact,
-          picture: picture,
-          totalTeacher: teacher ? teacher.length : 0,
-          totalStudent: teacher.reduce(
-            (total, item) => total + item.student.length,
-            0
-          ),
-          studentlist: teacher ? teacher.flatMap(({ student }) => student) : [],
-          accountStatus,
-        })
-      )
-    : [];
 
-
-  const handleSubmit = (data) => {
-    console.log(data);
-    mutate(data)
+  if(isError){
+    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
   }
 
-  //   columns
+
+
   const columns = [
     columnHelper.accessor("id", {
       id: "id",
@@ -120,11 +95,6 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
-    columnHelper.accessor("contact", {
-      id: "contact",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Contact",
-    }),
     columnHelper.accessor("campus", {
       id: "campus",
       cell: (info) => <span>{info.getValue()}</span>,
@@ -135,11 +105,19 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "College",
     }),
-
- 
+    columnHelper.accessor("program", {
+      id: "program",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Program",
+    }),
+    columnHelper.accessor("major", {
+      id: "major",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Major",
+    }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
-      cell: (info) => <div className="text-center font-semibold text-xs pr-7">{info.getValue()}</div>,
+      cell: (info) => <div className="text-center font-semibold">{info.getValue()}</div>,
       header: "Students",
     }),
 
@@ -148,12 +126,13 @@ const Trainer_list = () => {
       cell: (info) => (
         <div className="relative text-center">
           <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+            
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
             className={`${
               show === info.row.original.id ? "text-blue-500" : "text-gray-500"
-            } absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
+            } absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
           />
           {show === info.row.original.id && (
             <div
@@ -161,7 +140,7 @@ const Trainer_list = () => {
               className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to={`/view-coordinator/${info.row.original.id}`}
+                to={`/view-teacher/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
@@ -198,62 +177,47 @@ const Trainer_list = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
-
-
-
-
-  if(coordinatoryError){
-    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
-  }
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
-          Coordinator list
+          Teacher list
         </h1>
 
         <div className="flex items-center gap-3">
-          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
-            <BiSearch />
-            <input
-              type="text"
-              placeholder="Search.."
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="outline-none text-sm"
-            />
-          </div>
-          <div className="flex items-center gap-3">
-          <button
-            onClick={AddOnOpen}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          <div
+            className={`${
+              searchLength ? "w-[250px]" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
           >
-            <AiOutlineUserAdd size={16} />
-            <span className="font-semibold tracking-wider">Add</span>
-          </button>
-
-            <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <BsPrinter size={17} />
-              <span className="font-semibold tracking-wider">Print</span>
-            </button>
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
+            />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
           </div>
+        
+          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+            <BsPrinter size={17} />
+            <span className="font-semibold tracking-wider">Print</span>
+          </button>
         </div>
       </div>
 
-      <TableFormat
-        data={data}
-        columns={columns}
-        isLoading={coordinatorLoading}
-      />
-
-      <AddCoordinator
-        AddIsOpen={AddIsOpen}
-        AddOnClose={AddOnClose}
-        onSubmit={handleSubmit}
-        isLoading={AddCoordinatorLoading}
-      />
+      <TableFormat data={data} isLoading={isLoading} columns={columns} />
+    
 
     </div>
   );
 };
 
-export default Trainer_list;
+export default TeacherList;

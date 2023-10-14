@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AttendanceRequestItem from "../../components/attendance-request/AttendanceRequestItem";
 import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch } from "react-icons/bi";
-import { getStudentList } from '../../api/Api'
+import { getTrainer, getStudentList } from '../../api/Api'
 import {useQuery} from '@tanstack/react-query'
 
 const AttendanceRequest = () => {
@@ -10,29 +10,22 @@ const AttendanceRequest = () => {
 
   const [searchInput, setSearchInput] = useState(null);
 
+// get trainer id
+  const {data: getTrainer_id} = useQuery({
+    queryKey: ['getTrainer_id'],
+    queryFn: getTrainer
+  })
 
-  
-
+  // get student list
   const {data:StudentItem, isLoading} = useQuery({
     queryKey: ["getTimesheet"],
     queryFn: getStudentList
   });
 
-  // const StudentTimesheet = StudentItem 
-  // ? StudentItem.map(({timesheet})=> ({
-  //   timesheet: timesheet &&  timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0)
-  // }))
-  // :[]
-
-
-
-
-
-
-
-
   const studentRequest = StudentItem && Array.isArray(StudentItem)
-  ? StudentItem.map(({ id, firstname, lastname, accountStatus, timesheet }) => ({
+  ? StudentItem
+  .filter((item)=> item.trainer_id === getTrainer_id?.id)
+  .map(({ id, firstname, lastname, accountStatus, timesheet }) => ({
       id,
       firstname,
       lastname,

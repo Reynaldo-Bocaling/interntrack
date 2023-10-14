@@ -23,15 +23,16 @@ const Student_list = () => {
     queryFn: getStudentList
   });
 
-  // const {data: StudentList, isLoading: studentListLoading, isError} = useQuery({
-  //   queryKey: ["studentList"],
-  //   queryFn: getTrainer
-  // })
-
-
+  const {data: getTrainer_id} = useQuery({
+    queryKey: ['getTrainer_id'],
+    queryFn: getTrainer
+  })
 
   //   data
-  const data = StudentTimesheet ?  StudentTimesheet.map(({
+  const data = StudentTimesheet ?  
+  StudentTimesheet
+  .filter((item)=> item.trainer_id === getTrainer_id?.id)
+  .map(({
     id,
     firstname,
     middlename,

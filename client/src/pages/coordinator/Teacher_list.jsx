@@ -37,9 +37,10 @@ const TeacherList = () => {
 
   const {mutate, isLoading: AddTeacherLoading, isError: AddTeacherError} = useMutation({
     mutationFn: addTeacher,
-    onSuccess: ()=> {
+    onSuccess: (data)=> {
       Swal.fire("Success", "The teacher has been added to the system", "success");
       queryClient.invalidateQueries({ queryKey: ["getTeacherList"] });
+      console.log('teacher',{username: data.username, password: data.password} );
     },
     onError: ()=> {
       Swal.fire("Error", "There was an issue adding the teacher. \n Please check the information provided and try again.", "error");

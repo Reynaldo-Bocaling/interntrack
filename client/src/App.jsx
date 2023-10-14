@@ -1,9 +1,9 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
+import  TrainerList  from "./components/trainer-list/TrainerList";
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
 const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
-
 
 const  App = () => {
   return (
@@ -28,6 +28,7 @@ const  App = () => {
       <Routes>
         <Route path="/welcome-to-InternTrack" element={<LandingPage />} />
         <Route path="/*" element={<PrivateRoutes />} />
+        <Route path="/try" element={<TrainerList />} />
       </Routes>
     </Suspense>
   );

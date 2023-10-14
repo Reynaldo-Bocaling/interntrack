@@ -7,24 +7,25 @@ import pic from "../../assets/images/dp.png";
 import { Tabs } from "@mantine/core";
 import TeacherInfo from "./TeacherInfo";
 import StudentList from "./StudentList";
-import { getCoordinator } from "../../api/Api";
+
 import { useQuery } from "@tanstack/react-query";
 import PulseLloader from "react-spinners/PulseLoader";
+import { getTeacherList } from "../../api/Api";
 
 const CoordinatorInfo = () => {
   const { id } = useParams();
 
   const {
-    data: coordinatorList,
+    data: teacherList,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["getTrainerList"],
-    queryFn: getCoordinator,
+    queryKey: ["getTeacherList"],
+    queryFn: getTeacherList,
   });
 
-  const teacherInfo = coordinatorList
-    ? coordinatorList.teacher.find((item) => item.id == parseInt(id))
+  const teacherInfo = teacherList
+    ? teacherList.find((item) => item.id == parseInt(id))
     : [];
 
   const info = {
@@ -41,7 +42,7 @@ const CoordinatorInfo = () => {
     profile: teacherInfo ? teacherInfo.profile : "",
   };
 
-  const studentList = teacherInfo.student
+  const studentList = teacherInfo?.student
     ? teacherInfo.student.map(
         ({
           id,

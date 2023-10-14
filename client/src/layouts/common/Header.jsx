@@ -24,6 +24,10 @@ function Header(props) {
   const Menu = SidebarData[role] || [];
 
 
+  const handleLogout = ()=> {
+    cookies.remove('token')
+  }
+
 
   // dummy notif data
   const Notif = [
@@ -196,7 +200,7 @@ function Header(props) {
                   <RiArrowRightSLine />
                 </div>
 
-                <div className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg mt-3 hover:text-red-500 hover:bg-red-50">
+                <div onClick={handleLogout} className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg mt-3 hover:text-red-500 hover:bg-red-50">
                   <div className="flex items-center gap-2">
                     <div className="text-red-500 p-1 bg-red-100 rounded-full">
                       <LiaSignOutAltSolid size={20} />

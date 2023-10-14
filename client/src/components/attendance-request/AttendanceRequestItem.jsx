@@ -131,7 +131,7 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
             ))
           ) : (
             <div className="py-5 mt-7 text-xl font-medium text-center bg-white rounded-lg">
-              No record
+              No Request
             </div>
           )}
         </>

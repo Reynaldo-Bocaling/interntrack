@@ -7,36 +7,25 @@ import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import picture from "../../assets/images/dp.png";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { AddCoordinatorAccount, getDirector } from "../../api/Api";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
-import { 
-  Switch , useDisclosure as AddCoordinatorDisclosure,
+import AddTrainer from "../../components/AddTrainer/Addtrainer";
+import picture from "../../assets/images/dp.png";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  AddTrainerAccount,
+  getTrainerList,
+  getCompanyList,
+} from "../../api/Api";
+import {
+  Switch,
+  useDisclosure as AddCoordinatorDisclosure,
 } from "@nextui-org/react";
-
-
+import Swal from "sweetalert2";
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
-  const [show, setShow] = useState(null);
-
-  const queryClient = useQueryClient();
-
-
-  const {mutate} = useMutation({
-    mutationFn: AddCoordinatorAccount,
-    onSuccess: (data)=> {
-      console.log('myData', data);
-      alert('success');
-      queryClient.invalidateQueries({ queryKey: ["getCoordinatorList"] });
-    },
-    onError: ()=> {
-      alert('failed')
-    }
-  })
+  const [show, setShow] = useState(null); //right side popup
 
   const {
     isOpen: AddIsOpen,
@@ -44,61 +33,93 @@ const Trainer_list = () => {
     onClose: AddOnClose,
   } = AddCoordinatorDisclosure();
 
+  const queryClient = useQueryClient();
 
-  const {
-    data: coordinatorList,
-    isLoading: coordinatorLoading,
-    isError: coordinatoryError,
-  } = useQuery({
-    queryKey: ["getCoordinatorList"],
-    queryFn: getDirector,
+  // addtrainer mutatio
+  const { mutate, isLoading: AddLoading } = useMutation({
+    mutationFn: AddTrainerAccount,
+    onSuccess: (data) => {
+      Swal.fire("Success", "The trainer has been added to the system", "success");
+      queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
+      console.log('trainer', {username: data.username, password: data.password});
+    },
+    onError: () => {
+      Swal.fire("Error", "There was an issue adding the trainer. \n Please check the information provided and try again.", "error");
+    },
   });
 
+  // getTrainer list
+  const {
+    data: trainerlist,
+    isLoading: trainerListLoading,
+    isError: companyListError,
+  } = useQuery({
+    queryKey: ["getTrainerList"],
+    queryFn: getTrainerList,
+  });
 
+  // getCompanies
+  const {
+    data: company,
+    isLoading: companyLoading,
+    isError: companyError,
+  } = useQuery({
+    queryKey: ["getCompanyList"],
+    queryFn: getCompanyList,
+  });
 
-  const data = coordinatorList
-    ? coordinatorList.coordinator.map(
-        ({
-          firstname,
-          middlename,
-          lastname,
-          email,
-          campus,
-          college,
-          contact,
-          teacher,
-          accountStatus
-        }) => ({
-          name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''}. ${lastname}`,
-          email,
-          campus,
-          college,
-          contact,
-          picture: picture,
-          totalTeacher: teacher ? teacher.length : 0,
-          totalStudent: teacher.reduce(
-            (total, item) => total + item.student.length,
-            0
-          ),
-          studentlist: teacher ? teacher.flatMap(({ student }) => student) : [],
-          accountStatus,
-        })
-      )
+  if (companyListError) {
+    return (
+      <h1 className="text-center my-10">
+        Server Failed. Please Try Again Later
+      </h1>
+    );
+  }
+  //   data
+  const data = trainerlist
+    ? trainerlist
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            contact,
+            profile,
+            accountStatus,
+            company,
+            student,
+          }) => ({
+            id,
+            firstname,
+            name: `${firstname} ${lastname}`,
+            email,
+            companyName: company.companyName,
+            picture: picture,
+            contact,
+            profile,
+            accountStatus,
+            company,
+            student,
+            totalStudent: student !== null ? student.length : 0,
+            student,
+          })
+        )
+        .filter((item) => item.name.toLowerCase().includes(searchInput))
     : [];
 
+  console.log(data);
 
-
-
-  const handleSubmit = (data) => {
-    console.log(data);
-    mutate(data)
-  }
+  const handleFormSubmit = async (trainerData) => {
+    mutate(trainerData);
+  };
 
   //   columns
   const columns = [
     columnHelper.accessor("id", {
       id: "id",
-      cell: (info) => <span>{info.row.index + 1}</span>,
+      cell: (info) => <span>{info.getValue()}</span>,
       header: "ID",
     }),
     columnHelper.accessor("name", {
@@ -125,29 +146,29 @@ const Trainer_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Contact",
     }),
-    columnHelper.accessor("campus", {
-      id: "campus",
+    columnHelper.accessor("companyName", {
+      id: "companyName",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Campus",
+      header: "Company",
     }),
-    columnHelper.accessor("college", {
-      id: "college",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "College",
-    }),
-
- 
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
-      cell: (info) => <div className="text-center font-semibold text-xs pr-7">{info.getValue()}</div>,
+      cell: (info) => <div className="text-center">{info.getValue()}</div>,
       header: "Students",
     }),
-
     columnHelper.accessor("accountStatus", {
       id: "accountStatus",
       cell: (info) => (
         <div className="relative text-center">
-          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+          <Switch
+            isDisabled
+            className="mr-7"
+            size="sm"
+            defaultSelected={
+              info.row.original.accountStatus === 0 ? true : false
+            }
+          />
+
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -161,7 +182,7 @@ const Trainer_list = () => {
               className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to="/student/"
+                to={`/view-trainer/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
@@ -202,7 +223,7 @@ const Trainer_list = () => {
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
-          Coordinator list
+          Trainer list
         </h1>
 
         <div className="flex items-center gap-3">
@@ -216,14 +237,13 @@ const Trainer_list = () => {
             />
           </div>
           <div className="flex items-center gap-3">
-          <button
-            onClick={AddOnOpen}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-          >
-            <AiOutlineUserAdd size={16} />
-            <span className="font-semibold tracking-wider">Add</span>
-          </button>
-
+            <button
+              onClick={AddOnOpen}
+              className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <AiOutlineUserAdd size={16} />
+              <span className="font-semibold tracking-wider">Add</span>
+            </button>
             <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
               <BsPrinter size={17} />
               <span className="font-semibold tracking-wider">Print</span>
@@ -235,15 +255,15 @@ const Trainer_list = () => {
       <TableFormat
         data={data}
         columns={columns}
-        isLoading={coordinatorLoading}
+        isLoading={trainerListLoading}
       />
-
-      <AddCoordinator
+      <AddTrainer
+        companies={company}
+        onSubmit={handleFormSubmit}
         AddIsOpen={AddIsOpen}
         AddOnClose={AddOnClose}
-        onSubmit={handleSubmit}
+        isLoading={AddLoading}
       />
-
     </div>
   );
 };

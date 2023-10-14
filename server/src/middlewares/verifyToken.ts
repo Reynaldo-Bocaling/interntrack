@@ -14,7 +14,9 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
       include: {
         student: true,
         trainer: true,
-        teacher: true
+        teacher: true,
+        director: true,
+        coordinator: true
       }
     });
 

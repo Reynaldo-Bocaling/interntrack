@@ -58,7 +58,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-screen h-screen bg-white">
+    <div className="w-screen h-screen bg-white overflow-hidden">
       <div className="shadow-effect relative max-w-[1224px] mx-auto min-h-screen flex items-center">
         <div className="absolute top-7 left-7 z-30 flex items-center gap-2">
           <img src={Img} alt="" className="w-[35px]" />

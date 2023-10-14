@@ -1,7 +1,7 @@
 import React from 'react'
 import TimesheetTable from '../../components/StudentTimesheets/Timesheet_table'
 import {useQuery} from '@tanstack/react-query'
-import { getStudentList } from '../../api/Api'
+import { getTrainer, getStudentList } from '../../api/Api'
 
 function Timesheet() {
   const currentDate = new Date(); 
@@ -10,22 +10,15 @@ function Timesheet() {
     queryFn: getStudentList
   });
  
-  // const data = StudentTimesheet
-  // ?  StudentTimesheet.map(({
-  //   id,
-  //   firstname,
-  //   lastname,
-  //   timesheet
-  // })=>({
-  //   id,
-  //   name: `${firstname} ${lastname}`,
-  //   timeSheet:timesheet
-  // })) : []
-
-
+  const {data: getTrainer_id} = useQuery({
+    queryKey: ['getTrainer_id'],
+    queryFn: getTrainer
+  })
 
   const data = StudentTimesheet
-  ?  StudentTimesheet.map(({
+  ?  StudentTimesheet
+  .filter((item)=> item.trainer_id === getTrainer_id?.id)
+  .map(({
     id,
     firstname,
     lastname,

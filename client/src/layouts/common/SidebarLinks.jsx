@@ -14,7 +14,7 @@ import {CgFileDocument} from 'react-icons/cg'
 
 
   export const SidebarData = {
-    student: [
+    Student: [
       { label: "Dashboard", 
         url: "/", 
         icon: RxDashboard,
@@ -61,7 +61,7 @@ import {CgFileDocument} from 'react-icons/cg'
     ],
 
 
-    coordinator: [
+    Coordinator: [
       { label: "Dashboard", 
         url: "/", 
         icon: RxDashboard,
@@ -107,7 +107,7 @@ import {CgFileDocument} from 'react-icons/cg'
     ],
 
 
-    teacher: [
+    Teacher: [
       { label: "Dashboard", 
         url: "/", 
         icon: RxDashboard,
@@ -178,6 +178,7 @@ import {CgFileDocument} from 'react-icons/cg'
           { label: "Trainer", url: "/Trainer-list" },
           { label: "Students", url: "/Student-list" },
           { label: "Teacher", url: "/Teacher-list" },
+          { label: "Director", url: "/director" },
         ],
       },
       { label: "Messages", 
@@ -196,7 +197,7 @@ import {CgFileDocument} from 'react-icons/cg'
         
     ],
 
-    director: [
+    Director: [
       { label: "Dashboard", 
         url: "/", 
         icon: RxDashboard,
@@ -210,6 +211,11 @@ import {CgFileDocument} from 'react-icons/cg'
       },
       { label: "Coordinator list", 
         url: "/coordinator-list",  
+        icon: FiUsers,
+        size: 16,
+      },
+      { label: "Teacher list", 
+        url: "/teacher-list",  
         icon: FiUsers,
         size: 16,
       },
@@ -242,7 +248,7 @@ import {CgFileDocument} from 'react-icons/cg'
     ],
 
 
-    trainer: [
+    Trainer: [
       { label: "Dashboard", 
         url: "/", 
         icon: RxDashboard,

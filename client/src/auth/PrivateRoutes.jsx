@@ -1,202 +1,97 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { Routes, Route, Outlet, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { verifyToken } from "../api/Api";
-
-// auth
-const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
-const Login = lazy(() => import("./Login"));
 import PulseLoader from "react-spinners/PulseLoader";
 
-// testzy
-const ViewUploadTask = lazy(() =>
-  import("../components/Student-Task/ViewUploadTask")
-);
+import Rootlayout from "../layouts/Rootlayout"
+import Login from "./Login"
 
-// view Attendance REquesr Reuasable
-const ViewAttendanceRequest = lazy(() =>
-  import("../components/attendance-request/ViewAttendance")
-);
+import  ViewUploadTask from "../components/Student-Task/ViewUploadTask"
+
+// view Attendance Request Reuasable
+import ViewAttendanceRequest from "../components/attendance-request/ViewAttendance";
 
 // view timesheets
-const ViewTimesheets = lazy(() =>
-  import("../components/StudentTimesheets/ViewTimesheets")
-);
+import ViewTimesheets from "../components/StudentTimesheets/ViewTimesheets"
 
-// view trainer resubale
-const TrainerInfoView = lazy(() => import("../components/Trainer-Info/index"));
+// view user resubale
+import TrainerInfoView from "../components/Trainer-Info/index"
+import StudentInfoView from "../components/Student-Info/index"
+import CoordinatorInfoView from "../components/Coordinator-Info/index"
+import TeacherInfoView from "../components/Teacher-Info/index"
 
-const StudentInfoView = lazy(() => import("../components/Student-Info/index"));
-const CoordinatorInfoView = lazy(() =>
-  import("../components/Coordinator-Info/index")
-);
-const TeacherInfoView = lazy(() => import("../components/Teacher-Info/index"));
-
-// Student pages
-const StudentDashboard = lazy(() => import("../pages/Student/Dashboard"));
-const StudentTimesheets = lazy(() => import("../pages/Student/Timesheet"));
-const StudentDailylog = lazy(() => import("../pages/Student/DailyLogs"));
-const StudentUploadTask = lazy(() => import("../pages/Student/StudentTask"));
-const StudentAttendanceRequest = lazy(() =>
-  import("../pages/Student/AttendanceRequest")
-);
-const StudentLeave = lazy(() => import("../pages/Student/LeaveRequest"));
-const StudentMessage = lazy(() => import("../pages/Student/Message"));
-const StudentAnnouncement = lazy(() => import("../pages/Student/Announcement"));
-const StudentTimeLogs = lazy(() => import("../pages/Student/DailyLogs"));
-
-// student2
-const Activities = lazy(() => import("../pages/Student2/Activities"));
-const Attendance = lazy(() => import("../pages/Student2/Attendance"));
-const AttendanceRequest = lazy(() =>
-  import("../pages/Student2/Attendance_request")
-);
-const DailyLogs = lazy(() => import("../pages/Student2/DailyLogs"));
-const Home = lazy(() => import("../pages/Student2/Home"));
-const Profile = lazy(() => import("../pages/Student2/Profile"));
-const Timesheet = lazy(() => import("../pages/Student2/TimeSheet"));
-const Weekly = lazy(() => import("../pages/Student2/WeeklyReport"));
-const ViewWeeklyReport = lazy(() =>
-  import("../components/Weekly-Report/WeeklyReport")
-);
-const Records = lazy(() => import("../pages/Student2/Records"));
-const Info = lazy(() => import("../components/Student-profile/Information"));
-const Requirements = lazy(() =>
-  import("../components/Student-profile/Requirements")
-);
-const Security = lazy(() => import("../components/Student-profile/Security"));
+// student
+import Activities from "../pages/Student/Activities"
+import Attendance from "../pages/Student/Attendance"
+import AttendanceRequest from "../pages/Student/Attendance_request"
+import DailyLogs from "../pages/Student/DailyLogs"
+import Home from "../pages/Student/Home"
+import Profile from "../pages/Student/Profile"
+import Timesheet from "../pages/Student/TimeSheet"
+import Weekly from "../pages/Student/WeeklyReport"
+import ViewWeeklyReport from "../components/Weekly-Report/WeeklyReport"
+import Records from "../pages/Student/Records"
+import Info from "../components/Student-profile/Information"
+import Requirements from "../components/Student-profile/Requirements"
+import Security from "../components/Student-profile/Security"
 
 // SuperAdmin pages
-const SuperAdminDashboard = lazy(() => import("../pages/SuperAdmin/Dashboard"));
-const SuperAdmin_Trainer_list = lazy(() =>
-  import("../pages/SuperAdmin/Trainer")
-);
-const SuperAdmin_Student_list = lazy(() =>
-  import("../pages/SuperAdmin/Student")
-);
-
-const SuperAdmin_StudentInfoView = lazy(() =>
-  import("../pages/SuperAdmin/StudentViewInfo")
-);
-const SuperAdmin_Coordinator_list = lazy(() =>
-  import("../pages/SuperAdmin/Coordinator")
-);
-const SuperAdmin_Teacher_list = lazy(() =>
-  import("../pages/SuperAdmin/Teacher")
-);
-const SuperAdmin_Company = lazy(() => import("../pages/SuperAdmin/Companies"));
-
-const SuperAdminMessage = lazy(() => import("../pages/SuperAdmin/Message"));
-const SuperAdminAnnouncement = lazy(() =>
-  import("../pages/SuperAdmin/Announcement")
-);
+import SuperAdminDashboard from "../pages/SuperAdmin/Dashboard"
+import SuperAdmin_Trainer_list from "../pages/SuperAdmin/Trainer"
+import SuperAdmin_Student_list from "../pages/SuperAdmin/Student"
+import SuperAdmin_StudentInfoView from "../pages/SuperAdmin/StudentViewInfo"
+import SuperAdmin_Coordinator_list from "../pages/SuperAdmin/Coordinator"
+import SuperAdmin_Teacher_list from "../pages/SuperAdmin/Teacher"
+import SuperAdmin_Company from "../pages/SuperAdmin/Companies"
+import SuperAdmin_DirectorInfo from "../pages/SuperAdmin/Director"
 
 // Trainer pages
-const TrainerDashboard = lazy(() => import("../pages/Trainer/Dashboard"));
-const Trainer_Student_list = lazy(() =>
-  import("../pages/Trainer/Student_list")
-);
-const Trainer_StudentTimesheets = lazy(() =>
-  import("../pages/Trainer/Timesheet")
-);
-const Trainer_studentDailylog = lazy(() =>
-  import("../pages/Trainer/DailyLogs")
-);
-const Trainer_StudentTask = lazy(() => import("../pages/Trainer/StudentTask"));
-const Trainer_StudentAttendanceRequest = lazy(() =>
-  import("../pages/Trainer/AttendanceRequest")
-);
-const Trainer_StudentLeave = lazy(() =>
-  import("../pages/Trainer/LeaveRequest")
-);
-const TrainerMessage = lazy(() => import("../pages/Trainer/Message"));
-const TrainerAnnouncement = lazy(() => import("../pages/Trainer/Announcement"));
+import TrainerDashboard from "../pages/Trainer/Dashboard"
+import Trainer_Student_list from "../pages/Trainer/Student_list"
+import Trainer_StudentTimesheets from "../pages/Trainer/Timesheet"
+import Trainer_studentDailylog from "../pages/Trainer/DailyLogs"
+import Trainer_StudentTask from "../pages/Trainer/StudentTask"
+import Trainer_StudentAttendanceRequest from "../pages/Trainer/AttendanceRequest"
+import Trainer_StudentLeave from "../pages/Trainer/LeaveRequest"
+import TrainerMessage from "../pages/Trainer/Message"
+import TrainerAnnouncement from "../pages/Trainer/Announcement"
 
 // Teacher pages
-const TeacherDashboard = lazy(() => import("../pages/Teacher/Dashboard"));
-const TeacherrCompanies = lazy(() => import("../pages/Teacher/Companies"));
-const TeacherViewCompany = lazy(() => import("../pages/Director/ViewCompany"));
-const Teacher_Trainer_list = lazy(() =>
-  import("../pages/Teacher/Trainer_list")
-);
-const Teacher_Student_list = lazy(() =>
-  import("../pages/Teacher/Student_list")
-);
-const Teacher_StudentTimesheets = lazy(() =>
-  import("../pages/Teacher/Timesheet")
-);
-const Teacher_studentDailylog = lazy(() =>
-  import("../pages/Teacher/DailyLogs")
-);
-const Teacher_StudentTask = lazy(() => import("../pages/Teacher/StudentTask"));
-const Teacher_StudentAttendanceRequest = lazy(() =>
-  import("../pages/Teacher/AttendanceRequest")
-);
-
-const Teacher_StudentLeave = lazy(() =>
-  import("../pages/Teacher/LeaveRequest")
-);
-const TeacherMessage = lazy(() => import("../pages/Teacher/Message"));
-const TeacherAnnouncement = lazy(() => import("../pages/Teacher/Announcement"));
+import TeacherDashboard from "../pages/Teacher/Dashboard"
+import TeacherrCompanies from "../pages/Teacher/Companies"
+import TeacherViewCompany from "../pages/Director/ViewCompany"
+import Teacher_Trainer_list from "../pages/Teacher/Trainer_list"
+import Teacher_Student_list from "../pages/Teacher/Student_list"
+import Teacher_StudentTimesheets from "../pages/Teacher/Timesheet"
+import Teacher_studentDailylog from "../pages/Teacher/DailyLogs"
+import Teacher_StudentTask from "../pages/Teacher/StudentTask"
+import Teacher_StudentLeave from "../pages/Teacher/LeaveRequest"
+import TeacherMessage from "../pages/Teacher/Message"
+import TeacherAnnouncement from "../pages/Teacher/Announcement"
 
 // Coordinator pages
-
-const CoordinatorDashboard = lazy(() =>
-  import("../pages/Coordinator/Dashboard")
-);
-const CoordinatorCompanies = lazy(() => import("../pages/Teacher/Companies"));
-const CoordinatorViewCompany = lazy(() =>
-  import("../pages/Director/ViewCompany")
-);
-const Coordinator_Trainer_list = lazy(() =>
-  import("../pages/Coordinator/Trainer_list")
-);
-const Coordinator_Student_list = lazy(() =>
-  import("../pages/Coordinator/Student_list")
-);
-const Coordinator_Teacher_list = lazy(() =>
-  import("../pages/Coordinator/Teacher_list")
-);
-const Coordinator_StudentTimesheets = lazy(() =>
-  import("../pages/Coordinator/Timesheet")
-);
-const Coordinator_studentDailylog = lazy(() =>
-  import("../pages/Coordinator/DailyLogs")
-);
-const Coordinator_StudentTask = lazy(() =>
-  import("../pages/Coordinator/StudentTask")
-);
-const Coordinator_StudentAttendanceRequest = lazy(() =>
-  import("../pages/Coordinator/AttendanceRequest")
-);
-
-const Coordinator_StudentLeave = lazy(() =>
-  import("../pages/Coordinator/LeaveRequest")
-);
-const CoordinatorMessage = lazy(() => import("../pages/Coordinator/Message"));
-const CoordinatorAnnouncement = lazy(() =>
-  import("../pages/Coordinator/Announcement")
-);
+import CoordinatorDashboard from "../pages/Coordinator/Dashboard"
+import CoordinatorCompanies from "../pages/Coordinator/Companies"
+import CoordinatorViewCompany from "../pages/Director/ViewCompany"
+import Coordinator_Trainer_list from "../pages/Coordinator/Trainer_list"
+import Coordinator_Student_list from "../pages/Coordinator/Student_list"
+import Coordinator_Teacher_list from "../pages/Coordinator/Teacher_list"
+import Coordinator_StudentLeave from "../pages/Coordinator/LeaveRequest"
+import CoordinatorMessage from "../pages/Coordinator/Message"
+import CoordinatorAnnouncement from "../pages/Coordinator/Announcement"
 
 // Director pages
-const DirectorDashboard = lazy(() => import("../pages/Director/Dashboard"));
-const DirectorCompanies = lazy(() => import("../pages/Director/Companies"));
-const DirectorStudentList = lazy(() =>
-  import("../pages/Director/Student_list")
-);
-const DirectorMoa = lazy(() => import("../pages/Director/MOA"));
-const DirectorViewCompany = lazy(() => import("../pages/Director/ViewCompany"));
-const DirectorMessage = lazy(() => import("../pages/Director/Message"));
-const DirectorAnnouncement = lazy(() =>
-  import("../pages/Director/Announcement")
-);
+import DirectorDashboard from "../pages/Director/Dashboard"
+import DirectorCompanies from "../pages/Director/Companies"
+import DirectorStudentList from "../pages/Director/Student_list"
+import DirectorMoa from "../pages/Director/MOA"
+import DirectorViewCompany from "../pages/Director/ViewCompany"
+import DirectorMessage from "../pages/Director/Message"
+import DirectorAnnouncement from "../pages/Director/Announcement"
+import Director_Coordinator_list from "../pages/Director/Coordinator_list"
+import Director_Teacher_list from "../pages/Director/TeacherList"
 
-const Director_Trainer_Student_list = lazy(() =>
-  import("../pages/Director/Trainer_studentList")
-);
-const Director_Coordinator_list = lazy(() =>
-  import("../pages/Director/Coordinator_list")
-);
 
 const PrivateRoutes = () => {
   const navigate = useNavigate();
@@ -229,7 +124,6 @@ const PrivateRoutes = () => {
             size={15}
             speedMultiplier={1}
           />
-
           <span className="text-gray-400 text-2xl tracking-wider font-medium">
             Loading..
           </span>
@@ -272,9 +166,13 @@ const PrivateRoutes = () => {
         path: "/view-student/:id",
         element: <SuperAdmin_StudentInfoView />,
       },
+      {
+        path: "/director",
+        element: <SuperAdmin_DirectorInfo />,
+      },
     ],
 
-    director: [
+    Director: [
       {
         path: "/",
         element: <DirectorDashboard />,
@@ -292,8 +190,12 @@ const PrivateRoutes = () => {
         element: <Director_Coordinator_list />,
       },
       {
-        path: "/trainer-student-list",
-        element: <Director_Trainer_Student_list />,
+        path: "/teacher-list",
+        element: <Director_Teacher_list />,
+      },
+      {
+        path: "/view-teacher/:id",
+        element: <TeacherInfoView />,
       },
       {
         path: "/message",
@@ -326,7 +228,7 @@ const PrivateRoutes = () => {
       },
     ],
 
-    coordinator: [
+    Coordinator: [
       {
         path: "/",
         element: <CoordinatorDashboard />,
@@ -357,32 +259,13 @@ const PrivateRoutes = () => {
       },
 
       {
-        path: "/timeSheet",
-        element: <Coordinator_StudentTimesheets />,
-      },
-      {
         path: "/view-timeSheet",
         element: <ViewTimesheets />,
       },
-      {
-        path: "/StudentTask",
-        element: <Coordinator_StudentTask />,
-      },
+      
       {
         path: "/StudentTask/view",
         element: <ViewUploadTask />,
-      },
-      {
-        path: "/daily-logs",
-        element: <Coordinator_studentDailylog />,
-      },
-      {
-        path: "/Attendance-request",
-        element: <Coordinator_StudentAttendanceRequest />,
-      },
-      {
-        path: "/Attendance-request/view",
-        element: <ViewAttendanceRequest />,
       },
       {
         path: "/leave-request",
@@ -401,12 +284,12 @@ const PrivateRoutes = () => {
         element: <StudentInfoView />,
       },
       {
-        path: "/company/",
+        path: "/view-company/:id",
         element: <CoordinatorViewCompany />,
       },
     ],
 
-    teacher: [
+    Teacher: [
       {
         path: "/",
         element: <TeacherDashboard />,
@@ -448,14 +331,6 @@ const PrivateRoutes = () => {
         element: <Teacher_studentDailylog />,
       },
       {
-        path: "/Attendance-request",
-        element: <Teacher_StudentAttendanceRequest />,
-      },
-      {
-        path: "/Attendance-request/view/:id",
-        element: <ViewAttendanceRequest />,
-      },
-      {
         path: "/leave-request",
         element: <Teacher_StudentLeave />,
       },
@@ -472,12 +347,12 @@ const PrivateRoutes = () => {
         element: <StudentInfoView />,
       },
       {
-        path: "/company/",
+        path: "/view-company/:id",
         element: <TeacherViewCompany />,
       },
     ],
 
-    trainer: [
+    Trainer: [
       {
         path: "/",
         element: <TrainerDashboard />,
@@ -532,47 +407,8 @@ const PrivateRoutes = () => {
       },
     ],
 
-    student: [
-      {
-        path: "/",
-        element: <StudentDashboard />,
-      },
-      {
-        path: "/weekly-time-reports",
-        element: <StudentTimesheets />,
-      },
-      {
-        path: "/Upload-task",
-        element: <StudentUploadTask />,
-      },
-      {
-        path: "/StudentTask/view",
-        element: <ViewUploadTask />,
-      },
 
-      {
-        path: "/daily-log",
-        element: <StudentTimeLogs />,
-      },
-      {
-        path: "/Attendance-request",
-        element: <StudentAttendanceRequest />,
-      },
-      {
-        path: "/leave-request",
-        element: <StudentLeave />,
-      },
-      {
-        path: "/message",
-        element: <StudentMessage />,
-      },
-      {
-        path: "/announcement",
-        element: <StudentAnnouncement />,
-      },
-    ],
-
-    student2: [
+    Student: [
       {
         path: "/",
         element: <Home />,

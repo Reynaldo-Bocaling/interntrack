@@ -1,7 +1,7 @@
 import React, { lazy, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
-import { Drawer, Group, Button, TextInput, Avatar } from "@mantine/core";
+import { Drawer } from "@mantine/core";
 import Sidebar from "./common/Sidebar";
 import StudentHeader from "./common/StudentHeader";
 import Header from "./common/Header";
@@ -31,7 +31,7 @@ const Rootlayout = (props) => {
     <>
       {role !== "Unauthorized" && (
         <div>
-          {role !== "student2" ? (
+          {role !== "student" ? (
             <div>
               <Header
                 toggleIsOpen={isOpen}
@@ -57,7 +57,7 @@ const Rootlayout = (props) => {
 
           <div
             className={`${
-              role !== "student2" && "ml-[16rem]"
+              role !== "student" && "ml-[16rem]"
             } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50`}
             onClick={() => {
               setIsOpenNotif(false), setIsOpenProfile(false);

@@ -70,7 +70,6 @@ CREATE TABLE `Trainer` (
     `lastname` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `contact` INTEGER NOT NULL,
-    `companyName` VARCHAR(191) NOT NULL,
     `profile` VARCHAR(191) NULL,
     `accountStatus` INTEGER NOT NULL,
     `company_id` INTEGER NOT NULL,
@@ -111,6 +110,7 @@ CREATE TABLE `Timesheet` (
     `timeOut` VARCHAR(191) NOT NULL,
     `totalHours` INTEGER NOT NULL,
     `date` VARCHAR(191) NOT NULL,
+    `logStatus` INTEGER NOT NULL,
     `student_id` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)

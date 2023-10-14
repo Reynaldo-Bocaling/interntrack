@@ -8,7 +8,7 @@ import { Tabs } from "@mantine/core";
 import TrainerIfo from "./CoordinatorInfo";
 import StudentList from "./StudentList";
 import TeacherList from "./TeacherList";
-import { getDirector } from "../../api/Api";
+import { getCoordinatorList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import PulseLloader from "react-spinners/PulseLoader";
 
@@ -21,12 +21,12 @@ const CoordinatorInfo = () => {
     isError,
   } = useQuery({
     queryKey: ["getTrainerList"],
-    queryFn: getDirector,
+    queryFn: getCoordinatorList,
   });
 
   const CoordinatorInfo =
     coordinatorList &&
-    coordinatorList.coordinator.find((item) => item.id === parseInt(id));
+    coordinatorList.find((item) => item.id === parseInt(id));
 
   const info = {
     id: CoordinatorInfo ? CoordinatorInfo.id : "",
@@ -40,6 +40,7 @@ const CoordinatorInfo = () => {
     program: CoordinatorInfo ? CoordinatorInfo.program : "",
     profile: CoordinatorInfo ? CoordinatorInfo.profile : "",
   };
+
 
   const studentList = CoordinatorInfo
     ? CoordinatorInfo.teacher.flatMap(({ student }) =>

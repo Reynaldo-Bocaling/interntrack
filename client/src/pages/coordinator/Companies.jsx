@@ -148,7 +148,7 @@ const Companies = () => {
                             >
                               <button
                                 onClick={() =>
-                                  navigate("/company", { state: item })
+                                  navigate(`/view-company/${item.id && item.id}`)
                                 }
                                 className="flex items-center gap-1 text-gray-700 font-medium tracking-wide hover:underline"
                               >
