@@ -5,7 +5,16 @@ import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { generateNewPassword, transporter, prisma } from "../services/Services";
 
+
+const formattedDate = format(new Date(), 'yyyy-MM-dd');
+const formattedTime = format(new Date(), 'HH:mm'); 
+
 export class UserController {
+
+  
+
+
+
   // POST
   // add company
   static async addCompany(req: any, res: Response) {
@@ -381,6 +390,61 @@ export class UserController {
 
 
 
+
+  // time in
+  static async timeIn(req: Request, res: Response) {
+    const { id, timeIn } = req.body;
+    
+    try {
+      const response = await prisma.timesheet.update({
+        where: {
+          id: id
+        },
+        data: {
+          timeIn
+        }
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  // time in
+  static async timeOut(req: Request, res: Response) {
+    const { id, timeOut, totalHours } = req.body;
+    
+    try {
+      const response = await prisma.timesheet.update({
+        where: {
+          id: id
+        },
+        data: {
+          timeOut,
+          totalHours
+        }
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // GET
 // get director info
   static async getDirector(req: any, res: Response) {
@@ -503,9 +567,6 @@ export class UserController {
         },
         include: {
           user: true,
-          // task: true,
-          // timesheet: true
-          timesheet: true,
           teacher: true,
           trainer:true,
           AreaOfAssignment:{
@@ -690,6 +751,30 @@ export class UserController {
       return res.status(500).json(error)
     }
   }
+
+
+
+
+
+
+
+  //  records timesheet/task
+  static async getTimesheet(req: any, res: Response) {
+    const studentId = req.user.student[0]?.id
+    try {
+      const response = await prisma.timesheet.findMany({
+        where: {
+          student_id: Number(studentId)
+        }
+      })
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
+
+ 
+
 }
 
 // timesheet

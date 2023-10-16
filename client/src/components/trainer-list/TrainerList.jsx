@@ -102,8 +102,7 @@ const Trainer_list = () => {
             accountStatus,
             company,
             student,
-            totalStudent: student !== null ? student.length : 0,
-            student,
+            totalStudent: student ? student.length : 0,
           })
         )
         .filter((item) => item.name.toLowerCase().includes(searchInput))

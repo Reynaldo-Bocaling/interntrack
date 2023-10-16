@@ -139,7 +139,7 @@ model Timesheet {
   id                    Int      @id @default(autoincrement())
   timeIn                String
   timeOut               String
-  totalHours            Int
+  totalHours            Float
   date                  String
   week                  Int
   logStatus             Int

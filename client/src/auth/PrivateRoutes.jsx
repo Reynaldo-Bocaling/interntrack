@@ -24,8 +24,6 @@ import TeacherInfoView from "../components/Teacher-Info/index"
 // student
 import Activities from "../pages/Student/Activities"
 import Attendance from "../pages/Student/Attendance"
-import AttendanceRequest from "../pages/Student/Attendance_request"
-import DailyLogs from "../pages/Student/DailyLogs"
 import Home from "../pages/Student/Home"
 import Profile from "../pages/Student/Profile"
 import Timesheet from "../pages/Student/TimeSheet"
@@ -419,56 +417,18 @@ const PrivateRoutes = () => {
         element: <ViewWeeklyReport />,
       },
       {
-        path: "/Profile/",
-        element: <Profile />,
-        children: [
-          {
-            path: "/Profile/",
-            element: <Info />,
-          },
-          {
-            path: "/Profile/security",
-            element: <Security />,
-          },
-          {
-            path: "/Profile/requirements",
-            element: <Requirements />,
-          },
-        ],
-      },
-
-      {
-        path: "/Attendance/",
+        path: "/Attendance",
         element: <Attendance />,
-        children: [
-          {
-            path: "/Attendance/",
-            element: <DailyLogs />,
-          },
-          {
-            path: "/Attendance/Attendance-request",
-            element: <AttendanceRequest />,
-          },
-        ],
       },
 
       {
-        path: "/record/",
+        path: "/Profile",
+        element: <Profile />,
+      },
+
+      {
+        path: "/record",
         element: <Records />,
-        children: [
-          {
-            path: "/record/",
-            element: <Weekly />,
-          },
-          {
-            path: "/record/timesheet",
-            element: <Timesheet />,
-          },
-          {
-            path: "/record/activites",
-            element: <Activities />,
-          },
-        ],
       },
     ],
   };

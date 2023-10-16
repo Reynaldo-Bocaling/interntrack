@@ -25,6 +25,13 @@ const WeeklyReport = () => {
     groupedTimeSheet.push(student.timeSheet.slice(i, i + 5));
   }
 
+
+
+  const totalAllHours = newData.timeSheet
+  .filter((item) => new Date(item.date) <= currentDate)
+  .reduce((sum, entry) => sum + entry.totalHours, 0)
+
+
   return (
     <div>
      <Link 
@@ -75,7 +82,7 @@ const WeeklyReport = () => {
                   <td className="text-sm  tracking-widetext-left pl-5">{entry.date}</td>
                   <td className="text-sm  tracking-widetext-left">{entry.timeIn} AM</td>
                   <td className="text-sm  tracking-widetext-left">{entry.timeOut} PM</td>
-                  <td className="text-sm  tracking-widetext-left">{entry.totalHours} hrs</td>
+                  <td className="text-sm  tracking-widetext-left">{ `${Math.floor(entry.totalHours)}:${Math.round((entry.totalHours % 1) * 60)}`} hrs</td>
                 </tr>
               ))}
             </tbody>
@@ -87,7 +94,10 @@ const WeeklyReport = () => {
                 <td></td>
                 <td></td>
                 <td className="text-lg font-semibold">
-                  {calculateTotalHours(group)} hrs
+                  {
+
+                  `${Math.floor(calculateTotalHours(group))}:${Math.round((calculateTotalHours(group) % 1) * 60)}`
+                } hrs
                 </td>
               </tr>
             </tfoot>
@@ -97,6 +107,16 @@ const WeeklyReport = () => {
           </div> */}
         </div>
       ))}
+
+      <div className="bg-white pl-10 py-5 pr-36 flex items-center justify-between">
+<h1>Total All Hours </h1>
+        <h1>
+        {
+          `${Math.floor(totalAllHours)}:${Math.round((totalAllHours % 1) * 60)}`
+                        
+                        } Hours
+        </h1>
+      </div>
     </div>
   );
 };

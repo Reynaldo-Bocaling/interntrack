@@ -14,51 +14,52 @@ import {CgFileDocument} from 'react-icons/cg'
 
 
   export const SidebarData = {
-    Student: [
-      { label: "Dashboard", 
-        url: "/", 
-        icon: RxDashboard,
-        size: 18,
-        extraText: "HOME"
-      },
-      { label: "Attendance",   
-        icon: RxCalendar, 
-        size: 18,
-        subMenu: [
-          { label: "Daily Log", url: "/daily-log"},
-          { label: "Attendance request", url: "/Attendance-request" },
-        ],
-      },
-      { label: "My Records",  
-        icon: TbUserSearch, 
-        size: 20,
-        subMenu: [
-          { label: "Weekly Reports", url: "/weekly-time-reports" },
-          { label: "Timesheets", url: "/weekly-time-reports" },
-          { label: "Activities", url: "/Upload-task" },
-        ],
-      },
-      { 
-        label: "Leave", 
-        url: "/leave-request",
-        icon: TbCalendarCancel, 
-        dropIcon:BiChevronDown,
-        size: 20,
-      },
-      { label: "Messages", 
-        url:  "/message",  
-        icon: AiOutlineMessage,
-        size: 19,
-        space: true,
-        extraText: "MESSAGES",
-      },
-      { label: "Announcements", 
-        url: "/announcement",    
-        icon: CgFileDocument,
-        size:19
-      },
+
+    // Student: [
+    //   { label: "Dashboard", 
+    //     url: "/", 
+    //     icon: RxDashboard,
+    //     size: 18,
+    //     extraText: "HOME"
+    //   },
+    //   { label: "Attendance",   
+    //     icon: RxCalendar, 
+    //     size: 18,
+    //     subMenu: [
+    //       { label: "Daily Log", url: "/daily-log"},
+    //       { label: "Attendance request", url: "/Attendance-request" },
+    //     ],
+    //   },
+    //   { label: "My Records",  
+    //     icon: TbUserSearch, 
+    //     size: 20,
+    //     subMenu: [
+    //       { label: "Weekly Reports", url: "/weekly-time-reports" },
+    //       { label: "Timesheets", url: "/weekly-time-reports" },
+    //       { label: "Activities", url: "/Upload-task" },
+    //     ],
+    //   },
+    //   { 
+    //     label: "Leave", 
+    //     url: "/leave-request",
+    //     icon: TbCalendarCancel, 
+    //     dropIcon:BiChevronDown,
+    //     size: 20,
+    //   },
+    //   { label: "Messages", 
+    //     url:  "/message",  
+    //     icon: AiOutlineMessage,
+    //     size: 19,
+    //     space: true,
+    //     extraText: "MESSAGES",
+    //   },
+    //   { label: "Announcements", 
+    //     url: "/announcement",    
+    //     icon: CgFileDocument,
+    //     size:19
+    //   },
         
-    ],
+    // ],
 
 
     Coordinator: [

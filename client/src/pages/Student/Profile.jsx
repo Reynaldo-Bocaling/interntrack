@@ -1,15 +1,10 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
 import { useDisclosure } from "@mantine/hooks";
 import profile from "../../assets/images/dp.png";
-import { Input, PasswordInput, Drawer } from "@mantine/core";
-import { LiaUserEditSolid } from "react-icons/lia";
+import { Input, Drawer } from "@mantine/core";
 import { MdAlternateEmail } from "react-icons/md";
-import { BsFillTelephoneFill } from "react-icons/bs";
-import { BiUserVoice, BiBookOpen } from "react-icons/bi";
-import { PiGenderMaleBold } from "react-icons/pi";
-import { AiOutlineUserSwitch } from "react-icons/ai";
 
+import ProfileInfo from '../../components/Student-profile/index'
 function Profile() {
 
   const [opened, { open, close }] = useDisclosure(false); //MESSAGE
@@ -45,13 +40,7 @@ function Profile() {
           </button>
         </div>
 
-        <div className="mt-7 mb-5 flex items-center justify-between px-5 text-lg border-b pb-3">
-          <NavLink to="/Profile/" className="profile-tabs">Info</NavLink>
-          <NavLink to="/Profile/security" className="profile-tabs">Security</NavLink>
-          <NavLink to="/Profile/requirements" className="profile-tabs">Requirements</NavLink>
-        </div>
-
-        <Outlet />
+        <ProfileInfo />
 
 
 

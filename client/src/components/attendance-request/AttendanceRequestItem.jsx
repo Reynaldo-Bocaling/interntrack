@@ -85,7 +85,7 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
                         {item.totalDays} Days
                       </div>
                       <p className="text-sm tracking-wider">
-                        {item.totalHours} Hours
+                       
                       </p>
                     </div>
                     <div>

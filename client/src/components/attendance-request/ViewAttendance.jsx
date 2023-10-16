@@ -56,12 +56,12 @@ function ViewAttendanceRequest() {
 
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You want to accept the attendance request",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, proceed!",
+      confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
         mutate(id);
@@ -151,13 +151,16 @@ function ViewAttendanceRequest() {
                         {format(new Date(item.date), "MMMM dd")}
                       </td>
                       <td className="text-sm tracking-wide pl-2">
-                        {item.timeIn} am
+                        {item.timeIn}
                       </td>
                       <td className="text-sm tracking-wide pl-2">
-                        {item.timeOut} pm
+                        {item.timeOut}
                       </td>
                       <td className="text-sm text-center tracking-wide">
-                        {item.totalHours} hrs
+                      {
+                          `${Math.floor(item.totalHours)}:${Math.round((item.totalHours % 1) * 60)}`
+                        
+                        } Hours
                       </td>
                       <td className="text-sm tracking-wide pl-2 w-1/6">
                         <div className="flex item-center gap-2">

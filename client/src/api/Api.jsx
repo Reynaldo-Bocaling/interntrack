@@ -96,6 +96,28 @@ export const attendanceRequest = async (id)=>{
   }
 }
 
+// time in api
+export const addTimeIn = async ({ id, timeIn }) => {
+ 
+  try {
+    const response = await axios.put(`${url}timeIn`, { id, timeIn });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);  // You can handle the error as needed
+  }
+}
+
+// time in api
+export const addTimeOut = async ({ id, timeOut, totalHours }) => {
+ 
+  try {
+    const response = await axios.put(`${url}timeOut`, { id, timeOut, totalHours });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);  // You can handle the error as needed
+  }
+}
+
 
 
 
@@ -119,7 +141,7 @@ export const getTeacherList = async () => {
     throw new Error(error.message);
   }
 };
-
+ 
 
 export const getTrainerList = async () => {
   try {
@@ -234,6 +256,21 @@ export const verifyToken = async () => {
     throw new Error(error.message);
   }
 };
+
+
+
+
+
+// get student records timesheet/task
+export const getTimesheet = async () => {
+  try {
+    const response = await axios.get(`${url}getTimesheet`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 
 
 

@@ -63,6 +63,12 @@ function Information() {
           </div>
           <div className="flex items-center justify-between">
             <small className="text-gray-400 flex items-center gap-3">
+              <FaRegBuilding /> Company
+            </small>
+            <small className="font-semibold">NEUST</small>
+          </div>
+          <div className="flex items-center justify-between">
+            <small className="text-gray-400 flex items-center gap-3">
               <FaRegBuilding /> Area of assigned
             </small>
             <small className="font-semibold">OAR</small>

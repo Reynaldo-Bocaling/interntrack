@@ -15,6 +15,8 @@ routes.post('/addTeacher' ,verifyToken ,UserController.AddTeacher);
 routes.post('/addTrainer' ,UserController.AddTrainer);
 routes.put('/assignStudent' ,UserController.assignStudent);
 routes.put('/attendanceRequest' ,UserController.attendanceRequest);
+routes.put('/timeIn' ,UserController.timeIn);
+routes.put('/timeOut' ,UserController.timeOut);
 
 
 
@@ -32,6 +34,12 @@ routes.get('/getStudentList',UserController.getStudentList);
 routes.get('/getStudent' ,verifyToken, UserController.getStudent);
 routes.get('/getStudentInfo/:id' ,UserController.getStudentInfo);
 routes.get('/getCampus' ,UserController.getCampus);
+
+
+
+
+// get student records timesheet/task
+routes.get('/getTimesheet' ,verifyToken,UserController.getTimesheet);
 
 
 export default routes   
