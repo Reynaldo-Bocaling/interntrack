@@ -4,7 +4,6 @@ import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch } from "react-icons/bi";
 import { getTrainer, getStudentList } from '../../api/Api'
 import {useQuery} from '@tanstack/react-query'
-
 const AttendanceRequest = () => {
   const currentDate = new Date();
 

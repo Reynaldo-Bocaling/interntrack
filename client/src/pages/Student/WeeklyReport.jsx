@@ -29,12 +29,12 @@ const WeeklyReport = () => {
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-6">Weekly Reports</h2>
       <Card className="flex flex-col gap-5 ">
+      <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
         {groupedTimeSheet.map((group, groupIndex) => (
           <div
             key={groupIndex}
-            className="p-3 rounded-lg border hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
+            className="p-3 rounded-lg border bg-gray-100 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
             onClick={open}
           >
             <Card.Section
@@ -54,7 +54,7 @@ const WeeklyReport = () => {
       </Card>
 
       <Drawer
-        position="left"
+        position="bottom"
         size="100%"
         opened={opened}
         onClose={close}
