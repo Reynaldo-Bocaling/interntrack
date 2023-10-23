@@ -1,40 +1,159 @@
-import React from "react";
-import { useDisclosure } from "@mantine/hooks";
+import React, { useState } from "react";
 import profile from "../../assets/images/dp.png";
 import { Input, Drawer } from "@mantine/core";
-import { MdAlternateEmail } from "react-icons/md";
 import { CgMenuMotion } from "react-icons/cg";
-import {Avatar, Button} from "@nextui-org/react";
-import {MdKeyboardArrowLeft, MdKeyboardArrowRight} from 'react-icons/md'
-import {HiMenuAlt3, HiOutlineDocumentText} from 'react-icons/hi'
-import ProfileInfo from '../../components/Student-profile/index'
-function Profile() {
+import { MdKeyboardArrowLeft } from "react-icons/md";
+import ProfileInfo from "../../components/Student-profile/index";
+import Editinfo from "../../components/Student-profile/Editinfo";
+import Message from "../../components/Student-profile/Message";
+import { BsChatDots, BsCamera, BsFillTrash3Fill } from "react-icons/bs";
+import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
+import { AiOutlineCloudUpload, AiOutlineUser } from "react-icons/ai";
+import Swal from "sweetalert2";
 
-  const [opened, { open, close }] = useDisclosure(false); //MESSAGE
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+  Avatar,
+} from "@nextui-org/react";
+import {
+  editStudentProfile,
+  getStudent,
+  updateStudentProfilePicture
+} from "../../api/Api";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 
-                                                  
-  return (                                                       
+
+
+const Profile = () => {
+  const [File, setFile] = useState(null);
+  const [Preview, setPreview] = useState(null);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const queryClient = useQueryClient();
+
+  const [OpenEdit, setOpenEdit] = useState(false);
+  const [OpenMessage, setOpenMessage] = useState(false);
+
+
+  const loadingImage = (e) => {
+    const image = e.target.files[0];
+    setFile(image);
+    setPreview(URL.createObjectURL(image));
+  };
+  
+
+  const {data} = useQuery({
+    queryKey: ['getstudentInfo'],
+    queryFn: getStudent
+  })
+
+  const {mutate: editInfoMutate} = useMutation(editStudentProfile, {
+    onSuccess: ()=> {
+      Swal.fire("Success", "Update Successful", "success");
+      setOpenEdit(false)
+      queryClient.invalidateQueries('getstudentInfo')
+      setPreview('')
+    },
+    onError: () => {
+      Swal.fire(
+        "Error",
+        "Update Failed. Please check the information provided and try again.",
+        "error"
+      );
+    }
+  })
+  
+  const { mutate: editProfile } = useMutation(updateStudentProfilePicture, {
+    onSuccess: () => {
+      Swal.fire("Success", "Update Successful", "success");
+      queryClient.invalidateQueries("getstudentInfo");
+    },
+    onError: () => {
+      Swal.fire(
+        "Error",
+        "Update Failed. Please check the information provided and try again.",
+        "error"
+      );
+    },
+  });
+
+  
+  const handleEditProfile = () => {
+    const formData = new FormData();
+    formData.append("image", File);
+    editProfile(formData);
+  };
+
+  const handleEditInfo = (item) => {
+   
+
+    editInfoMutate(item)
+
+  }
+
+
+  
+  const Info = [
+    { id: 0, type: "text", name: "firstname", label: "Firstname" },
+    { id: 1, type: "text", name: "lastname", label: "Lastname" },
+    { id: 2, type: "text", name: "middlename", label: "Middle Initial" },
+    { id: 3, type: "text", name: "email", label: "Email" },
+    { id: 4, type: "number", name: "contact", label: "Contact" },
+    { id: 5, type: "text", name: "gender", label: "Gender" },
+  
+  ]
+
+
+  return (
     <div className="flex flex-col">
       <div className="flex flex-col">
-        <header className='flex items-center justify-between py-2 mb-3 px-2'>
-            <MdKeyboardArrowLeft size={22} />
-            <span className='text-lg font-semibold'>Profile</span>
-            <CgMenuMotion size={20} />
+        <header className="flex items-center justify-between py-2 mb-3 px-2">
+          <MdKeyboardArrowLeft size={22} />
+          <span className="text-lg font-semibold">Profile</span>
+          <CgMenuMotion size={20} />
         </header>
         <div className="bg-blue-2 flex flex-col items-center">
-        <Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" className="w-24 h-24 text-large border-[3px] border-slate-300 mb-2" />
+        <div className="relative">
+                <div className="ml-7  bg-white w-32 h-32 p-5 object-cover border-white right rounded-full shadow-md overflow-hidden">
+                  {data?.profile ? (
+                    <img src={data.profile_url} alt={data.profile_url} />
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <button
+                  onClick={onOpen}
+                  className="absolute -bottom-1 right-5 bg-gray-200 px-2 h-[32px] w-[32px] flex items-center justify-center rounded-full cursor-pointer"
+                >
+                  <BsCamera />
+                </button>
+              </div>
 
-        
           <div className="mt-3 flex flex-col items-center">
-          <p className="text-lg text-[#000] font-bold">Reynaldo F. Bocaling</p>
-          <small className='text-blue-500 font-medium'>Student</small>
+            <div className="text-lg text-[#000] font-bold flex items-center justify-center gap-2">
+              <span className="capitalize">{data?.firstname}</span>
+              <span className="capitalize">{data?.lastname}</span>
+            </div>
+            <small className="text-blue-500 font-medium">Student</small>
           </div>
         </div>
         <div className="flex items-center justify-between px-2 mt-5">
-          <button className="font-semibold bg-slate-100 py-2 px-4 rounded-lg">
+          <button 
+          onClick={()=> setOpenMessage(true)}
+            className="font-semibold bg-slate-100 py-2 px-4 rounded-lg"
+          >
             Message
           </button>
-          <button onClick={open} className="font-semibold bg-slate-100 py-2 px-4 rounded-lg">
+          <button
+            onClick={()=>setOpenEdit(true)}
+            className="font-semibold bg-slate-100 py-2 px-4 rounded-lg"
+          >
             Edit Info
           </button>
           <button className="text-red-500 font-semibold bg-red-100 py-2 px-4 rounded-lg">
@@ -42,52 +161,66 @@ function Profile() {
           </button>
         </div>
 
-        <ProfileInfo />
+        <ProfileInfo data={data} />
+        <Editinfo data={data} handleSubmit={handleEditInfo} info={Info} onClose={() => setOpenEdit(false)} opened={OpenEdit} />
+        <Message onClose={() => setOpenMessage(false)} opened={OpenMessage} />
 
-
-
-
-        {/* message drawer */}
-        <Drawer
-          position="right"
-          size="100%"
-          opened={opened}
-          onClose={close}
-          title={
-            <header className="mt-2">
-              <span className="text-xl font-semibold">Edit Info</span>
-            </header>
-          }
-        >
-
-          <div className="flex flex-col gap-3">
-          <Input.Wrapper label={<p className="pb-2">First Name</p>}>
-          <Input
-            icon={<MdAlternateEmail />}
-            size="md"
-            placeholder="Your email"
-          />
-        </Input.Wrapper>
-       
-<Input.Wrapper label={<p className="pb-2">Middle Name</p>}>
-          <Input
-            icon={<MdAlternateEmail />}
-            size="md"
-            placeholder="Your email"
-          />
-        </Input.Wrapper>
-       
-<Input.Wrapper label={<p className="pb-2">Last Name</p>}>
-          <Input
-            icon={<MdAlternateEmail />}
-            size="md"
-            placeholder="Your email"
-          />
-        </Input.Wrapper>
-          </div>
-       
-        </Drawer>
+        
       </div>
+
+      {/* modal */}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Upload Profile
+              </ModalHeader>
+              <ModalBody>
+                <div className="w-full h-full flex flex-col  items-center justify-center gap-5 py-10">
+                  {Preview ? (
+                    <Avatar
+                      src={Preview}
+                      className="w-[150px] h-[150px] text-large"
+                    />
+                  ) : (
+                    <Avatar
+                      src={EmptyProfileIcon}
+                      className="w-[150px] h-[150px] text-large"
+                    />
+                  )}
+
+                  {Preview ? (
+                    <Button
+                      color="primary"
+                      className=" rounded-full flex items-center justify-center gap-2 font-medium tracking-wider overflow-hidden "
+                      size="lg"
+                      onClick={handleEditProfile}
+                    >
+                      Upload Profile
+                    </Button>
+                  ) : (
+                    <Button
+                      color="primary"
+                      className=" relative rounded-full flex items-center justify-center gap-2 font-medium tracking-wider overflow-hidden "
+                      size="lg"
+                    >
+                      <input
+                        type="file"
+                        onChange={loadingImage}
+                        className="absolute scale-[2] opacity-0 cursor-pointer"
+                      />
+                      <AiOutlineCloudUpload size={23} />
+                      Select Image
+                    </Button>
+                  )}
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
     </div>
   );
 }

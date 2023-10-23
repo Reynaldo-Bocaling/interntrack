@@ -22,6 +22,8 @@ import {
   useDisclosure,
   Avatar,
 } from "@nextui-org/react";
+
+
 const CoordinatorInfo = () => {
   const [Editable, setEditable] = useState(false);
   const [File, setFile] = useState(null);

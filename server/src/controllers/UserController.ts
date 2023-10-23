@@ -742,7 +742,6 @@ export class UserController {
     }
   }
 
-
   // get requirements
   static async getTask(req: any, res: Response) {
     const id = req.user.student[0]?.id;
@@ -757,10 +756,6 @@ export class UserController {
       return res.status(500).json({ message: error });
     }
   }
-
-
-
-
 
   // update profile user
   // update coordinator
@@ -846,6 +841,29 @@ export class UserController {
   }
 
   // update trainer
+  static async EditStudentProfile(req: any, res: Response) {
+    const { item } = req.body;
+
+    try {
+      const id = req.user.student[0].id;
+      const response = await prisma.student.update({
+        where: { id },
+        data: {
+          firstname: item.firstname,
+          lastname: item.lastname,
+          middlename: item.middlename,
+          email: item.email,
+          contact: item.contact,
+          gender: item.gender,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+  // update trainer
   static async EditDirectorProfile(req: any, res: Response) {
     const { item } = req.body;
 
@@ -870,34 +888,61 @@ export class UserController {
     }
   }
 
+  // change password
+  //student
+  static async changeStudentPassword(req: any, res: Response) {
+    const { oldPassword, newPassword } = req.body;
+    const id = req.user.id;
+    try {
+      const findAccount = await prisma.user.findFirst({
+        where: { id },
+      });
+      const pass = findAccount?.password ? findAccount?.password : "";
 
+      const passwordVerify = await argon2.verify(pass, oldPassword);
+      if (!passwordVerify)
+        return res.status(404).json({ message: "wrong password" });
 
+      const response = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          password: await argon2.hash(newPassword),
+        },
+      });
 
-
-
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
 
   // update profile picture
   //update teacher profile
   static async updateTeacherProfilePicture(req: any, res: Response) {
     const id = req.user.teacher[0]?.id;
-    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
-    const profile =  req.file?.filename;
+    const url = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+    const profile = req.file?.filename;
 
-    const existingFile =  await prisma.teacher.findUnique({ where: {id} });
-    if(!existingFile) return res.status(404).json({message: 'teacher not found'})
+    const existingFile = await prisma.teacher.findUnique({ where: { id } });
+    if (!existingFile)
+      return res.status(404).json({ message: "teacher not found" });
 
-   if(existingFile?.profile) {
-    const filePath = `./public/images/${existingFile.profile}`;
-    fs.unlinkSync(filePath);
-   }
+    if (existingFile?.profile) {
+      const filePath = `./public/images/${existingFile.profile}`;
+      fs.unlinkSync(filePath);
+    }
 
     try {
       if (req.file) {
         await prisma.teacher.update({
           where: { id },
-          data: { 
+          data: {
             profile_url: url,
-            profile
+            profile,
           },
         });
       }
@@ -911,24 +956,27 @@ export class UserController {
   //update coordinator profile
   static async updateCoordinatorProfilePicture(req: any, res: Response) {
     const id = req.user.coordinator[0]?.id;
-    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
-    const profile =  req.file?.filename;
+    const url = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+    const profile = req.file?.filename;
 
-    const existingFile =  await prisma.coordinator.findUnique({ where: {id} });
-    if(!existingFile) return res.status(404).json({message: 'coordinator not found'})
+    const existingFile = await prisma.coordinator.findUnique({ where: { id } });
+    if (!existingFile)
+      return res.status(404).json({ message: "coordinator not found" });
 
-   if(existingFile?.profile) {
-    const filePath = `./public/images/${existingFile.profile}`;
-    fs.unlinkSync(filePath);
-   }
+    if (existingFile?.profile) {
+      const filePath = `./public/images/${existingFile.profile}`;
+      fs.unlinkSync(filePath);
+    }
 
     try {
       if (req.file) {
         await prisma.coordinator.update({
           where: { id },
-          data: { 
+          data: {
             profile_url: url,
-            profile
+            profile,
           },
         });
       }
@@ -942,24 +990,27 @@ export class UserController {
   //update director profile
   static async updateDirectorProfilePicture(req: any, res: Response) {
     const id = req.user.director[0]?.id;
-    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
-    const profile =  req.file?.filename;
+    const url = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+    const profile = req.file?.filename;
 
-    const existingFile =  await prisma.director.findUnique({ where: {id} });
-    if(!existingFile) return res.status(404).json({message: 'director not found'})
+    const existingFile = await prisma.director.findUnique({ where: { id } });
+    if (!existingFile)
+      return res.status(404).json({ message: "director not found" });
 
-   if(existingFile?.profile) {
-    const filePath = `./public/images/${existingFile.profile}`;
-    fs.unlinkSync(filePath);
-   }
+    if (existingFile?.profile) {
+      const filePath = `./public/images/${existingFile.profile}`;
+      fs.unlinkSync(filePath);
+    }
 
     try {
       if (req.file) {
         await prisma.director.update({
           where: { id },
-          data: { 
+          data: {
             profile_url: url,
-            profile
+            profile,
           },
         });
       }
@@ -972,45 +1023,77 @@ export class UserController {
 
   static async updateTrainerProfilePicture(req: any, res: Response) {
     const id = req.user.trainer[0]?.id;
-    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
-    const profile =  req.file?.filename;
+    const url = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+    const profile = req.file?.filename;
 
-    const existingFile =  await prisma.trainer.findUnique({ where: {id} });
-    if(!existingFile) return res.status(404).json({message: 'trainer not found'})
+    const existingFile = await prisma.trainer.findUnique({ where: { id } });
+    if (!existingFile)
+      return res.status(404).json({ message: "trainer not found" });
 
-   if(existingFile?.profile) {
-    const filePath = `./public/images/${existingFile.profile}`;
-    fs.unlinkSync(filePath);
-   }
+    if (existingFile?.profile) {
+      const filePath = `./public/images/${existingFile.profile}`;
+      fs.unlinkSync(filePath);
+    }
 
     try {
       if (req.file) {
         await prisma.trainer.update({
           where: { id },
-          data: { 
+          data: {
             profile_url: url,
-            profile
+            profile,
           },
         });
       }
- 
+
       return res.status(200).json(url);
     } catch (error) {
       return res.status(500).json(error);
     }
   }
 
+  static async updateStudentProfilePicture(req: any, res: Response) {
+    const id = req.user.student[0]?.id;
+    const url = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+    const profile = req.file?.filename;
 
+    const existingFile = await prisma.student.findUnique({ where: { id } });
+    if (!existingFile)
+      return res.status(404).json({ message: "student not found" });
 
+    if (existingFile?.profile) {
+      const filePath = `./public/images/${existingFile.profile}`;
+      fs.unlinkSync(filePath);
+    }
 
+    try {
+      if (req.file) {
+        await prisma.student.update({
+          where: { id },
+          data: {
+            profile_url: url,
+            profile,
+          },
+        });
+      }
 
-
+      return res.status(200).json(url);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
 
   // upload task
-  static async uploadTask(req:any, res: Response) {
+  static async uploadTask(req: any, res: Response) {
     const id = req.user.student[0]?.id;
-    const {description, date} = req.body;
-    const tasImageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    const { description, date } = req.body;
+    const tasImageUrl = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
     const taskImage = req.file.filename;
 
     try {
@@ -1020,62 +1103,39 @@ export class UserController {
           date,
           taskImage,
           tasImageUrl,
-          student_id: id
-        }
+          student_id: id,
+        },
       });
 
-      return res.status(200).json(response)
-    } catch (error) {
-      return res.status(500).json(error)
-    }
-  }
-
- 
-
-
-
-  static async uploadRequirement(req:any, res: Response) {
-    const id = req.user.student[0]?.id;
-    const {type} = req.body;
-    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
-    const image =  req.file?.filename;
-  
-  
-    try {
-      const response = await prisma.requirement.create({
-        data: {
-         type,
-         image,
-         imageUrl: url,
-          student_id: id
-        } 
-      });
-  
       return res.status(200).json(response);
     } catch (error) {
       return res.status(500).json(error);
     }
   }
-  
 
+  static async uploadRequirement(req: any, res: Response) {
+    const id = req.user.student[0]?.id;
+    const { type } = req.body;
+    const url = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+    const image = req.file?.filename;
 
+    try {
+      const response = await prisma.requirement.create({
+        data: {
+          type,
+          image,
+          imageUrl: url,
+          student_id: id,
+        },
+      });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
 }
 
 

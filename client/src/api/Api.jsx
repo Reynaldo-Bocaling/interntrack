@@ -349,6 +349,31 @@ export const editTrainerProfile = async (item) => {
     throw new Error(error);
   }
 };
+export const editStudentProfile = async (item) => {
+  try {
+    const response = await axios.put(`${url}editProfileStudent`, {item}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+
+
+// change password
+export const changeStudentPassword = async ({oldPassword, newPassword}) => {
+  try {
+    const response = await axios.put(`${url}changeStudentPassword`, {oldPassword, newPassword}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
 
 
 
@@ -400,6 +425,20 @@ export const updateDirectorProfilePicture = async (formData) => {
 export const updateTrainerProfilePicture = async (formData) => {
   try {
     const response = await axios.put(`${url}updateTrainerProfilePicture`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const updateStudentProfilePicture = async (formData) => {
+  try {
+    const response = await axios.put(`${url}updateStudentProfilePicture`, formData, {
       withCredentials: true,
       headers: {
         'Content-Type': 'multipart/form-data'

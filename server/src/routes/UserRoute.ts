@@ -58,6 +58,16 @@ routes.put('/editProfileCoordinator' ,verifyToken,UserController.EditCoordinator
 routes.put('/editProfileTeacher' ,verifyToken, UserController.editTeacherProfile);
 routes.put('/editProfileTrainer' ,verifyToken,UserController.EditTrainerProfile);
 routes.put('/editProfileDirector' ,verifyToken,UserController.EditDirectorProfile);
+routes.put('/editProfileStudent' ,verifyToken,UserController.EditStudentProfile);
+
+
+
+
+
+
+//change password
+//student
+routes.put('/changeStudentPassword' ,verifyToken,UserController.changeStudentPassword);
 
 
 
@@ -69,6 +79,7 @@ routes.put('/updateTeacherProfilePicture' ,verifyToken, uploads.single('image'),
 routes.put('/updateCoordinatorProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateCoordinatorProfilePicture);
 routes.put('/updateDirectorProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateDirectorProfilePicture);
 routes.put('/updateTrainerProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateTrainerProfilePicture);
+routes.put('/updateStudentProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateStudentProfilePicture);
 
 
 

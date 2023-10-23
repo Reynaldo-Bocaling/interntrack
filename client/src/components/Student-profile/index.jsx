@@ -1,22 +1,122 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Information from './Information'
-import Requirements from './Requirements'
-import Security from './Security'
+import Information from "./Information";
+import Requirements from "./Requirements";
+import Security from "./Security";
+import Swal from "sweetalert2";
+import { MdAlternateEmail } from "react-icons/md";
+import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
+import {
+  BsChatDots,
+  BsCamera,
+  BsFillTrash3Fill,
+  BsFillTelephoneFill,
+} from "react-icons/bs";
+import {
+  AiOutlineCloudUpload,
+  AiOutlineUser,
+  AiOutlineUserSwitch,
+} from "react-icons/ai";
+import { LiaUserEditSolid } from "react-icons/lia";
+import { PiGenderMaleBold } from "react-icons/pi";
+import { BiBookOpen, BiUserVoice } from "react-icons/bi";
+import { FaRegBuilding } from "react-icons/fa";
 
-
-function index() {
+function index({ data }) {
   const [value, setValue] = useState(0);
+
+
+
+  const dataInfo = [
+    {
+      label: "Name",
+      value: `${data?.firstname} ${data?.lastname}`,
+      icon: LiaUserEditSolid,
+      title: "Information",
+    },
+    {
+      label: "Email",
+      value: data?.email,
+      icon: MdAlternateEmail,
+    },
+    {
+      label: "Contact",
+      value: data?.contact,
+      icon: BsFillTelephoneFill,
+    },
+    {
+      label: "Gender",
+      value: data?.gender,
+      icon: PiGenderMaleBold,
+    },
+
+    // education
+    {
+      label: "Program",
+      value: data?.program,
+      icon: BiBookOpen,
+      title: "Education",
+      style: "mt-7",
+    },
+    {
+      label: "Major",
+      value: data?.major,
+      icon: BiBookOpen,
+    },
+    {
+      label: "College",
+      value: data?.college,
+      icon: BiBookOpen,
+    },
+    {
+      label: "Campus",
+      value: data?.campus,
+      icon: BiBookOpen,
+    },
+
+    // others
+    {
+      label: "Teacher",
+      value: `${data?.teacher?.firstname} ${data?.teacher?.lastname}`,
+      icon: AiOutlineUserSwitch,
+      title: "Others",
+      style: "mt-3",
+    },
+    {
+      label: "Trainer",
+      value: `${data?.trainer?.firstname} ${data?.trainer?.lastname}`,
+      icon: BiUserVoice,
+    },
+    {
+      label: "Company",
+      value: data?.Company ? data?.Company : "",
+      icon: FaRegBuilding,
+    },
+    {
+      label: "Area Of Assignemnt",
+      value: data?.AreaOfAssignment ? data?.AreaOfAssignment?.areaName : "",
+      icon: FaRegBuilding,
+    },
+  ];
+
+
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
-    <div className='my-5'>
-       <Box sx={{ width: '100%', bgcolor: 'background.paper' , marginBottom: '20px'}}>
+    <div className="my-5">
+      <Box
+        sx={{
+          width: "100%",
+          bgcolor: "background.paper",
+          marginBottom: "20px",
+        }}
+      >
         <Tabs value={value} onChange={handleChange} centered>
           <Tab label="Info" />
           <Tab label="Security" />
@@ -24,9 +124,9 @@ function index() {
         </Tabs>
       </Box>
 
-      {value === 0 &&  <Information />}
-      {value === 1 &&  <Security />}
-      {value === 2 &&  <Requirements />}
+      {value === 0 && <Information dataInfo={dataInfo} />}
+      {value === 1 && <Security data={data} />}
+      {value === 2 && <Requirements />}
     </div>
   );
 }
