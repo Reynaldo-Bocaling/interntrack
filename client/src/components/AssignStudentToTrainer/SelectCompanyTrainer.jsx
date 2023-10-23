@@ -15,9 +15,27 @@ function SelectCompanyTrainer(props) {
     selectedStudent,
   } = props;
 
-  const filteredTrainers = selectedCompany ? selectedCompany.trainer : [];
   const filteredAreasOfAssignment = selectedCompany
     ? selectedCompany.areaOfAssignment
+    : [];
+
+  const areaOption = selectedCompany
+    ? selectedCompany?.areaOfAssignment
+        .map(({ id, areaName, company_id, trainer, slot, student }) => ({
+          id,
+          key: id,
+          areaName,
+          company_id,
+          trainer,
+          slot,
+          student,
+          studenttotal: student ? student.length : 0,
+        }))
+        .filter((item) => item.slot > item.studenttotal)
+    : [];
+
+  const filteredTrainers = selectedAreaOfAssignment
+    ? selectedAreaOfAssignment.trainer
     : [];
 
   const handleCompanyChange = (event, newValue) => {
@@ -26,13 +44,18 @@ function SelectCompanyTrainer(props) {
     setSelectedTrainer(null); // Reset selected trainer
   };
 
+  const handleAreaChange = (event, newValue) => {
+    setSelectedAreaOfAssignment(newValue);
+  };
+
   const handleTrainerChange = (event, newValue) => {
     setSelectedTrainer(newValue);
   };
 
-  const handleAreaChange = (event, newValue) => {
-    setSelectedAreaOfAssignment(newValue);
-  };
+  const areaTotalStudent= selectedAreaOfAssignment?.student.length;
+  const areaSlot= selectedAreaOfAssignment?.slot ? selectedAreaOfAssignment?.slot : 'notSelectArea';
+    const totalAvailable = areaSlot - areaTotalStudent;
+  
 
   return (
     <div className="p-5 flex flex-col gap-3">
@@ -60,17 +83,19 @@ function SelectCompanyTrainer(props) {
       <div className="flex items-center gap-5">
         <CustomAutocomplete
           size={"w-[85%]"}
-          options={filteredAreasOfAssignment}
+          options={areaOption}
           label="Choose an Area of Assignment"
           value={selectedAreaOfAssignment}
           onChange={handleAreaChange}
           disabled={!selectedCompany}
           getOptionLabel={(option) => option.areaName}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
         />
+
         {selectedAreaOfAssignment && (
           <p>
             Available Slots for {selectedAreaOfAssignment.areaName}:{" "}
-            {selectedAreaOfAssignment.slot}
+            {totalAvailable}
           </p>
         )}
 
@@ -80,14 +105,16 @@ function SelectCompanyTrainer(props) {
           className={`${
             selectedStudent === null ||
             selectedTrainer === null ||
-            selectedAreaOfAssignment === null
-              ? "cursor-not-allowed"
-              : ""
-          } w-[15%] font-medium tracking-wide bg-blue-500 py-3 px-10  text-white rounded-xl`}
+            selectedAreaOfAssignment === null ||
+            selectedStudent.length > totalAvailable
+              ? "cursor-not-allowed bg-blue-300"
+              : "bg-blue-500"
+          } w-[15%] font-medium tracking-wide  py-3 px-10  text-white rounded-xl`}
           disabled={
             selectedStudent == [] ||
             selectedTrainer === null ||
-            selectedAreaOfAssignment === null
+            selectedAreaOfAssignment === null ||
+            selectedStudent.length > totalAvailable
           }
         >
           Assign

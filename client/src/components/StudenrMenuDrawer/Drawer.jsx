@@ -90,7 +90,7 @@ function Drawer2({ opened, close }) {
 
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
             {totalHoursDB > 0 ? (
-              <div className="my-10 text-2xl flex items-center justify-center gap-1 text-green-500">
+              <div className="my-10 text-xl flex items-center justify-center gap-1 text-green-500">
                 End Work <AiOutlineCheck />
               </div>
             ) : timeInDB !== "0:00" ? (
@@ -102,7 +102,7 @@ function Drawer2({ opened, close }) {
                 <h1 className="text-3xl font-bold">{timeInDB}</h1>
               </div>
             ) : (
-              <div className="w-full text-2xl text-gray-500 my-10 flex items-center justify-center gap-1">
+              <div className="w-full text-xl text-gray-500 my-10 flex items-center justify-center gap-1">
                 Time in not yet <LiaTimesSolid className="text-red-500" />
               </div>
             )}

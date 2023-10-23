@@ -39,6 +39,7 @@ const Companies = () => {
       )
     : [];
 
+    console.log('companies', company);
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">

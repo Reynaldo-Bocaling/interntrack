@@ -105,6 +105,34 @@ const Student_list = () => {
   }))
    : []
 
+
+   const limitCompany = companyList?.map(({
+    id,
+    companyName,
+    address,
+    email,
+    contact,
+    areaOfAssignment,
+    director_id,
+    profile,
+    moaUpload
+  }) => ({
+    id,
+    companyName,
+    address,
+    email,
+    contact,
+    director_id,
+    profile,
+    moaUpload,
+    areaOfAssignment,
+    totalStudent: areaOfAssignment?.flatMap(({student})=> student).length,
+    totalSlot: areaOfAssignment?.flatMap(({slot})=> slot).reduce((sum, item)=> sum+item,0),
+  })).filter((item)=> item.totalSlot > item.totalStudent);
+
+ console.log('ccccc', companyList);
+
+
   // mutate
   const { mutate, isLoading: importLoading } = useMutation({
     mutationFn: importStudent,
@@ -279,7 +307,7 @@ const Student_list = () => {
       <AssignStudentModal
         closeModal={() => setAssignStudentModalIsOpen(false)}
         isOpen={AssignStudentModalIsOpen}
-        companies={companyList}
+        companies={limitCompany}
       />
     </div>
   );

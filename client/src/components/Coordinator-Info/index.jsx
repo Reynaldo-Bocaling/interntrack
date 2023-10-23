@@ -57,7 +57,7 @@ const CoordinatorInfo = () => {
                 program,
                 major,
                 profile,
-                AreaOfAssignment,
+                AreaOfAssignment
               }) => ({
                 id,
                 name: `${firstname} ${lastname}`,
@@ -68,9 +68,7 @@ const CoordinatorInfo = () => {
                 program,
                 major,
                 profile,
-                company: AreaOfAssignment
-                  ? AreaOfAssignment.company.companyName
-                  : [],
+                company: AreaOfAssignment?.company.companyName
               })
             )
           : []
@@ -109,6 +107,7 @@ const CoordinatorInfo = () => {
     : [];
 
 
+    console.log('s', studentList);
 
     if(isError){
       return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
@@ -207,7 +206,7 @@ const CoordinatorInfo = () => {
                   <TrainerIfo data={info} />
                 </Tabs.Panel>
                 <Tabs.Panel value="studentList" pt="xs">
-                  <StudentList data={studentList} />
+                  <StudentList data={studentList}/>
                 </Tabs.Panel>
                 <Tabs.Panel value="teacherList" pt="xs">
                   <TeacherList data={teacherList} />

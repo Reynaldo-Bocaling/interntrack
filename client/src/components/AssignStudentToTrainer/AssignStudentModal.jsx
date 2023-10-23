@@ -40,7 +40,9 @@ const AssignStudentModal = (props) => {
       setSelectedItems([])
       setSelectedTrainer(null)
       setSelectedAreaOfAssignment(null)
-      closeModal()
+      setSelectedCompany(null)
+      closeModal();
+      window.location.reload()
     },
     onError: ()=> {
       Swal.fire("Error", "Opps!\n An error occured while asigning the student \n Please try again or contact support for assistance.", "error");
@@ -80,18 +82,14 @@ const AssignStudentModal = (props) => {
     selectedItems.some((selectedItem) => selectedItem.id === item.id);
 
   const handleTryCLick = () => {
-    // console.log(":company", selectedCompany.id);
-    // console.log("trainer", selectedTrainer.id);
-    // console.log("assign area", selectedAreaOfAssignment.id);
-    // console.log(selectStudent);
+   
     mutate({
-      studentId: selectStudent, // Tiyakin na tama ang variable name dito
+      studentId: selectStudent, 
       trainer_id,
-      areaAssigned_id: areaAssigned // Tiyakin na tama ang variable name dito
+      areaAssigned_id: areaAssigned
     });
     
 
-    // console.log({selectStudent, trainer_id, areaAssigned});
   };
 
   return (

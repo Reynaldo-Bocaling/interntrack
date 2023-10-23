@@ -88,19 +88,19 @@ const Trainer_list = () => {
             contact,
             profile,
             accountStatus,
-            company,
+            areaofAssignment,
             student,
           }) => ({
             id,
             firstname,
             name: `${firstname} ${lastname}`,
             email,
-            companyName: company.companyName,
+            companyName: areaofAssignment.company.companyName,
             picture: picture,
             contact,
             profile,
+            areaAssign : areaofAssignment.areaName,
             accountStatus,
-            company,
             student,
             totalStudent: student ? student.length : 0,
           })
@@ -108,11 +108,17 @@ const Trainer_list = () => {
         .filter((item) => item.name.toLowerCase().includes(searchInput))
     : [];
 
-  console.log(data);
 
   const handleFormSubmit = async (trainerData) => {
     mutate(trainerData);
   };
+
+
+console.log('trainer list', data);
+
+
+
+
 
   //   columns
   const columns = [
@@ -149,6 +155,11 @@ const Trainer_list = () => {
       id: "companyName",
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Company",
+    }),
+    columnHelper.accessor("areaAssign", {
+      id: "areaAssign",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Area assign",
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",

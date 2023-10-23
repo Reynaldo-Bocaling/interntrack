@@ -40,7 +40,7 @@ function StudentList({data}) {
                     <td className="text-sm text-left pl-3">{item.campus}</td>
                     <td className="text-sm text-left pl-3">{item.program}</td>
                     <td className="text-sm text-left pl-3">{item.major}</td>
-                    <td className="text-sm text-left pl-3">{item.major}</td>
+                    <td className="text-sm text-left pl-3">{item.company? item.company :<span className='text-red-500'>Not assign</span>}</td>
                     <td className="text-sm text-left pl-3">70%</td>
                   </tr>
                 ))

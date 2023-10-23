@@ -19,7 +19,7 @@ const Task = ({ taskRecords, Fullscreen, close, isFullScreen }) => {
                 <div className="profile flex items-center gap-3">
                   <div className=" mt-3 rounded-full w-10 h-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
                     <img
-                      src={item.image}
+                      src={item.tasImageUrl}
                       alt=""
                       width={30}
                       className="rounded-full mx-[0.35rem]"
@@ -56,19 +56,19 @@ const Task = ({ taskRecords, Fullscreen, close, isFullScreen }) => {
             className={`flex flex-wrap 
         ${
           isFullScreen ? "justify-center" : "justify-between"
-        } gap-4  pt-32 bg-white h-screen overflow-y-auto p-2 
+        } gap-4  pt-32 pb-24 bg-white h-screen overflow-y-auto
         `}
           >
             {item.Task.map((task) => (
               <div
                 key={task.id}
                 className={`${
-                  isFullScreen ? "max-w-[270px] " : "max-w-[230px] h-[270px] "
+                  isFullScreen ? "max-w-[270px] h-[270px]" : "max-w-[230px] h-[270px] "
                 }   bg-white shadow-md shadow-slate-200 border border-slate-100 rounded-lg p-4 flex flex-col justify-end`}
               >
                 <img
                   className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-                  src={task.image}
+                  src={task.tasImageUrl}
                   alt={"ds"}
                 />
 
@@ -76,13 +76,13 @@ const Task = ({ taskRecords, Fullscreen, close, isFullScreen }) => {
                   <div className="flex flex-col gap-2 w-full">
                     <div className="flex justify-center w-full pb-1 mb-2 border-b">
                       <h2 className="text-base text-gray-800 font-semibold tracking-wide">
-                        {task.taskName}
+                        {task.description}
                       </h2>
                     </div>
 
                     <div className="flex justify-between items-center">
                       <div className="">
-                        <p className="text-xs text-gray-600">August 3, 2023</p>
+                        <p className="text-xs text-gray-600">{task.date}</p>
                       </div>
 
                       <NavLink

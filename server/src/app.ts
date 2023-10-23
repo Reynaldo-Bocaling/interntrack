@@ -4,6 +4,7 @@ import cors from 'cors';
 import UserRoutes from './routes/UserRoute'
 import verifyToken from './middlewares/verifyToken';
 import  Login  from './utils/auth';
+import path from 'path';
 class App {
     public server;
 
@@ -17,14 +18,14 @@ class App {
         this.server.use(express.json());
         this.server.use(cors({
             origin: 'http://localhost:5173',
-            methods: ['POST', 'GET', 'DELETE', 'PUT'],
+            methods: ['POST', 'GET', 'DELETE', 'PUT', 'PATCH'],
             credentials: true 
         }));
         this.server.use(cookieParser());
         this.server.get('/verify', verifyToken, (req:any, res:Response) => {
             res.json(req.user.role)
         });
-       
+       this.server.use("/images", express.static(path.join(__dirname, "../public/images")))
     }
     routes() {
         this.server.use('/', UserRoutes);

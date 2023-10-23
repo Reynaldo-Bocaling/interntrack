@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { SidebarData } from "./SidebarLinks";
 import Dp from "../../assets/images/dp.png";
 import { MdNotificationsNone } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import { BiSearch, BiHelpCircle } from "react-icons/bi";
 import { LiaSignOutAltSolid } from "react-icons/lia";
@@ -11,8 +12,12 @@ import { CgProfile } from "react-icons/cg";
 import { RiArrowDropDownFill } from "react-icons/ri";
 import { BsDot } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
+import { logout } from "../../api/Api";
+import { useMutation } from "@tanstack/react-query";
+
 
 function Header(props) {
+  const navigate = useNavigate()
   const {
     toggleIsOpen,
     toggleNotif,
@@ -22,11 +27,6 @@ function Header(props) {
     role
   } = props;
   const Menu = SidebarData[role] || [];
-
-
-  const handleLogout = ()=> {
-    cookies.remove('token')
-  }
 
 
   // dummy notif data
@@ -67,6 +67,44 @@ function Header(props) {
     return string;
   }
 }
+
+
+  // logout
+  const {mutate} = useMutation({
+    mutationFn: logout,
+    onSuccess: ()=> {
+      
+
+      navigate('/')
+      window.location.reload();
+
+    },
+    onError: () => {
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Oops...',
+      //   text: 'Something went wrong!',
+      //   footer: '<a href="">Why do I have this issue?</a>'
+      // })
+    }
+  });
+
+  const handleLogout = () => {
+
+    Swal.fire({
+      title: 'Are you sure you want to log out',
+      showDenyButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: `No`,
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+        mutate()
+      } 
+    })
+
+   
+  }
 
 
   return (
@@ -170,7 +208,7 @@ function Header(props) {
                 </div>
 
                 {/* row2 */}
-                <div className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg hover:text-blue-500">
+                <NavLink to="/MyProfile" className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg hover:text-blue-500">
                   <div className="flex items-center gap-2">
                     <div className="text-blue-500 p-1 bg-blue-100 rounded-full">
                       <CgProfile size={20} />
@@ -178,7 +216,7 @@ function Header(props) {
                     <span className="text-sm">Personal Information</span>
                   </div>
                   <RiArrowRightSLine />
-                </div>
+                </NavLink>
 
                 <div className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg hover:text-blue-500">
                   <div className="flex items-center gap-2">
@@ -208,6 +246,10 @@ function Header(props) {
                     <span className="text-sm textgray-500">Sign out</span>
                   </div>
                 </div>
+
+
+
+
               </div>
             )}
           </div>

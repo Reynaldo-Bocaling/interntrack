@@ -8,6 +8,7 @@ import LineChart from "../../components/charts/LineChart";
 import pic from "../../assets/images/dp.png";
 import { Link } from "react-router-dom";
 import DateNow from "../../components/Dates/DateNow";
+
 function Dashboard() {
   const totalCountBox = [
     {
@@ -41,6 +42,8 @@ function Dashboard() {
       fillColor: "rgba(26, 117, 255, 0.3)",
     },
   ];
+
+
 
   return (
     <div className="min-h-full w-full">

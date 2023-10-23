@@ -593,17 +593,24 @@
   dependencies:
     "@mantine/utils" "6.0.20"
 
-"@mantine/core@^6.0.20":
-  version "6.0.20"
-  resolved "https://registry.npmjs.org/@mantine/core/-/core-6.0.20.tgz"
-  integrity sha512-v/51klCP3nRZIIv0tl8zvOHpksbEK6+AXr0PcQzLnV0KY9xEbV6mh6mEM/w6ygigXRMTQ3oSK85fX1JYg9xC6Q==
+"@mantine/core@^6.0.21":
+  version "6.0.21"
+  resolved "https://registry.npmjs.org/@mantine/core/-/core-6.0.21.tgz"
+  integrity sha512-Kx4RrRfv0I+cOCIcsq/UA2aWcYLyXgW3aluAuW870OdXnbII6qg7RW28D+r9D76SHPxWFKwIKwmcucAG08Divg==
   dependencies:
     "@floating-ui/react" "^0.19.1"
-    "@mantine/styles" "6.0.20"
-    "@mantine/utils" "6.0.20"
+    "@mantine/styles" "6.0.21"
+    "@mantine/utils" "6.0.21"
     "@radix-ui/react-scroll-area" "1.0.2"
     react-remove-scroll "^2.5.5"
     react-textarea-autosize "8.3.4"
+
+"@mantine/dates@^7.1.5":
+  version "7.1.5"
+  resolved "https://registry.npmjs.org/@mantine/dates/-/dates-7.1.5.tgz"
+  integrity sha512-rvlOFcjTpYQ8SFBH8fPWeIaBTXfhZUg5Rq7ANBD/6jizWN9I9bZIXIBan6Q4fA2i90eU6u6tidzeIsr1s4fU7w==
+  dependencies:
+    clsx "2.0.0"
 
 "@mantine/form@^6.0.20":
   version "6.0.20"
@@ -618,10 +625,10 @@
   resolved "https://registry.npmjs.org/@mantine/hooks/-/hooks-6.0.20.tgz"
   integrity sha512-Sys2qr6KwyNjAWgzm94F9rGG94l709G69pO3iofQXwzKX/fZushk1NMIt5g9De9F+qXm+67wa0DpA0QWLNLxlg==
 
-"@mantine/styles@6.0.20":
-  version "6.0.20"
-  resolved "https://registry.npmjs.org/@mantine/styles/-/styles-6.0.20.tgz"
-  integrity sha512-Ft0kVwr299Cots5/z3EFXsFpZBAGqC1AlvYQ4XvDRSfHH12QfFAl3zKz1UCFSfk25TAd9cgEm5PFEo/DRxbN/w==
+"@mantine/styles@6.0.21":
+  version "6.0.21"
+  resolved "https://registry.npmjs.org/@mantine/styles/-/styles-6.0.21.tgz"
+  integrity sha512-PVtL7XHUiD/B5/kZ/QvZOZZQQOj12QcRs3Q6nPoqaoPcOX5+S7bMZLMH0iLtcGq5OODYk0uxlvuJkOZGoPj8Mg==
   dependencies:
     clsx "1.1.1"
     csstype "3.0.9"
@@ -630,6 +637,11 @@
   version "6.0.20"
   resolved "https://registry.npmjs.org/@mantine/utils/-/utils-6.0.20.tgz"
   integrity sha512-9vsSskPtFyfPW2DOad6brLl9x4MnZtlyhszyoZOyMgXf/vdQbThKhL6PpqUbmlalwQpnCObbkEwVydugeh2dyQ==
+
+"@mantine/utils@6.0.21":
+  version "6.0.21"
+  resolved "https://registry.npmjs.org/@mantine/utils/-/utils-6.0.21.tgz"
+  integrity sha512-33RVDRop5jiWFao3HKd3Yp7A9mEq4HAJxJPTuYm1NkdqX6aTKOQK7wT8v8itVodBp+sb4cJK6ZVdD1UurK/txQ==
 
 "@mui/base@5.0.0-beta.14":
   version "5.0.0-beta.14"
@@ -3325,7 +3337,7 @@ clsx@^1.2.1:
   resolved "https://registry.npmjs.org/clsx/-/clsx-1.2.1.tgz"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
 
-clsx@^2.0.0:
+clsx@^2.0.0, clsx@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/clsx/-/clsx-2.0.0.tgz"
   integrity sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==

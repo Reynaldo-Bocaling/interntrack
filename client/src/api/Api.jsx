@@ -272,13 +272,185 @@ export const getTimesheet = async () => {
 };
 
 
+// get requirements
+export const getRequirement = async () => {
+  try {
+    const response = await axios.get(`${url}getRequirement`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// get task
+export const getTask = async () => {
+  try {
+    const response = await axios.get(`${url}getTask`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+
+
+// edit profile user
+
+
+// edit direct profile
+export const editDirectorProfile = async (item) => {
+  try {
+    const response = await axios.put(`${url}editProfileDirector`, {item}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+// edit coordinator profile
+export const editCoordinatorProfile = async (item) => {
+  try {
+    const response = await axios.put(`${url}editProfileCoordinator`, {item}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+// edit teacher profile
+export const editTeacherProfile = async (item) => {
+  try {
+    const response = await axios.put(`${url}editProfileTeacher`, {item}, {
+      withCredentials: true,
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// edit teacher profile
+export const editTrainerProfile = async (item) => {
+  try {
+    const response = await axios.put(`${url}editProfileTrainer`, {item}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+
+
+
+// update profile picture
+export const updateTeacherProfilePicture = async (formData) => {
+  try {
+    const response = await axios.put(`${url}updateTeacherProfilePicture`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const updateCoordinatorProfilePicture = async (formData) => {
+  try {
+    const response = await axios.put(`${url}updateCoordinatorProfilePicture`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const updateDirectorProfilePicture = async (formData) => {
+  try {
+    const response = await axios.put(`${url}updateDirectorProfilePicture`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const updateTrainerProfilePicture = async (formData) => {
+  try {
+    const response = await axios.put(`${url}updateTrainerProfilePicture`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+
+
+// upload task
+export const uploadTask = async (formData) => {
+  try {
+    const response = await axios.post(`${url}uploadTask`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+
+export const uploadRequirement = async (formData) => {
+  try {
+    const response = await axios.post(`${url}uploadRequirement`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 
 
 // logout
 export const logout = async () => {
   try {
-    const response = await axios.post(`${url}logout`);
-    return response.data;
+    const response = await axios.post('http://localhost:3001/logout', {}, { withCredentials: true });
+    return response.data.message;
   } catch (error) {
     throw error;
   }

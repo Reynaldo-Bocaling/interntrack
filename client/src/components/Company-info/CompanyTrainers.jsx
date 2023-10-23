@@ -3,23 +3,39 @@ import React from "react";
 function ViewAttendanceRequest({data}) {
 
 
-  const trainerList = data.trainer
-  ? data.trainer.map(({
-    id ,
-    firstname,
-     lastname,
-     email,
-     student
-  })=> ({
-    id,
-    name:`${firstname} ${lastname}`,
-    email,
-    student: student.length
-  }))
-:[]
+//   const trainerList = data.trainer
+//   ? data.trainer.map(({
+//     id ,
+//     firstname,
+//      lastname,
+//      email,
+//      student
+//   })=> ({
+//     id,
+//     name:`${firstname} ${lastname}`,
+//     email,
+//     student: student.length
+//   }))
+// :[]
+const trainerList = data?.areaOfAssignment
+.flatMap(({trainer}) => trainer)
+.map(({
+  id,
+  firstname,
+  lastname,
+  email,
+  student
+}) => ({
+  id,
+  name: `${firstname} ${lastname}`,
+  email,
+  student: student.length
+}));
+
 
 console.log(trainerList);
-  return (
+
+return (
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
         <span className="text-xl text-gray-700 font-semibold tracking-wide">
@@ -39,7 +55,7 @@ console.log(trainerList);
               <th className="text-sm tracking-wide text-left pl-2">
                 Email
               </th>
-              <th className="text-sm tracking-wide text-left pl-2">
+              <th className="text-sm tracking-wide text-center ">
                 Total Student
               </th>
             </tr>
@@ -51,7 +67,7 @@ console.log(trainerList);
                   <td className="text-sm tracking-wide pl-2">{item.id}</td>
                   <td className="text-sm tracking-wide pl-2">{item.name}</td>
                   <td className="text-sm tracking-wide pl-2">{item.email}</td>
-                  <td className="text-sm tracking-wide pl-2">{item.student}</td>
+                  <td className="text-sm tracking-wide text-center">{item.student}</td>
                 </tr>
               ))}
           </tbody>

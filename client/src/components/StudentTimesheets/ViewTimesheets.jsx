@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { Student } from "../../components/dummyData/Data";
 import image from '../../assets/images/dp.png'
 import { Link, useLocation } from "react-router-dom";
-
+import { format } from "date-fns";
+import PieChart from "../../components/charts/PieChart";
+import { Button } from "@nextui-org/react";
 
 const WeeklyReport = () => {
   const currentDate = new Date();
   const location = useLocation();
   const newData = location.state.data
+  const [showAllTables, setShowAllTables] = useState(false);
 
+    // piechart info
+    const piechartData = [325, 25, 150];
+    const colors = ["#2ECC71", "#FFA500", "#FF5733"];
+    const labels = ["Hours Taken", "Leave", "Hours Remaining"];
+
+    
   const student = {
     name:newData.name,
     timeSheet:newData.timeSheet.filter((item) => new Date(item.date) <= currentDate),
@@ -25,11 +34,16 @@ const WeeklyReport = () => {
     groupedTimeSheet.push(student.timeSheet.slice(i, i + 5));
   }
 
+  groupedTimeSheet.sort((a, b) => {
+    return new Date(b[0].date) - new Date(a[0].date);
+  });
 
 
-  const totalAllHours = newData.timeSheet
-  .filter((item) => new Date(item.date) <= currentDate)
-  .reduce((sum, entry) => sum + entry.totalHours, 0)
+
+
+  const visibleGroups = showAllTables
+    ? groupedTimeSheet
+    : groupedTimeSheet.slice(0, 1);
 
 
   return (
@@ -61,61 +75,133 @@ const WeeklyReport = () => {
           </span>
         </div>
       </div>
-      {groupedTimeSheet.map((group, groupIndex) => (
-        <div key={groupIndex} className="border rounded-lg p-4 mb-4 bg-white">
-          <h3 className="text-base font-semibold">
-            Week {groupIndex + 1} ( {group[0].date} -{" "}
-            {group[group.length - 1].date} )
-          </h3>
-          <table className="w-full mt-5 ">
-            <thead>
-              <tr className="h-12 border-b">
-                <th className="font-semibold tracking-wide text-left w-[25%] pl-5">Date</th>
-                <th className="font-semibold tracking-wide text-left w-[25%]">Time In</th>
-                <th className="font-semibold tracking-wide text-left w-[25%]">Time Out</th>
-                <th className="font-semibold tracking-wide text-left w-[25%]">Total Hours</th>
-              </tr>
-            </thead>
-            <tbody>
-              {group.map((entry) => (
-                <tr key={entry.id} className="h-12">
-                  <td className="text-sm  tracking-widetext-left pl-5">{entry.date}</td>
-                  <td className="text-sm  tracking-widetext-left">{entry.timeIn} AM</td>
-                  <td className="text-sm  tracking-widetext-left">{entry.timeOut} PM</td>
-                  <td className="text-sm  tracking-widetext-left">{ `${Math.floor(entry.totalHours)}:${Math.round((entry.totalHours % 1) * 60)}`} hrs</td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot className="w-full border-t mt-5">
-              <tr className="h-12">
-                <td className="text-lg text-left pl-5 font-semibold">
-                  Total Hours
-                </td>
-                <td></td>
-                <td></td>
-                <td className="text-lg font-semibold">
-                  {
 
-                  `${Math.floor(calculateTotalHours(group))}:${Math.round((calculateTotalHours(group) % 1) * 60)}`
-                } hrs
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-          {/* <div className="pl-3 font-semibold tracking-wide mt-4 w-full text-right bg-red-500">
-            Total Hours: {calculateTotalHours(group)} hrs
-          </div> */}
+
+      {/* pichart */}
+      <div className="w-[100%] flex flex-col gap-14 bg-white2 rounded-lg relative mb-5">
+        <div className="relative  max-w-[450px] w-full pt-7">
+          <PieChart
+            data={piechartData}
+            colors={colors}
+            labels={labels}
+            title={"Total Hours"}
+          />
+
+          <h1 className="absolute top-[12%] right-[2%] text-2xl font-semibold">
+            325 / 500 <span className="text-xs text-blue-500">hrs</span>
+          </h1>
+
+          <div className="absolute -bottom-2 left-[60%] h-[110px] max-w-[450px] w-full flex items-center justify-between px-8 pb-2">
+            <div>
+              <h1 className="text-lg font-semibold xl flex items-center gap-3">
+                325
+                <span className="text-xs text-blue-500 tracking-wider">
+                  hrs
+                </span>
+              </h1>
+              <span className="text-gray-500 text-xs tracking-wide">
+                Hours Taken
+              </span>
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold xl flex items-center gap-3">
+                150
+                <span className="text-xs text-blue-500 tracking-wider">
+                  hrs
+                </span>
+              </h1>
+              <span className="text-gray-500 text-xs tracking-wide">
+                Hours Remaining
+              </span>
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold xl flex items-center gap-3">
+                25
+                <span className="text-xs text-blue-500 tracking-wider">
+                  hrs
+                </span>
+              </h1>
+              <span className="text-gray-500 text-xs tracking-wide">
+                Leave Hours
+              </span>
+            </div>
+          </div>
         </div>
+      </div>
+
+
+
+
+
+
+      {/* table of timesheet */}
+      {visibleGroups.map((group, groupIndex) => (
+       <div key={groupIndex} className="border rounded-lg p-4 mb-4 bg-white">
+       <h3 className="text-base font-semibold">
+         {format(new Date(group[0].date), "MMMM dd")} -{" "}
+         {format(new Date(group[group.length - 1].date), "MMMM dd")}
+       </h3>
+       <table className="w-full mt-5">
+         <thead>
+           <tr className="h-12 border-b">
+             <th className="font-semibold tracking-wide text-left w-[25%] pl-5">
+               Date
+             </th>
+             <th className="font-semibold tracking-wide text-left w-[25%]">
+               Time In
+             </th>
+             <th className="font-semibold tracking-wide text-left w-[25%]">
+               Time Out
+             </th>
+             <th className="font-semibold tracking-wide text-left w-[25%]">
+               Total Hours
+             </th>
+           </tr>
+         </thead>
+         <tbody>
+           {group.map((entry) => (
+             <tr key={entry.id} className="h-12">
+               <td className="text-sm  tracking-widetext-left pl-5">
+                 {format(new Date(entry.date), "MMM dd")}
+               </td>
+               <td className="text-sm  tracking-widetext-left">
+                 {entry.timeIn} AM
+               </td>
+               <td className="text-sm  tracking-widetext-left">
+                 {entry.timeOut} PM
+               </td>
+               <td className="text-sm  tracking-widetext-left">
+                 {entry.totalHours} hrs
+               </td>
+             </tr>
+           ))}
+         </tbody>
+         <tfoot className="w-full border-t mt-5">
+           <tr className="h-12">
+             <td className="text-lg text-left pl-5 font-semibold">
+               Total Hours
+             </td>
+             <td></td>
+             <td></td>
+             <td className="text-lg font-semibold">
+               {calculateTotalHours(group)} hrs
+             </td>
+           </tr>
+         </tfoot>
+       </table>
+     </div>
       ))}
 
-      <div className="bg-white pl-10 py-5 pr-36 flex items-center justify-between">
-<h1>Total All Hours </h1>
-        <h1>
-        {
-          `${Math.floor(totalAllHours)}:${Math.round((totalAllHours % 1) * 60)}`
-                        
-                        } Hours
-        </h1>
+<div  className="w-full grid place-items-center">
+      {groupedTimeSheet.length > 1 && (
+        <Button
+          color="primary"
+          className="w-[130px]"
+          onClick={() => setShowAllTables(!showAllTables)}
+        >
+          {showAllTables ? "Show less" : "Show more"}
+        </Button>
+      )}
       </div>
     </div>
   );

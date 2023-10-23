@@ -4,17 +4,13 @@ import { v4 as uuidv4 } from "uuid";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { generateNewPassword, transporter, prisma } from "../services/Services";
+import path from "path";
+import fs from "fs";
 
-
-const formattedDate = format(new Date(), 'yyyy-MM-dd');
-const formattedTime = format(new Date(), 'HH:mm'); 
+const formattedDate = format(new Date(), "yyyy-MM-dd");
+const formattedTime = format(new Date(), "HH:mm");
 
 export class UserController {
-
-  
-
-
-
   // POST
   // add company
   static async addCompany(req: any, res: Response) {
@@ -30,6 +26,7 @@ export class UserController {
       return res.status(400).json({ message: "No file uploaded" });
     }
     try {
+      const director_id = req.user.director[0]?.id;
       const response = await prisma.company.create({
         data: {
           companyName,
@@ -46,23 +43,23 @@ export class UserController {
         },
       });
       return res.status(200).json(response);
-    } catch (error:any) {
+    } catch (error: any) {
       return res.status(500).json(error.message);
     }
   }
- 
+
   // add coordinator
   static async AddCoordinator(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
     const director_id = req.user.director[0]?.id;
-    
+
     const {
       firstname,
       middlename,
       lastname,
       email,
       contact,
-      campus ,
+      campus,
       college,
       program,
     } = req.body;
@@ -83,7 +80,7 @@ export class UserController {
               college,
               program,
               director_id: director_id,
-              accountStatus: 0
+              accountStatus: 0,
             },
           },
         },
@@ -92,12 +89,12 @@ export class UserController {
     } catch (error: any) {
       return res.status(500).json(error.message);
     }
-  } 
+  }
 
   // add trainer
   static async AddTrainer(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const { company_id, firstname, middlename, lastname, email, contact } =
+    const { area_id, firstname, middlename, lastname, email, contact } =
       req.body;
     try {
       await prisma.user.create({
@@ -112,8 +109,8 @@ export class UserController {
               lastname,
               email,
               contact: Number(contact),
-              company_id: Number(company_id),
-              accountStatus: 0
+              areaAssign_id: Number(area_id),
+              accountStatus: 0,
             },
           },
         },
@@ -125,9 +122,9 @@ export class UserController {
     }
   }
 
-   // add teacher
-   static async AddTeacher(req: any, res: Response) {
-    const coordinator_id  = req.user.coordinator[0]?.id
+  // add teacher
+  static async AddTeacher(req: any, res: Response) {
+    const coordinator_id = req.user.coordinator[0]?.id;
     const newPassowrd = generateNewPassword();
     const {
       firstname,
@@ -135,7 +132,7 @@ export class UserController {
       lastname,
       email,
       contact,
-      campus ,
+      campus,
       college,
       program,
       major,
@@ -158,7 +155,7 @@ export class UserController {
               program,
               major,
               coordinator_id: coordinator_id,
-              accountStatus: 0
+              accountStatus: 0,
             },
           },
         },
@@ -169,7 +166,7 @@ export class UserController {
     }
   }
 
-   static async addSingleStudent(req: any, res: Response) {
+  static async addSingleStudent(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
     const {
       firstname,
@@ -177,7 +174,7 @@ export class UserController {
       lastname,
       email,
       contact,
-      campus ,
+      campus,
       college,
       program,
       major,
@@ -201,7 +198,7 @@ export class UserController {
               program: "BSIT",
               major: "Web",
               coordinator_id: 1,
-              accountStatus: 0
+              accountStatus: 0,
             },
           },
         },
@@ -212,8 +209,8 @@ export class UserController {
     }
   }
 
-   //newImport
-   static async importStudent(req: any, res: Response) {
+  //newImport
+  static async importStudent(req: any, res: Response) {
     const teacher_id = req.user.teacher[0]?.id;
 
     const ExcelData = req.body.excelData;
@@ -238,9 +235,9 @@ export class UserController {
             address: data.address,
             gender: data.gender,
             campus: "Sumacab",
-            college: 'CICT',
-            program: 'BSIT',
-            major: 'Web',
+            college: "CICT",
+            program: "BSIT",
+            major: "Web",
             teacher_id: teacher_id,
             user_id: createdUser.id,
             accountStatus: 0,
@@ -268,24 +265,17 @@ export class UserController {
     }
   }
 
-
-  // add super Admin 
-  static async addSuperAdmin(req: any, res: Response){
+  // add super Admin
+  static async addSuperAdmin(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const {
-      firstname,
-      middlename,
-      lastname,
-      email,
-      contact
-    } = req.body;
+    const { firstname, middlename, lastname, email, contact } = req.body;
 
     try {
       await prisma.user.create({
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: 'SuperAdmin',
+          role: "SuperAdmin",
           superadmin: {
             create: {
               firstname,
@@ -293,36 +283,29 @@ export class UserController {
               lastname,
               email,
               contact: Number(contact),
-              accountStatus: 0
-            }
-          }
-        }
+              accountStatus: 0,
+            },
+          },
+        },
       });
 
-      return res.status(200).json({username: email, password: newPassowrd});
+      return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
-
   // add director
-  static async addDirector(req: any, res: Response){
+  static async addDirector(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const {
-      firstname,
-      middlename,
-      lastname,
-      email,
-      contact
-    } = req.body;
+    const { firstname, middlename, lastname, email, contact } = req.body;
 
     try {
       await prisma.user.create({
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: 'Director',
+          role: "Director",
           director: {
             create: {
               firstname,
@@ -330,79 +313,70 @@ export class UserController {
               lastname,
               email,
               contact: Number(contact),
-              accountStatus: 0
-            }
-          }
-        }
+              accountStatus: 0,
+            },
+          },
+        },
       });
 
-      return res.status(200).json({username: email, password: newPassowrd});
+      return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
-
   // assign Students
   static async assignStudent(req: any, res: Response) {
-    const {
-       studentId,
-       trainer_id,
-       areaAssigned_id
-      } = req.body;
+    const { studentId, trainer_id, areaAssigned_id } = req.body;
 
-      try {
-        const response = await prisma.student.updateMany({
-          where: {
-            id: {in: studentId}
-          },
-          data: {
-            trainer_id: Number(trainer_id),
-            areaAssigned_id: Number(areaAssigned_id)
-          }
-        })
+    try {
+      const response = await prisma.student.updateMany({
+        where: {
+          id: { in: studentId },
+        },
+        data: {
+          trainer_id: Number(trainer_id),
+          areaAssigned_id: Number(areaAssigned_id),
+        },
+      });
 
-        return res.status(200).json(response)
-      } catch (error) {
-        return res.status(500).json(error)
-      }
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
 
-
   // attendance request
-  static async attendanceRequest(req: Request, res: Response){
-    const {id} = req.body;
+  static async attendanceRequest(req: Request, res: Response) {
+    const { id } = req.body;
 
     try {
       const response = await prisma.timesheet.update({
         where: {
-          id : id
+          id: id,
         },
         data: {
-          logStatus: 1
-        }
+          logStatus: 1,
+        },
       });
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
-
-
-
 
   // time in
   static async timeIn(req: Request, res: Response) {
     const { id, timeIn } = req.body;
-    
+
     try {
       const response = await prisma.timesheet.update({
         where: {
-          id: id
+          id: id,
         },
         data: {
-          timeIn
-        }
+          timeIn,
+        },
       });
 
       return res.status(200).json(response);
@@ -414,16 +388,16 @@ export class UserController {
   // time in
   static async timeOut(req: Request, res: Response) {
     const { id, timeOut, totalHours } = req.body;
-    
+
     try {
       const response = await prisma.timesheet.update({
         where: {
-          id: id
+          id: id,
         },
         data: {
           timeOut,
-          totalHours
-        }
+          totalHours,
+        },
       });
 
       return res.status(200).json(response);
@@ -432,23 +406,10 @@ export class UserController {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   // GET
-// get director info
+  // get director info
   static async getDirector(req: any, res: Response) {
-    const director_id = req.user.director[0]?.id
+    const director_id = req.user.director[0]?.id;
     try {
       const response = await prisma.director.findUnique({
         where: {
@@ -458,7 +419,7 @@ export class UserController {
           user: true,
         },
       });
-      return res.status(200).json(response );
+      return res.status(200).json(response);
     } catch (error) {
       return res.status(500).json({ message: error });
     }
@@ -466,7 +427,7 @@ export class UserController {
 
   // get trainer info
   static async getTrainer(req: any, res: Response) {
-    const trainer_id = req.user.trainer[0]?.id
+    const trainer_id = req.user.trainer[0]?.id;
     try {
       const response = await prisma.trainer.findUnique({
         where: {
@@ -480,11 +441,11 @@ export class UserController {
               trainer: true,
               AreaOfAssignment: {
                 include: {
-                  company: true
-                }
-              }
-            }
-          }
+                  company: true,
+                },
+              },
+            },
+          },
         },
       });
       return res.status(200).json(response);
@@ -496,7 +457,7 @@ export class UserController {
   // get coordinator info
   static async getCoordinator(req: any, res: Response) {
     try {
-      const coordinator_id = req.user.coordinator[0]?.id
+      const coordinator_id = req.user.coordinator[0]?.id;
       const response = await prisma.coordinator.findUnique({
         where: {
           id: coordinator_id,
@@ -513,16 +474,16 @@ export class UserController {
                   // timesheet: true
                   AreaOfAssignment: {
                     include: {
-                      company: true
-                    }
-                  }
-                }
-              }
-            }
-          }
+                      company: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
-      return res.status(200).json(response );
+      return res.status(200).json(response);
     } catch (error) {
       return res.status(500).json({ message: error });
     }
@@ -530,7 +491,7 @@ export class UserController {
 
   // get teacher info
   static async getTeacher(req: any, res: Response) {
-    const teacher_id = req.user.teacher[0]?.id
+    const teacher_id = req.user.teacher[0]?.id;
     try {
       const response = await prisma.teacher.findUnique({
         where: {
@@ -544,11 +505,11 @@ export class UserController {
               trainer: true,
               AreaOfAssignment: {
                 include: {
-                  company: true
-                }
-              }
-            }
-          }
+                  company: true,
+                },
+              },
+            },
+          },
         },
       });
       return res.status(200).json(response);
@@ -559,31 +520,31 @@ export class UserController {
 
   // get student info
   static async getStudent(req: any, res: Response) {
-    const studentId = req.user.student[0]?.id
+    const studentId = req.user.student[0]?.id;
     try {
       const response = await prisma.student.findUnique({
         where: {
-          id: studentId, 
+          id: studentId,
         },
         include: {
           user: true,
           teacher: true,
-          trainer:true,
-          AreaOfAssignment:{
+          trainer: true,
+          AreaOfAssignment: {
             include: {
-              company: true
-            }
+              company: true,
+            },
           },
         },
       });
-      return res.status(200).json(response );
+      return res.status(200).json(response);
     } catch (error) {
       return res.status(500).json({ message: error });
     }
   }
 
   // get campus info
-  static async getCampus(req: any, res: Response){
+  static async getCampus(req: any, res: Response) {
     try {
       const response = await prisma.campus.findMany({
         include: {
@@ -591,54 +552,49 @@ export class UserController {
             include: {
               program: {
                 include: {
-                  major: true
-                }
-              }
-            }
+                  major: true,
+                },
+              },
+            },
           },
-
-        }
+        },
       });
       return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
-    }
-  }  
-  
-
-  // get student info
-  static async getStudentInfo(req: any, res: Response){
-    try {
-      const id = parseInt(req.params.id);
-      const response = await prisma.student.findUnique({
-        where: {id: id},
-        include: {
-          task:true,
-          timesheet: true,
-          AreaOfAssignment:{
-            include: {company:true}
-          },
-          teacher: true,
-          trainer: true
-        }
-      });
-      return res.status(200).json(response)
-    } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
-
-  
+  // get student info
+  static async getStudentInfo(req: any, res: Response) {
+    try {
+      const id = parseInt(req.params.id);
+      const response = await prisma.student.findUnique({
+        where: { id: id },
+        include: {
+          task: true,
+          timesheet: true,
+          AreaOfAssignment: {
+            include: { company: true },
+          },
+          teacher: true,
+          trainer: true,
+        },
+      });
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
 
   // get list
   // get Director List
   static async getDirectorList(req: any, res: Response) {
     try {
       const response = await prisma.director.findMany({});
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
@@ -655,42 +611,39 @@ export class UserController {
                   trainer: true,
                   AreaOfAssignment: {
                     include: {
-                      company: {
-                        include: {
-                          trainer: true
-                        }
-                      },
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+                      trainer: true,
+                      company: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
-  
-  static async getStudentList(req: any, res: Response){
+
+  static async getStudentList(req: any, res: Response) {
     try {
       const response = await prisma.student.findMany({
         include: {
           task: true,
           timesheet: true,
           trainer: true,
-          AreaOfAssignment:{
+          AreaOfAssignment: {
             include: {
-              company: true
-            }
-          }
-        }
-      })
-      return res.status(200).json(response)
+              company: true,
+            },
+          },
+        },
+      });
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json({message: error})
+      return res.status(500).json({ message: error });
     }
   }
 
@@ -701,25 +654,29 @@ export class UserController {
         include: {
           areaOfAssignment: {
             include: {
+              trainer: {
+                include: {
+                  student: true,
+                },
+              },
               student: {
-                include:{
-                  trainer:true,
-                  timesheet:true,
-                  AreaOfAssignment:true
-                }
-              }
-            }
+                include: {
+                  trainer: true,
+                  timesheet: true,
+                  AreaOfAssignment: {
+                    include: {
+                      trainer: true,
+                    },
+                  },
+                },
+              },
+            },
           },
-          trainer: {
-            include: {
-              student:true
-            }
-          }
-        }
+        },
       });
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
@@ -728,54 +685,413 @@ export class UserController {
     try {
       const response = await prisma.trainer.findMany({
         include: {
-          company: true,
-          student: true
-        }
+          student: true,
+          areaofAssignment: {
+            include: {
+              company: true,
+            },
+          },
+        },
       });
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
-
-  static async getTeacherList(req:any, res:Response) {
+  static async getTeacherList(req: any, res: Response) {
     try {
       const response = await prisma.teacher.findMany({
         include: {
-          student: true
-        }
-      })
-      return res.status(200).json(response)
+          student: true,
+        },
+      });
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
-
-
-
-
-
-
   //  records timesheet/task
   static async getTimesheet(req: any, res: Response) {
-    const studentId = req.user.student[0]?.id
+    const studentId = req.user.student[0]?.id;
     try {
       const response = await prisma.timesheet.findMany({
         where: {
-          student_id: Number(studentId)
-        }
-      })
+          student_id: Number(studentId),
+        },
+      });
       return res.status(200).json(response);
     } catch (error) {
       return res.status(500).json({ message: error });
     }
   }
 
+  // get requirements
+  static async getRequirement(req: any, res: Response) {
+    const id = req.user.student[0]?.id;
+    try {
+      const response = await prisma.requirement.findMany({
+        where: {
+          student_id: id,
+        },
+      });
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
+
+
+  // get requirements
+  static async getTask(req: any, res: Response) {
+    const id = req.user.student[0]?.id;
+    try {
+      const response = await prisma.task.findMany({
+        where: {
+          student_id: id,
+        },
+      });
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
+
+
+
+
+
+  // update profile user
+  // update coordinator
+  static async EditCoordinatorProfile(req: any, res: Response) {
+    const { item } = req.body;
+
+    try {
+      const id = req.user.coordinator[0].id;
+      const response = await prisma.coordinator.update({
+        where: {
+          id: id,
+        },
+        data: {
+          firstname: item.firstname,
+          lastname: item.lastname,
+          middlename: item.middlename,
+          email: item.email,
+          contact: item.contact,
+          campus: item.campus,
+          college: item.college,
+          program: item.program,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  // update teacher
+  static async editTeacherProfile(req: any, res: Response) {
+    const { item } = req.body;
+
+    try {
+      const id = req.user.teacher[0].id;
+      const response = await prisma.teacher.update({
+        where: {
+          id: id,
+        },
+        data: {
+          firstname: item.firstname,
+          lastname: item.lastname,
+          middlename: item.middlename,
+          email: item.email,
+          contact: item.contact,
+          campus: item.campus,
+          college: item.college,
+          program: item.program,
+          major: item.major,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  // update trainer
+  static async EditTrainerProfile(req: any, res: Response) {
+    const { item } = req.body;
+
+    try {
+      const id = req.user.trainer[0].id;
+      const response = await prisma.trainer.update({
+        where: {
+          id: id,
+        },
+        data: {
+          firstname: item.firstname,
+          lastname: item.lastname,
+          middlename: item.middlename,
+          email: item.email,
+          contact: item.contact,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  // update trainer
+  static async EditDirectorProfile(req: any, res: Response) {
+    const { item } = req.body;
+
+    try {
+      const id = req.user.director[0].id;
+      const response = await prisma.director.update({
+        where: {
+          id: id,
+        },
+        data: {
+          firstname: item.firstname,
+          lastname: item.lastname,
+          middlename: item.middlename,
+          email: item.email,
+          contact: item.contact,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+
+
+
+
+
+
+  // update profile picture
+  //update teacher profile
+  static async updateTeacherProfilePicture(req: any, res: Response) {
+    const id = req.user.teacher[0]?.id;
+    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
+    const profile =  req.file?.filename;
+
+    const existingFile =  await prisma.teacher.findUnique({ where: {id} });
+    if(!existingFile) return res.status(404).json({message: 'teacher not found'})
+
+   if(existingFile?.profile) {
+    const filePath = `./public/images/${existingFile.profile}`;
+    fs.unlinkSync(filePath);
+   }
+
+    try {
+      if (req.file) {
+        await prisma.teacher.update({
+          where: { id },
+          data: { 
+            profile_url: url,
+            profile
+          },
+        });
+      }
+
+      return res.status(200).json(url);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  //update coordinator profile
+  static async updateCoordinatorProfilePicture(req: any, res: Response) {
+    const id = req.user.coordinator[0]?.id;
+    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
+    const profile =  req.file?.filename;
+
+    const existingFile =  await prisma.coordinator.findUnique({ where: {id} });
+    if(!existingFile) return res.status(404).json({message: 'coordinator not found'})
+
+   if(existingFile?.profile) {
+    const filePath = `./public/images/${existingFile.profile}`;
+    fs.unlinkSync(filePath);
+   }
+
+    try {
+      if (req.file) {
+        await prisma.coordinator.update({
+          where: { id },
+          data: { 
+            profile_url: url,
+            profile
+          },
+        });
+      }
+
+      return res.status(200).json(url);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  //update director profile
+  static async updateDirectorProfilePicture(req: any, res: Response) {
+    const id = req.user.director[0]?.id;
+    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
+    const profile =  req.file?.filename;
+
+    const existingFile =  await prisma.director.findUnique({ where: {id} });
+    if(!existingFile) return res.status(404).json({message: 'director not found'})
+
+   if(existingFile?.profile) {
+    const filePath = `./public/images/${existingFile.profile}`;
+    fs.unlinkSync(filePath);
+   }
+
+    try {
+      if (req.file) {
+        await prisma.director.update({
+          where: { id },
+          data: { 
+            profile_url: url,
+            profile
+          },
+        });
+      }
+
+      return res.status(200).json(url);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  static async updateTrainerProfilePicture(req: any, res: Response) {
+    const id = req.user.trainer[0]?.id;
+    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
+    const profile =  req.file?.filename;
+
+    const existingFile =  await prisma.trainer.findUnique({ where: {id} });
+    if(!existingFile) return res.status(404).json({message: 'trainer not found'})
+
+   if(existingFile?.profile) {
+    const filePath = `./public/images/${existingFile.profile}`;
+    fs.unlinkSync(filePath);
+   }
+
+    try {
+      if (req.file) {
+        await prisma.trainer.update({
+          where: { id },
+          data: { 
+            profile_url: url,
+            profile
+          },
+        });
+      }
+ 
+      return res.status(200).json(url);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+
+
+
+
+
+
+  // upload task
+  static async uploadTask(req:any, res: Response) {
+    const id = req.user.student[0]?.id;
+    const {description, date} = req.body;
+    const tasImageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    const taskImage = req.file.filename;
+
+    try {
+      const response = await prisma.task.create({
+        data: {
+          description,
+          date,
+          taskImage,
+          tasImageUrl,
+          student_id: id
+        }
+      });
+
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
  
 
+
+
+  static async uploadRequirement(req:any, res: Response) {
+    const id = req.user.student[0]?.id;
+    const {type} = req.body;
+    const url = `${req.protocol}://${req.get("host")}/images/${ req.file.filename}`;
+    const image =  req.file?.filename;
+  
+  
+    try {
+      const response = await prisma.requirement.create({
+        data: {
+         type,
+         image,
+         imageUrl: url,
+          student_id: id
+        } 
+      });
+  
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // timesheet
 // const generateTimeData = () => {
@@ -805,8 +1121,6 @@ export class UserController {
 
 //   return timeData;
 // };
-
-
 
 const generateTimeData = () => {
   const startDate = new Date("2023-09-04");
@@ -840,7 +1154,3 @@ const generateTimeData = () => {
 
   return timeData;
 };
-
-
-
-

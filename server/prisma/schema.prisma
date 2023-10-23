@@ -46,6 +46,7 @@ model Director {
   email                 String
   contact               Int
   profile               String?
+  profile_url           String?
   accountStatus         Int
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
@@ -64,6 +65,7 @@ model Coordinator {
   college               String
   program               String
   profile               String?
+   profile_url           String?
   accountStatus         Int
   director_id           Int
   user_id               Int
@@ -84,6 +86,7 @@ model Teacher {
   program               String
   major                 String
   profile               String?
+  profile_url           String?
   accountStatus         Int
   user_id               Int
   coordinator_id        Int
@@ -100,10 +103,11 @@ model Trainer {
   email                 String
   contact               Int
   profile               String?
+  profile_url           String?
   accountStatus         Int
-  company_id            Int
+  areaAssign_id         Int
   user_id               Int
-  company               Company @relation(fields: [company_id], references: [id])
+  areaofAssignment      AreaOfAssignment @relation(fields: [areaAssign_id], references: [id])
   user                  User @relation(fields: [user_id], references: [id])
   student               Student[]
 }
@@ -123,6 +127,7 @@ model Student {
   major                 String
   accountStatus         Int
   profile               String?
+  profile_url           String?
   areaAssigned_id       Int?
   trainer_id            Int?
   teacher_id            Int
@@ -133,6 +138,7 @@ model Student {
   user                  User      @relation(fields: [user_id], references: [id])
   timesheet             Timesheet[]
   task                  Task[]
+  requirement           Requirement[]
 }
 
 model Timesheet {
@@ -149,12 +155,24 @@ model Timesheet {
 
 model Task {
   id Int @id @default(autoincrement())
-  taskName              String
   description           String
   date                  String
+  taskImage             String?
+  tasImageUrl           String?
   student_id            Int
   student               Student @relation(fields: [student_id], references: [id])
 }
+
+model Requirement {
+  id Int @id @default(autoincrement())
+  type                  String
+  image                 String        
+  imageUrl              String
+  student_id            Int
+  student               Student @relation(fields: [student_id], references: [id])
+}
+
+
 
 model Company {
   id                    Int @id @default(autoincrement())
@@ -166,9 +184,7 @@ model Company {
   profile               String?
   director_id           Int
   director              Director @relation(fields: [director_id], references: [id])
-  areaOfAssignment      AreaOfAssignment[]
-  trainer               Trainer[]
-  
+  areaOfAssignment      AreaOfAssignment[]  
 }
 
 model AreaOfAssignment {
@@ -178,6 +194,7 @@ model AreaOfAssignment {
   company_id            Int
   company               Company @relation(fields: [company_id], references: [id])
   student               Student[]
+  trainer               Trainer[]
 }
 
 

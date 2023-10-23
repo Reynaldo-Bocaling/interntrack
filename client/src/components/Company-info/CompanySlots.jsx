@@ -18,6 +18,7 @@ const totalStudent = slots.reduce((total, item)=> total + item.student.length, 0
 
 const percentage = totalSlots === 0 ? 0 : (totalStudent / totalSlots) * 100;
 
+console.log('slots', slots);
   return (
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">

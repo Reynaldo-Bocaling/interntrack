@@ -33,7 +33,6 @@ import Records from "../pages/Student/Records"
 import Info from "../components/Student-profile/Information"
 import Requirements from "../components/Student-profile/Requirements"
 import Security from "../components/Student-profile/Security"
-
 // SuperAdmin pages
 import SuperAdminDashboard from "../pages/SuperAdmin/Dashboard"
 import SuperAdmin_Trainer_list from "../pages/SuperAdmin/Trainer"
@@ -54,6 +53,7 @@ import Trainer_StudentAttendanceRequest from "../pages/Trainer/AttendanceRequest
 import Trainer_StudentLeave from "../pages/Trainer/LeaveRequest"
 import TrainerMessage from "../pages/Trainer/Message"
 import TrainerAnnouncement from "../pages/Trainer/Announcement"
+import TrainerMyProfile from "../pages/Trainer/MyProfile"
 
 // Teacher pages
 import TeacherDashboard from "../pages/Teacher/Dashboard"
@@ -67,6 +67,7 @@ import Teacher_StudentTask from "../pages/Teacher/StudentTask"
 import Teacher_StudentLeave from "../pages/Teacher/LeaveRequest"
 import TeacherMessage from "../pages/Teacher/Message"
 import TeacherAnnouncement from "../pages/Teacher/Announcement"
+import TeacherNyProfile from "../pages/Teacher/MyProfile"
 
 // Coordinator pages
 import CoordinatorDashboard from "../pages/Coordinator/Dashboard"
@@ -78,6 +79,7 @@ import Coordinator_Teacher_list from "../pages/Coordinator/Teacher_list"
 import Coordinator_StudentLeave from "../pages/Coordinator/LeaveRequest"
 import CoordinatorMessage from "../pages/Coordinator/Message"
 import CoordinatorAnnouncement from "../pages/Coordinator/Announcement"
+import CoordinatorMyProfile from "../pages/Coordinator/MyProfile"
 
 // Director pages
 import DirectorDashboard from "../pages/Director/Dashboard"
@@ -89,6 +91,8 @@ import DirectorMessage from "../pages/Director/Message"
 import DirectorAnnouncement from "../pages/Director/Announcement"
 import Director_Coordinator_list from "../pages/Director/Coordinator_list"
 import Director_Teacher_list from "../pages/Director/TeacherList"
+// import Director_Teacher_list from "../pages/Director/TeacherList"
+import DirectorMyProfile from "../pages/Director/MyProfile"
 
 
 const PrivateRoutes = () => {
@@ -224,6 +228,10 @@ const PrivateRoutes = () => {
         path: "/view-company/:id",
         element: <DirectorViewCompany />,
       },
+      {
+        path: "/MyProfile",
+        element: <DirectorMyProfile />,
+      },
     ],
 
     Coordinator: [
@@ -284,6 +292,10 @@ const PrivateRoutes = () => {
       {
         path: "/view-company/:id",
         element: <CoordinatorViewCompany />,
+      },
+      {
+        path: "/MyProfile",
+        element: <CoordinatorMyProfile />,
       },
     ],
 
@@ -348,6 +360,10 @@ const PrivateRoutes = () => {
         path: "/view-company/:id",
         element: <TeacherViewCompany />,
       },
+      {
+        path: "/MyProfile",
+        element: <TeacherNyProfile />,
+      },
     ],
 
     Trainer: [
@@ -402,6 +418,10 @@ const PrivateRoutes = () => {
       {
         path: "/view-student/:id",
         element: <StudentInfoView />,
+      },
+      {
+        path: "/MyProfile",
+        element: <TrainerMyProfile />,
       },
     ],
 

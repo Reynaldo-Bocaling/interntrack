@@ -1,26 +1,71 @@
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import { StudentData } from "../../components/Student-Task/Data";
 import Task from "../../components/Student-Task/Task";
 import Table from "../../components/Student-Task/Table";
-
+import { useQuery } from "@tanstack/react-query";
+import { getStudentList, getTrainer } from "../../api/Api";
+import pic from "../../assets/images/dp.png";
+import PulseLoader from "react-spinners/PulseLoader";
 
 const StudentTask = () => {
   const [StudentId, setStudentId] = useState(0);
   const [Fullscreen, setFullscreen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
-  const data = StudentData.map(
-    ({ studentNo, firstname, middleName, lastname, Task, status, image }) => ({
-      studentNo,
-      name: `${firstname} ${middleName.slice(0, 1)}.  ${lastname}`,
-      status,
-      totalTask: Task.length,
-      lastUpload: Task[Task.length - 1].date,
-      image,
-      Task: Task,
-    })
-  );
+  const { data: studentTask } = useQuery({
+    queryKey: ["getStudentList2"],
+    queryFn: getStudentList,
+  });
+
+  const { data: trainerInfo, isLoading: trainerIdLoading } = useQuery({
+    queryKey: ["getTrainer22"],
+    queryFn: getTrainer,
+  });
+
+  if (trainerIdLoading) {
+    return (
+      <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
+        <div className="flex flex-col gap-4">
+          <PulseLoader
+            color="#03A8F5"
+            margin={8}
+            size={15}
+            speedMultiplier={1}
+          />
+
+          <span className="text-gray-400 text-2xl tracking-wider font-medium">
+            Loading..
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  const studentTaskFilter = studentTask
+    ? studentTask.filter((item) => item.trainer_id == trainerInfo?.id)
+    : [];
+
+  const data = studentTaskFilter
+    ? studentTaskFilter.map(
+        ({
+          id,
+          firstname,
+          middlename,
+          lastname,
+          task,
+          status,
+          tasImageUrl,
+        }) => ({
+          studentNo: id,
+          name: `${firstname} ${lastname}`,
+          status: 1,
+          totalTask: task.length,
+          lastUpload: "january",
+          image: pic,
+          Task: task,
+        })
+      )
+    : [];
 
   const taskRecords = data.filter((student) => student.studentNo === StudentId);
 
@@ -29,6 +74,8 @@ const StudentTask = () => {
       ? data
       : data.name.toLowerCase().includes(searchInput);
   });
+
+
 
   return (
     <div className="relative">
@@ -85,6 +132,6 @@ const StudentTask = () => {
       )}
     </div>
   );
-}
+};
 
 export default StudentTask;

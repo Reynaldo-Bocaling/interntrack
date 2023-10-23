@@ -4,14 +4,14 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 
-function CustomAutocomplete({ options, label, value, onChange,size ,getOptionLabel }) {
+function CustomAutocomplete({isOptionEqualToValue, options, label, value, onChange,size ,getOptionLabel }) {
   return (
     <Autocomplete
     className={size}
       options={options}
       getOptionLabel={getOptionLabel}
       value={value}
-
+      isOptionEqualToValue={isOptionEqualToValue}
       onChange={onChange}
       renderOption={(props, option) => (
         <Box component="li" {...props}>

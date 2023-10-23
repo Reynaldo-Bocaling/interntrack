@@ -11,7 +11,7 @@ function StudentHeader() {
   return (
     <>
       <div
-        className={`w-full fixed -top-1 left-0 h-[70px] pt-2 flex items-center justify-between duration-300 z-10 bg-white shadow-xl shadow-slate-100 px-5`}
+        className={`w-full fixed -top-1 left-0 h-[70px] pt-2 flex items-center justify-between duration-300 z-10 bg-white shadow-xl shadow-slate-100 px-5 z-20`}
       >
         <div className="flex items-center gap-2">
           <img src={logo} alt="" className="w-[32px]" />

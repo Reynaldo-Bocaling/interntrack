@@ -2,8 +2,20 @@ import { Request, Response, Router } from "express";
 import { UserController } from "../controllers/UserController";
 import multer from "multer";
 import verifyToken from "../middlewares/verifyToken";
+import path from "path";
 const routes = Router();
 const uploadMoa = multer({storage:multer.memoryStorage()}).single('pdfFile');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "public/images")
+    },
+    filename: ( req, file, cb) => {
+       cb(null, Date.now() + path.extname(file.originalname))
+    }
+});
+
+const uploads = multer({storage: storage})
 
 // post
 routes.post('/importStudent' ,verifyToken, UserController.importStudent);
@@ -34,6 +46,30 @@ routes.get('/getStudentList',UserController.getStudentList);
 routes.get('/getStudent' ,verifyToken, UserController.getStudent);
 routes.get('/getStudentInfo/:id' ,UserController.getStudentInfo);
 routes.get('/getCampus' ,UserController.getCampus);
+routes.get('/getRequirement' ,verifyToken,UserController.getRequirement);
+routes.get('/getTask' ,verifyToken,UserController.getTask);
+
+
+
+
+
+// edit profile
+routes.put('/editProfileCoordinator' ,verifyToken,UserController.EditCoordinatorProfile);
+routes.put('/editProfileTeacher' ,verifyToken, UserController.editTeacherProfile);
+routes.put('/editProfileTrainer' ,verifyToken,UserController.EditTrainerProfile);
+routes.put('/editProfileDirector' ,verifyToken,UserController.EditDirectorProfile);
+
+
+
+
+
+
+// update profile
+routes.put('/updateTeacherProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateTeacherProfilePicture);
+routes.put('/updateCoordinatorProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateCoordinatorProfilePicture);
+routes.put('/updateDirectorProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateDirectorProfilePicture);
+routes.put('/updateTrainerProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateTrainerProfilePicture);
+
 
 
 
@@ -41,5 +77,24 @@ routes.get('/getCampus' ,UserController.getCampus);
 // get student records timesheet/task
 routes.get('/getTimesheet' ,verifyToken,UserController.getTimesheet);
 
+
+
+
+// upload task
+routes.post('/uploadTask' ,verifyToken, uploads.single('image'), UserController.uploadTask);
+routes.post('/uploadRequirement' ,verifyToken, uploads.single('image'), UserController.uploadRequirement);
+
+
+
+
+// logout
+routes.post('/logout', (req:any, res:Response)=> {
+    try {
+        res.clearCookie('token');
+    res.json({message: 'LoggedOut'})
+    } catch (error:any) {
+        throw new Error(error)
+    }
+})
 
 export default routes   
