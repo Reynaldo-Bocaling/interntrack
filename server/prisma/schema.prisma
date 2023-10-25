@@ -93,6 +93,7 @@ model Teacher {
   user                  User @relation(fields: [user_id], references: [id])
   coordinator           Coordinator @relation(fields: [coordinator_id], references: [id])
   student               Student[]
+  dateRangeTimesheet    DateRangeTimesheet[]
 }
 
 model Trainer {
@@ -196,6 +197,16 @@ model AreaOfAssignment {
   student               Student[]
   trainer               Trainer[]
 }
+
+
+model DateRangeTimesheet {
+  id                    Int @id @default(autoincrement())
+  start_date            String
+  end_date              String
+  teacher_id            Int
+  teacher               Teacher @relation(fields: [teacher_id], references: [id])
+}
+
 
 
 model Campus {

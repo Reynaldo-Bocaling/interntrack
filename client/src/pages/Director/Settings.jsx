@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import Information from "../../components/user-Settings/Information";
 import ChangePassword from "../../components/user-Settings/ChangePassword";
-import SetUpDate from "../../components/user-Settings/SetupDates";
+import Campus from "../../components/user-Settings/Campus";
+import College from "../../components/user-Settings/College";
+import Program from "../../components/user-Settings/Program";
+import Major from "../../components/user-Settings/Major";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { getTrainer } from "../../api/Api";
+import { getDirector } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
 function Settings() {
   const [valueEvent, setValueEvent] = useState(1);
 
   const { data } = useQuery({
-    queryKey: ["getTrainerInfo"],
-    queryFn: getTrainer,
+    queryKey: ["getDirectorInfo"],
+    queryFn: getDirector,
   });
 
   const infoData = [
@@ -36,6 +39,7 @@ function Settings() {
       value: 1,
       element: Information,
       data: infoData,
+      extraText: "Personal Data",
     },
     {
       label: "Change password ",
@@ -43,7 +47,31 @@ function Settings() {
       value: 2,
       element: ChangePassword,
     },
-    
+    {
+      label: "Add campus ",
+      url: "/Settings/change-password",
+      value: 3,
+      element: Campus,
+      extraText: "Adding Capuses",
+    },
+    {
+      label: "Add college ",
+      url: "/Settings/change-password",
+      value: 4,
+      element: College,
+    },
+    {
+      label: "Add program ",
+      url: "/Settings/change-password",
+      value: 5,
+      element: Program,
+    },
+    {
+      label: "Add major ",
+      url: "/Settings/change-password",
+      value: 6,
+      element: Major,
+    },
   ];
 
   return (
@@ -61,20 +89,28 @@ function Settings() {
       </small>
       <span className="w-full text-2xl font-bold">Settings</span>
 
-      <div className="flex gap-4 w-full mt-5">
-        <div className="mt-9 w-[25%] flex flex-col gap-3 items-start">
+      <div className="flex gap-4 w-full">
+        <div className="mt-7 w-[25%] flex flex-col gap-3 items-start">
           {links.map((item, index) => (
-            <button
-              onClick={() => setValueEvent(item?.value)}
-              key={index}
-              className={`${
-                item.value === valueEvent
-                  ? "text-gray-700 underline"
-                  : "text-blue-500"
-              } text-sm hover:underline`}
-            >
-              {item.label}
-            </button>
+            <>
+              {item.extraText &&
+              (
+                <small className="text-[0.68rem] text-gray-400 mt-5">
+                  {item.extraText}
+                </small>
+              )}
+              <button
+                onClick={() => setValueEvent(item?.value)}
+                key={index}
+                className={`${
+                  item.value === valueEvent
+                    ? "text-gray-700 underline"
+                    : "text-blue-500"
+                } text-sm hover:underline`}
+              >
+                {item.label}
+              </button>
+            </>
           ))}
         </div>
 

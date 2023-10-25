@@ -25,6 +25,13 @@ routes.post('/addDirector' ,UserController.addDirector);
 routes.post('/AddCoordinator' ,verifyToken, UserController.AddCoordinator);
 routes.post('/addTeacher' ,verifyToken ,UserController.AddTeacher);
 routes.post('/addTrainer' ,UserController.AddTrainer);
+routes.post('/addCampus' ,UserController.addCampus);
+routes.post('/addCollege' ,UserController.addCollege);
+routes.post('/addProgram' ,UserController.addProgram);
+routes.post('/addMajor' ,UserController.addMajor);
+
+
+
 routes.put('/assignStudent' ,UserController.assignStudent);
 routes.put('/attendanceRequest' ,UserController.attendanceRequest);
 routes.put('/timeIn' ,UserController.timeIn);

@@ -56,6 +56,10 @@ const StudentViewInfo = () => {
   const timesheet = studentlist && studentlist.timesheet.filter((item) => new Date(item.date) <= currentDate);
 
 
+  const requirementData = studentlist ? studentlist.requirement : null;
+
+  const taskData = studentlist ? studentlist.task : null
+
 if(isError){
   return <h1 className="text-center my-10">Something wrong!! Please try again</h1>
 }
@@ -159,10 +163,10 @@ if(isError){
               <StudentIfo data={info} isLoading={isLoading} />
             </Tabs.Panel>
             <Tabs.Panel value="requirement" pt="xs">
-              <StudentRequirements />
+              <StudentRequirements data={requirementData} />
             </Tabs.Panel>
             <Tabs.Panel value="task" pt="xs">
-              <StudentTask />
+              <StudentTask data={taskData} />
             </Tabs.Panel>
             <Tabs.Panel value="timesheet" pt="xs">
               <StudentTimesheet data={timesheet}  />

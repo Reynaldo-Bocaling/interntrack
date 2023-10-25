@@ -7,6 +7,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import Rootlayout from "../layouts/Rootlayout"
 import Login from "./Login"
 
+
 import  ViewUploadTask from "../components/Student-Task/ViewUploadTask"
 
 // view Attendance Request Reuasable
@@ -54,6 +55,7 @@ import Trainer_StudentLeave from "../pages/Trainer/LeaveRequest"
 import TrainerMessage from "../pages/Trainer/Message"
 import TrainerAnnouncement from "../pages/Trainer/Announcement"
 import TrainerMyProfile from "../pages/Trainer/MyProfile"
+import TrainerSettings from "../pages/Trainer/Settings"
 
 // Teacher pages
 import TeacherDashboard from "../pages/Teacher/Dashboard"
@@ -68,6 +70,7 @@ import Teacher_StudentLeave from "../pages/Teacher/LeaveRequest"
 import TeacherMessage from "../pages/Teacher/Message"
 import TeacherAnnouncement from "../pages/Teacher/Announcement"
 import TeacherNyProfile from "../pages/Teacher/MyProfile"
+import TeacherSettings from "../pages/Teacher/Settings"
 
 // Coordinator pages
 import CoordinatorDashboard from "../pages/Coordinator/Dashboard"
@@ -80,6 +83,7 @@ import Coordinator_StudentLeave from "../pages/Coordinator/LeaveRequest"
 import CoordinatorMessage from "../pages/Coordinator/Message"
 import CoordinatorAnnouncement from "../pages/Coordinator/Announcement"
 import CoordinatorMyProfile from "../pages/Coordinator/MyProfile"
+import CoordinatorSettings from "../pages/Coordinator/Settings"
 
 // Director pages
 import DirectorDashboard from "../pages/Director/Dashboard"
@@ -93,6 +97,8 @@ import Director_Coordinator_list from "../pages/Director/Coordinator_list"
 import Director_Teacher_list from "../pages/Director/TeacherList"
 // import Director_Teacher_list from "../pages/Director/TeacherList"
 import DirectorMyProfile from "../pages/Director/MyProfile"
+import DirectorSettings from "../pages/Director/Settings"
+
 
 
 const PrivateRoutes = () => {
@@ -232,6 +238,10 @@ const PrivateRoutes = () => {
         path: "/MyProfile",
         element: <DirectorMyProfile />,
       },
+      {
+        path: "/Settings",
+        element: <DirectorSettings />,
+      },
     ],
 
     Coordinator: [
@@ -296,6 +306,10 @@ const PrivateRoutes = () => {
       {
         path: "/MyProfile",
         element: <CoordinatorMyProfile />,
+      },
+      {
+        path: "/Settings",
+        element: <CoordinatorSettings />,
       },
     ],
 
@@ -364,6 +378,10 @@ const PrivateRoutes = () => {
         path: "/MyProfile",
         element: <TeacherNyProfile />,
       },
+      {
+        path: "/Settings/",
+        element: <TeacherSettings />,
+      },
     ],
 
     Trainer: [
@@ -422,6 +440,10 @@ const PrivateRoutes = () => {
       {
         path: "/MyProfile",
         element: <TrainerMyProfile />,
+      },
+      {
+        path: "/Settings",
+        element: <TrainerSettings />,
       },
     ],
 

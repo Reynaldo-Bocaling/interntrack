@@ -71,6 +71,50 @@ export const addCompany = async (formData) => {
   }
 };
 
+// add campus
+export const addCampus = async (campus_Location) => {
+  try {
+    const response = await axios.post(`${url}addCampus`, campus_Location);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// add college
+export const addCollege = async (formValues) => {
+  try {
+    const response = await axios.post(`${url}addCollege`, formValues);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// add program
+export const addProgram = async (data) => {
+  try {
+    const response = await axios.post(`${url}addProgram`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// add college
+export const addMajor = async (data) => {
+  try {
+    const response = await axios.post(`${url}addMajor`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+
+
 
 // assign student
 export const assignStudent = async({studentId, trainer_id, areaAssigned_id}) => {

@@ -3,47 +3,50 @@ import Information from "../../components/user-Settings/Information";
 import ChangePassword from "../../components/user-Settings/ChangePassword";
 import SetUpDate from "../../components/user-Settings/SetupDates";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { getTrainer } from "../../api/Api";
+import { getTeacher } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
 function Settings() {
   const [valueEvent, setValueEvent] = useState(1);
 
   const { data } = useQuery({
-    queryKey: ["getTrainerInfo"],
-    queryFn: getTrainer,
+    queryKey: ["getTeacherInfo"],
+    queryFn: getTeacher,
   });
 
+  const newData =  data? data: []
   const infoData = [
     {
       label: "Name",
-      value: `${data?.firstname} ${data?.lastname}`,
+      value: `${newData?.firstname} ${newData?.lastname}`,
     },
     {
       label: "Email",
-      value: data?.email,
+      value: newData?.email,
     },
     {
       label: "Contact",
-      value: data?.contact,
+      value: newData?.contact,
     },
   ];
 
   const links = [
     {
       label: "Personal Information ",
-      url: "/Settings/",
       value: 1,
       element: Information,
       data: infoData,
     },
     {
       label: "Change password ",
-      url: "/Settings/change-password",
       value: 2,
       element: ChangePassword,
     },
-    
+    {
+      label: "Date Range Setup ",
+      value: 3,
+      element: SetUpDate,
+    },
   ];
 
   return (
@@ -80,7 +83,7 @@ function Settings() {
 
         <div className="w-[75%]">
           {links.map((item, index) =>
-            valueEvent === item.value ? <item.element data={item.data} /> : ""
+            valueEvent === item.value ? <item.element key={index} data={item.data} /> : ""
           )}
         </div>
       </div>

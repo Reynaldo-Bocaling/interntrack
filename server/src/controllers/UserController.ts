@@ -365,6 +365,100 @@ export class UserController {
     }
   }
 
+
+  //add campus
+  static async addCampus(req:any, res:Response) {
+    const campus_Location = req.body.campus_Location;
+
+    try {
+      const alreadyExist = await prisma.campus.findFirst({
+        where: {campus_Location}
+      });
+      if(alreadyExist) return res.status(500).json('Campus is already exist');
+
+      const response = await prisma.campus.create({
+        data: {campus_Location}
+      });
+
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  //add collge
+  static async addCollege(req:any, res:Response) {
+    const {college_description, campus_id} = req.body;
+
+    try {
+      const alreadyExist = await prisma.college.findFirst({
+        where: {college_description}
+      });
+
+      if(alreadyExist) return res.status(500).json('College is already exist');
+
+      const response = await prisma.college.create({
+        data: {
+          college_description,
+          campus_id:Number(campus_id)
+        }
+      });
+
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  //add program
+  static async addProgram(req:any, res:Response) {
+    const {program_description, college_id} = req.body;
+
+    try {
+      const alreadyExist = await prisma.program.findFirst({
+        where: {program_description}
+      });
+
+      if(alreadyExist) return res.status(500).json('Program is already exist');
+
+      const response = await prisma.program.create({
+        data: {
+          program_description,
+          college_id
+        }
+      });
+
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  //add major
+  static async addMajor(req:any, res:Response) {
+    const {major_description, program_id} = req.body;
+
+    try {
+      const alreadyExist = await prisma.major.findFirst({
+        where: {major_description}
+      });
+
+      if(alreadyExist) return res.status(500).json('Major is already exist');
+      const response = await prisma.major.create({
+        data: {
+          major_description,
+          program_id
+        }
+      });
+
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+
+
   // time in
   static async timeIn(req: Request, res: Response) {
     const { id, timeIn } = req.body;
@@ -405,6 +499,12 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+
+
+
+
+
+
 
   // GET
   // get director info
@@ -574,6 +674,7 @@ export class UserController {
         include: {
           task: true,
           timesheet: true,
+          requirement: true,
           AreaOfAssignment: {
             include: { company: true },
           },
@@ -757,6 +858,14 @@ export class UserController {
     }
   }
 
+
+
+
+
+
+
+
+
   // update profile user
   // update coordinator
   static async EditCoordinatorProfile(req: any, res: Response) {
@@ -888,6 +997,8 @@ export class UserController {
     }
   }
 
+
+
   // change password
   //student
   static async changeStudentPassword(req: any, res: Response) {
@@ -917,6 +1028,16 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+
+
+
+
+
+
+
+
+
+
 
   // update profile picture
   //update teacher profile

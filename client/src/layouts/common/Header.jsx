@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { SidebarData } from "./SidebarLinks";
 import Dp from "../../assets/images/dp.png";
 import { MdNotificationsNone } from "react-icons/md";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { BiSearch, BiHelpCircle } from "react-icons/bi";
@@ -14,7 +14,6 @@ import { BsDot } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { logout } from "../../api/Api";
 import { useMutation } from "@tanstack/react-query";
-
 
 function Header(props) {
   const navigate = useNavigate()
@@ -228,7 +227,7 @@ function Header(props) {
                   <RiArrowRightSLine />
                 </div>
 
-                <div className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg hover:text-blue-500">
+                <Link to="/Settings" className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg hover:text-blue-500">
                   <div className="flex items-center gap-2">
                     <div className="text-blue-500 p-1 bg-blue-100 rounded-full">
                       <FiSettings size={20} />
@@ -236,7 +235,7 @@ function Header(props) {
                     <span className="text-sm">Settings</span>
                   </div>
                   <RiArrowRightSLine />
-                </div>
+                </Link>
 
                 <div onClick={handleLogout} className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg mt-3 hover:text-red-500 hover:bg-red-50">
                   <div className="flex items-center gap-2">
