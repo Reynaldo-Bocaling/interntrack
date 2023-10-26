@@ -529,6 +529,42 @@ export const uploadRequirement = async (formData) => {
 
 
 
+
+
+
+// add date range and get
+export const getDateRange = async() => {
+  try {
+    const response = await axios.get(`${url}getDateRange`, {withCredentials: true});
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// add date range and get
+export const addDateRange = async(item) => {
+  try {
+    const response = await axios.post(`${url}addDateRange`, item,{withCredentials: true});
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// add date range and get
+export const updateDateRange = async(item) => {
+  try {
+    const response = await axios.put(`${url}updateDateRange`, item,{withCredentials: true});
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+
+
+
 // logout
 export const logout = async () => {
   try {

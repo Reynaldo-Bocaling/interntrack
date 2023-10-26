@@ -1,555 +1,146 @@
-import React from 'react'
-import pic from "../../assets/images/task1.jpg";
-import { Link } from 'react-router-dom';
-import { Carousel } from '@mantine/carousel';
-function UnOrderedListStyle() {
+import React, { useState } from "react";
+import { Button, Input, Select, SelectItem } from "@nextui-org/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getCampus, addMajor } from "../../api/Api";
+import Swal from "sweetalert2";
+
+function Major() {
+  const [selectedCampus, setSelectedCampus] = useState(null);
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [selectedProgram, setSelectedProgram] = useState(null);
+
+  const [values, setValues] = useState({
+    program: "",
+    major: "",
+  });
+
+  const { data: CampusList } = useQuery({
+    queryKey: ["getCampus"],
+    queryFn: getCampus,
+  });
+
+  const { mutate } = useMutation(addMajor, {
+    onSuccess: () => {
+      Swal.fire("Success", "Major has Major successfully added.", "success");
+    },
+    onError: () => {
+      Swal.fire(
+        "Error",
+        "Failed to add major. The campus may already exist or the format is invalid. \n Please review and try again.",
+        "error"
+      );
+    },
+  });
+
+  const campus = CampusList;
+  const college = selectedCampus
+    ? campus.find((college) => college.id === parseInt(selectedCampus))
+    : [];
+  const program = selectedCollege
+    ? college.college.find(
+        (program) => program.id === parseInt(selectedCollege)
+      )
+    : [];
+
+  const handleCampusChange = (e) => {
+    setSelectedCampus(e.target.value);
+    setSelectedCollege(null);
+    // setSelectedProgram(null);
+  };
+  const handleCollegeChange = (e) => {
+    setSelectedCollege(e.target.value);
+    // setSelectedProgram(null);
+  };
+  //   const handleProgramChange = (e) => {
+  //     setSelectedProgram(e.target.value);
+  //   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  console.log(values);
+
+  const handleSubmit = () => {
+    const major_desc = values.major;
+    const program_id = values.program;
+    mutate({ major_description: major_desc, program_id: Number(program_id) });
+  };
+
   return (
-    <div className='mt-7'>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-        {/* start */}
+    <div>
+      <div>
+        <p className="text-lg font-semibold mb-4">Add Major</p>
 
-        <div className='flex flex-col gap-3'>
-          <small className='w-[80px] pl-2 text-base border-b-[1.2px] pb-2 border-blue-500'>January</small>
-          <Carousel slideSize="70%"  align="start" slideGap="xs" controlsOffset="xs" withIndicators>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
+        <div className="grid gap-3">
+          <Select
+            label="Campus"
+            className="max-w-xs"
+            size="sm"
+            isRequired
+            onChange={handleCampusChange}
+          >
+            {campus &&
+              campus.map(({ id, campus_Location }) => (
+                <SelectItem key={id}>{campus_Location}</SelectItem>
+              ))}
+          </Select>
 
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
-          </Carousel.Slide>
+          <Select
+            label=" College"
+            className="max-w-xs"
+            size="sm"
+            isRequired
+            onChange={handleCollegeChange}
+            isDisabled={!selectedCampus}
+          >
+            {selectedCampus &&
+              college.college.map(({ id, college_description }) => (
+                <SelectItem key={id}>{college_description}</SelectItem>
+              ))}
+          </Select>
 
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
+          <Select
+            label=" Program"
+            className="max-w-xs"
+            size="sm"
+            isRequired
+            onChange={handleChange}
+            isDisabled={!selectedCollege}
+            name="program"
+          >
+            {selectedCollege &&
+              program.program.map(({ id, program_description }) => (
+                <SelectItem key={id}>{program_description}</SelectItem>
+              ))}
+          </Select>
+
+          <Input
+            type="text"
+            label="Major"
+            className="max-w-xs"
+            onChange={handleChange}
+            name="major"
+            isRequired
           />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          
-        </Carousel>
-        </div>
-        <div className='flex flex-col gap-3'>
-          <small className='w-[80px] pl-2 text-base border-b-[1.2px] pb-2 border-blue-500'>February</small>
-          <Carousel slideSize="70%"  align="start" slideGap="xs" controlsOffset="xs" withIndicators>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
 
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
-          </Carousel.Slide>
-
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
+          <Button
+            onClick={handleSubmit}
+            color="primary"
+            size="lg"
+            className="max-w-xs mt-2 font-medium"
+          >
+            Add Major
+          </Button>
         </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          
-        </Carousel>
-        </div>
-        <div className='flex flex-col gap-3'>
-          <small className='w-[80px] pl-2 text-base border-b-[1.2px] pb-2 border-blue-500'>March</small>
-          <Carousel slideSize="70%"  align="start" slideGap="xs" controlsOffset="xs" withIndicators>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
-
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
-          </Carousel.Slide>
-
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          
-        </Carousel>
-        </div>
-        <div className='flex flex-col gap-3'>
-          <small className='w-[80px] pl-2 text-base border-b-[1.2px] pb-2 border-blue-500'>April</small>
-          <Carousel slideSize="70%"  align="start" slideGap="xs" controlsOffset="xs" withIndicators>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
-
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-            <div className="mb-5">
-              <h1 className="text-base font-semibold tracking-wide">
-                Coding in CICT office
-              </h1>
-              <small className="text-blue-500 font-medium tracking-wide">
-                Task
-              </small>
-            </div>
-            <img
-              className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-              src={pic}
-              alt={"ds"}
-            />
-            <div className="flex justify-between mt-7 px-2">
-              <span className="text-gray-405 tracking-wide text-sm">
-                August 20, 2023
-              </span>
-              <Link className="text-blue-500 text-sm font-medium tracking-wide">
-                View
-              </Link>
-            </div>
-          </div>
-          </Carousel.Slide>
-
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          <Carousel.Slide>
-          <div className="card-group bg-white p-4 rounded-lg drop-shadow-md">
-          <div className="mb-5">
-            <h1 className="text-base font-semibold tracking-wide">
-              Coding in CICT office
-            </h1>
-            <small className="text-blue-500 font-medium tracking-wide">
-              Task
-            </small>
-          </div>
-          <img
-            className="w-full h-40 object-cover object-center mb-2 rounded-lg"
-            src={pic}
-            alt={"ds"}
-          />
-          <div className="flex justify-between mt-7 px-2">
-            <span className="text-gray-405 tracking-wide text-sm">
-              August 20, 2023
-            </span>
-            <Link className="text-blue-500 text-sm font-medium tracking-wide">
-              View
-            </Link>
-          </div>
-        </div>
-          </Carousel.Slide>
-          
-        </Carousel>
-        </div>
-
-
-        
-
-        
-
-  
-        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default UnOrderedListStyle
+export default Major;

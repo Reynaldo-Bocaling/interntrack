@@ -25,10 +25,31 @@ routes.post('/addDirector' ,UserController.addDirector);
 routes.post('/AddCoordinator' ,verifyToken, UserController.AddCoordinator);
 routes.post('/addTeacher' ,verifyToken ,UserController.AddTeacher);
 routes.post('/addTrainer' ,UserController.AddTrainer);
+
+// campuses
 routes.post('/addCampus' ,UserController.addCampus);
 routes.post('/addCollege' ,UserController.addCollege);
 routes.post('/addProgram' ,UserController.addProgram);
 routes.post('/addMajor' ,UserController.addMajor);
+
+//campuses delete
+routes.delete('/deleteCampus' ,UserController.deleteCampus);
+routes.delete('/deleteCollege' ,UserController.deleteCollege);
+routes.delete('/deleteProgram' ,UserController.deleteProgram);
+routes.delete('/deleteMajor' ,UserController.deleteMajor);
+
+
+//update campuses
+routes.put('/updateCampus' ,UserController.updateCampus);
+routes.put('/updateCollege' ,UserController.updateCollege);
+routes.put('/updateProgram' ,UserController.updateProgram);
+routes.put('/updateMajor' ,UserController.updateMajor);
+
+
+// date range routes
+routes.post('/addDateRange' ,verifyToken,UserController.addDateRange);
+routes.put('/updateDateRange' ,verifyToken,UserController.updateDateRange);
+routes.get('/getDateRange' ,verifyToken,UserController.getDateRange);
 
 
 

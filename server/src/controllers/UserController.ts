@@ -212,10 +212,20 @@ export class UserController {
   //newImport
   static async importStudent(req: any, res: Response) {
     const teacher_id = req.user.teacher[0]?.id;
-
     const ExcelData = req.body.excelData;
     const newPassowrd = generateNewPassword();
     try {
+      const dates = await prisma.dateRangeTimesheet.findFirst({
+        where: { teacher_id },
+      });
+  
+      if (!dates) {
+        return res.status(500).json('not set range date');
+      }
+  
+      const startDate = dates?.start_date;
+      const endDate = dates?.end_date;
+
       for (const data of ExcelData) {
         const createdUser = await prisma.user.create({
           data: {
@@ -243,7 +253,7 @@ export class UserController {
             accountStatus: 0,
             timesheet: {
               createMany: {
-                data: generateTimeData(),
+                data: generateTimeData(startDate,endDate),
               },
             },
           },
@@ -366,6 +376,8 @@ export class UserController {
   }
 
 
+
+// campuses
   //add campus
   static async addCampus(req:any, res:Response) {
     const campus_Location = req.body.campus_Location;
@@ -392,7 +404,10 @@ export class UserController {
 
     try {
       const alreadyExist = await prisma.college.findFirst({
-        where: {college_description}
+        where: {
+          college_description,
+          campus_id:Number(campus_id)
+        }
       });
 
       if(alreadyExist) return res.status(500).json('College is already exist');
@@ -412,11 +427,14 @@ export class UserController {
 
   //add program
   static async addProgram(req:any, res:Response) {
-    const {program_description, college_id} = req.body;
+    const {program_description, college_id, trainingHours} = req.body;
 
     try {
       const alreadyExist = await prisma.program.findFirst({
-        where: {program_description}
+        where: {
+          program_description,
+          college_id
+        }
       });
 
       if(alreadyExist) return res.status(500).json('Program is already exist');
@@ -424,7 +442,8 @@ export class UserController {
       const response = await prisma.program.create({
         data: {
           program_description,
-          college_id
+          college_id,
+          trainingHours:Number(trainingHours)
         }
       });
 
@@ -440,7 +459,10 @@ export class UserController {
 
     try {
       const alreadyExist = await prisma.major.findFirst({
-        where: {major_description}
+        where: {
+          major_description,
+          program_id
+        }
       });
 
       if(alreadyExist) return res.status(500).json('Major is already exist');
@@ -456,6 +478,126 @@ export class UserController {
       return res.status(500).json(error)
     }
   }
+
+
+
+  //delete campuses
+static async deleteCampus(req: any, res:Response) {
+  try {
+    await prisma.campus.delete({
+      where: { id: req.body.id}
+    });
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+static async deleteCollege(req: any, res:Response) {
+  try {
+    await prisma.college.delete({
+      where: { id: req.body.id}
+    });
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+static async deleteProgram(req: any, res:Response) {
+  try {
+    await prisma.program.delete({
+      where: { id: req.body.id}
+    });
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+static async deleteMajor(req: any, res:Response) {
+  try {
+    await prisma.major.delete({
+      where: { id: req.body.id}
+    });
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+
+
+
+
+  //update campuses
+static async updateCampus(req:any, res:Response) {
+  const {id, campus_Location} = req.body;
+
+  try {
+    await prisma.campus.update({
+      where: {
+        id
+      },
+      data: {
+        campus_Location
+      }
+    })
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+static async updateCollege(req:any, res:Response) {
+  const {id, college_description} = req.body;
+
+  try {
+    await prisma.college.update({
+      where: {
+        id
+      },
+      data: {
+        college_description
+      }
+    })
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+static async updateProgram(req:any, res:Response) {
+  const {id, program_description} = req.body;
+
+  try {
+    await prisma.program.update({
+      where: {
+        id
+      },
+      data: {
+        program_description
+      }
+    })
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+
+static async updateMajor(req:any, res:Response) {
+  const {id, major_description} = req.body;
+
+  try {
+    await prisma.major.update({
+      where: {
+        id
+      },
+      data: {
+        major_description
+      }
+    })
+    return res.status(200).json('success')
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+
+
 
 
 
@@ -650,9 +792,21 @@ export class UserController {
         include: {
           college: {
             include: {
+              campus:true,
               program: {
                 include: {
-                  major: true,
+                  college:{
+                    include: {campus:true}
+                  },
+                  major:{
+                    include:{
+                      program: {
+                        include: {
+                          college:true
+                        }
+                      }
+                    }
+                  }
                 },
               },
             },
@@ -1257,15 +1411,70 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+
+
+
+
+
+
+
+
+
+  
+  // add date ranage
+ static async addDateRange(req:any, res:Response) {
+  const {start_date, end_date} = req.body;
+  const teacher_id = req.user.teacher[0]?.id;
+  try {
+    const response = await prisma.dateRangeTimesheet.create({
+      data: {
+        start_date,
+        end_date,
+        teacher_id
+      }
+    });
+
+    return res.status(200).json(response)
+  } catch (error) {
+    return res.status(500).json(error)
+  }
 }
 
+  // update date ranage
+ static async updateDateRange(req:any, res:Response) {
+  const {start_date, end_date} = req.body;
+  const teacher_id = req.user.teacher[0]?.id;
+  try {
+    const response = await prisma.dateRangeTimesheet.updateMany({
+      where: {
+        teacher_id
+      },
+      data: {
+        start_date,
+        end_date
+      }
+    });
 
+    return res.status(200).json(response)
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
 
+// add date ranage
+static async getDateRange(req:any, res:Response) {
+  const teacher_id = req.user.teacher[0]?.id;
+  try {
+    const response = await prisma.dateRangeTimesheet.findMany({
+      where: {teacher_id}
+    });
 
-
-
-
-
+    return res.status(200).json(response)
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+}
+}
 
 
 
@@ -1303,9 +1512,10 @@ export class UserController {
 //   return timeData;
 // };
 
-const generateTimeData = () => {
-  const startDate = new Date("2023-09-04");
-  const endDate = new Date("2023-12-15");
+const generateTimeData = (start:any,end:any) => {
+ 
+  const startDate = new Date(start);
+  const endDate = new Date(end);
   const timeData = [];
 
   let currentDate = new Date(startDate);

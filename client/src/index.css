@@ -96,7 +96,8 @@
   
 .sidebar::-webkit-scrollbar,
 .studentTask::-webkit-scrollbar, 
-.notification::-webkit-scrollbar {
+.notification::-webkit-scrollbar, 
+.scrollBar::-webkit-scrollbar {
     display: none;
   }
 

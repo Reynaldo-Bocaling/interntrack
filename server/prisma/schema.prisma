@@ -227,6 +227,7 @@ model Program {
   id Int @id @default(autoincrement())
   program_description  String
   college_id           Int
+  trainingHours        Int?
   college College      @relation(fields: [college_id], references: [id])  
   major                Major[]            
 }

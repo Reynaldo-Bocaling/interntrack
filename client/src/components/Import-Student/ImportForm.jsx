@@ -7,6 +7,9 @@ import excel4 from "../../assets/icons/excelImg6.png";
 import logo from "../../assets/icons/logo.png";
 import { AiOutlineCloudDownload } from "react-icons/ai";
 import { FiCheck } from "react-icons/fi";
+import { PiWarningOctagonBold } from "react-icons/pi";
+import { Link } from "react-router-dom";
+import WarningIcon from '../../assets/images/warning.png';
 
 const ImportStudentModalUI = (props) => {
   const {
@@ -17,8 +20,11 @@ const ImportStudentModalUI = (props) => {
     importLoading,
     handleFileChange,
     handleImportExcel,
+    DateRangeData
   } = props;
 
+
+  console.log('import',DateRangeData);
   return (
     <Modal
       isOpen={isOpen}
@@ -35,7 +41,17 @@ const ImportStudentModalUI = (props) => {
             </ModalHeader>
 
             <ModalBody>
-              <div className="relative h-full flex flex-col items-center justify-center gap-5 overflow-hidden">
+              {
+                !DateRangeData?.start_date || !DateRangeData?.end_date? 
+                (
+                  <div className="h-full w-full flex flex-col justify-start items-center gap-5">
+                    <img src={WarningIcon} className="h-16 w-16" />
+                    <p className="text-gray-400 tracking-wider font-light text-sm">
+                    Before you can import or add students, please set up the date range. Click <Link to="/Settings" className="text-blue-500 underline mx-2">'Go to Settings'</Link> and then 'Set Date Range' to specify the date range for generating student timesheets.
+                  </p>
+                  </div>
+                ):(
+                  <div className="relative h-full flex flex-col items-center justify-center gap-5 overflow-hidden">
                 <button
                   className={`circleImport relative h-[90px] w-[90px] text-blue-500 rounded-full mb-4  border flex items-center justify-center`}
                 >
@@ -106,6 +122,8 @@ const ImportStudentModalUI = (props) => {
                   className="imageImport  absolute bottom-[40%] left-12 w-[50px] opacity-[0.08]"
                 />
               </div>
+                )
+              }
             </ModalBody>
           </>
         )}

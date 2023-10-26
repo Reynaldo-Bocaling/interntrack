@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Information from "../../components/user-Settings/Information";
 import ChangePassword from "../../components/user-Settings/ChangePassword";
-import SetUpDate from "../../components/user-Settings/SetupDates";
+import ResetData from "../../components/user-Settings/ResetData";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getCoordinator } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
@@ -32,16 +32,19 @@ function Settings() {
   const links = [
     {
       label: "Personal Information ",
-      url: "/Settings/",
       value: 1,
       element: Information,
       data: infoData,
     },
     {
       label: "Change password ",
-      url: "/Settings/change-password",
       value: 2,
       element: ChangePassword,
+    },
+    {
+      label: "Reset all data",
+      value: 3,
+      element: ResetData,
     },
     
   ];

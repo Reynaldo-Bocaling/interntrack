@@ -11,7 +11,7 @@ import {
   useDisclosure as ImportStudentDisclosure,
   useDisclosure as AddStudentDisclosure,
 } from "@nextui-org/react";
-import { getCompanyList, getTeacher, importStudent } from "../../api/Api";
+import { getCompanyList, getDateRange, getTeacher, importStudent } from "../../api/Api";
 import ImportStudentModalUI from "../../components/Import-Student/ImportForm";
 import { Tabs } from "@mantine/core";
 import AllStudent from "../../components/StudentList-Filter/All";
@@ -19,6 +19,7 @@ import AssignedStudent from "../../components/StudentList-Filter/Assigned";
 import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
 import picture from "../../assets/images/dp.png";
 import Swal from "sweetalert2";
+
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -130,7 +131,13 @@ const Student_list = () => {
     totalSlot: areaOfAssignment?.flatMap(({slot})=> slot).reduce((sum, item)=> sum+item,0),
   })).filter((item)=> item.totalSlot > item.totalStudent);
 
- console.log('ccccc', companyList);
+
+  const {data:getDateRangeData} = useQuery({
+    queryKey: ['getDateRange'],
+    queryFn: getDateRange
+});
+
+ const DateRangeData = getDateRangeData ? getDateRangeData[0] : []
 
 
   // mutate
@@ -174,16 +181,17 @@ const Student_list = () => {
   };
 
   const handleImportExcel = () => {
+
     mutate(ImportData);
   };
 
   // sanitation
   const validateData = (data) => {
     const nameRegex = /^[A-Za-z\s]+$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[A-Za-z\s]+$/;
 
     for (const row of data) {
-      if (!nameRegex.test(row.firstname) || !emailRegex.test(row.email)) {
+      if (!nameRegex.test(row.firstname)) {
         return false;
       }
     }
@@ -294,6 +302,7 @@ const Student_list = () => {
         importLoading={importLoading}
         handleFileChange={handleFileChange}
         handleImportExcel={handleImportExcel}
+        DateRangeData={DateRangeData}
       />
 
       {/* Add Student modal */}
