@@ -1,27 +1,34 @@
 import React, { useState } from "react";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addCollege, getCampus } from "../../api/Api";
+import {
+  addCollege,
+  deleteCollege,
+  getCampus,
+  updateCollege,
+} from "../../api/Api";
 import Swal from "sweetalert2";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { FiEdit2,FiTrash2 } from "react-icons/fi";
-import { MdEditOff } from "react-icons/md";
-
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 function College() {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const [campusId, setCampusId] = useState(0);
-  const [value, setValue] = useState(0);
+  const [valueTab, setValueTab] = useState(0);
   const [formValues, setFormValues] = useState({
     college_description: "",
     campus_id: 0,
   });
 
-  const [campus_id, setCampus_id] = useState(null)
+  const [campus_id, setCampus_id] = useState(null);
 
-  const { data: campuses } = useQuery({
+  const {
+    data: campuses,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["getCampuses"],
     queryFn: getCampus,
   });
@@ -29,8 +36,8 @@ function College() {
   const { mutate } = useMutation(addCollege, {
     onSuccess: () => {
       Swal.fire("Success", "College has been successfully added.", "success");
-      setFormValues(null);
-      queryClient.invalidateQueries("getCampuses")
+      setFormValues({ college_description: "", campus_id: 0 });
+      queryClient.invalidateQueries("getCampuses");
     },
     onError: () => {
       Swal.fire(
@@ -41,11 +48,12 @@ function College() {
     },
   });
 
+  // if (isLoading) return <h1>Loading</h1>;
+
   const newCampuses = campuses ? campuses : [];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormValues((prev) => ({
       ...prev,
       [name]: value,
@@ -56,26 +64,84 @@ function College() {
     mutate(formValues);
   };
 
-
   const handleTabChange = (event, newValue) => {
-    setValue(newValue);
+    setValueTab(newValue);
+  };
+
+  const getCollegeList = newCampuses
+    ?.flatMap(({ college }) => college)
+    .map(({ id, college_description, campus, program }) => ({
+      id,
+      college_description,
+      campusName: campus?.campus_Location,
+      program,
+      campus_id: campus?.id,
+    }));
+
+  const [itemList, setItemList] = useState({});
+
+  const handleInputChange = (e, itemId) => {
+    const { name, value } = e.target;
+
+    setItemList((prevItemList) => ({
+      ...prevItemList,
+      [itemId]: {
+        ...prevItemList[itemId],
+        [name]: value,
+      },
+    }));
+  };
+
+  const [searchValue, setSearchValue] = useState("");
+
+  const filteredCollege = getCollegeList.filter((item) =>
+    item.college_description.toLowerCase().includes(searchValue.toLowerCase())
+    || item.campusName.toLowerCase().includes(searchValue.toLowerCase())
+
+  );
+
+
+
+  const { mutate: deleteMutate } = useMutation(deleteCollege, {
+    onSuccess: (id) => {
+      console.log(id);
+      Swal.fire("Success", "College has been successfully deleted.", "success");
+      queryClient.invalidateQueries("getCampuses");
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed \n Please try again", "error");
+    },
+  });
+
+  const { mutate: updateMutate } = useMutation(updateCollege, {
+    onSuccess: (id) => {
+      console.log(id);
+      Swal.fire("Success", "College has been successfully updated.", "success");
+      queryClient.invalidateQueries("getCampuses");
+      setCampusId(0);
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed to updated College. \n Please try again", "error");
+    },
+  });
+
+
+
+  const handleDelete = (id) => {
+    deleteMutate(id);
   };
 
 
 
-  const getCollegeList = newCampuses
-  ?.flatMap(({ college }) => college)
-  .map(({ id, college_description, campus, program }) => ({
-    id,
-    college_description,
-    campusName: campus?.campus_Location,
-    program,
-    campus_id: campus?.id,
-  }))
-  .filter((item) => campus_id === null || item.campus_id === Number(campus_id));
+  const handleUpdate = (id, college_desc) => {
+    const updatedValue = itemList[id]?.college_description;
 
+    let updateCollegeDesc =
+      updatedValue !== undefined ? updatedValue : college_desc;
+    setCampusId(0);
 
-  
+    updateMutate({id, college_description: updateCollegeDesc})
+  };
 
   return (
     <div className="max-w-[450px]">
@@ -87,7 +153,7 @@ function College() {
           marginBottom: "25px",
         }}
       >
-        <Tabs value={value} onChange={handleTabChange}>
+        <Tabs value={valueTab} onChange={handleTabChange}>
           <Tab
             label={
               <small className="font-medium capitalize tracking-wide text-sm">
@@ -105,12 +171,12 @@ function College() {
         </Tabs>
       </Box>
 
-      {value === 0 && (
+      {valueTab === 0 && (
         <div className="w-full">
           <div className="grid gap-3">
             <Select
               label="Campus"
-              className="max-w-full"
+              className="max-w-sm"
               size="sm"
               isRequired
               onChange={handleChange}
@@ -128,7 +194,8 @@ function College() {
               type="text"
               label="College"
               name="college_description"
-              className="max-w-full"
+              className="max-w-sm"
+              value={formValues.college_description}
               onChange={handleChange}
               isRequired
             />
@@ -137,7 +204,7 @@ function College() {
               onClick={handleSubmit}
               color="primary"
               size="lg"
-              className="max-w-full mt-2 font-medium"
+              className="max-w-[170px] mt-2 font-medium"
             >
               Add College
             </Button>
@@ -145,65 +212,86 @@ function College() {
         </div>
       )}
 
-{value === 1 && (
+      {valueTab === 1 && (
         <div className="w-full">
           <div className="scrollBar h-[300px] overflow-y-auto flex flex-col gap-2">
-            <Select
-              label="Select Campus"
+          <Input
+              type="text"
+              label="Search"
               className="max-w-full"
-              size="sm"
-              isRequired
-              onChange={(e)=> setCampus_id(e.target.value)}
-              name="campus_id"
-            >
-              {newCampuses &&
-                newCampuses.map((item) => (
-                  <SelectItem key={item.id} value={item.id}>
-                    {item.campus_Location}
-                  </SelectItem>
-                ))}
-            </Select>
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
 
-            {
-              getCollegeList.length > 0 ?
-            getCollegeList.map((item, index) => (
-              <div className="flex items-center gap-3" key={index}>
-                <Input
-                  type="text"
-                  label={item.campusName}
-                  className="max-w-full"
-                  value={item.college_description}
-                  isDisabled={campusId !== item.id}
-                />
+            {filteredCollege.length > 0 ? (
+              filteredCollege.map((item, index) => (
+                <div className="flex items-center gap-3" key={index}>
+                  <Input
+                    type="text"
+                    name="college_description"
+                    label={item.campusName}
+                    value={
+                      itemList[item.id]?.college_description !== undefined
+                        ? itemList[item.id]?.college_description
+                        : item.college_description
+                    }
+                    onChange={(e) => handleInputChange(e, item.id)}
+                    isDisabled={campusId !== item.id}
+                  />
 
-                <button>
-                  {campusId !== item.id ? (
-                    <div className="flex items-center gap-2">
-                    <FiEdit2 onClick={() =>
-                    setCampusId(campusId === item.id ? 0 : item.id)
-                  } size={20} className="text-green-600" />
-                    <FiTrash2 onClick={()=> alert(item.id)} size={20} className="text-red-600" />
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <Button
-                        className="bg-green-500 text-white font-medium"
-                        size="sm"
-                      >
-                        Update
-                      </Button>
-                      <Button
-                        onClick={() => setCampusId(0)}
-                        className="bg-red-100 text-red-500 font-medium "
-                        size="sm"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  )}
-                </button>
-              </div>
-            )) : <>No College</>}
+                  <button>
+                    {campusId !== item.id ? (
+                      <div className="flex items-center gap-2">
+                        <FiEdit2
+                          onClick={() =>
+                            setCampusId(campusId === item.id ? 0 : item.id)
+                          }
+                          size={20}
+                          className="text-green-600"
+                        />
+                        <FiTrash2
+                          onClick={() => handleDelete(item.id)}
+                          size={20}
+                          className="text-red-600"
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          className="bg-green-500 text-white font-medium"
+                          size="sm"
+                          // onClick={() => {
+                          //   const updatedValue =
+                          //     itemList[item.id]?.college_description;
+                          //   if (updatedValue !== undefined) {
+                          //     console.log(updatedValue);
+                          //   } else {
+                          //     console.log(item.college_description);
+                          //   }
+                          // setCampusId(0);
+                          // }}
+
+                          onClick={() =>
+                            handleUpdate(item?.id, item.college_description)
+                          }
+                        >
+                          Update
+                        </Button>
+                        <Button
+                          onClick={() => setCampusId(0)}
+                          className="bg-red-100 text-red-500 font-medium "
+                          size="sm"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    )}
+                  </button>
+                </div>
+              ))
+            ) : (
+              <>No College</>
+            )}
           </div>
         </div>
       )}

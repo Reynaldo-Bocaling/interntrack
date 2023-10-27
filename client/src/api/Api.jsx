@@ -113,6 +113,81 @@ export const addMajor = async (data) => {
 
 
 
+// delete campus
+export const deleteCampus = async (id) => {
+  try {
+    const response = await axios.delete(`${url}deleteCampus/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const deleteCollege = async (id) => {
+  try {
+    const response = await axios.delete(`${url}deleteCollege/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const deleteProgram = async (id) => {
+  try {
+    const response = await axios.delete(`${url}deleteProgram/${id}`,);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+
+}
+export const deleteMajor = async (id) => {
+  try {
+    const response = await axios.delete(`${url}deleteMajor/${id}`,);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+
+export const updateCampus = async (data) => {
+  try {
+    const response = await axios.put(`${url}updateCampus`,data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateCollege = async (data) => {
+  try {
+    const response = await axios.put(`${url}updateCollege`,data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const updateProgram = async (data) => {
+  try {
+    const response = await axios.put(`${url}updateProgram`,data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const updateMajor = async (data) => {
+  try {
+    const response = await axios.put(`${url}updateMajor`,data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
+
+
 
 
 

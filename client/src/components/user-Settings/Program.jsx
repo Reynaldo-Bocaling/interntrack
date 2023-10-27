@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addProgram, getCampus } from "../../api/Api";
+import {
+  addProgram,
+  deleteProgram,
+  getCampus,
+  updateProgram,
+} from "../../api/Api";
 import Swal from "sweetalert2";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { FiEdit2,FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 function Program() {
   const queryClient = useQueryClient();
@@ -15,6 +20,7 @@ function Program() {
   const [program, setProgram] = useState(null);
   const [hours, setHours] = useState(null);
   const [campusId, setCampusId] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
 
   const [value, setValue] = useState(0);
 
@@ -87,8 +93,28 @@ function Program() {
     }))
     .filter(
       (item) =>
-        selectedCollege === null || item.college_id === Number(selectedCollege)
+        item.program_description
+          .toLowerCase()
+          .includes(searchValue.toLowerCase()) ||
+        item.college_description
+          .toLowerCase()
+          .includes(searchValue.toLowerCase()) ||
+        item.campus.toLowerCase().includes(searchValue.toLowerCase())
     );
+
+  const [itemList, setItemList] = useState({});
+
+  const handleInputChange = (e, itemId) => {
+    const { name, value } = e.target;
+
+    setItemList((prevItemList) => ({
+      ...prevItemList,
+      [itemId]: {
+        ...prevItemList[itemId],
+        [name]: value,
+      },
+    }));
+  };
 
   const collegeList = campus
     ?.flatMap(({ college }) => college)
@@ -99,7 +125,52 @@ function Program() {
       campus: campus.campus_Location,
     }));
 
-  console.log(selectedCollege);
+  const { mutate: deleteMutate } = useMutation(deleteProgram, {
+    onSuccess: (id) => {
+      Swal.fire("Success", "Program has been successfully deleted.", "success");
+      queryClient.invalidateQueries("GetProgram");
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed \n Please try again", "error");
+    },
+  });
+
+  const { mutate: updateMutate } = useMutation(updateProgram, {
+    onSuccess: (id) => {
+      Swal.fire("Success", "Program has been successfully updated.", "success");
+      queryClient.invalidateQueries("GetProgram");
+      setCampusId(0);
+    },
+    onError: () => {
+      Swal.fire(
+        "Error",
+        "Failed to updated Program. \n Please try again",
+        "error"
+      );
+    },
+  });
+
+  const handleDelete = (id) => {
+    deleteMutate(id);
+  };
+
+  const handleUpdate = (id, program_desc, trainer_hours) => {
+    const updatedValue = itemList[id]?.program_description;
+    const trainingHours = itemList[id]?.trainingHours;
+
+    let updateProgramDesc =
+      updatedValue !== undefined ? updatedValue : program_desc;
+    let updateProgramHours =
+      trainingHours !== undefined ? trainingHours : trainer_hours;
+
+    setCampusId(0);
+
+    updateMutate({
+      id,
+      program_description: updateProgramDesc,
+      trainingHours: updateProgramHours,
+    });
+  };
 
   return (
     <div className="max-w-[450px]">
@@ -135,7 +206,7 @@ function Program() {
             <div className="grid gap-3">
               <Select
                 label="Campus"
-                className="max-w-full"
+                className="max-w-sm"
                 size="sm"
                 onChange={handleCampusChange}
                 isRequired
@@ -150,7 +221,7 @@ function Program() {
 
               <Select
                 label=" College"
-                className="max-w-full"
+                className="max-w-sm"
                 size="sm"
                 isRequired
                 onChange={handleCollegeChange}
@@ -167,14 +238,14 @@ function Program() {
               <Input
                 type="text"
                 label="Program"
-                className="max-w-full"
+                className="max-w-sm"
                 isRequired
                 onChange={(e) => setProgram(e.target.value)}
               />
               <Input
                 type="number"
                 label="Training Hours"
-                className="max-w-full"
+                className="max-w-sm"
                 isRequired
                 onChange={(e) => setHours(e.target.value)}
               />
@@ -184,7 +255,7 @@ function Program() {
                 color="primary"
                 size="lg"
                 isRequired
-                className="max-w-xs mt-2 font-medium"
+                className="max-w-[170px] mt-2 font-medium"
               >
                 Add Program
               </Button>
@@ -195,56 +266,71 @@ function Program() {
         {value === 1 && (
           <div className="w-full">
             <div className="scrollBar h-[300px] overflow-y-auto flex flex-col gap-2">
-              <Select
-                label="Slect College"
+              <Input
+                type="text"
+                label="Search"
                 className="max-w-full"
-                size="sm"
-                onChange={handleCollegeChange}
-              >
-                {collegeList &&
-                  collegeList.map(({ id, college_description, campus }) => (
-                    <SelectItem key={id}>
-                      {`${college_description} > ${campus}`}
-                    </SelectItem>
-                  ))}
-              </Select>
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
 
               {filteredPrograms.map((item, index) => (
                 <div className="flex items-center gap-3" key={index}>
                   <Input
                     type="text"
-                    label={
-                      <>
-                        {item.college_description} {">"} {item.campus}
-                      </>
-                    }
+                    label={`${item.college_description} > ${item.campus}`}
                     className="max-w-full"
-                    value={item.program_description}
+                    value={
+                      itemList[item.id]?.program_description !== undefined
+                        ? itemList[item.id]?.program_description
+                        : item.program_description
+                    }
                     isDisabled={campusId !== item.id}
+                    name="program_description"
+                    onChange={(e) => handleInputChange(e, item.id)}
                   />
                   <Input
                     type="number"
                     label="Hours"
+                    name="trainingHours"
                     className="max-w-[100px]"
-                    value={item.trainingHours}
+                    value={
+                      itemList[item.id]?.trainingHours !== undefined
+                        ? itemList[item.id]?.trainingHours
+                        : item.trainingHours
+                    }
                     isDisabled={campusId !== item.id}
+                    onChange={(e) => handleInputChange(e, item.id)}
                   />
 
-                  <button
-                  
-                  >
+                  <button>
                     {campusId !== item.id ? (
-                     <div className="flex items-center gap-2">
-                     <FiEdit2 onClick={() =>
-                     setCampusId(campusId === item.id ? 0 : item.id)
-                   } size={20} className="text-green-600" />
-                     <FiTrash2 onClick={()=> alert(item.id)} size={20} className="text-red-600" />
-                     </div>
+                      <div className="flex items-center gap-2">
+                        <FiEdit2
+                          onClick={() =>
+                            setCampusId(campusId === item.id ? 0 : item.id)
+                          }
+                          size={20}
+                          className="text-green-600"
+                        />
+                        <FiTrash2
+                          onClick={() => handleDelete(item.id)}
+                          size={20}
+                          className="text-red-600"
+                        />
+                      </div>
                     ) : (
                       <div className="flex items-center gap-2">
                         <Button
                           className="bg-green-500 text-white font-medium"
                           size="sm"
+                          onClick={() =>
+                            handleUpdate(
+                              item?.id,
+                              item?.program_description,
+                              item?.trainingHours
+                            )
+                          }
                         >
                           Update
                         </Button>

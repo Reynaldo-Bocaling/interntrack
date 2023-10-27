@@ -1,20 +1,27 @@
 import { Button, Input } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
-import { addCampus, getCampus } from "../../api/Api";
+import React, { useEffect, useState } from "react";
+import {
+  addCampus,
+  deleteCampus,
+  getCampus,
+  updateCampus,
+} from "../../api/Api";
 import Swal from "sweetalert2";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import { FiEdit2,FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { MdEditOff } from "react-icons/md";
 
 function Campus() {
+  const queryClient = useQueryClient();
   const [campus, setCampus] = useState("");
   const [campusId, setCampusId] = useState(0);
-  const [isUpdateCampus, setIsUpdateCampus] = useState(true);
-  const [value, setValue] = useState(0);
 
+  const [value, setValue] = useState(0);
+  const [searchInput, setSearchInput] = useState("");
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -22,6 +29,7 @@ function Campus() {
   const { mutate } = useMutation(addCampus, {
     onSuccess: () => {
       Swal.fire("Success", "Campus has been successfully added.", "success");
+      queryClient.invalidateQueries("getCampuses")
     },
     onError: () => {
       Swal.fire(
@@ -43,6 +51,60 @@ function Campus() {
   });
 
   const newCampuses = campuses ? campuses : [];
+
+  const [updateView, setUpdateView] = useState(newCampuses);
+
+  useEffect(() => {
+    setUpdateView(newCampuses);
+  }, [newCampuses]);
+
+  const handleInputChange = (index, value) => {
+    const updatedView = [...updateView];
+    updatedView[index].campus_Location = value;
+    setUpdateView(updatedView);
+  };
+
+  const { mutate: deleteMutate } = useMutation(deleteCampus, {
+    onSuccess: () => {
+      Swal.fire("Success", "Campus has been successfully deleted.", "success");
+      queryClient.invalidateQueries("getCampuses")
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed \n Please try again", "error");
+    },
+  });
+
+  const { mutate: updateMutate } = useMutation(updateCampus, {
+    onSuccess: () => {
+      Swal.fire("Success", "Campus has been successfully updated.", "success");
+      queryClient.invalidateQueries("getCampuses")
+      setCampusId(0);
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed to updated Campus. \n Please try again", "error");
+    },
+  });
+
+  const handleDelete = (id) => {
+    deleteMutate(id);
+  };
+
+  const handleUpdate = (id) => {
+    const upDataViewData = updateView
+      ? updateView?.filter((item) => item.id === id)
+      : [];
+    updateMutate(upDataViewData[0]);
+  };
+
+  
+
+
+  const [searchValue, setSearchValue] = useState("");
+
+  const filteredCampuses = updateView.filter((item) =>
+    item.campus_Location.toLowerCase().includes(searchValue.toLowerCase())
+  );
+
 
   return (
     <div className="max-w-[450px]">
@@ -79,7 +141,7 @@ function Campus() {
               type="text"
               label="Campus"
               name="compus"
-              className="max-w-full"
+              className="max-w-sm"
               onChange={(e) => setCampus(e.target.value)}
               isRequired
             />
@@ -88,7 +150,7 @@ function Campus() {
               onClick={handleSubmit}
               size="lg"
               color="primary"
-              className="max-w-full mt-2 font-medium"
+              className="max-w-[170px] mt-2 font-medium"
             >
               Add Campus
             </Button>
@@ -98,32 +160,50 @@ function Campus() {
       {value === 1 && (
         <div className="w-full">
           <div className="scrollBar h-[300px] overflow-y-auto flex flex-col gap-2">
-            {newCampuses.map((item, index) => (
+
+          <Input
+              type="text"
+              label="Search"
+              className="max-w-full"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+
+
+            {filteredCampuses?.map((item, index) => (
               <div className="flex items-center gap-3" key={index}>
                 <Input
                   type="text"
                   label="Campus"
-                  name="compus"
+                  name="campus"
                   className="max-w-full"
-                  value={item.campus_Location}
-                  onChange={(e) => setCampus(e.target.value)}
+                  value={item.campus_Location || ""}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
                   isDisabled={campusId !== item.id}
                 />
 
                 <button>
                   {campusId !== item.id ? (
-                     <div className="flex items-center gap-2">
-                     <FiEdit2 onClick={() =>
-                     setCampusId(campusId === item.id ? 0 : item.id)
-                   } size={20} className="text-green-600" />
-                     <FiTrash2 onClick={()=> alert(item.id)} size={20} className="text-red-600" />
-                     </div>
+                    <div className="flex items-center gap-2">
+                      <FiEdit2
+                        onClick={() =>
+                          setCampusId(campusId === item.id ? 0 : item.id)
+                        }
+                        size={20}
+                        className="text-green-600"
+                      />
+                      <FiTrash2
+                        onClick={() => handleDelete(item.id)}
+                        size={20}
+                        className="text-red-600"
+                      />
+                    </div>
                   ) : (
                     <div className="flex items-center gap-2">
                       <Button
                         className="bg-green-500 text-white font-medium"
                         size="sm"
-                        onClick={()=> alert(`${item.id} ${item.campus_Location}`)}
+                        onClick={() => handleUpdate(item.id)}
                       >
                         Update
                       </Button>

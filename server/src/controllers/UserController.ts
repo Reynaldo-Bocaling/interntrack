@@ -483,39 +483,46 @@ export class UserController {
 
   //delete campuses
 static async deleteCampus(req: any, res:Response) {
+  const {id} = req.params;
   try {
     await prisma.campus.delete({
-      where: { id: req.body.id}
+      where: { id: Number(id)}
     });
     return res.status(200).json('success')
   } catch (error) {
     return res.status(500).json(error)
   }
 }
+
 static async deleteCollege(req: any, res:Response) {
+  const {id} = req.params;
   try {
     await prisma.college.delete({
-      where: { id: req.body.id}
+      where: { id: Number(id)}
     });
     return res.status(200).json('success')
   } catch (error) {
     return res.status(500).json(error)
   }
 }
+
 static async deleteProgram(req: any, res:Response) {
+  const {id} = req.params;
   try {
     await prisma.program.delete({
-      where: { id: req.body.id}
+      where: { id: Number(id)}
     });
     return res.status(200).json('success')
   } catch (error) {
     return res.status(500).json(error)
   }
 }
+
 static async deleteMajor(req: any, res:Response) {
+  const {id} = req.params;
   try {
     await prisma.major.delete({
-      where: { id: req.body.id}
+      where: { id: Number(id)}
     });
     return res.status(200).json('success')
   } catch (error) {
@@ -561,8 +568,9 @@ static async updateCollege(req:any, res:Response) {
     return res.status(500).json(error)
   }
 }
+
 static async updateProgram(req:any, res:Response) {
-  const {id, program_description} = req.body;
+  const {id, program_description,trainingHours} = req.body;
 
   try {
     await prisma.program.update({
@@ -570,7 +578,8 @@ static async updateProgram(req:any, res:Response) {
         id
       },
       data: {
-        program_description
+        program_description,
+        trainingHours:Number(trainingHours)
       }
     })
     return res.status(200).json('success')
@@ -802,7 +811,11 @@ static async updateMajor(req:any, res:Response) {
                     include:{
                       program: {
                         include: {
-                          college:true
+                          college:{
+                            include:{
+                              campus:true
+                            }
+                          }
                         }
                       }
                     }

@@ -33,10 +33,10 @@ routes.post('/addProgram' ,UserController.addProgram);
 routes.post('/addMajor' ,UserController.addMajor);
 
 //campuses delete
-routes.delete('/deleteCampus' ,UserController.deleteCampus);
-routes.delete('/deleteCollege' ,UserController.deleteCollege);
-routes.delete('/deleteProgram' ,UserController.deleteProgram);
-routes.delete('/deleteMajor' ,UserController.deleteMajor);
+routes.delete('/deleteCampus/:id' ,UserController.deleteCampus);
+routes.delete('/deleteCollege/:id' ,UserController.deleteCollege);
+routes.delete('/deleteProgram/:id' ,UserController.deleteProgram);
+routes.delete('/deleteMajor/:id' ,UserController.deleteMajor);
 
 
 //update campuses
