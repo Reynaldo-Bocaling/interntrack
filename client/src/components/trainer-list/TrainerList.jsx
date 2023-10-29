@@ -90,6 +90,7 @@ const Trainer_list = () => {
             accountStatus,
             areaofAssignment,
             student,
+            deletedStatus
           }) => ({
             id,
             firstname,
@@ -102,7 +103,7 @@ const Trainer_list = () => {
             areaAssign : areaofAssignment.areaName,
             accountStatus,
             student,
-            totalStudent: student ? student.length : 0,
+            totalStudent: student.filter((item)=> item.deletedStatus === 0).length
           })
         )
         .filter((item) => item.name.toLowerCase().includes(searchInput))

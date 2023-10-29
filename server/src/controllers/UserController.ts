@@ -34,7 +34,7 @@ export class UserController {
           email,
           contact: Number(contact),
           moaUpload,
-          director_id: 2,
+          director_id:Number(director_id) ,
           areaOfAssignment: {
             createMany: {
               data: areasToInsert,
@@ -251,6 +251,7 @@ export class UserController {
             teacher_id: teacher_id,
             user_id: createdUser.id,
             accountStatus: 0,
+            deletedStatus:0,
             timesheet: {
               createMany: {
                 data: generateTimeData(startDate,endDate),
@@ -805,7 +806,9 @@ static async updateMajor(req:any, res:Response) {
               program: {
                 include: {
                   college:{
-                    include: {campus:true}
+                    include: {
+                      campus:true
+                    }
                   },
                   major:{
                     include:{
@@ -1486,6 +1489,31 @@ static async getDateRange(req:any, res:Response) {
   } catch (error) {
     return res.status(500).json(error)
   }
+}
+
+
+
+
+
+
+// reset all data
+static async resetData(req:any, res:Response) {
+  const {id} = req.body;
+
+  try {
+    await prisma.student.updateMany({
+      where: {
+        id: {
+          in: id
+        }
+      },
+      data: {deletedStatus:1}
+    });
+    res.status(200).json(id)
+  } catch (error) {
+    return res.status(500).json(error)
+  }
+
 }
 }
 

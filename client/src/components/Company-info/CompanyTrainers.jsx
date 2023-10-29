@@ -24,12 +24,12 @@ const trainerList = data?.areaOfAssignment
   firstname,
   lastname,
   email,
-  student
+  student,
 }) => ({
   id,
   name: `${firstname} ${lastname}`,
   email,
-  student: student.length
+  totalStudent: student?.filter((item)=>item.deletedStatus == 0).length
 }));
 
 
@@ -67,7 +67,7 @@ return (
                   <td className="text-sm tracking-wide pl-2">{item.id}</td>
                   <td className="text-sm tracking-wide pl-2">{item.name}</td>
                   <td className="text-sm tracking-wide pl-2">{item.email}</td>
-                  <td className="text-sm tracking-wide text-center">{item.student}</td>
+                  <td className="text-sm tracking-wide text-center">{item.totalStudent}</td>
                 </tr>
               ))}
           </tbody>

@@ -59,7 +59,7 @@ const TeacherList = () => {
     major,
     picture: picture,
     accountStatus,
-    totalStudent: student.length
+    totalStudent: student.filter((item)=>item.deletedStatus ===0).length
   })): []
 
 

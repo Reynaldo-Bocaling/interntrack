@@ -129,6 +129,7 @@ model Student {
   accountStatus         Int
   profile               String?
   profile_url           String?
+  deletedStatus         Int
   areaAssigned_id       Int?
   trainer_id            Int?
   teacher_id            Int

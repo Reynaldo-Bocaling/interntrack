@@ -55,16 +55,18 @@ const StudentTask = () => {
           task,
           status,
           tasImageUrl,
+          deletedStatus
         }) => ({
           studentNo: id,
           name: `${firstname} ${lastname}`,
           status: 1,
           totalTask: task.length,
-          lastUpload: "january",
           image: pic,
           Task: task,
+          lastUpload: task.flatMap(({date})=>date)[task.flatMap(({date})=>date).length - 1],
+          deletedStatus
         })
-      )
+      ).filter((item)=> item.deletedStatus ===0)
     : [];
 
   const taskRecords = data.filter((student) => student.studentNo === StudentId);

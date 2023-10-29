@@ -64,7 +64,7 @@ export const addTeacher = async (data) => {
 
 export const addCompany = async (formData) => {
   try {
-    const response = await axios.post(`${url}addCompany`, formData);
+    const response = await axios.post(`${url}addCompany`, formData, { withCredentials: true });
     return response.data;
   } catch (error) {
     throw new Error(error.message);
@@ -637,6 +637,18 @@ export const updateDateRange = async(item) => {
   }
 }
 
+
+
+
+//reset data
+export const resetData = async(id) => {
+  try {
+    const response = await axios.put(`${url}resetData`, {id:id});
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
 
 
 

@@ -19,7 +19,7 @@ const uploads = multer({storage: storage})
 
 // post
 routes.post('/importStudent' ,verifyToken, UserController.importStudent);
-routes.post('/addCompany', uploadMoa ,UserController.addCompany);
+routes.post('/addCompany', uploadMoa , verifyToken , UserController.addCompany);
 routes.post('/addSuperAdmin' ,UserController.addSuperAdmin);
 routes.post('/addDirector' ,UserController.addDirector);
 routes.post('/AddCoordinator' ,verifyToken, UserController.AddCoordinator);
@@ -123,6 +123,11 @@ routes.get('/getTimesheet' ,verifyToken,UserController.getTimesheet);
 routes.post('/uploadTask' ,verifyToken, uploads.single('image'), UserController.uploadTask);
 routes.post('/uploadRequirement' ,verifyToken, uploads.single('image'), UserController.uploadRequirement);
 
+
+
+
+// reset data
+routes.put('/resetData' , UserController.resetData);
 
 
 

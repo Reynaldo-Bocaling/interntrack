@@ -44,6 +44,7 @@ const Student_list = () => {
                 teacher,
                 trainer,
                 AreaOfAssignment,
+                deletedStatus
               }) => ({
                 id,
                 middlename,
@@ -62,8 +63,11 @@ const Student_list = () => {
                 trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',
                 accountStatus,
                 studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
-                studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned'
-              })) : []
+                studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned',
+                deletedStatus
+              })).filter((item)=>item.deletedStatus ===0)
+              
+              : []
             
       
 

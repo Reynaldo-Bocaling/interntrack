@@ -12,13 +12,29 @@ function CompanySlots({data}) {
   // // Kalkulahin ang percentage
   // const percentage = totalSlots === 0 ? 0 : (usedSlots / totalSlots) * 100;
 
-const totalSlots = slots.reduce((total, item)=> total + item.slot, 0) //total slots saved 8
-const totalStudent = slots.reduce((total, item)=> total + item.student.length, 0) //total student 2
+const totalSlots = slots.reduce((total, item)=> total + item.slot, 0) //total slots saved 8 //total student 2
+const studentFilter =  slots?.map(({
+  id, 
+  areaName,
+  slot,
+  company_id, 
+  trainer, student
+}) => ({
+  id, 
+  areaName,
+  slot,
+  company_id, 
+  totalStudent: student?.filter((item)=>item.deletedStatus == 0).length
+}))
+
+const totalStudent = studentFilter?.reduce((total, item)=> total + item.totalStudent, 0)
+
+
 
 
 const percentage = totalSlots === 0 ? 0 : (totalStudent / totalSlots) * 100;
 
-console.log('slots', slots);
+console.log('slots', studentFilter);
   return (
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
@@ -52,8 +68,8 @@ console.log('slots', slots);
                 </tr>
               </thead>
               <tbody>
-                {slots.length > 0 &&
-                  slots.map((item, index) => (
+                {
+                  studentFilter.map((item, index) => (
                     <tr className="h-14" key={item.id}>
                       <td className="text-sm tracking-wide text-center border-r">
                         {index + 1}
@@ -62,11 +78,10 @@ console.log('slots', slots);
                         {item.areaName}
                       </td>
                       <td className="text-sm text-center font-semibold tracking-wider border-r">
-                        {item.student.length}
+                        {item.totalStudent}
                       </td>
                       <td className="text-sm text-center font-semibold tracking-wider">
-
-                        {item.slot === 0 ? 0 : item.slot - item.student.length}
+                        {item.slot - item.totalStudent} <span className="text-gray-400">{` / ${item.slot}`}</span>
                       </td>
                     </tr>
                   ))}

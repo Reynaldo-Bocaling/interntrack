@@ -57,7 +57,8 @@ const CoordinatorInfo = () => {
                 program,
                 major,
                 profile,
-                AreaOfAssignment
+                AreaOfAssignment,
+                deletedStatus
               }) => ({
                 id,
                 name: `${firstname} ${lastname}`,
@@ -68,9 +69,10 @@ const CoordinatorInfo = () => {
                 program,
                 major,
                 profile,
-                company: AreaOfAssignment?.company.companyName
+                company: AreaOfAssignment?.company.companyName,
+                deletedStatus
               })
-            )
+            ).filter((item)=> item.deletedStatus ===0)
           : []
       )
     : [];
@@ -101,7 +103,7 @@ const CoordinatorInfo = () => {
           program,
           major,
           picture: pic,
-          totalStudent: student.length,
+          totalStudent: student.filter((item)=>item.deletedStatus ===0).length,
         })
       )
     : [];

@@ -56,13 +56,15 @@ const AssignStudentModal = (props) => {
   firstname,
   lastname,
   email,
-  gender
+  gender,
+  deletedStatus
  })=> ({
   id,
   name: `${firstname} ${lastname}`,
   email,
-  gender
- }))
+  gender,
+  deletedStatus
+ })).filter((item)=>item.deletedStatus === 0)
  : []
 
 
@@ -153,7 +155,8 @@ const AssignStudentModal = (props) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {studentUnassigned.map((item) => (
+                    {studentUnassigned.length > 0 ?
+                    studentUnassigned.map((item) => (
                       <tr key={item.id} className={`cursor-pointer h-12`}>
                         <td className="text-left pl-5 text-sm">{item.id}</td>
                         <td className="capitalize text-left pl-5 text-sm">{item.name}</td>
@@ -177,7 +180,13 @@ const AssignStudentModal = (props) => {
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    ))
+                    : (
+                      <tr>
+                        <td colSpan={5} className="text-center py-5">No Student</td>
+                      </tr>
+                    )
+                    }
                   </tbody>
                 </table>
               </div>

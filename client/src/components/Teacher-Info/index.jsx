@@ -56,6 +56,7 @@ const CoordinatorInfo = () => {
           major,
           profile,
           teacher,
+          deletedStatus
         }) => ({
           id,
           name: `${firstname} ${lastname}`,
@@ -66,8 +67,9 @@ const CoordinatorInfo = () => {
           program,
           major,
           profile,
+          deletedStatus
         })
-      )
+      ).filter((item)=>item.deletedStatus === 0)
     : [];
 
     if(isError){

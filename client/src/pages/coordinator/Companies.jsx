@@ -3,7 +3,7 @@ import { BiSearch } from "react-icons/bi";
 import { HiOutlineDotsVertical, HiOutlineEye } from "react-icons/hi";
 import { IconTrash } from "@tabler/icons-react";
 import { BsPrinter } from "react-icons/bs";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import sm from "../../assets/images/SM Logo.png";
 import sevenEleven from "../../assets/images/7eleven.jpg";
 import neust from "../../assets/images/neustLogo.png";
@@ -35,10 +35,16 @@ const Companies = () => {
           email,
           contact,
           slots: areaOfAssignment.reduce((total, item) => total + item.slot, 0),
+          totalStudent: areaOfAssignment
+            ?.flatMap(({ trainer }) =>
+              trainer?.flatMap(({ student }) => student)
+            )
+            .filter((item) => item.deletedStatus === 0).length,
         })
       )
     : [];
 
+  // console.log('t',filtered);
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
@@ -125,11 +131,13 @@ const Companies = () => {
                     </td>
                     <td className="text-sm text-center tracking-wide ">80%</td>
                     <td className="text-sm text-center font-semibold tracking-wide ">
-                      {40}
+                      {item.totalStudent}
                     </td>
                     <td className="text-sm text-left pl-9 tracking-wide ">
                       <div className="relative">
-                        <span className="pr-10">{item.slots}</span>
+                        <span className="pr-10">
+                          {item.slots - item.totalStudent}
+                        </span>
                         <div>
                           <button
                             className=" absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer hover:text-gray-700"
@@ -148,7 +156,9 @@ const Companies = () => {
                             >
                               <button
                                 onClick={() =>
-                                  navigate(`/view-company/${item.id && item.id}`)
+                                  navigate(
+                                    `/view-company/${item.id && item.id}`
+                                  )
                                 }
                                 className="flex items-center gap-1 text-gray-700 font-medium tracking-wide hover:underline"
                               >

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {BiEditAlt} from 'react-icons/bi'
 import {Input, Button } from "@nextui-org/react";
+import { useParams } from "react-router-dom";
+
 
 
 const StudentIfo = ({ data}) => {
@@ -23,6 +25,11 @@ const StudentIfo = ({ data}) => {
     e.preventDefault();
     setEditable(!Editable)
   }
+
+
+  
+
+  
 
   return (
     <div className="bg-slate-50">

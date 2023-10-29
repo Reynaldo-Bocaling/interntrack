@@ -260,7 +260,7 @@ const TimeSheetTable = ({ data }) => {
         )}
         {currentItems.length === 0 ? (
           <div className="px-4 py-2 text-center">
-            No matching records found.
+            No record.
           </div>
         ) : (
           <div className="flex my-3 ml-3">

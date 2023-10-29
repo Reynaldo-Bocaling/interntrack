@@ -26,6 +26,8 @@ const index = ({data, isLoading, isError}) => {
     return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
   }
 
+  
+  
   return (
     <div className="rounded-xl overflow-hidden -mt-3 -ml-2">
        {isLoading ? (

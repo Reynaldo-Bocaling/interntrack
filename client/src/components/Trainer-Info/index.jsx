@@ -52,6 +52,7 @@ const TrainerViewInfo = () => {
           major,
           profile,
           teacher,
+          deletedStatus
         }) => ({
           id,
           name: `${firstname} ${lastname}`,
@@ -62,8 +63,9 @@ const TrainerViewInfo = () => {
           program,
           major,
           profile,
+          deletedStatus
         })
-      )
+      ).filter((item)=>item.deletedStatus === 0)
     : [];
 
     if(trainerListError){

@@ -12,25 +12,20 @@ import neust from "../../assets/images/neustLogo.png";
 import { getCompanyList, addCompany } from "../../api/Api";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
-import {useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+import { useDisclosure as AddTeacherDisclosure } from "@nextui-org/react";
 import Swal from "sweetalert2";
 
 const Companies = () => {
   const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
   const [OpenTableMenu, setOpenTableMenu] = useState(null);
-  
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
 
   const {
     isOpen: AddIsOpen,
     onOpen: AddTeacherOnOpen,
     onClose: AddTeacherOnClose,
   } = AddTeacherDisclosure();
-
-  
-
-
 
   const queryClient = useQueryClient();
 
@@ -43,8 +38,11 @@ const Companies = () => {
       setAddCompanyModalIsOpen(false);
     },
     onError: (error) => {
-      Swal.fire("Error", "There was an issue adding the campany. \n Please check the information provided and try again.", "error");
-
+      Swal.fire(
+        "Error",
+        "There was an issue adding the campany. \n Please check the information provided and try again.",
+        "error"
+      );
     },
   });
   // getCompanies
@@ -64,29 +62,21 @@ const Companies = () => {
 
   const filtered = company
     ? company.map(
-        ({ id, 
-          companyName, 
-          address, 
-          email, 
-          contact,
-          moaUpload,
-          profile,
-          trainer, 
-          areaOfAssignment
-         }) => ({
+        ({ id, companyName, address, email, contact, areaOfAssignment }) => ({
           id,
           companyName,
           address,
           email,
           contact,
-          moaUpload,
-          profile,
-          trainer,
           slots: areaOfAssignment.reduce((total, item) => total + item.slot, 0),
+          totalStudent: areaOfAssignment
+            ?.flatMap(({ trainer }) =>
+              trainer?.flatMap(({ student }) => student)
+            )
+            .filter((item) => item.deletedStatus === 0).length,
         })
       )
     : [];
-
 
   return (
     <div>
@@ -179,15 +169,15 @@ const Companies = () => {
                     <td className="text-sm text-left pl-5 tracking-wide ">
                       {item.email}
                     </td>
-                    <td className="text-sm text-center tracking-wide ">
-                      80%
-                    </td>
+                    <td className="text-sm text-center tracking-wide ">80%</td>
                     <td className="text-sm text-center font-semibold tracking-wide ">
-                      {40}
+                      {item.totalStudent}
                     </td>
                     <td className="text-sm text-left pl-9 tracking-wide ">
                       <div className="relative">
-                        <span className="pr-10">{item.slots}</span>
+                        <span className="pr-10">
+                          {item.slots - item.totalStudent}
+                        </span>
                         <div>
                           <button
                             className=" absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer hover:text-gray-700"
@@ -206,7 +196,9 @@ const Companies = () => {
                             >
                               <button
                                 onClick={() =>
-                                  navigate(`/view-company/${item.id && item.id}`)
+                                  navigate(
+                                    `/view-company/${item.id && item.id}`
+                                  )
                                 }
                                 className="flex items-center gap-1 text-gray-700 font-medium tracking-wide hover:underline"
                               >
@@ -232,9 +224,9 @@ const Companies = () => {
 
       {/* modal */}
       <AddCompanyComponents
-      AddIsOpen={AddIsOpen}
-      AddOnOpen={AddTeacherOnOpen}
-      AddOnClose={AddTeacherOnClose}
+        AddIsOpen={AddIsOpen}
+        AddOnOpen={AddTeacherOnOpen}
+        AddOnClose={AddTeacherOnClose}
         isOpen={AddCompanyModalIsOpen}
         closeModal={() => setAddCompanyModalIsOpen(false)}
         onAddCompany={handleAddCompany}

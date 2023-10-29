@@ -1,7 +1,7 @@
 import React from "react";
 import pic from "../../assets/images/dp.png";
 import { Avatar } from "@nextui-org/react";
-import PulseLloader from "react-spinners/PulseLoader";
+import Pulseloader from "react-spinners/PulseLoader";
 
 function StudentList({ data, isLoading }) {
   console.log("student", data);

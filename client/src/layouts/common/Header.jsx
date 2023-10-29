@@ -91,16 +91,20 @@ function Header(props) {
   const handleLogout = () => {
 
     Swal.fire({
-      title: 'Are you sure you want to log out',
-      showDenyButton: true,
-      confirmButtonText: 'Yes',
-      denyButtonText: `No`,
+      title: 'Are you sure you want to logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#49A6F3',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
     }).then((result) => {
-
       if (result.isConfirmed) {
         mutate()
-      } 
+      }
     })
+
+
+
 
    
   }

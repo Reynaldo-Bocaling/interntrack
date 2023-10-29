@@ -69,7 +69,8 @@ const TeacherList = () => {
     program,
     major,
     accountStatus,
-    student
+    student,
+    deletedStatus
   })=> ({
     id,
     name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''} ${lastname}`,
@@ -81,7 +82,7 @@ const TeacherList = () => {
     major,
     picture: picture,
     accountStatus,
-    totalStudent: student.length
+    totalStudent: student.filter((item)=> item.deletedStatus === 0).length
   })): []
 
   const handleSubmit = (formData) => {

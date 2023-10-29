@@ -10,7 +10,8 @@ function ViewAttendanceRequest({data}) {
     lastname,
     AreaOfAssignment,
     timesheet,
-    trainer
+    trainer,
+    deletedStatus
 
   })=> ({
     id,
@@ -19,9 +20,9 @@ function ViewAttendanceRequest({data}) {
     timesheet: timesheet 
     ? timesheet.reduce((total, item)=> total + item.totalHours, 0)
     : [],
-    trainer: trainer? `${trainer.firstname} ${trainer.lastname}`: []
-
-  }))
+    trainer: trainer? `${trainer.firstname} ${trainer.lastname}`: [],
+    deletedStatus
+  })).filter((item)=>item.deletedStatus === 0)
   :[])
   :[]
 // console.log('student',studentList);
@@ -52,7 +53,7 @@ function ViewAttendanceRequest({data}) {
             </tr>
           </thead>
           <tbody>
-            {studentList.length > 0 &&
+            {studentList.length > 0 ?
               studentList.map((item) => (
                 <tr className="h-14" key={item.id}>
                   <td className="text-sm tracking-wide pl-2">{item.id}</td>
@@ -61,7 +62,13 @@ function ViewAttendanceRequest({data}) {
                   <td className="text-sm tracking-wide pl-2">{item.timesheet} hrs</td>
                   <td className="text-sm tracking-wide pl-2">{item.trainer}</td>
                 </tr>
-              ))}
+              ))
+              :
+              <tr>
+                <td colSpan="5" className="w-full text-center py-5 font-medium tracking-wide">No Student</td>
+              </tr>
+              
+              }
           </tbody>
         </table>
       </div>

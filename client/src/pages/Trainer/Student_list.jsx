@@ -48,7 +48,8 @@ const Student_list = () => {
     profile,
     accountStatus,
     teacher,
-    AreaOfAssignment
+    AreaOfAssignment,
+    deletedStatus
   })=> ({
     id,
     middlename,
@@ -65,8 +66,10 @@ const Student_list = () => {
     picture:picture,
     company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
     accountStatus,
-    totalHours: 170
-  })): []
+    totalHours: 170,
+    deletedStatus
+  })).filter((item)=>item.deletedStatus === 0)
+  : []
 
   //   columns
   const columns = [
