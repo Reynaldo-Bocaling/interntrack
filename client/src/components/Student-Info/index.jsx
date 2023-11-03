@@ -73,6 +73,8 @@ const StudentViewInfo = () => {
     );
   }
 
+
+  // console.log(timesheet);
   const { mutate } = useMutation(resetData, {
     onSuccess: () => {
       Swal.fire(
@@ -210,7 +212,7 @@ const StudentViewInfo = () => {
                   <StudentIfo data={info} isLoading={isLoading} />
                 </Tabs.Panel>
                 <Tabs.Panel value="requirement" pt="xs">
-                  <StudentRequirements data={requirementData} />
+                  <StudentRequirements data={requirementData} isLoading={isLoading} />
                 </Tabs.Panel>
                 <Tabs.Panel value="task" pt="xs">
                   <StudentTask data={taskData} />

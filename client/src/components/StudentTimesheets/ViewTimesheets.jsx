@@ -14,8 +14,8 @@ const WeeklyReport = () => {
   const [showAllTables, setShowAllTables] = useState(false);
 
     // piechart info
-    const piechartData = [325, 25, 150];
-    const colors = ["#2ECC71", "#FFA500", "#FF5733"];
+    const piechartData = [325, 150];
+    const colors = ["#2ECC71", "#FF5733"];
     const labels = ["Hours Taken", "Leave", "Hours Remaining"];
 
     
@@ -45,7 +45,7 @@ const WeeklyReport = () => {
     ? groupedTimeSheet
     : groupedTimeSheet.slice(0, 1);
 
-
+console.log(newData, 'd');
   return (
     <div>
      <Link 
@@ -71,7 +71,7 @@ const WeeklyReport = () => {
             {student.name}
           </div>
           <span className="text-sm text-blue-500 font-medium tracking-wide">
-            Trainee
+            Timesheet
           </span>
         </div>
       </div>
@@ -165,13 +165,17 @@ const WeeklyReport = () => {
                  {format(new Date(entry.date), "MMM dd")}
                </td>
                <td className="text-sm  tracking-widetext-left">
-                 {entry.timeIn} AM
+                  {entry.timeIn != '0:00' ? format(new Date(entry.timeIn), "h:mm a") : '0'}
                </td>
                <td className="text-sm  tracking-widetext-left">
-                 {entry.timeOut} PM
+               {entry.timeOut != '0:00' ? format(new Date(entry.timeOut), "h:mm a") : '0'}
                </td>
                <td className="text-sm  tracking-widetext-left">
-                 {entry.totalHours} hrs
+                 {entry.totalHours} 
+                 {/* {`${Math.floor(entry.totalHours)}:${Math.round(
+                            (entry.totalHours % 1) * 60
+                          )}`} */}
+                 hrs
                </td>
              </tr>
            ))}

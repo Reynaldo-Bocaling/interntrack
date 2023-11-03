@@ -8,58 +8,210 @@ import LineChart from "../../components/charts/LineChart";
 import pic from "../../assets/images/dp.png";
 import { Link } from "react-router-dom";
 import DateNow from "../../components/Dates/DateNow";
+import { useQuery } from "@tanstack/react-query";
+import { getCampus, getStudentList, getTeacher, getTrainerList } from "../../api/Api";
+import { format } from "date-fns";
+import { CircularProgressbar } from "react-circular-progressbar";
 
 function Dashboard() {
+  const formattedDate = format(new Date(), "yyyy-MM-dd");
+
+  const { data: getProgram } = useQuery({
+    queryKey: ["getProgram"],
+    queryFn: getCampus,
+  });
+
+  const { data: teacher, isLoading: studentListLoading } = useQuery({
+    queryKey: ["getTeacher"],
+    queryFn: getTeacher,
+  });
+
+  const { data: students } = useQuery({
+    queryKey: ["getStudent"],
+    queryFn: getStudentList,
+  });
+
+  const data = teacher
+    ? teacher.student.filter((item) => item.deletedStatus === 0)
+    : [];
+
+  const { data: trainerlist, isLoading: trainerlistLoading } = useQuery({
+    queryKey: ["getTrainerList"],
+    queryFn: getTrainerList,
+  });
+
+  const filterStudentList = students
+    ? students.filter((item) => item.teacher_id === teacher?.id)
+    : [];
+
+  const getTime = filterStudentList
+    .flatMap(({ timesheet }) => timesheet)
+    .find((item) => item.date === formattedDate);
+
+    const getWeeklyHoursRate = filterStudentList 
+  ? filterStudentList.flatMap(({ timesheet }) => timesheet)
+    .filter((item) => item.week === getTime?.week)
+    .map(({ date, totalHours }) => ({
+      date: format(new Date(date), "dd"),
+      day: format(new Date(date), "EEEE"),
+      totalHours
+    }))
+    .reduce((acc, { day, totalHours }) => {
+      if (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].includes(day)) {
+        acc[day] = (acc[day] || 0) + totalHours;
+      }
+      return acc;
+    }, {})
+  : {};
+
+
+
+  const getWeeklyAttendance = filterStudentList
+    ? filterStudentList
+        .flatMap(({ timesheet }) => timesheet)
+        .filter((item) => item.week === getTime?.week)
+        .map(({ date, totalHours }) => ({
+          date: format(new Date(date), "dd"),
+          day: format(new Date(date), "EEEE"),
+          totalHours,
+        }))
+        .reduce((acc, { day, totalHours }) => {
+          if (
+            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].includes(
+              day
+            )
+          ) {
+            acc[day] = acc[day] || { present: 0, absent: 0 };
+            if (totalHours === 0) {
+              acc[day].absent += 1;
+            } else {
+              acc[day].present += 1;
+            }
+          }
+          return acc;
+        }, {})
+    : {};
+
+  const result = {
+    present: [],
+    absent: [],
+  };
+
+  ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].forEach((day) => {
+    if (getWeeklyAttendance[day]) {
+      result.present.push(getWeeklyAttendance[day].present);
+      result.absent.push(getWeeklyAttendance[day].absent);
+    }
+  });
+
+
+
+
+  const programList = getProgram
+  ? getProgram.flatMap(({ college }) =>
+      college?.flatMap(({ program }) => program)
+    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
+  : [];
+
+
+  
+  const totalAllHoursStudent = filterStudentList.map(({ program}) => 
+    programList.find((item)=> item.program_description === program)?.trainingHours)
+    .reduce((total, item) => total + item, 0)
+
+  const totalHoursStudent = filterStudentList.flatMap(({timesheet}) => timesheet).reduce((total, item) => total + item.totalHours, 0)
+
+
+  const percentage = Math.floor((totalHoursStudent / totalAllHoursStudent) * 100)
+
+  const trainer = trainerlist ? trainerlist : 0;
+  const coordinatorStudent = teacher?.coordinator.teacher.flatMap(
+    ({ student }) => student
+  ).length;
+
+  const totalStudent = filterStudentList.length;
+
+  const totalAssign = `${
+    (data.filter(
+      (item) => item.trainer !== null && item.areaAssigned_id !== null
+    ).length /
+      totalStudent) *
+    100
+  }%`;
+  const totalUnAssign = `${
+    (data.filter(
+      (item) => item.trainer === null && item.areaAssigned_id === null
+    ).length /
+      totalStudent) *
+    100
+  }%`;
+
+  // console.log('student',getWeeklyAttendance);
+
   const totalCountBox = [
     {
       label: "Trainer",
       url: "/daily-logs",
-      count: 25,
+      count: trainerlistLoading ? "Loading" : trainer.length,
       textColor: "text-blue-500",
       shadow: "shadow-red-50",
     },
     {
       label: "Student",
       url: "/",
-      count: 40,
+      count: studentListLoading ? "Loading" : totalStudent,
       textColor: "text-green-500",
       shadow: "shadow-green-50",
     },
   ];
 
+
   // dummydata for charts
-  const DummyData = [
+  const weeklyAttendanceGraphData = [
     {
       name: "absent",
-      data: [21, 30, 18, 41, 32],
+      data: result.absent,
       color: "#ff0000",
       fillColor: "rgba(255, 0, 0, 0.3)",
     },
     {
       name: "present",
-      data: [8, 25, 38, 20, 24],
+      data: result.present,
       color: "#1a75ff",
       fillColor: "rgba(26, 117, 255, 0.3)",
     },
   ];
 
 
+  const hoursRateGraphData = [
+    {
+      name: 'Hours',
+      data: Object.values(getWeeklyHoursRate),
+      color: '#00C6FD',
+      fillColor: 'rgba(255, 0, 0, 0.3)',
+    }
+  ];
+
 
   return (
     <div className="min-h-full w-full">
       <div className="m-1 ">
-        <div className="flex gap-[2%] mt-1 min-h-[550px]">
-          {/* dashboard content */}
-          <main className="flex flex-col w-[64%] gap-2 relative ">
+        <div className="flex gap-3 mt-1 min-h-[550px]">
+
+
+          {/* main dashboard content */}
+          <main className="flex flex-col w-[62%]  relative ">
             {/* title */}
-              <div className="left-content flex  items-center justify-between">
+
+
+            <div className="left-content flex  items-center justify-between">
               <div className="flex flex-col gap-2">
                 <h1 className="text-xl font-semibold tracking-wider text-gray-700">
-                    Teacher overview
-                  </h1>
-                  <small className="text-blue-500 font-semibold tracking-wider">
-                    Teacher Dashboard
-                  </small>  
+                  Teacher overview
+                </h1>
+                <small className="text-blue-500 font-semibold tracking-wider">
+                  Teacher Dashboard
+                </small>
               </div>
               <div className="flex items-center gap-3">
                 <FcCalendar />
@@ -75,16 +227,28 @@ function Dashboard() {
                 </div>
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col gap-3">
-                    <div className="font-medium">Assigned: <span className="pl-8 font-semibold">{'80%'}</span></div>
+                    <div className="font-medium">
+                      Assigned:{" "}
+                      <span className="pl-8 font-semibold">{totalAssign}</span>
+                    </div>
                     <div className="h-2 w-full bg-gray-200 rounded-full">
-                      <div className="h-full w-[80%] bg-blue-500 rounded-full"></div>
+                      <div
+                        className={`h-full w-[${totalAssign}] bg-blue-500 rounded-full`}
+                      ></div>
                     </div>
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    <div className="font-medium">Unassigned: <span className="pl-3 font-semibold">{'20%'}</span></div>
+                    <div className="font-medium">
+                      Unassigned:{" "}
+                      <span className="pl-3 font-semibold">
+                        {totalUnAssign}
+                      </span>
+                    </div>
                     <div className="h-2 w-full bg-gray-200 rounded-full">
-                      <div className="h-full w-[20%] bg-red-500 rounded-full"></div>
+                      <div
+                        className={`h-full w-[${totalUnAssign}] bg-red-500 rounded-full`}
+                      ></div>
                     </div>
                   </div>
                 </div>
@@ -123,13 +287,17 @@ function Dashboard() {
               <h1 className=" text-base font-semibold text-gray-700 ">
                 Weekly Attendance Overview
               </h1>
-              <LineChart data={DummyData} />
+              <LineChart data={weeklyAttendanceGraphData} />
             </div>
           </main>
 
+
+
+
+
           {/* right side */}
-          <div className="right-side w-[35%] flex flex-col gap-[2%] ">
-            <div className="relative  max-w-full flex  flex-col p-4 bg-white shadow-2xl shadow-blue-50 rounded-md border px-7 py-7 border-slate-200">
+          <div className="right-side w-[37%] flex flex-col gap-3 ">
+            <div className="relative  max-w-full flex  flex-col p-4 bg-white shadow-2xl shadow-orange-50 rounded-md border px-7 py-7 border-slate-200">
               <div className="flex items-center gap-5">
                 <div className="h-[50px] w-[50px] rounded-full overflow-hidden shadow-lg p-2 border border-slate-100">
                   <img src={pic} alt="error" />
@@ -137,7 +305,7 @@ function Dashboard() {
 
                 <div>
                   <h4 className="text-xl font-semibold tracking-wider">
-                    Alex Cochanco
+                    {`${teacher?.coordinator?.firstname} ${teacher?.coordinator?.lastname}`}
                   </h4>
                   <small className="text-blue-500 font-medium tracking-wide">
                     Coordinator
@@ -151,15 +319,9 @@ function Dashboard() {
                     <LiaUsersSolid size={25} className="text-blue-400" />
                     <span className=" font-medium tracking-wide">Teacher</span>
                   </div>
-                  <span className="pl-5 text-gray-700 text-lg font-semibold">15</span>
-                </div>
-
-                <div className="flex items-center justify-between ap-3">
-                  <div className="flex gap-5">
-                    <LiaUsersSolid size={25} className="text-blue-400" />
-                    <span className=" font-medium tracking-wide">Trainer</span>
-                  </div>
-                 <span className="pl-5 text-gray-700 text-lg font-semibold">25</span>
+                  <span className="pl-5 text-gray-700 text-lg font-semibold">
+                    {teacher?.coordinator?.teacher.length}
+                  </span>
                 </div>
 
                 <div className="flex items-center  justify-between">
@@ -167,7 +329,9 @@ function Dashboard() {
                     <LiaUsersSolid size={25} className="text-blue-400" />
                     <span className=" font-medium tracking-wide">Student</span>
                   </div>
-                 <span className="pl-5 text-gray-700 text-lg font-semibold">120</span>
+                  <span className="pl-5 text-gray-700 text-lg font-semibold">
+                    {coordinatorStudent}
+                  </span>
                 </div>
               </div>
 
@@ -176,46 +340,44 @@ function Dashboard() {
               </button>
             </div>
 
-            <div className=" max-w-full p-4 bg-white shadow-2xl shadow-red-50 rounded-md border border-slate-200">
-              <header className="flex justify-between mb-3">
-                <div className="left flex flex-col gap-3">
-                  <small className="font-medium tracking-wide">
-                    Student Hours{" "}
-                  </small>
-                  <h2 className="text-xl font-semibold tracking-wider">72%</h2>
-                </div>
 
-                <div className="right flex flex-col gap-3 items-center">
-                  <small className="font-medium tracking-wide">
-                    Top 3 Higher hours rate
-                  </small>
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={pic}
-                      alt="error"
-                      className="h-[40px] w-[40px] bg-yellow-400 p-1 rounded-full"
-                    />
-                    <img
-                      src={pic}
-                      alt="error"
-                      className="h-[40px] w-[40px] bg-violet-400 p-1 rounded-full"
-                    />
-                    <img
-                      src={pic}
-                      alt="error"
-                      className="h-[40px] w-[40px] bg-green-400 p-1 rounded-full"
-                    />
-                  </div>
-                </div>
-              </header>
 
-              <main>
-                <div className="left"></div>
-                <div className="right"></div>
-              </main>
+            <div className="col-span-3 bg-white rounded-lg shadow-xl shadow-blue-50 border border-[#ecf0f1] ">
+            <p className="text-base font-semibold mt-3 ml-3">
+                Student Hours rate per week
+              </p>
+            <LineChart data={hoursRateGraphData} sizeHeight={200} />
             </div>
 
-            <div className="h-[65%] max-w-full p-4 bg-white shadow-lg shadow-slate-100 rounded-md border border-slate-200">
+
+
+
+
+
+            <div className="col-span-2 bg-white rounded-lg shadow-xl p-3 shadow-blue-50 border border-[#ecf0f1] flex flex-col items-center justify-center">
+              <p className="text-lg font-semibold">Student Completion Rate</p>
+              <div className="max-w-[200px] w-full p-4 ">
+                <CircularProgressbar
+                  value={percentage}
+                  text={`${percentage} %`}
+                  styles={{
+                    path: { stroke: `#20D117` },
+                    trail: { stroke: "#E4F5E4", strokeWidth: 10 },
+                    text: {
+                      fill: `#333`,
+                      fontSize: `1rem`,
+                      fontWeight: 600,
+                      dominantBaseline: "middle",
+                      textAnchor: "middle",
+                    },
+                  }}
+                  strokeWidth={10}
+                />
+              </div>
+            </div>
+
+
+            {/* <div className="h-[65%] max-w-full p-4 bg-white shadow-lg shadow-slate-100 rounded-md border border-slate-200">
               <div className="flex items-center">
                 <span className="text-gray-500 tracking-wide">Active now</span>
                 <BsDot size={23} className="text-green-500" />
@@ -264,7 +426,7 @@ function Dashboard() {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

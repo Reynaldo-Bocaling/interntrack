@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
 
 const Companies = () => {
-  const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
   const [OpenTableMenu, setOpenTableMenu] = useState(null);
   const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ const Companies = () => {
             )
             .filter((item) => item.deletedStatus === 0).length,
         })
-      )
+      ).filter((item)=>item.companyName.toLowerCase().includes(searchInput.toLowerCase()))
     : [];
 
   // console.log('t',filtered);
@@ -58,6 +58,7 @@ const Companies = () => {
               type="text"
               placeholder="Search.."
               className="outline-none text-sm"
+              onChange={(e)=>setSearchInput(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-3">

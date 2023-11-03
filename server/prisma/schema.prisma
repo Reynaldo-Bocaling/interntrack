@@ -183,6 +183,7 @@ model Company {
   email                 String
   contact               Int
   moaUpload             String
+  moaUrl                String?
   profile               String?
   director_id           Int
   director              Director @relation(fields: [director_id], references: [id])

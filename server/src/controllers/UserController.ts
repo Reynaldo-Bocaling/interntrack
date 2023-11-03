@@ -14,27 +14,34 @@ export class UserController {
   // POST
   // add company
   static async addCompany(req: any, res: Response) {
+    const director_id = req.user.director[0]?.id;
+
     const { companyName, address, email, contact, available_positions } =
       req.body;
-    const moaUpload = req.file.buffer.toString("base64");
+
+    const moaUrl = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+
+    const moaFilename = req.file?.filename;
+
     const parsedAvailablePositions = JSON.parse(available_positions);
+
     const areasToInsert = parsedAvailablePositions.map((positionData: any) => ({
       areaName: positionData.position,
       slot: positionData.slot,
     }));
-    if (!moaUpload) {
-      return res.status(400).json({ message: "No file uploaded" });
-    }
+
     try {
-      const director_id = req.user.director[0]?.id;
       const response = await prisma.company.create({
         data: {
           companyName,
           address,
           email,
           contact: Number(contact),
-          moaUpload,
-          director_id:Number(director_id) ,
+          moaUpload: moaFilename,
+          moaUrl: moaUrl,
+          director_id: Number(director_id),
           areaOfAssignment: {
             createMany: {
               data: areasToInsert,
@@ -167,6 +174,8 @@ export class UserController {
   }
 
   static async addSingleStudent(req: any, res: Response) {
+    const teacher_id = req.user.teacher[0]?.id;
+
     const newPassowrd = generateNewPassword();
     const {
       firstname,
@@ -174,40 +183,62 @@ export class UserController {
       lastname,
       email,
       contact,
-      campus,
-      college,
-      program,
+      gender,
       major,
-      accountStatus,
+      address,
     } = req.body;
     try {
+      const findTeacher = await prisma.teacher.findUnique({
+        where: {
+          id: teacher_id,
+        },
+      });
+
+      if (!findTeacher) return res.status(404).json("teacher not found");
+
       await prisma.user.create({
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: "teacher",
-          teacher: {
+          role: "student",
+          student: {
             create: {
               firstname,
               middlename,
               lastname,
+              gender,
               email,
+              address,
               contact: Number(contact),
-              campus: "Sumacab",
-              college: "CICT",
-              program: "BSIT",
-              major: "Web",
-              coordinator_id: 1,
+              campus: findTeacher?.campus,
+              college: findTeacher?.college,
+              program: findTeacher?.program,
+              major: major,
               accountStatus: 0,
+              deletedStatus: 0,
+              teacher_id: teacher_id,
             },
           },
         },
       });
-      return res.status(200).json({ username: email, password: newPassowrd });
+
+      const mailOptions = {
+        from: "reynaldobocaling@gmail.com",
+        to:email,
+        subject: "IternTrack!",
+        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\nStudent`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
+
+      return res.status(200).json('success');
     } catch (error: any) {
       return res.status(500).json(error.message);
     }
   }
+
+
 
   //newImport
   static async importStudent(req: any, res: Response) {
@@ -215,16 +246,26 @@ export class UserController {
     const ExcelData = req.body.excelData;
     const newPassowrd = generateNewPassword();
     try {
+      const findTeacher = await prisma.teacher.findUnique({
+        where: {
+          id: teacher_id,
+        },
+      });
+
+      if (!findTeacher) return res.status(404).json("teacher not found");
+
+
       const dates = await prisma.dateRangeTimesheet.findFirst({
         where: { teacher_id },
       });
-  
+
       if (!dates) {
-        return res.status(500).json('not set range date');
+        return res.status(500).json("not set range date");
       }
-  
+
       const startDate = dates?.start_date;
       const endDate = dates?.end_date;
+
 
       for (const data of ExcelData) {
         const createdUser = await prisma.user.create({
@@ -244,17 +285,17 @@ export class UserController {
             contact: data.contact,
             address: data.address,
             gender: data.gender,
-            campus: "Sumacab",
-            college: "CICT",
-            program: "BSIT",
-            major: "Web",
+            campus: findTeacher?.campus,
+            college: findTeacher?.college,
+            program: findTeacher?.program,
+            major:  data.major,
             teacher_id: teacher_id,
             user_id: createdUser.id,
             accountStatus: 0,
-            deletedStatus:0,
+            deletedStatus: 0,
             timesheet: {
               createMany: {
-                data: generateTimeData(startDate,endDate),
+                data: generateTimeData(startDate, endDate),
               },
             },
           },
@@ -376,240 +417,229 @@ export class UserController {
     }
   }
 
-
-
-// campuses
+  // campuses
   //add campus
-  static async addCampus(req:any, res:Response) {
+  static async addCampus(req: any, res: Response) {
     const campus_Location = req.body.campus_Location;
 
     try {
       const alreadyExist = await prisma.campus.findFirst({
-        where: {campus_Location}
+        where: { campus_Location },
       });
-      if(alreadyExist) return res.status(500).json('Campus is already exist');
+      if (alreadyExist) return res.status(500).json("Campus is already exist");
 
       const response = await prisma.campus.create({
-        data: {campus_Location}
+        data: { campus_Location },
       });
 
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
   //add collge
-  static async addCollege(req:any, res:Response) {
-    const {college_description, campus_id} = req.body;
+  static async addCollege(req: any, res: Response) {
+    const { college_description, campus_id } = req.body;
 
     try {
       const alreadyExist = await prisma.college.findFirst({
         where: {
           college_description,
-          campus_id:Number(campus_id)
-        }
+          campus_id: Number(campus_id),
+        },
       });
 
-      if(alreadyExist) return res.status(500).json('College is already exist');
+      if (alreadyExist) return res.status(500).json("College is already exist");
 
       const response = await prisma.college.create({
         data: {
           college_description,
-          campus_id:Number(campus_id)
-        }
+          campus_id: Number(campus_id),
+        },
       });
 
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
   //add program
-  static async addProgram(req:any, res:Response) {
-    const {program_description, college_id, trainingHours} = req.body;
+  static async addProgram(req: any, res: Response) {
+    const { program_description, college_id, trainingHours } = req.body;
 
     try {
       const alreadyExist = await prisma.program.findFirst({
         where: {
           program_description,
-          college_id
-        }
+          college_id,
+        },
       });
 
-      if(alreadyExist) return res.status(500).json('Program is already exist');
+      if (alreadyExist) return res.status(500).json("Program is already exist");
 
       const response = await prisma.program.create({
         data: {
           program_description,
           college_id,
-          trainingHours:Number(trainingHours)
-        }
+          trainingHours: Number(trainingHours),
+        },
       });
 
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
   //add major
-  static async addMajor(req:any, res:Response) {
-    const {major_description, program_id} = req.body;
+  static async addMajor(req: any, res: Response) {
+    const { major_description, program_id } = req.body;
 
     try {
       const alreadyExist = await prisma.major.findFirst({
         where: {
           major_description,
-          program_id
-        }
+          program_id,
+        },
       });
 
-      if(alreadyExist) return res.status(500).json('Major is already exist');
+      if (alreadyExist) return res.status(500).json("Major is already exist");
       const response = await prisma.major.create({
         data: {
           major_description,
-          program_id
-        }
+          program_id,
+        },
       });
 
-      return res.status(200).json(response)
+      return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
-
-
   //delete campuses
-static async deleteCampus(req: any, res:Response) {
-  const {id} = req.params;
-  try {
-    await prisma.campus.delete({
-      where: { id: Number(id)}
-    });
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+  static async deleteCampus(req: any, res: Response) {
+    const { id } = req.params;
+    try {
+      await prisma.campus.delete({
+        where: { id: Number(id) },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
 
-static async deleteCollege(req: any, res:Response) {
-  const {id} = req.params;
-  try {
-    await prisma.college.delete({
-      where: { id: Number(id)}
-    });
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+  static async deleteCollege(req: any, res: Response) {
+    const { id } = req.params;
+    try {
+      await prisma.college.delete({
+        where: { id: Number(id) },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
 
-static async deleteProgram(req: any, res:Response) {
-  const {id} = req.params;
-  try {
-    await prisma.program.delete({
-      where: { id: Number(id)}
-    });
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+  static async deleteProgram(req: any, res: Response) {
+    const { id } = req.params;
+    try {
+      await prisma.program.delete({
+        where: { id: Number(id) },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
 
-static async deleteMajor(req: any, res:Response) {
-  const {id} = req.params;
-  try {
-    await prisma.major.delete({
-      where: { id: Number(id)}
-    });
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+  static async deleteMajor(req: any, res: Response) {
+    const { id } = req.params;
+    try {
+      await prisma.major.delete({
+        where: { id: Number(id) },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
-
-
-
 
   //update campuses
-static async updateCampus(req:any, res:Response) {
-  const {id, campus_Location} = req.body;
+  static async updateCampus(req: any, res: Response) {
+    const { id, campus_Location } = req.body;
 
-  try {
-    await prisma.campus.update({
-      where: {
-        id
-      },
-      data: {
-        campus_Location
-      }
-    })
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+    try {
+      await prisma.campus.update({
+        where: {
+          id,
+        },
+        data: {
+          campus_Location,
+        },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
-static async updateCollege(req:any, res:Response) {
-  const {id, college_description} = req.body;
+  static async updateCollege(req: any, res: Response) {
+    const { id, college_description } = req.body;
 
-  try {
-    await prisma.college.update({
-      where: {
-        id
-      },
-      data: {
-        college_description
-      }
-    })
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+    try {
+      await prisma.college.update({
+        where: {
+          id,
+        },
+        data: {
+          college_description,
+        },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
 
-static async updateProgram(req:any, res:Response) {
-  const {id, program_description,trainingHours} = req.body;
+  static async updateProgram(req: any, res: Response) {
+    const { id, program_description, trainingHours } = req.body;
 
-  try {
-    await prisma.program.update({
-      where: {
-        id
-      },
-      data: {
-        program_description,
-        trainingHours:Number(trainingHours)
-      }
-    })
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+    try {
+      await prisma.program.update({
+        where: {
+          id,
+        },
+        data: {
+          program_description,
+          trainingHours: Number(trainingHours),
+        },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
 
-static async updateMajor(req:any, res:Response) {
-  const {id, major_description} = req.body;
+  static async updateMajor(req: any, res: Response) {
+    const { id, major_description } = req.body;
 
-  try {
-    await prisma.major.update({
-      where: {
-        id
-      },
-      data: {
-        major_description
-      }
-    })
-    return res.status(200).json('success')
-  } catch (error) {
-    return res.status(500).json(error)
+    try {
+      await prisma.major.update({
+        where: {
+          id,
+        },
+        data: {
+          major_description,
+        },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
-
-
-
-
 
   // time in
   static async timeIn(req: Request, res: Response) {
@@ -651,12 +681,6 @@ static async updateMajor(req:any, res:Response) {
       return res.status(500).json(error);
     }
   }
-
-
-
-
-
-
 
   // GET
   // get director info
@@ -750,6 +774,15 @@ static async updateMajor(req:any, res:Response) {
           id: teacher_id,
         },
         include: {
+          coordinator: {
+            include: {
+              teacher:{
+                include: {
+                  student:true
+                }
+              }
+            }
+          },
           user: true,
           student: {
             include: {
@@ -802,27 +835,27 @@ static async updateMajor(req:any, res:Response) {
         include: {
           college: {
             include: {
-              campus:true,
+              campus: true,
               program: {
                 include: {
-                  college:{
+                  college: {
                     include: {
-                      campus:true
-                    }
+                      campus: true,
+                    },
                   },
-                  major:{
-                    include:{
+                  major: {
+                    include: {
                       program: {
                         include: {
-                          college:{
-                            include:{
-                              campus:true
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                          college: {
+                            include: {
+                              campus: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -1028,14 +1061,6 @@ static async updateMajor(req:any, res:Response) {
     }
   }
 
-
-
-
-
-
-
-
-
   // update profile user
   // update coordinator
   static async EditCoordinatorProfile(req: any, res: Response) {
@@ -1167,8 +1192,6 @@ static async updateMajor(req:any, res:Response) {
     }
   }
 
-
-
   // change password
   //student
   static async changeStudentPassword(req: any, res: Response) {
@@ -1198,16 +1221,6 @@ static async updateMajor(req:any, res:Response) {
       return res.status(500).json(error);
     }
   }
-
-
-
-
-
-
-
-
-
-
 
   // update profile picture
   //update teacher profile
@@ -1428,93 +1441,78 @@ static async updateMajor(req:any, res:Response) {
     }
   }
 
-
-
-
-
-
-
-
-
-  
   // add date ranage
- static async addDateRange(req:any, res:Response) {
-  const {start_date, end_date} = req.body;
-  const teacher_id = req.user.teacher[0]?.id;
-  try {
-    const response = await prisma.dateRangeTimesheet.create({
-      data: {
-        start_date,
-        end_date,
-        teacher_id
-      }
-    });
+  static async addDateRange(req: any, res: Response) {
+    const { start_date, end_date } = req.body;
+    const teacher_id = req.user.teacher[0]?.id;
+    try {
+      const response = await prisma.dateRangeTimesheet.create({
+        data: {
+          start_date,
+          end_date,
+          teacher_id,
+        },
+      });
 
-    return res.status(200).json(response)
-  } catch (error) {
-    return res.status(500).json(error)
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
-}
 
   // update date ranage
- static async updateDateRange(req:any, res:Response) {
-  const {start_date, end_date} = req.body;
-  const teacher_id = req.user.teacher[0]?.id;
-  try {
-    const response = await prisma.dateRangeTimesheet.updateMany({
-      where: {
-        teacher_id
-      },
-      data: {
-        start_date,
-        end_date
-      }
-    });
+  static async updateDateRange(req: any, res: Response) {
+    const { start_date, end_date } = req.body;
+    const teacher_id = req.user.teacher[0]?.id;
+    try {
+      const response = await prisma.dateRangeTimesheet.updateMany({
+        where: {
+          teacher_id,
+        },
+        data: {
+          start_date,
+          end_date,
+        },
+      });
 
-    return res.status(200).json(response)
-  } catch (error) {
-    return res.status(500).json(error)
-  }
-}
-
-// add date ranage
-static async getDateRange(req:any, res:Response) {
-  const teacher_id = req.user.teacher[0]?.id;
-  try {
-    const response = await prisma.dateRangeTimesheet.findMany({
-      where: {teacher_id}
-    });
-
-    return res.status(200).json(response)
-  } catch (error) {
-    return res.status(500).json(error)
-  }
-}
-
-
-
-
-
-
-// reset all data
-static async resetData(req:any, res:Response) {
-  const {id} = req.body;
-
-  try {
-    await prisma.student.updateMany({
-      where: {
-        id: {
-          in: id
-        }
-      },
-      data: {deletedStatus:1}
-    });
-    res.status(200).json(id)
-  } catch (error) {
-    return res.status(500).json(error)
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
   }
 
-}
+  // add date ranage
+  static async getDateRange(req: any, res: Response) {
+    const teacher_id = req.user.teacher[0]?.id;
+    try {
+      const response = await prisma.dateRangeTimesheet.findMany({
+        where: { teacher_id },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+  // reset all data
+  static async resetData(req: any, res: Response) {
+    const { id } = req.body;
+
+    try {
+      await prisma.student.updateMany({
+        where: {
+          id: {
+            in: id,
+          },
+        },
+        data: { deletedStatus: 1 },
+      });
+      res.status(200).json(id);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
 }
 
 

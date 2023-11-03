@@ -3,8 +3,10 @@ import { format } from "date-fns";
 import { Button } from "@nextui-org/react";
 import PieChart from "../../components/charts/PieChart";
 
-const StudentTimesheet = ({ data }) => {
+const StudentTimesheet = ({ data ,isLoading}) => {
   const [showAllTables, setShowAllTables] = useState(false);
+
+if(isLoading) return <span>Loading</span>
 
   // piechart info
   const piechartData = [325, 25, 150];
@@ -34,6 +36,7 @@ const StudentTimesheet = ({ data }) => {
       <div className="text-xl text-gray-700 font-semibold tracking-wide mb-5">
         Timesheet
       </div>
+
 
 
       
@@ -119,10 +122,10 @@ const StudentTimesheet = ({ data }) => {
                     {format(new Date(entry.date), "MMM dd")}
                   </td>
                   <td className="text-sm  tracking-widetext-left">
-                    {entry.timeIn} AM
+                  {entry.timeIn != '0:00' ? format(new Date(entry.timeIn), "h:mm a") : '0'}
                   </td>
                   <td className="text-sm  tracking-widetext-left">
-                    {entry.timeOut} PM
+                  {entry.timeOut != '0:00' ? format(new Date(entry.timeOut), "h:mm a") : '0'}
                   </td>
                   <td className="text-sm  tracking-widetext-left">
                     {entry.totalHours} hrs

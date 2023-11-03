@@ -60,7 +60,8 @@ const TeacherList = () => {
     picture: picture,
     accountStatus,
     totalStudent: student.filter((item)=>item.deletedStatus ===0).length
-  })): []
+  })).filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
+  : []
 
 
 

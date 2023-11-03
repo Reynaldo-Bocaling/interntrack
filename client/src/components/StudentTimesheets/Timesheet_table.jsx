@@ -24,6 +24,7 @@ const TimeSheetTable = ({ data }) => {
     "Dec",
   ];
 
+
   const [sortOrder, setSortOrder] = useState("asc"); // Default sorting order
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,6 +71,7 @@ const TimeSheetTable = ({ data }) => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
 
   return (
     <div>
@@ -137,7 +139,7 @@ const TimeSheetTable = ({ data }) => {
                     onClick={toggleSortOrder}
                   >
                     <div className="flex items-center justify-center gap-2">
-                      <span>Total All</span>
+                      <span>Total Hours</span>
                       <RiArrowUpDownLine />
                     </div>
                   </th>
@@ -172,37 +174,19 @@ const TimeSheetTable = ({ data }) => {
                               : ""
                           }`}
                         >
-                          {`${Math.floor(entry.totalHours)}:${Math.round(
-                            (entry.totalHours % 1) * 60
-                          )}`}
+                          {entry.totalHours}
                         </td>
                         {(index + 1) % chunkSize === 0 && (
                           <td
                             className={`border-b px-4 py-2 font-semibold text-center text-gray-600 border-r`}
                           >
-                            {/* {student.timeSheet
+                            {student.timeSheet
                               .slice(index - chunkSize + 1, index + 1)
                               .reduce(
                                 (sum, current) => sum + current.totalHours,
                                 0
-                              )} hrs */}
-                            {`${Math.floor(
-                              student.timeSheet
-                                .slice(index - chunkSize + 1, index + 1)
-                                .reduce(
-                                  (sum, current) => sum + current.totalHours,
-                                  0
-                                )
-                            )}:${Math.round(
-                              (student.timeSheet
-                                .slice(index - chunkSize + 1, index + 1)
-                                .reduce(
-                                  (sum, current) => sum + current.totalHours,
-                                  0
-                                ) %
-                                1) *
-                                60
-                            )}`}{" "}
+                              )}{" "}
+                            hrs
                           </td>
                         )}
                       </React.Fragment>
@@ -212,45 +196,54 @@ const TimeSheetTable = ({ data }) => {
                         student.timeSheet.reduce(
                           (sum, entry) => sum + entry.totalHours,
                           0
-                        ) >= 500
+                        ) >= student.trainingHours
                           ? "bg-blue-400 text-white"
                           : student.timeSheet.reduce(
                               (sum, entry) => sum + entry.totalHours,
                               0
-                            ) >= 375
+                            ) >=
+                            student.trainingHours * 0.75
                           ? "bg-green-400"
                           : student.timeSheet.reduce(
                               (sum, entry) => sum + entry.totalHours,
                               0
-                            ) >= 250
+                            ) >=
+                            student.trainingHours * 0.5
                           ? "bg-yellow-400"
                           : student.timeSheet.reduce(
                               (sum, entry) => sum + entry.totalHours,
                               0
-                            ) >= 125
+                            ) >=
+                            student.trainingHours * 0.25
                           ? "bg-orange-400"
                           : "bg-red-400"
                       }`}
                     >
-                      {student.timeSheet.reduce(
-                        (sum, entry) => sum + entry.totalHours,
-                        0
-                      ) >= 500
-                        ? "Complete"
-                        : `${Math.floor(
-                            student.timeSheet.reduce(
+                      {
+                        student.timeSheet.reduce(
+                          (sum, entry) => sum + entry.totalHours,
+                          0
+                        ) >= student.trainingHours
+                          ? "Complete"
+                          : `${student.timeSheet.reduce(
                               (sum, entry) => sum + entry.totalHours,
                               0
-                            )
-                          )}:${Math.round(
-                            (student.timeSheet.reduce(
-                              (sum, entry) => sum + entry.totalHours,
-                              0
-                            ) %
-                              1) *
-                              60
-                          )}`}{" "}
-                      hrs
+                            )} / ${student.trainingHours} hrs`
+
+                        // : `${Math.floor(
+                        //     student.timeSheet.reduce(
+                        //       (sum, entry) => sum + entry.totalHours,
+                        //       0
+                        //     )
+                        //   )}:${Math.round(
+                        //     (student.timeSheet.reduce(
+                        //       (sum, entry) => sum + entry.totalHours,
+                        //       0
+                        //     ) %
+                        //       1) *
+                        //       60
+                        //   )}`}{" "}
+                      }
                     </td>
                   </tr>
                 ))}
@@ -259,9 +252,7 @@ const TimeSheetTable = ({ data }) => {
           </div>
         )}
         {currentItems.length === 0 ? (
-          <div className="px-4 py-2 text-center">
-            No record.
-          </div>
+          <div className="px-4 py-2 text-center">No record.</div>
         ) : (
           <div className="flex my-3 ml-3">
             <button

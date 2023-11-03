@@ -16,6 +16,7 @@ import { useDisclosure as AddTeacherDisclosure } from "@nextui-org/react";
 import Swal from "sweetalert2";
 
 const Companies = () => {
+  const [searchInput, setSearchInput] = useState('');
   const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
   const [OpenTableMenu, setOpenTableMenu] = useState(null);
 
@@ -75,8 +76,11 @@ const Companies = () => {
             )
             .filter((item) => item.deletedStatus === 0).length,
         })
-      )
+      ).filter((item)=>item.companyName.toLowerCase().includes(searchInput.toLowerCase()))
     : [];
+
+
+
 
   return (
     <div>
@@ -91,6 +95,7 @@ const Companies = () => {
               type="text"
               placeholder="Search.."
               className="outline-none text-sm"
+              onChange={(e)=>setSearchInput(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-3">

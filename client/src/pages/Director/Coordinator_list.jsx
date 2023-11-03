@@ -19,7 +19,8 @@ import {
 import Swal from "sweetalert2";
 
 const Trainer_list = () => {
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
+
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
@@ -87,7 +88,7 @@ const Trainer_list = () => {
           studentlist: teacher ? teacher.flatMap(({ student }) => student) : [],
           accountStatus,
         })
-      )
+      ).filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
     : [];
 
   const handleSubmit = (data) => {

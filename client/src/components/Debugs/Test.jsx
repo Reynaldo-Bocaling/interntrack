@@ -1,146 +1,62 @@
-import React, { useState } from "react";
-import { Button, Input, Select, SelectItem } from "@nextui-org/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getCampus, addMajor } from "../../api/Api";
-import Swal from "sweetalert2";
+import React, { useState } from 'react';
+import { format, addMinutes, setMinutes, getMinutes, getHours } from 'date-fns';
+import { Button } from '@nextui-org/react';
 
-function Major() {
-  const [selectedCampus, setSelectedCampus] = useState(null);
-  const [selectedCollege, setSelectedCollege] = useState(null);
-  const [selectedProgram, setSelectedProgram] = useState(null);
+function App() {
+  const [timeIn, setTimeIn] = useState(null);
+  const [timeOut, setTimeOut] = useState(null);
+  const [totalHours, setTotalHours] = useState(0.0);
 
-  const [values, setValues] = useState({
-    program: "",
-    major: "",
-  });
-
-  const { data: CampusList } = useQuery({
-    queryKey: ["getCampus"],
-    queryFn: getCampus,
-  });
-
-  const { mutate } = useMutation(addMajor, {
-    onSuccess: () => {
-      Swal.fire("Success", "Major has Major successfully added.", "success");
-    },
-    onError: () => {
-      Swal.fire(
-        "Error",
-        "Failed to add major. The campus may already exist or the format is invalid. \n Please review and try again.",
-        "error"
-      );
-    },
-  });
-
-  const campus = CampusList;
-  const college = selectedCampus
-    ? campus.find((college) => college.id === parseInt(selectedCampus))
-    : [];
-  const program = selectedCollege
-    ? college.college.find(
-        (program) => program.id === parseInt(selectedCollege)
-      )
-    : [];
-
-  const handleCampusChange = (e) => {
-    setSelectedCampus(e.target.value);
-    setSelectedCollege(null);
-    // setSelectedProgram(null);
-  };
-  const handleCollegeChange = (e) => {
-    setSelectedCollege(e.target.value);
-    // setSelectedProgram(null);
-  };
-  //   const handleProgramChange = (e) => {
-  //     setSelectedProgram(e.target.value);
-  //   };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setValues((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleTimeIn = () => {
+    const currentTime = new Date();
+    const adjustedTime = adjustTime(currentTime);
+    setTimeIn(adjustedTime);
   };
 
-  console.log(values);
+  const handleTimeOut = () => {
+    const currentTime = new Date();
+    const adjustedTime = adjustTime(currentTime);
+    setTimeOut(adjustedTime);
 
-  const handleSubmit = () => {
-    const major_desc = values.major;
-    const program_id = values.program;
-    mutate({ major_description: major_desc, program_id: Number(program_id) });
+    if (timeIn) {
+      const minutesWorked = Math.ceil((adjustedTime - timeIn) / 60000);
+      const hoursWorked = minutesWorked / 60;
+      setTotalHours(adjustTotalHours(totalHours + hoursWorked));
+    }
   };
 
+  const adjustTime = (time) => {
+    const minutes = getMinutes(time);
+    const hours = getHours(time);
+    if (minutes >= 0 && minutes < 15) {
+      return setMinutes(setMinutes(time, 0), 0);
+    } else if (minutes >= 15 && minutes < 30) {
+      return setMinutes(setMinutes(time, 0), 15);
+    } else if (minutes >= 30 && minutes < 45) {
+      return setMinutes(setMinutes(time, 0), 30);
+    } else {
+      return setMinutes(setMinutes(time, 0), 45);
+    }
+  };
+
+  const adjustTotalHours = (hours) => {
+    const totalMinutes = hours * 60;
+    const adjustedMinutes = Math.floor(totalMinutes / 15) * 15;
+    return adjustedMinutes / 60;
+  };
+
+ 
   return (
     <div>
       <div>
-        <p className="text-lg font-semibold mb-4">Add Major</p>
-
-        <div className="grid gap-3">
-          <Select
-            label="Campus"
-            className="max-w-xs"
-            size="sm"
-            isRequired
-            onChange={handleCampusChange}
-          >
-            {campus &&
-              campus.map(({ id, campus_Location }) => (
-                <SelectItem key={id}>{campus_Location}</SelectItem>
-              ))}
-          </Select>
-
-          <Select
-            label=" College"
-            className="max-w-xs"
-            size="sm"
-            isRequired
-            onChange={handleCollegeChange}
-            isDisabled={!selectedCampus}
-          >
-            {selectedCampus &&
-              college.college.map(({ id, college_description }) => (
-                <SelectItem key={id}>{college_description}</SelectItem>
-              ))}
-          </Select>
-
-          <Select
-            label=" Program"
-            className="max-w-xs"
-            size="sm"
-            isRequired
-            onChange={handleChange}
-            isDisabled={!selectedCollege}
-            name="program"
-          >
-            {selectedCollege &&
-              program.program.map(({ id, program_description }) => (
-                <SelectItem key={id}>{program_description}</SelectItem>
-              ))}
-          </Select>
-
-          <Input
-            type="text"
-            label="Major"
-            className="max-w-xs"
-            onChange={handleChange}
-            name="major"
-            isRequired
-          />
-
-          <Button
-            onClick={handleSubmit}
-            color="primary"
-            size="lg"
-            className="max-w-xs mt-2 font-medium"
-          >
-            Add Major
-          </Button>
-        </div>
+        <p>Time In: {timeIn ? format(timeIn, 'h:mm a') : 'N/A'}</p>
+        <p>Time Out: {timeOut ? format(timeOut, 'h:mm a') : 'N/A'}</p>
+        <p>Total Hours: {totalHours.toFixed(2)} hours</p>
       </div>
+      <Button onClick={handleTimeIn} disabled={timeIn !== null}>Time In</Button>
+      <Button onClick={handleTimeOut} disabled={timeOut !== null}>Time Out</Button>
     </div>
   );
 }
 
-export default Major;
+export default App;

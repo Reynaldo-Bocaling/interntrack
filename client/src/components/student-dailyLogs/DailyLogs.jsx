@@ -7,10 +7,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTimesheet, addTimeIn, addTimeOut } from "../../api/Api";
 import {
   format,
-  setMinutes,
   parse,
   differenceInMinutes,
   addMinutes,
+  setMinutes,
+  getMinutes,
+  getHours,
+  setHours
 } from "date-fns";
 import { AiOutlineCheck } from "react-icons/ai";
 import Swal from "sweetalert2";
@@ -20,6 +23,7 @@ const DailyLogs = () => {
   const timeOfDay = format(new Date(), "aa");
   const formattedDate = format(new Date(), "yyyy-MM-dd");
   const timeFormat = format(new Date(), "HH:mm");
+  const [totalHours, setTotalHours] = useState(0);
 
   // timeIn
   const { mutate: mutateTimeIn } = useMutation({
@@ -63,10 +67,14 @@ const DailyLogs = () => {
     },
   });
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getStudentDailyLog"],
     queryFn: getTimesheet,
   });
+
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
 
   const getTime = data ? data.find((item) => item.date === formattedDate) : [];
   const timeInDB = getTime?.timeIn;
@@ -74,39 +82,11 @@ const DailyLogs = () => {
   const totalHoursDB = getTime?.totalHours;
   const timeId = getTime?.id;
 
-  // for total hours purposes
-  const timeIn = parse(getTime?.timeIn, "HH:mm", new Date());
-  const parseTimeFormat = parse(timeFormat, "HH:mm", new Date());
+  const timeInDBFormat = new Date(timeInDB);
+  const timeOutDBFormat = new Date(timeOutDB);
 
-  const minutesDifference = differenceInMinutes(parseTimeFormat, timeIn);
-  const hoursDecimal = minutesDifference / 60;
-  const totalHours = parseFloat(hoursDecimal.toFixed(2));
-
-  // timeIn Function
-  const handleTimeIn = (e) => {
-    e.preventDefault();
-    const parsedTime = parse(timeFormat, "HH:mm", new Date());
-    const minutes = parsedTime.getMinutes();
-
-    if (minutes % 15 === 0) {
-      mutateTimeIn({ id: timeId, timeIn: format(parsedTime, "HH:mm") });
-    } else {
-      const adjustedMinutes = Math.ceil(minutes / 15) * 15;
-      const adjustedTime = setMinutes(parsedTime, adjustedMinutes);
-      mutateTimeIn({ id: timeId, timeIn: format(adjustedTime, "HH:mm") });
-    }
-  };
-
-  // timeOut Function
-  const handleTimeOut = (e) => {
-    e.preventDefault();
-    mutateTimeOut({
-      id: timeId,
-      timeOut: timeFormat,
-      totalHours: parseFloat(totalHours),
-    });
-    console.log(parseFloat(totalHours));
-  };
+  // time now
+  const timeNow = parse(timeFormat, "HH:mm", new Date());
 
   const getWeek = data
     ? data
@@ -116,6 +96,124 @@ const DailyLogs = () => {
           day: format(new Date(date), "EEEE"),
         }))
     : [];
+
+
+
+  //addjust time
+  const adjustTime = (time) => {
+    const minutes = getMinutes(time);
+    const hours = getHours(time);
+    if (minutes >= 0 && minutes < 15) {
+      return setMinutes(setMinutes(time, 0), 0);
+    } else if (minutes >= 15 && minutes < 30) {
+      return setMinutes(setMinutes(time, 0), 15);
+    } else if (minutes >= 30 && minutes < 45) {
+      return setMinutes(setMinutes(time, 0), 30);
+    } else {
+      return setMinutes(setMinutes(time, 0), 45);
+    }
+  };
+
+  // adjust total hours
+  const adjustTotalHours = (hours) => {
+    const totalMinutes = hours * 60;
+    const adjustedMinutes = Math.floor(totalMinutes / 15) * 15;
+    return adjustedMinutes / 60;
+  };
+
+
+// timeIn Function
+const handleTimeIn = (e) => {
+  e.preventDefault();
+  const currentTime = new Date();
+  const adjustedTime = adjustTime(currentTime);
+
+  mutateTimeIn({
+    id: timeId,
+    timeIn: adjustedTime,
+  });
+};
+
+// timeOut Function
+const handleTimeOut = () => {
+  const currentTime = new Date();
+  const adjustedTime = adjustTime(currentTime);
+
+  // if (timeInDB !== "0:00") {
+  //   const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
+  //   const hoursWorked = minutesWorked / 60;
+  //   const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
+
+  //   mutateTimeOut({
+  //     id: timeId,
+  //     timeOut: adjustedTime,
+  //     totalHours: parseFloat(newTotalHours.toFixed(2)),
+  //   });
+  // }
+
+
+  //second
+
+
+  // if (timeInDB !== "0:00") {
+  //   const lunchBreakStart = setHours(setMinutes(new Date(), 0), 12); 
+
+  //   if (timeInDBFormat < lunchBreakStart) {
+  //     const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
+  //     const hoursWorked = minutesWorked / 60;
+  //     const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
+
+  //     const lunchBreakHours = 1.0;
+  //     const adjustedTotalHours = newTotalHours - lunchBreakHours;
+
+  //     mutateTimeOut({
+  //       id: timeId,
+  //       timeOut: adjustedTime,
+  //       totalHours: parseFloat(adjustedTotalHours.toFixed(2)),
+  //     });
+  //   } else {
+  //     const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
+  //     const hoursWorked = minutesWorked / 60;
+  //     const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
+
+  //     mutateTimeOut({
+  //       id: timeId,
+  //       timeOut: adjustedTime,
+  //       totalHours: parseFloat(newTotalHours.toFixed(2)),
+  //     });
+  //   }
+  // }
+
+
+
+  //third
+    if (timeInDB !== "0:00") {
+      const lunchBreakStart = setHours(setMinutes(new Date(), 0), 12);
+  
+      const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
+      const hoursWorked = minutesWorked / 60;
+      const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
+  
+      let adjustedTotalHours = newTotalHours;
+      
+      if (timeInDBFormat < lunchBreakStart) {
+        const lunchBreakHours = 1.0;
+        adjustedTotalHours -= lunchBreakHours;
+      }
+  
+      mutateTimeOut({
+        id: timeId,
+        timeOut: adjustedTime,
+        totalHours: parseFloat(adjustedTotalHours.toFixed(2)),
+      });
+    }
+  
+  
+  
+};
+
+
+
 
   return (
     <div className="mt-2 border-r">
@@ -135,7 +233,7 @@ const DailyLogs = () => {
               key={index}
               className={`${
                 item.date === format(new Date(), "dd")
-                  ? "bg-blue-300 text-white"
+                  ? "bg-blue-500 text-white"
                   : "bg-gray-200"
               } h-[80px]  rounded-2xl flex flex-col justify-center items-center gap-2`}
             >
@@ -154,7 +252,7 @@ const DailyLogs = () => {
                 Time Now
               </span>
               <h1 className="text-4xl tracking-wide font-semibold">
-                {format(parseTimeFormat, "hh:mm")} {/*time now */}
+                {format(timeNow, "hh:mm")} {/*time now */}
                 <small className="text-sm text-blue-500">{timeOfDay}</small>
               </h1>
             </div>
@@ -177,7 +275,9 @@ const DailyLogs = () => {
                   timeInDB === "0:00" ? "text-red-500" : "font-semibold"
                 }  tracking-wide`}
               >
-                {timeInDB === "0:00" ? "Not yet Time in" : `${timeInDB}`}
+                {timeInDB === "0:00"
+                  ? "Not yet Time in"
+                  : `${format(timeInDBFormat, "h:mm a")}`}
               </span>
             </div>
             <div className="w-full flex items-center justify-between my-3">
@@ -190,7 +290,10 @@ const DailyLogs = () => {
                   timeOutDB === "0:00" ? "text-red-500" : "font-semibold"
                 }  tracking-wide`}
               >
-                {timeOutDB === "0:00" ? "Not yet Time out" : `${timeOutDB}`}
+                {timeOutDB === "0:00"
+                  ? "Not yet Time out"
+                  : `${format(timeOutDBFormat, "h:mm a")}`}
+                {/* {timeOutDB} */}
               </span>
             </div>
             <div className="w-full flex items-center justify-between my-3">

@@ -11,7 +11,7 @@ import {
   useDisclosure as ImportStudentDisclosure,
   useDisclosure as AddStudentDisclosure,
 } from "@nextui-org/react";
-import { getCompanyList, getDateRange, getTeacher, importStudent } from "../../api/Api";
+import { addStudentAccount, getCompanyList, getDateRange, getTeacher, importStudent } from "../../api/Api";
 import ImportStudentModalUI from "../../components/Import-Student/ImportForm";
 import { Tabs } from "@mantine/core";
 import AllStudent from "../../components/StudentList-Filter/All";
@@ -105,7 +105,9 @@ const Student_list = () => {
     studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
     studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned',
     deletedStatus
-  })).filter((item)=>item.deletedStatus === 0)
+  }))
+  .filter((item)=>item.deletedStatus === 0)
+  .filter((item)=> item.name.toLowerCase().includes(searchInput.toLocaleLowerCase()))
    : []
 
 
@@ -202,6 +204,26 @@ const Student_list = () => {
 
   // Student data
 
+
+
+  const {mutate:addMutate, isLoading:addStudentLoading} = useMutation(addStudentAccount, {
+    onSuccess: () => {
+      Swal.fire("Success", "The Student has been added", "success");
+    },
+    onError: () => {
+      wal.fire(
+        "Error",
+        "There was an issue adding the student. \n Please check the information provided and try again.",
+        "error"
+      );
+    }
+  })
+
+  // add sing student
+  const handleAddStudent = (item) => {
+    addMutate(item)
+    // console.log('d',item);
+  }
 
 
   return (
@@ -312,6 +334,8 @@ const Student_list = () => {
         AddIsOpen={AddIsOpen}
         AddOnOpen={AddOnOpen}
         AddOnClose={AddOnClose}
+        handleAddStudent={handleAddStudent}
+        isLoading={addStudentLoading}
       />
 
       {/*  asign students modal */}

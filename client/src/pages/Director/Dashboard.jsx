@@ -12,12 +12,87 @@ import Avatar from "@mui/material/Avatar";
 import LineChart from "../../components/charts/LineChart";
 import coverDirector from "../../assets/images/DirectorCover.png";
 import ApexCharts from "react-apexcharts";
+import { getCompanyList, getCoordinatorList, getDirector, getStudentList, getTeacherList } from "../../api/Api";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 
 const Dashboard = () => {
-  const DummyData = [
+  const formattedDate = format(new Date(), "yyyy-MM-dd");
+
+
+  const {
+    data: getDirectorInfo
+  } = useQuery({
+    queryKey: ["getCompanyList"],
+    queryFn: getDirector,
+  });
+
+
+  const {
+    data: company
+  } = useQuery({
+    queryKey: ["getCompanyList"],
+    queryFn: getCompanyList,
+  });
+
+  const {
+    data: StudentList,
+    
+  } = useQuery({
+    queryKey: ["getStudentList"],
+    queryFn: getStudentList,
+  });
+
+
+  const {
+    data: coordinatorList,
+  } = useQuery({
+    queryKey: ["getCoordinatorList"],
+    queryFn: getCoordinatorList,
+  });
+
+  const  {
+    data: teacherList
+  } = useQuery({
+    queryKey: ["getTeacherList"],
+    queryFn: getTeacherList
+  });
+
+  
+  const getTime = StudentList 
+  ? StudentList.flatMap(({timesheet}) => timesheet)
+  .find((item)=> item.date === formattedDate)
+  : []
+  
+
+  const getWeek = StudentList 
+  ? StudentList.flatMap(({ timesheet }) => timesheet)
+    .filter((item) => item.week === getTime?.week)
+    .map(({ date, totalHours }) => ({
+      date: format(new Date(date), "dd"),
+      day: format(new Date(date), "EEEE"),
+      totalHours
+    }))
+    .reduce((acc, { day, totalHours }) => {
+      if (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].includes(day)) {
+        acc[day] = (acc[day] || 0) + totalHours;
+      }
+      return acc;
+    }, {})
+  : {};
+  
+ 
+
+  const totalStudent = StudentList ? StudentList.length : [];
+  const totalCoordinator = coordinatorList ? coordinatorList.length : [];
+  const totalTeacher = teacherList ? teacherList.length : [];
+  const companyList = company ? company.length : [];
+
+
+  const graphData = [
     {
       name: "Hours",
-      data: [30, 50, 75, 100, 125],
+      data: Object.values(getWeek),
       color: "#00C6FD",
       fillColor: "rgba(255, 0, 0, 0.3)",
     },
@@ -26,7 +101,7 @@ const Dashboard = () => {
   const countBox = [
     {
       label: "Student",
-      totalCount: 200,
+      totalCount: totalStudent,
       icon: FiUsers,
       iconBackground: "text-sky-500 bg-sky-100",
       ShadowColor: "shadow-red-50",
@@ -37,21 +112,21 @@ const Dashboard = () => {
     },
     {
       label: "Coordinator",
-      totalCount: 25,
+      totalCount: totalCoordinator,
       icon: FiUsers,
       iconBackground: "text-green-500 bg-green-100",
       ShadowColor: "shadow-green-50",
     },
     {
-      label: "Trainer",
-      totalCount: 75,
+      label: "Teacher",
+      totalCount: totalTeacher,
       icon: FiUsers,
       iconBackground: "text-violet-500 bg-violet-100",
       ShadowColor: "shadow-red-50",
     },
     {
       label: "Company",
-      totalCount: 35,
+      totalCount: companyList,
       icon: PiBuildingsBold,
       iconBackground: "text-orange-500 bg-orange-100",
       ShadowColor: "shadow-blue-50",
@@ -61,48 +136,6 @@ const Dashboard = () => {
     },
   ];
 
-  const currentTeacher = [
-    {
-      id: 1,
-      name: "Reynaldo F. Bocaling",
-      contact: 988282222,
-      specializations: "Web",
-      totalStudent: 40,
-      status: 1,
-    },
-    {
-      id: 2,
-      name: "Reynaldo F. Bocaling",
-      contact: 988282222,
-      specializations: "Web",
-      totalStudent: 40,
-      status: 1,
-    },
-    {
-      id: 3,
-      name: "Reynaldo F. Bocaling",
-      contact: 988282222,
-      specializations: "Web",
-      totalStudent: 40,
-      status: 1,
-    },
-    {
-      id: 4,
-      name: "Reynaldo F. Bocaling",
-      contact: 988282222,
-      specializations: "Web",
-      totalStudent: 40,
-      status: 1,
-    },
-    {
-      id: 5,
-      name: "Reynaldo F. Bocaling",
-      contact: 988282222,
-      specializations: "Web",
-      totalStudent: 40,
-      status: 1,
-    },
-  ];
 
   const percentage = 75;
 
@@ -132,7 +165,7 @@ const Dashboard = () => {
 
           <div className="p-3">
             <p className="">
-              Hello, <span className="font-semibold">Alex</span>
+              Hello, <span className="font-semibold capitalize tracking-wide">{getDirectorInfo?.firstname}</span>
             </p>
             <p className="text-xs text-gray-500 max-w-[70%] w-full mt-3 tracking-wider">
               Your centralized control for overseeing OJT programs, tracking
@@ -149,7 +182,7 @@ const Dashboard = () => {
             Student Hours rate per week
           </p>
           <div>
-            <LineChart data={DummyData} sizeHeight={260} />
+            <LineChart data={graphData} sizeHeight={260} />
           </div>
         </div>
         <div className="col-span-2 col-start-5 row-span-2 row-start-1 grid grid-cols-2 gap-3">
@@ -186,7 +219,7 @@ const Dashboard = () => {
           {/* <p className="text-base font-semibold mt-3 ml-3">
                 Student Hours rate per week
               </p>
-            <LineChart data={DummyData} sizeHeight={100} /> */}
+            <LineChart data={graphData} sizeHeight={100} /> */}
         </div>
       </div>
     </>

@@ -26,6 +26,7 @@ const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null); //right side popup
+  const [searchLength, setSearchLength] = useState(false);
 
   const {
     isOpen: AddIsOpen,
@@ -238,14 +239,25 @@ console.log('trainer list', data);
         </h1>
 
         <div className="flex items-center gap-3">
-          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
-            <BiSearch />
-            <input
-              type="text"
-              placeholder="Search.."
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="outline-none text-sm"
+        <div
+            className={`${
+              searchLength ? "w-[250px]" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          >
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
             />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
           </div>
           <div className="flex items-center gap-3">
             <button

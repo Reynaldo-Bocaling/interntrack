@@ -96,13 +96,13 @@ const index = ({data, isLoading, isError}) => {
                 >
                   <p>Info</p>
                 </Tabs.Tab>
-                <Tabs.Tab
+                {/* <Tabs.Tab
                   className="text-base text-gray-500 tracking-wide"
                   value="moa"
                   icon={<HiOutlineDocumentDuplicate />}
                 >
                   MOA
-                </Tabs.Tab>
+                </Tabs.Tab> */}
                 <Tabs.Tab
                   className="text-base text-gray-500 tracking-wide"
                   value="slots"

@@ -26,6 +26,19 @@ export const importStudent = async (data) => {
   }
 };
 
+export const addStudentAccount = async (data) => {
+  try {
+    const response = await axios.post(`${url}addStudent`, data,
+    {
+      withCredentials: true
+    }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const AddTrainerAccount = async (data) => {
   try {
     const response = await axios.post(`${url}addTrainer`, data);
@@ -64,8 +77,13 @@ export const addTeacher = async (data) => {
 
 export const addCompany = async (formData) => {
   try {
-    const response = await axios.post(`${url}addCompany`, formData, { withCredentials: true });
-    return response.data;
+    const response = await axios.post(`${url}addCompany`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });    return response.data;
+    
   } catch (error) {
     throw new Error(error.message);
   }

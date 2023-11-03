@@ -23,55 +23,52 @@ const Student_list = () => {
     queryFn: getStudentList,
   });
 
-
   const data = StudentList
-
-         ? StudentList.map(({
-                id,
-                firstname,
-                middlename,
-                lastname,
-                email,
-                contact,
-                address,
-                gender,
-                campus,
-                college,
-                program,
-                major,
-                profile,
-                accountStatus,
-                teacher,
-                trainer,
-                AreaOfAssignment,
-                deletedStatus
-              }) => ({
-                id,
-                middlename,
-                name: `${firstname} ${lastname}`,
-                email,
-                contact,
-                address,
-                gender,
-                campus,
-                college,
-                program,
-                major,
-                profile,
-                picture:picture,
-                company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
-                trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',
-                accountStatus,
-                studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
-                studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned',
-                deletedStatus
-              })).filter((item)=>item.deletedStatus ===0)
-              
-              : []
-            
-      
-
-
+    ? StudentList.map(
+        ({
+          id,
+          firstname,
+          middlename,
+          lastname,
+          email,
+          contact,
+          address,
+          gender,
+          campus,
+          college,
+          program,
+          major,
+          profile,
+          accountStatus,
+          teacher,
+          trainer,
+          AreaOfAssignment,
+          deletedStatus,
+        }) => ({
+          id,
+          middlename,
+          name: `${firstname} ${lastname}`,
+          email,
+          contact,
+          address,
+          gender,
+          campus,
+          college,
+          program,
+          major,
+          profile,
+          picture: picture,
+          company: AreaOfAssignment ? AreaOfAssignment.company.companyName : [],
+          trainer: trainer ? `${trainer.firstname} ${trainer.lastname}` : "",
+          accountStatus,
+          studentTrainerStatus: trainer ? "Assigned" : "Unassigned",
+          studentAreaOfAssignment: AreaOfAssignment ? "Assigned" : "Unassigned",
+          deletedStatus,
+        })
+      )
+      .filter((item) => item.deletedStatus === 0)
+      .filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
+    : [];
 
   return (
     <div>
@@ -111,20 +108,43 @@ const Student_list = () => {
 
       <div className="flex items-center justify-between">
         <Tabs defaultValue="first" className="w-full">
-          <Tabs.List sx={{borderColor: '#ecf0f1'}}>
-            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="first">All</Tabs.Tab>
-            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="second">Assigned</Tabs.Tab>
-            <Tabs.Tab className="text-base text-gray-500 tracking-wide" value="third">Unassigned</Tabs.Tab>
+          <Tabs.List sx={{ borderColor: "#ecf0f1" }}>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="first"
+            >
+              All
+            </Tabs.Tab>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="second"
+            >
+              Assigned
+            </Tabs.Tab>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="third"
+            >
+              Unassigned
+            </Tabs.Tab>
           </Tabs.List>
 
           <Tabs.Panel value="first" pt="xs">
-            <AllStudent data={data}  isLoading={isLoading} isError={isError}  />
+            <AllStudent data={data} isLoading={isLoading} isError={isError} />
           </Tabs.Panel>
           <Tabs.Panel value="second" pt="xs">
-            <AssignedStudent data={data} isLoading={isLoading} isError={isError} />
+            <AssignedStudent
+              data={data}
+              isLoading={isLoading}
+              isError={isError}
+            />
           </Tabs.Panel>
           <Tabs.Panel value="third" pt="xs">
-            <UnassignedStudent data={data} isLoading={isLoading} isError={isError} />
+            <UnassignedStudent
+              data={data}
+              isLoading={isLoading}
+              isError={isError}
+            />
           </Tabs.Panel>
         </Tabs>
       </div>

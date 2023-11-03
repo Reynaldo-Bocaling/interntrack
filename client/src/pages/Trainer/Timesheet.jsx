@@ -1,7 +1,7 @@
 import React from "react";
 import TimesheetTable from "../../components/StudentTimesheets/Timesheet_table";
 import { useQuery } from "@tanstack/react-query";
-import { getTrainer, getStudentList } from "../../api/Api";
+import { getTrainer, getStudentList,getCampus } from "../../api/Api";
 
 function Timesheet() {
   const currentDate = new Date();
@@ -15,12 +15,26 @@ function Timesheet() {
     queryFn: getTrainer,
   });
 
+  const { data: getProgram } = useQuery({
+    queryKey: ["getProgram"],
+    queryFn: getCampus,
+  });
+
+  const programList = getProgram
+    ? getProgram.flatMap(({ college }) =>
+        college?.flatMap(({ program }) => program)
+      ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
+    : [];
+
+
   const data = StudentTimesheet
     ? StudentTimesheet.filter(
         (item) => item.trainer_id === getTrainer_id?.id
-      ).map(({ id, firstname, lastname, timesheet,deletedStatus }) => ({
+      ).map(({ id, firstname, lastname, timesheet,deletedStatus,program }) => ({
         id,
         name: `${firstname} ${lastname}`,
+        program,
+        trainingHours: programList.find((item) => item.program_description ==program)?.trainingHours,
         timeSheet: timesheet
           ? timesheet.map(
               ({ id, timeIn, timeOut, totalHours, date, logStatus }) => ({
@@ -37,7 +51,6 @@ function Timesheet() {
       ).filter((item)=> item.deletedStatus === 0)
     : [];
 
-  console.log(StudentTimesheet);
 
   return (
     <div>

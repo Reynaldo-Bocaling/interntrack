@@ -5,6 +5,15 @@ import  TrainerList  from "./components/trainer-list/TrainerList";
 import Test from "./components/Debugs/Test";
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
 const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
+
+import { pdfjs } from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
+
+
 const  App = () => {
   return (
     <Suspense

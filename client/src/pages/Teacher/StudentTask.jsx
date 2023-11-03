@@ -84,7 +84,9 @@ const StudentTask = () => {
           lastUpload: task.flatMap(({date})=>date)[task.flatMap(({date})=>date).length - 1],
           deletedStatus
         })
-      ).filter((item)=> item.deletedStatus ===0)
+      )
+      .filter((item)=> item.deletedStatus ===0)
+      .filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
     : [];
 
   const taskRecords = data.filter((student) => student.studentNo === StudentId);

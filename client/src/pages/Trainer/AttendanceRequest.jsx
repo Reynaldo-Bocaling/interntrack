@@ -34,7 +34,7 @@ const AttendanceRequest = () => {
     })).filter((item)=> item.deletedStatus ===0).filter((val) => {
       if (searchInput === null) {
         return val;
-      } else if (val.firstname.toLowerCase().includes(searchInput)) {
+      } else if (val.firstname.toLowerCase().includes(searchInput) || val.lastname.toLowerCase().includes(searchInput)) {
         return val;
       }
     })

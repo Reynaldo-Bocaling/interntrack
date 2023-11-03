@@ -12,7 +12,7 @@ import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 import { ImAttachment } from "react-icons/im";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCoordinator, addTeacher } from "../../api/Api";
+import { getCoordinator, getTeacherList, addTeacher } from "../../api/Api";
 import picture from '../../assets/images/dp.png'
 import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
 import AddTeacherModal from '../../components/add-teacher/AddTeacher'
@@ -39,7 +39,7 @@ const TeacherList = () => {
     mutationFn: addTeacher,
     onSuccess: (data)=> {
       Swal.fire("Success", "The teacher has been added to the system", "success");
-      queryClient.invalidateQueries({ queryKey: ["getTeacherList"] });
+      queryClient.invalidateQueries({ queryKey: ["getCoordinator"] });
       console.log('teacher',{username: data.username, password: data.password} );
     },
     onError: ()=> {
@@ -47,17 +47,31 @@ const TeacherList = () => {
     }
   })
 
+
+
+  //find coordinator id
+
+
+  const  {
+    data: coordinatorId,
+    isLoading: coordinator_idLoading,
+  } = useQuery({
+    queryKey: ["getCoordinatorId"],
+    queryFn: getCoordinator
+  });
+
+
   const  {
     data: teacherList,
     isLoading,
     isError
   } = useQuery({
-    queryKey: ["getTeacherList"],
-    queryFn: getCoordinator
+    queryKey: ["getCoordinator"],
+    queryFn: getTeacherList
   });
 
   const data = teacherList 
-  ? teacherList.teacher.map(({
+  ? teacherList.map(({
     id,
     firstname,
     middlename,
@@ -70,7 +84,7 @@ const TeacherList = () => {
     major,
     accountStatus,
     student,
-    deletedStatus
+    coordinator_id
   })=> ({
     id,
     name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''} ${lastname}`,
@@ -82,8 +96,13 @@ const TeacherList = () => {
     major,
     picture: picture,
     accountStatus,
-    totalStudent: student.filter((item)=> item.deletedStatus === 0).length
-  })): []
+    totalStudent: student.filter((item)=>item.deletedStatus ===0).length,
+    coordinator_id
+  }))
+  .filter((item)=> item?.coordinator_id == coordinatorId?.id)
+  .filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
+  : []
+
 
   const handleSubmit = (formData) => {
       mutate(formData)
@@ -92,6 +111,7 @@ const TeacherList = () => {
   if(isError){
     return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
   }
+
 
 
 
@@ -197,7 +217,6 @@ const TeacherList = () => {
       header: "Active",
     }),
   ];
-
   const ShowFunction = (id) => {
     setShow((prev) => (prev === id ? null : id));
   };

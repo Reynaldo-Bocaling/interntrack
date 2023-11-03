@@ -19,12 +19,13 @@ const uploads = multer({storage: storage})
 
 // post
 routes.post('/importStudent' ,verifyToken, UserController.importStudent);
-routes.post('/addCompany', uploadMoa , verifyToken , UserController.addCompany);
+routes.post('/addCompany', uploads.single('pdfFile') , verifyToken , UserController.addCompany);
 routes.post('/addSuperAdmin' ,UserController.addSuperAdmin);
 routes.post('/addDirector' ,UserController.addDirector);
 routes.post('/AddCoordinator' ,verifyToken, UserController.AddCoordinator);
 routes.post('/addTeacher' ,verifyToken ,UserController.AddTeacher);
 routes.post('/addTrainer' ,UserController.AddTrainer);
+routes.post('/addStudent' ,verifyToken,UserController.addSingleStudent);
 
 // campuses
 routes.post('/addCampus' ,UserController.addCampus);

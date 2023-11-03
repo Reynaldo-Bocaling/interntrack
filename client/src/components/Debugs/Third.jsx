@@ -1,132 +1,60 @@
 import React, { useState } from 'react';
-
-const collegesData = [
-  {
-    college_id: 1,
-    college_desc: "College of Engineering",
-    programs: [
-      {
-        prog_id: 101,
-        prog_desc: "Computer Science",
-        majors: [
-          {
-            major_id: 201,
-            major_desc: "Software Engineering"
-          },
-          {
-            major_id: 202,
-            major_desc: "Data Science"
-          }
-        ]
-      },
-      {
-        prog_id: 102,
-        prog_desc: "Electrical Engineering",
-        majors: [
-          {
-            major_id: 203,
-            major_desc: "Power Systems"
-          },
-          {
-            major_id: 204,
-            major_desc: "Electronics"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    college_id: 2,
-    college_desc: "College of Business",
-    programs: [
-      {
-        prog_id: 103,
-        prog_desc: "Marketing",
-        majors: [
-          {
-            major_id: 205,
-            major_desc: "Digital Marketing"
-          },
-          {
-            major_id: 206,
-            major_desc: "Finance"
-          }
-        ]
-      }
-    ]
-  }
-];
+import { format, addMinutes, setMinutes, getMinutes, getHours } from 'date-fns';
+import { Button } from '@nextui-org/react';
 
 function App() {
-  const [selectedCollege, setSelectedCollege] = useState(null);
-  const [selectedProgram, setSelectedProgram] = useState(null);
-  const [selectedMajor, setSelectedMajor] = useState(null);
+  const [timeIn, setTimeIn] = useState(null);
+  const [timeOut, setTimeOut] = useState(null);
+  const [totalHours, setTotalHours] = useState(0.0);
 
-  const handleCollegeChange = (e) => {
-    setSelectedCollege(e.target.value);
-    setSelectedProgram(null);
-    setSelectedMajor(null);
+  const handleTimeIn = () => {
+    const currentTime = new Date();
+    const adjustedTime = adjustTime(currentTime);
+    setTimeIn(adjustedTime);
   };
 
-  const handleProgramChange = (e) => {
-    setSelectedProgram(e.target.value);
-    setSelectedMajor(null);
+  const handleTimeOut = () => {
+    const currentTime = new Date();
+    const adjustedTime = adjustTime(currentTime);
+    setTimeOut(adjustedTime);
+
+    if (timeIn) {
+      const minutesWorked = Math.ceil((adjustedTime - timeIn) / 60000);
+      const hoursWorked = minutesWorked / 60;
+      setTotalHours(adjustTotalHours(totalHours + hoursWorked));
+    }
   };
 
-  const handleMajorChange = (e) => {
-    setSelectedMajor(e.target.value);
+  const adjustTime = (time) => {
+    const minutes = getMinutes(time);
+    const hours = getHours(time);
+    if (minutes >= 0 && minutes < 15) {
+      return setMinutes(setMinutes(time, 0), 0);
+    } else if (minutes >= 15 && minutes < 30) {
+      return setMinutes(setMinutes(time, 0), 15);
+    } else if (minutes >= 30 && minutes < 45) {
+      return setMinutes(setMinutes(time, 0), 30);
+    } else {
+      return setMinutes(setMinutes(time, 0), 45);
+    }
   };
 
-  
+  const adjustTotalHours = (hours) => {
+    const totalMinutes = hours * 60;
+    const adjustedMinutes = Math.floor(totalMinutes / 15) * 15;
+    return adjustedMinutes / 60;
+  };
 
-  // Extract colleges, programs, and majors from the data
-  const colleges = collegesData;
-  const programs = selectedCollege
-    ? colleges.find(college => college.college_id === parseInt(selectedCollege))
-    : [];
-  const majors = selectedProgram
-    ? programs.programs.find(program => program.prog_id === parseInt(selectedProgram))
-    : [];
-
+ 
   return (
     <div>
-      <label>Select College: </label>
-      <select value={selectedCollege || ''} onChange={handleCollegeChange}>
-        <option value="">Select</option>
-        {colleges.map(college => (
-          <option key={college.college_id} value={college.college_id}>{college.college_desc}</option>
-        ))}
-      </select>
-
-      {selectedCollege && (
-        <div>
-          <label>Select Program: </label>
-          <select value={selectedProgram || ''} onChange={handleProgramChange}>
-            <option value="">Select</option>
-            {programs.programs.map(program => (
-              <option key={program.prog_id} value={program.prog_id}>{program.prog_desc}</option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {selectedProgram && (
-        <div>
-          <label>Select Major: </label>
-          <select value={selectedMajor || ''} onChange={handleMajorChange}>
-            <option value="">Select</option>
-            {majors.majors.map(major => (
-              <option key={major.major_id} value={major.major_id}>{major.major_desc}</option>
-            ))}
-          </select>
-        </div>
-      )}
-
       <div>
-        <h3>Selected College: {programs.college_desc}</h3>
-        <h3>Selected Program: {majors.prog_desc}</h3>
-        <h3>Selected Major: {selectedMajor}</h3>
+        <p>Time In: {timeIn ? format(timeIn, 'h:mm a') : 'N/A'}</p>
+        <p>Time Out: {timeOut ? format(timeOut, 'h:mm a') : 'N/A'}</p>
+        <p>Total Hours: {totalHours.toFixed(2)} hours</p>
       </div>
+      <Button onClick={handleTimeIn} disabled={timeIn !== null}>Time In</Button>
+      <Button onClick={handleTimeOut} disabled={timeOut !== null}>Time Out</Button>
     </div>
   );
 }

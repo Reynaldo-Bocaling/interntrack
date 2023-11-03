@@ -24,7 +24,6 @@ const ImportStudentModalUI = (props) => {
   } = props;
 
 
-  console.log('import',DateRangeData);
   return (
     <Modal
       isOpen={isOpen}
