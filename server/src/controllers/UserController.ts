@@ -813,7 +813,11 @@ export class UserController {
         },
         include: {
           user: true,
-          teacher: true,
+          teacher: {
+            include: {
+              coordinator:true
+            }
+          },
           trainer: true,
           AreaOfAssignment: {
             include: {

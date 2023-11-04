@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
@@ -8,10 +8,18 @@ import { Tabs } from "@mantine/core";
 import AllStudent from "../../components/StudentList-Filter/All";
 import AssignedStudent from "../../components/StudentList-Filter/Assigned";
 import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchLength, setSearchLength] = useState(false);
+
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const {
     data: StudentList,
@@ -24,63 +32,110 @@ const Student_list = () => {
   });
 
   const students = StudentList
-    ? StudentList.teacher.flatMap(({ student }) =>
-        student
-          ? student
-              .map(
-                ({
-                  id,
-                  firstname,
-                  middlename,
-                  lastname,
-                  email,
-                  contact,
-                  address,
-                  gender,
-                  campus,
-                  college,
-                  program,
-                  major,
-                  profile,
-                  accountStatus,
-                  teacher,
-                  trainer,
-                  AreaOfAssignment,
-                  deletedStatus,
-                }) => ({
-                  id,
-                  middlename,
-                  name: `${firstname} ${lastname}`,
-                  email,
-                  contact,
-                  address,
-                  gender,
-                  campus,
-                  college,
-                  program,
-                  major,
-                  profile,
-                  picture: picture,
-                  company: AreaOfAssignment
-                    ? AreaOfAssignment.company.companyName
-                    : [],
-                  trainer: trainer
-                    ? `${trainer.firstname} ${trainer.lastname}`
-                    : "",
-                  accountStatus,
-                  studentTrainerStatus: trainer ? "Assigned" : "Unassigned",
-                  studentAreaOfAssignment: AreaOfAssignment
-                    ? "Assigned"
-                    : "Unassigned",
-                  deletedStatus,
-                })
-              )
-              .filter((item) => item.deletedStatus === 0)
-          : []
-      ).filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
+    ? StudentList.teacher
+        .flatMap(({ student }) =>
+          student
+            ? student
+                .map(
+                  ({
+                    id,
+                    firstname,
+                    middlename,
+                    lastname,
+                    email,
+                    contact,
+                    address,
+                    gender,
+                    campus,
+                    college,
+                    program,
+                    major,
+                    profile,
+                    accountStatus,
+                    teacher,
+                    trainer,
+                    AreaOfAssignment,
+                    deletedStatus,
+                  }) => ({
+                    id,
+                    middlename,
+                    name: `${firstname} ${lastname}`,
+                    email,
+                    contact,
+                    address,
+                    gender,
+                    campus,
+                    college,
+                    program,
+                    major,
+                    profile,
+                    picture: picture,
+                    company: AreaOfAssignment
+                      ? AreaOfAssignment.company.companyName
+                      : [],
+                    trainer: trainer
+                      ? `${trainer.firstname} ${trainer.lastname}`
+                      : "",
+                    accountStatus,
+                    studentTrainerStatus: trainer ? "Assigned" : "Unassigned",
+                    studentAreaOfAssignment: AreaOfAssignment
+                      ? "Assigned"
+                      : "Unassigned",
+                    deletedStatus,
+                  })
+                )
+                .filter((item) => item.deletedStatus === 0)
+            : []
+        )
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
     : [];
 
-  console.log("students", students);
+  const defaultData = [...students];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
+  }
+
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Sex
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Program
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Major
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px] capitalize">{item.gender}</td>
+              <td className="text-center border text-[13px] uppercase">{item.program}</td>
+              <td className="text-center border text-[13px] uppercase">{item.major}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
 
   return (
     <div>
@@ -111,7 +166,10 @@ const Student_list = () => {
             )}
           </div>
 
-          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
             <BsPrinter size={17} />
             <span className="font-semibold tracking-wider">Print</span>
           </button>
@@ -165,7 +223,11 @@ const Student_list = () => {
         </Tabs>
       </div>
 
-      <div></div>
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Student List`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };

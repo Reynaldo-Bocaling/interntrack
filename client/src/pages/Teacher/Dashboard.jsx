@@ -32,7 +32,7 @@ function Dashboard() {
   });
 
   const { data: students, isLoading:studentLoading } = useQuery({
-    queryKey: ["getStudent"],
+    queryKey: ["getStudent2"],
     queryFn: getStudentList,
   });
 
@@ -42,9 +42,7 @@ function Dashboard() {
   });
 
 
-  if(programLoading || studentLoading || teacherLoading, trainerlistLoading) {
-    return <center className="my-5 text-lg">Computing..</center>
-  }
+  
 
 
 
@@ -212,6 +210,15 @@ function Dashboard() {
       fillColor: "rgba(255, 0, 0, 0.3)",
     },
   ];
+
+
+
+  if(programLoading || studentLoading || teacherLoading, trainerlistLoading) {
+    return <center className="my-5 text-lg">Computing..</center>
+  }
+
+
+
 
   return (
     <div className="min-h-full w-full">

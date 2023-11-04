@@ -242,3 +242,18 @@ model Major {
 }
 
 
+model Announcement {
+  id Int @id @default(autoincrement())
+  description          String
+  role                 String
+  date                 String
+}
+
+
+model Notification {
+  id Int @id @default(autoincrement())
+  description          String
+  role                 String
+  date                 String
+}
+

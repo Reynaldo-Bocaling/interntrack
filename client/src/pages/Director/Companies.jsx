@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { HiOutlineDotsVertical, HiOutlineEye } from "react-icons/hi";
 import { IconTrash } from "@tabler/icons-react";
@@ -14,13 +14,21 @@ import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
 import { useDisclosure as AddTeacherDisclosure } from "@nextui-org/react";
 import Swal from "sweetalert2";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
 
 const Companies = () => {
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
   const [OpenTableMenu, setOpenTableMenu] = useState(null);
 
   const navigate = useNavigate();
+
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const {
     isOpen: AddIsOpen,
@@ -62,25 +70,67 @@ const Companies = () => {
   };
 
   const filtered = company
-    ? company.map(
-        ({ id, companyName, address, email, contact, areaOfAssignment }) => ({
-          id,
-          companyName,
-          address,
-          email,
-          contact,
-          slots: areaOfAssignment.reduce((total, item) => total + item.slot, 0),
-          totalStudent: areaOfAssignment
-            ?.flatMap(({ trainer }) =>
-              trainer?.flatMap(({ student }) => student)
-            )
-            .filter((item) => item.deletedStatus === 0).length,
-        })
-      ).filter((item)=>item.companyName.toLowerCase().includes(searchInput.toLowerCase()))
+    ? company
+        .map(
+          ({ id, companyName, address, email, contact, areaOfAssignment }) => ({
+            id,
+            companyName,
+            address,
+            email,
+            contact,
+            slots: areaOfAssignment.reduce(
+              (total, item) => total + item.slot,
+              0
+            ),
+            totalStudent: areaOfAssignment
+              ?.flatMap(({ trainer }) =>
+                trainer?.flatMap(({ student }) => student)
+              )
+              .filter((item) => item.deletedStatus === 0).length,
+          })
+        )
+        .filter((item) =>
+          item.companyName.toLowerCase().includes(searchInput.toLowerCase())
+        )
     : [];
 
+  const defaultData = [...filtered];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
+  }
 
-
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Company
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Address
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.companyName}</td>
+              <td className=" border pl-4 text-[13px]">{item.address}</td>
+              <td className="text-left pl-4 border text-[13px]">
+                {item.email}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <div>
@@ -95,7 +145,7 @@ const Companies = () => {
               type="text"
               placeholder="Search.."
               className="outline-none text-sm"
-              onChange={(e)=>setSearchInput(e.target.value)}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
           <div className="flex items-center gap-3">
@@ -106,7 +156,10 @@ const Companies = () => {
               <AiOutlineUserAdd size={16} />
               <span className="font-semibold tracking-wider">Add</span>
             </button>
-            <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
               <BsPrinter size={17} />
               <span className="font-semibold tracking-wider">Print</span>
             </button>
@@ -237,6 +290,12 @@ const Companies = () => {
         onAddCompany={handleAddCompany}
         isLoading={companyLoading}
       />
+
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Companies`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };

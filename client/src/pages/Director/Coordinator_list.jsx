@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -17,10 +17,17 @@ import {
   useDisclosure as AddCoordinatorDisclosure,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
 
 const Trainer_list = () => {
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
 
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
@@ -61,34 +68,45 @@ const Trainer_list = () => {
   });
 
   const data = coordinatorList
-    ? coordinatorList.map(
-        ({
-          id,
-          firstname,
-          middlename,
-          lastname,
-          email,
-          campus,
-          college,
-          contact,
-          teacher,
-          accountStatus,
-        }) => ({
-          id,
-          name: `${firstname} ${
-            middlename ? middlename[0].toUpperCase() : ""
-          }. ${lastname}`,
-          email,
-          campus,
-          college,
-          contact,
-          picture: picture,
-          totalTeacher: teacher ? teacher.length : 0,
-          totalStudent: teacher.reduce((total, item) => total + item.student.filter((item)=> item.deletedStatus === 0 ).length, 0 ),
-          studentlist: teacher ? teacher.flatMap(({ student }) => student) : [],
-          accountStatus,
-        })
-      ).filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
+    ? coordinatorList
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            campus,
+            college,
+            contact,
+            teacher,
+            accountStatus,
+          }) => ({
+            id,
+            name: `${firstname} ${
+              middlename ? middlename[0].toUpperCase() : ""
+            }. ${lastname}`,
+            email,
+            campus,
+            college,
+            contact,
+            picture: picture,
+            totalTeacher: teacher ? teacher.length : 0,
+            totalStudent: teacher.reduce(
+              (total, item) =>
+                total +
+                item.student.filter((item) => item.deletedStatus === 0).length,
+              0
+            ),
+            studentlist: teacher
+              ? teacher.flatMap(({ student }) => student)
+              : [],
+            accountStatus,
+          })
+        )
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
     : [];
 
   const handleSubmit = (data) => {
@@ -217,6 +235,44 @@ const Trainer_list = () => {
       </h1>
     );
   }
+
+
+
+
+
+
+  const defaultData = [...data];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
+  }
+
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+              <thead>
+                <tr className="h-11">
+                  <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Name</th>
+                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Email</th>
+                  <th className="w-[20%] border font-semibold text-[13px]">Total Students</th>
+                </tr>
+              </thead>
+              <tbody>
+                {defaultData.map((item, index) => (
+                  <tr key={index} className="h-11">
+                    <td className="text-center border text-[13px]">{index + 1}</td>
+                    <td className=" border pl-4 text-[13px]">{item.name}</td>
+                    <td className=" border pl-4 text-[13px]">{item.email}</td>
+                    <td className="text-center border text-[13px]">{item.totalStudent}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+    )
+  }
+
+
+
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
@@ -243,7 +299,7 @@ const Trainer_list = () => {
               <span className="font-semibold tracking-wider">Add</span>
             </button>
 
-            <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+            <button onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
               <BsPrinter size={17} />
               <span className="font-semibold tracking-wider">Print</span>
             </button>
@@ -263,6 +319,12 @@ const Trainer_list = () => {
         onSubmit={handleSubmit}
         isLoading={AddCoordinatorLoading}
       />
+
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Coordinator List`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };

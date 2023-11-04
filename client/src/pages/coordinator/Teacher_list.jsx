@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
@@ -11,13 +11,17 @@ import { NavLink } from "react-router-dom";
 import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
 import { ImAttachment } from "react-icons/im";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoordinator, getTeacherList, addTeacher } from "../../api/Api";
-import picture from '../../assets/images/dp.png'
-import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
-import AddTeacherModal from '../../components/add-teacher/AddTeacher'
+import picture from "../../assets/images/dp.png";
+import {
+  Switch,
+  useDisclosure as AddTeacherDisclosure,
+} from "@nextui-org/react";
+import AddTeacherModal from "../../components/add-teacher/AddTeacher";
 import Swal from "sweetalert2";
-
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -25,6 +29,11 @@ const TeacherList = () => {
   const [show, setShow] = useState(null);
   const [searchLength, setSearchLength] = useState(false);
 
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   //modal add teacher
   const {
@@ -35,85 +44,101 @@ const TeacherList = () => {
 
   const queryClient = useQueryClient();
 
-  const {mutate, isLoading: AddTeacherLoading, isError: AddTeacherError} = useMutation({
+  const {
+    mutate,
+    isLoading: AddTeacherLoading,
+    isError: AddTeacherError,
+  } = useMutation({
     mutationFn: addTeacher,
-    onSuccess: (data)=> {
-      Swal.fire("Success", "The teacher has been added to the system", "success");
+    onSuccess: (data) => {
+      Swal.fire(
+        "Success",
+        "The teacher has been added to the system",
+        "success"
+      );
       queryClient.invalidateQueries({ queryKey: ["getCoordinator"] });
-      console.log('teacher',{username: data.username, password: data.password} );
+      console.log("teacher", {
+        username: data.username,
+        password: data.password,
+      });
     },
-    onError: ()=> {
-      Swal.fire("Error", "There was an issue adding the teacher. \n Please check the information provided and try again.", "error");
-    }
-  })
-
-
+    onError: () => {
+      Swal.fire(
+        "Error",
+        "There was an issue adding the teacher. \n Please check the information provided and try again.",
+        "error"
+      );
+    },
+  });
 
   //find coordinator id
 
-
-  const  {
-    data: coordinatorId,
-    isLoading: coordinator_idLoading,
-  } = useQuery({
+  const { data: coordinatorId, isLoading: coordinator_idLoading } = useQuery({
     queryKey: ["getCoordinatorId"],
-    queryFn: getCoordinator
+    queryFn: getCoordinator,
   });
 
-
-  const  {
+  const {
     data: teacherList,
     isLoading,
-    isError
+    isError,
   } = useQuery({
     queryKey: ["getCoordinator"],
-    queryFn: getTeacherList
+    queryFn: getTeacherList,
   });
 
-  const data = teacherList 
-  ? teacherList.map(({
-    id,
-    firstname,
-    middlename,
-    lastname,
-    email,
-    contact,
-    campus,
-    college,
-    program,
-    major,
-    accountStatus,
-    student,
-    coordinator_id
-  })=> ({
-    id,
-    name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''} ${lastname}`,
-    email,
-    contact,
-    campus,
-    college,
-    program,
-    major,
-    picture: picture,
-    accountStatus,
-    totalStudent: student.filter((item)=>item.deletedStatus ===0).length,
-    coordinator_id
-  }))
-  .filter((item)=> item?.coordinator_id == coordinatorId?.id)
-  .filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
-  : []
-
+  const data = teacherList
+    ? teacherList
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            accountStatus,
+            student,
+            coordinator_id,
+          }) => ({
+            id,
+            name: `${firstname} ${
+              middlename ? middlename[0].toUpperCase() : ""
+            } ${lastname}`,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            picture: picture,
+            accountStatus,
+            totalStudent: student.filter((item) => item.deletedStatus === 0)
+              .length,
+            coordinator_id,
+          })
+        )
+        .filter((item) => item?.coordinator_id == coordinatorId?.id)
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+    : [];
 
   const handleSubmit = (formData) => {
-      mutate(formData)
+    mutate(formData);
+  };
+
+  if (isError) {
+    return (
+      <h1 className="text-center my-10">
+        Server Failed. Please Try Again Later
+      </h1>
+    );
   }
-
-  if(isError){
-    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
-  }
-
-
-
 
   const columns = [
     columnHelper.accessor("id", {
@@ -162,7 +187,9 @@ const TeacherList = () => {
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
-      cell: (info) => <div className="text-center font-semibold">{info.getValue()}</div>,
+      cell: (info) => (
+        <div className="text-center font-semibold">{info.getValue()}</div>
+      ),
       header: "Students",
     }),
 
@@ -170,8 +197,15 @@ const TeacherList = () => {
       id: "accountStatus",
       cell: (info) => (
         <div className="relative text-center">
-          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
-            
+          <Switch
+            isDisabled
+            className="mr-7"
+            size="sm"
+            defaultSelected={
+              info.row.original.accountStatus === 0 ? true : false
+            }
+          />
+
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -222,9 +256,37 @@ const TeacherList = () => {
   };
 
 
-  const handlePrint = () => {
-    alert('dd')
+  const defaultData = [...data];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
   }
+
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+              <thead>
+                <tr className="h-11">
+                  <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Name</th>
+                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Email</th>
+                  <th className="w-[20%] border font-semibold text-[13px]">Total Students</th>
+                </tr>
+              </thead>
+              <tbody>
+                {defaultData.map((item, index) => (
+                  <tr key={index} className="h-11">
+                    <td className="text-center border text-[13px]">{index + 1}</td>
+                    <td className=" border pl-4 text-[13px]">{item.name}</td>
+                    <td className=" border pl-4 text-[13px]">{item.email}</td>
+                    <td className="text-center border text-[13px]">{item.totalStudent}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+    )
+  }
+
+
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
@@ -253,7 +315,7 @@ const TeacherList = () => {
               />
             )}
           </div>
-        
+
           <button
             onClick={AddTeacherOnOpen}
             className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
@@ -261,7 +323,10 @@ const TeacherList = () => {
             <AiOutlineUserAdd size={16} />
             <span className="font-semibold tracking-wider">Add</span>
           </button>
-          <button onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
             <BsPrinter size={17} />
             <span className="font-semibold tracking-wider">Print</span>
           </button>
@@ -269,7 +334,6 @@ const TeacherList = () => {
       </div>
 
       <TableFormat data={data} isLoading={isLoading} columns={columns} />
-     
 
       <AddTeacherModal
         AddIsOpen={AddIsOpen}
@@ -279,6 +343,11 @@ const TeacherList = () => {
         isLoading={AddTeacherLoading}
       />
 
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List  title={`Teacher's List`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };

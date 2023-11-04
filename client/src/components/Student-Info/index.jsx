@@ -120,7 +120,6 @@ const StudentViewInfo = () => {
 
 
 
-  console.log('tm',timesheet);
 
   const { mutate } = useMutation(resetData, {
     onSuccess: () => {

@@ -12,10 +12,6 @@ import {Switch} from "@nextui-org/react";
 const Student_list = ({data, isLoading, isError}) => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-
-
-
-  console.log('trylang', data);
   
 
   //   columns

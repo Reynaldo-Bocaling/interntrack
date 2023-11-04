@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import picture from "../../assets/images/dp.png";
+import { BsPrinter } from "react-icons/bs";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -10,13 +11,21 @@ import { NavLink } from "react-router-dom";
 import {useQuery} from '@tanstack/react-query'
 import { getTrainer, getStudentList } from "../../api/Api";
 import {Switch} from "@nextui-org/react";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
 
 
 const Student_list = () => {
+  const [searchLength, setSearchLength] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
 
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   const {data:StudentTimesheet,isLoading: studentListLoading, isError} = useQuery({
     queryKey: ["getStudentTimesheet"],
@@ -162,24 +171,105 @@ const Student_list = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
+
+
+
+  const defaultData = [...data];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
+  }
+
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Sex
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Program
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Major
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px] capitalize">{item.gender}</td>
+              <td className="text-center border text-[13px] uppercase">{item.program}</td>
+              <td className="text-center border text-[13px] uppercase">{item.major}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+
+
+
+
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Student list
         </h1>
-        <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
-          <BiSearch />
-          <input
-            type="text"
-            placeholder="Search.."
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="outline-none text-sm"
-          />
+        <div className="flex items-center gap-3">
+          <div
+            className={`${
+              searchLength ? "w-[250px]" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          >
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
+            />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
+          </div>
+
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
+            <BsPrinter size={17} />
+            <span className="font-semibold tracking-wider">Print</span>
+          </button>
         </div>
       </div>
 
       <TableFormat isError={isError} data={data} columns={columns} isLoading={studentListLoading} />
+
+
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Student List`} ListTable={ListTable} />
+        </div>
+      </div>
+
+
     </div>
   );
 };

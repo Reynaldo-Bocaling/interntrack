@@ -1,169 +1,49 @@
-import React, { useRef, useState } from "react";
-import { Student } from "../../components/dummyData/Data";
-import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
+import React from 'react'
 import logo from "../../assets/images/neust_logo-1.png";
-import { getStudent, getTask, getTimesheet } from "../../api/Api";
-import { useQuery } from "@tanstack/react-query";
-import { Button } from "@nextui-org/react";
-import { format } from "date-fns";
-import Report from'../../components/print-layout/WeeklyReport'
-const WeeklyReport = () => {
-  const student = Student;
-  const [opened, { open, close }] = useDisclosure();
-  const [weeklyReport, setWeeklyReport] = useState([]);
-  const calculateTotalHours = (timeSheet) => {
-    return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
-  };
-
-  // /timesheet
-  const currentDate = new Date();
-
-  const { data: timesheet, isLoading: timesheetLoading } = useQuery({
-    queryKey: ["getTimesheetStudent2"],
-    queryFn: getTimesheet,
-  });
-
-  const { data: getTaskList, isLoading: taskLoading } = useQuery({
-    queryKey: ["getTaskStudent2"],
-    queryFn: getTask,
-  });
-
-  const { data, isLoading: studentLoading } = useQuery({
-    queryKey: ["getStudent2"],
-    queryFn: getStudent,
-  });
-
-  const studentTask = getTaskList ? getTaskList : [];
-  const studentInfo = data ? data : [];
-
-  const StudentTimesheet = timesheet
-    ? timesheet
-        .filter((item) => new Date(item.date) <= currentDate)
-        .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
-          id,
-          totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
-          date,
-          logStatus,
-          student_id,
-          week,
-          taskDescription:
-            logStatus !== 0
-              ? studentTask.find((item) => item.date === date)?.description
-              : "",
-        }))
-    : [];
-
-  const groupedTimeSheet = [];
-  for (let i = 0; i < StudentTimesheet.length; i += 5) {
-    groupedTimeSheet.push(StudentTimesheet.slice(i, i + 5));
-  }
-
-  groupedTimeSheet.sort((a, b) => {
-    return new Date(b[0].date) - new Date(a[0].date);
-  });
-
-  const totalHours = weeklyReport
+import { format } from 'date-fns';
+function WeeklyReport({weeklyReport, studentInfo}) {
+    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const totalHours = weeklyReport
     ? weeklyReport.reduce((total, item) => total + item.totalHours, 0)
     : [];
 
-  const Studentlabel = "Juan Dela Cruz";
-  const Trainerlabel = "Juanito Cruz";
-
-  // Reference para sa pag-print
-  const componentRef = useRef();
-
-  // React-to-Print function
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
-  const handleOpenWeeklyReport = (item) => {
-    setWeeklyReport(item);
-    open();
-  };
-
-  if (taskLoading || timesheetLoading || studentLoading) {
-    return <center className="my-5 text-lg">Computing..</center>;
-  }
-
-
-
   return (
-    <div>
-      <Card className="flex flex-col gap-5">
-        <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
-        {groupedTimeSheet.map((group, groupIndex) => (
-          <div
-            key={groupIndex}
-            className="p-3 rounded-lg border bg-gray-100 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
-            onClick={() => handleOpenWeeklyReport(group)}
-          >
-            <Card.Section
-              component="a"
-              href="https://mantine.dev/"
-            ></Card.Section>
-            <Group position="apart" width={"100%"} mt="md" mb="xs">
-              <Text weight={500}>
-                {group[0].date} - {group[group.length - 1].date}
-              </Text>
-              <Badge color="green" variant="light">
-                Ok
-              </Badge>
-            </Group>
-          </div>
-        ))}
-      </Card>
-
-      <Drawer
-        position="bottom"
-        size="100%"
-        opened={opened}
-        onClose={close}
-        title={
-          <header className="mt-2">
-            <span className="text-xl font-semibold">Weekly report</span>
-          </header>
-        }
-      >
-        <div className="weekly-report-container mx-auto px-2 sm:px-10">
+    <div className='mx-auto'>
+       <div className="weekly-report-container mx-20 px-4 sm:px-10">
           <div className="m-4 border-b-2 border-black flex items-center justify-between pb-2">
             <img src={logo} alt="" className="w-20 sm:w-28" />
             <div className="mt-4 flex flex-col items-end text-[10px] sm:text-[12px]">
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] sm:text-[9.5px]">
                 Republic of the Philippines
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] sm:text-[9.5px]">
                 NUEVA ECIJA UNIVERSITY OF SCIENCE AND TECHNOLOGY
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] sm:text-[9.5px]">
                 On–the–Job Training and Career Development Center
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] sm:text-[9.5px]">
                 Cabanatuan City
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] sm:text-[9.5px]">
                 ISO 9001:2015 Certified
               </span>
             </div>
           </div>
 
           <main className="text-[10px] sm:text-[12px]">
-            <h5 className="text-center text-[10px] sm:text-[12px] max-w-[330px] mx-auto mt-3">
+            <h5 className="font-medium text-center text-[10px] sm:text-[12px] max-w-[330px] mx-auto mt-3">
               STUDENT ON–THE–JOB–TRAINING WEEKLY REPORT
             </h5>
 
             <div className="grid grid-cols-2 gap-2 sm:gap-4 items-center justify-between border-[2px] border-[#000] rounded-[4px] mt-3">
-              <div className="pl-2 py-2">
+              <div className="pl-2 py-1">
                 Name:
                 <span className="capitalize font-semibold">
                   {` ${studentInfo.firstname}  ${studentInfo.lastname}`}
                 </span>
               </div>
-              <div className="border-l-[2px] border-[#000] pl-2 py-2">
+              <div className="border-l-[2px] border-[#000] pl-2 py-1">
                 Company:
                 <span className="capitalize font-semibold">
                   {` ${studentInfo.AreaOfAssignment?.company.companyName}`}
@@ -172,16 +52,16 @@ const WeeklyReport = () => {
             </div>
 
             <div className="grid grid-cols-3 gap-2 sm:gap-4 items-center justify-between border-[2px] border-[#000] rounded-[4px] mt-3">
-              <div className="h-[50px] sm:h-[80px] overflow-hidden pl-2 py-2">
-                Course and Section: {student.courseSection}
+              <div className="h-[60px]  overflow-hidden p-1">
+                Course and Section: 
               </div>
-              <div className="h-[50px] sm:h-[80px] overflow-hidden border-l-[2px]  border-[#000] pl-2 py-2 flex flex-col">
+              <div className="h-[60px] overflow-hidden border-l-[2px]  border-[#000] p-1 flex flex-col">
                 Training Station:
                 <span className="capitalize font-semibold">
                   {studentInfo.AreaOfAssignment?.areaName}
                 </span>
               </div>
-              <div className="h-[50px] sm:h-[80px] overflow-hidden border-l-[2px]  border-[#000] pl-2 py-2 flex flex-col">
+              <div className="h-[60px]  overflow-hidden border-l-[2px]  border-[#000] p-1 flex flex-col">
                 Date:
                 <span className="capitalize font-semibold">
                   {format(new Date(), "MM/dd/yyyy")}
@@ -214,7 +94,7 @@ const WeeklyReport = () => {
                         {Math.round(entry.totalHours) !== 0 &&
                           entry.taskDescription}
                       </td>
-                      <td className="text-center border-[2px] border-[#000] px-2 sm:px-5">
+                      <td className="text-center font-medium border-[2px] border-[#000] px-2 sm:px-5">
                         {Math.round(entry.totalHours) !== 0 &&
                           `${entry.totalHours} hrs`}
                       </td>
@@ -241,7 +121,7 @@ const WeeklyReport = () => {
                     <td className="border-[2px] border-[#000] px-2 ">
                       TOTAL TRAINING HOURS PER WEEK
                     </td>
-                    <td className="text-center border-[2px] border-[#000] px-2 sm:px-5">
+                    <td className="text-center border-[2px] border-[#000] px-2 sm:px-5 font-medium">
                       {Math.round(totalHours)} hrs
                     </td>
                   </tr>
@@ -284,27 +164,8 @@ const WeeklyReport = () => {
             </div>
           </main>
         </div>
-
-        {/* Printable component */}
-        <div style={{ display: "none" }}>
-          <div ref={componentRef}>
-            <Report weeklyReport={weeklyReport} studentInfo={studentInfo} />
-          </div>
-        </div>
-
-        <div className="my-5 w-full flex items-center justify-center">
-          <Button
-            color="primary"
-            size="lg"
-            className="w-full my-5"
-            onClick={handlePrint}
-          >
-            Print
-          </Button>
-        </div>
-      </Drawer>
     </div>
-  );
-};
+  )
+}
 
-export default WeeklyReport;
+export default WeeklyReport

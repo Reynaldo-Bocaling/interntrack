@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { BiSearch } from "react-icons/bi";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { ImAttachment } from "react-icons/im";
@@ -19,6 +19,8 @@ import AssignedStudent from "../../components/StudentList-Filter/Assigned";
 import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
 import picture from "../../assets/images/dp.png";
 import Swal from "sweetalert2";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
 
 
 const Student_list = () => {
@@ -30,7 +32,11 @@ const Student_list = () => {
   const [error, setError] = useState(null);
 
   const queryClient = useQueryClient();
+  const componentRef = useRef();
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
   // modal Import/add student
   const {
     isOpen: ImportIsOpen,
@@ -47,7 +53,7 @@ const Student_list = () => {
   //getCompany
   const {
     data: companyList,
-    isLoading: GetCompanyLoading,
+    isLoading:companyLoading,
     isError,
   } = useQuery({
     queryKey: ["getCompany"],
@@ -61,7 +67,7 @@ const Student_list = () => {
     isLoading: StudentListLoading,
     isError: StudentListError,
   } = useQuery({
-    queryKey: ["getStudent"],
+    queryKey: ["getTeacher2"],
     queryFn: getTeacher,
   });
 
@@ -226,6 +232,57 @@ const Student_list = () => {
   }
 
 
+
+
+
+  const defaultData = [...data];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
+  }
+
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Sex
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Program
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Major
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px] capitalize">{item.gender}</td>
+              <td className="text-center border text-[13px] uppercase">{item.program}</td>
+              <td className="text-center border text-[13px] uppercase">{item.major}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+
+  if(StudentListLoading || companyLoading) return <center>Loading</center>
+
+
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
@@ -275,7 +332,7 @@ const Student_list = () => {
             <AiOutlineUsergroupAdd size={17} />
             <span className="font-semibold tracking-wider">Assign Student</span>
           </button>
-          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+          <button onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
             <BsPrinter size={17} />
             <span className="font-semibold tracking-wider">Print</span>
           </button>
@@ -344,6 +401,12 @@ const Student_list = () => {
         isOpen={AssignStudentModalIsOpen}
         companies={limitCompany}
       />
+
+<div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Student List`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };
