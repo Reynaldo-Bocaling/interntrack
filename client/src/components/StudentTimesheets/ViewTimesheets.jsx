@@ -11,12 +11,20 @@ const WeeklyReport = () => {
   const currentDate = new Date();
   const location = useLocation();
   const newData = location.state.data
+  
   const [showAllTables, setShowAllTables] = useState(false);
 
+  const totalHours = newData.trainingHours;
+  const totalHoursTaken = Math.round(newData.totalHours);
+  const totalHoursRemaining = totalHours - totalHoursTaken;
+
+
+
+  console.log(totalHoursTaken);
     // piechart info
-    const piechartData = [325, 150];
+    const piechartData = [totalHoursTaken, totalHoursRemaining];
     const colors = ["#2ECC71", "#FF5733"];
-    const labels = ["Hours Taken", "Leave", "Hours Remaining"];
+    const labels = ["Hours Taken", "Hours Remaining"];
 
     
   const student = {
@@ -38,14 +46,14 @@ const WeeklyReport = () => {
     return new Date(b[0].date) - new Date(a[0].date);
   });
 
-
+  console.log(newData,'j');
 
 
   const visibleGroups = showAllTables
     ? groupedTimeSheet
     : groupedTimeSheet.slice(0, 1);
 
-console.log(newData, 'd');
+
   return (
     <div>
      <Link 
@@ -88,13 +96,13 @@ console.log(newData, 'd');
           />
 
           <h1 className="absolute top-[12%] right-[2%] text-2xl font-semibold">
-            325 / 500 <span className="text-xs text-blue-500">hrs</span>
+            {`${totalHoursTaken} / ${totalHours}`} <span className="text-xs text-blue-500">hrs</span>
           </h1>
 
           <div className="absolute -bottom-2 left-[60%] h-[110px] max-w-[450px] w-full flex items-center justify-between px-8 pb-2">
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                325
+                {totalHoursTaken}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
@@ -105,7 +113,7 @@ console.log(newData, 'd');
             </div>
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                150
+                {totalHoursRemaining}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
@@ -116,13 +124,13 @@ console.log(newData, 'd');
             </div>
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                25
+                {totalHours}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
               </h1>
               <span className="text-gray-500 text-xs tracking-wide">
-                Leave Hours
+                Total Hours
               </span>
             </div>
           </div>

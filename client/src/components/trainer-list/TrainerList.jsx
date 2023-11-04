@@ -259,7 +259,6 @@ console.log('trainer list', data);
               />
             )}
           </div>
-          <div className="flex items-center gap-3">
             <button
               onClick={AddOnOpen}
               className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
@@ -267,11 +266,7 @@ console.log('trainer list', data);
               <AiOutlineUserAdd size={16} />
               <span className="font-semibold tracking-wider">Add</span>
             </button>
-            <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <BsPrinter size={17} />
-              <span className="font-semibold tracking-wider">Print</span>
-            </button>
-          </div>
+           
         </div>
       </div>
 

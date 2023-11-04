@@ -982,7 +982,7 @@ export class UserController {
     } catch (error) {
       return res.status(500).json(error);
     }
-  }
+  } 
 
   // get trainer list
   static async getTrainerList(req: any, res: Response) {

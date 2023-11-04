@@ -3,15 +3,19 @@ import { format } from "date-fns";
 import { Button } from "@nextui-org/react";
 import PieChart from "../../components/charts/PieChart";
 
-const StudentTimesheet = ({ data ,isLoading}) => {
+const StudentTimesheet = ({ data, isLoading, pieChartData }) => {
   const [showAllTables, setShowAllTables] = useState(false);
 
-if(isLoading) return <span>Loading</span>
+  if (isLoading) return <span>Loading</span>;
+
+  const totalHours = pieChartData.totalHours;
+  const hoursTaken = pieChartData.hoursTaken;
+  const hoursRemaining = totalHours - hoursTaken;
 
   // piechart info
-  const piechartData = [325, 25, 150];
-  const colors = ["#2ECC71", "#FFA500", "#FF5733"];
-  const labels = ["Hours Taken", "Leave", "Hours Remaining"];
+  const piechartData = [hoursTaken, hoursRemaining];
+  const colors = ["#2ECC71", "#FF5733"];
+  const labels = ["Hours Taken", "Hours Remaining"];
 
   const calculateTotalHours = (timeSheet) => {
     return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
@@ -37,9 +41,6 @@ if(isLoading) return <span>Loading</span>
         Timesheet
       </div>
 
-
-
-      
       <div className="w-[100%] flex flex-col gap-14 bg-white2 rounded-lg relative mb-5">
         <div className="relative  max-w-[450px] w-full pt-7">
           <PieChart
@@ -50,13 +51,14 @@ if(isLoading) return <span>Loading</span>
           />
 
           <h1 className="absolute top-[12%] right-[2%] text-2xl font-semibold">
-            325 / 500 <span className="text-xs text-blue-500">hrs</span>
+            {`${hoursTaken} / ${totalHours}`}{" "}
+            <span className="text-xs text-blue-500">hrs</span>
           </h1>
 
           <div className="absolute -bottom-2 left-[60%] h-[110px] max-w-[450px] w-full flex items-center justify-between px-8 pb-2">
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                325
+                {hoursTaken}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
@@ -67,7 +69,7 @@ if(isLoading) return <span>Loading</span>
             </div>
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                150
+                {hoursRemaining}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
@@ -78,13 +80,13 @@ if(isLoading) return <span>Loading</span>
             </div>
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                25
+                {totalHours}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
               </h1>
               <span className="text-gray-500 text-xs tracking-wide">
-                Leave Hours
+                Total Hours
               </span>
             </div>
           </div>
@@ -122,10 +124,14 @@ if(isLoading) return <span>Loading</span>
                     {format(new Date(entry.date), "MMM dd")}
                   </td>
                   <td className="text-sm  tracking-widetext-left">
-                  {entry.timeIn != '0:00' ? format(new Date(entry.timeIn), "h:mm a") : '0'}
+                    {entry.timeIn != "0:00"
+                      ? format(new Date(entry.timeIn), "h:mm a")
+                      : "0"}
                   </td>
                   <td className="text-sm  tracking-widetext-left">
-                  {entry.timeOut != '0:00' ? format(new Date(entry.timeOut), "h:mm a") : '0'}
+                    {entry.timeOut != "0:00"
+                      ? format(new Date(entry.timeOut), "h:mm a")
+                      : "0"}
                   </td>
                   <td className="text-sm  tracking-widetext-left">
                     {entry.totalHours} hrs
@@ -149,16 +155,16 @@ if(isLoading) return <span>Loading</span>
         </div>
       ))}
 
-      <div  className="w-full grid place-items-center">
-      {groupedTimeSheet.length > 1 && (
-        <Button
-          color="primary"
-          className="w-[130px]"
-          onClick={() => setShowAllTables(!showAllTables)}
-        >
-          {showAllTables ? "Show less" : "Show more"}
-        </Button>
-      )}
+      <div className="w-full grid place-items-center">
+        {groupedTimeSheet.length > 1 && (
+          <Button
+            color="primary"
+            className="w-[130px]"
+            onClick={() => setShowAllTables(!showAllTables)}
+          >
+            {showAllTables ? "Show less" : "Show more"}
+          </Button>
+        )}
       </div>
     </div>
   );

@@ -5,20 +5,28 @@ import { getStudentList, getTeacher,getCampus } from "../../api/Api";
 
 const Timesheet = () => {
   const currentDate = new Date();
-  const { data: StudentTimesheet } = useQuery({
+
+  const { data: StudentTimesheet, isLoading:timesheetLoading } = useQuery({
     queryKey: ["getTimesheet"],
     queryFn: getStudentList,
   });
 
-  const { data: getTeacher_id } = useQuery({
+  const { data: getTeacher_id, isLoading: teacher_idLoading } = useQuery({
     queryKey: ["getStudent"],
     queryFn: getTeacher,
   });
 
-  const { data: getProgram } = useQuery({
+  const { data: getProgram, isLoading:programLoading } = useQuery({
     queryKey: ["getProgram"],
     queryFn: getCampus,
   });
+
+
+  if(programLoading || teacher_idLoading || timesheetLoading) {
+    return <center className="my-5 text-lg">Computing..</center>
+  }
+
+
 
 
   const programList = getProgram
@@ -47,6 +55,7 @@ const Timesheet = () => {
               )
             : [],
           deletedStatus,
+          totalHours: timesheet.filter((item) => item.logStatus).reduce((total, item) => total + item.totalHours, 0)
         }))
         .filter((item) => item.deletedStatus === 0)
     : [];

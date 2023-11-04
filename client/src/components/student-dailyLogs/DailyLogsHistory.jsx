@@ -48,10 +48,14 @@ function DailyLogsHistory() {
                       {format(new Date(item.date), "MMM dd")}
                     </td>
                     <td className="text-xs tracking-wide text-center">
-                      {item.timeIn}
+                      {item.timeIn != "0:00"
+                        ? format(new Date(item.timeIn), "h:mm a")
+                        : "0"}
                     </td>
                     <td className="text-xs tracking-wide text-center">
-                      {item.timeOut}
+                      {item.timeOut != "0:00"
+                        ? format(new Date(item.timeOut), "h:mm a")
+                        : "0"}
                     </td>
                     <td className="text-xs tracking-wide text-center">
                       {item.totalHours} hrs

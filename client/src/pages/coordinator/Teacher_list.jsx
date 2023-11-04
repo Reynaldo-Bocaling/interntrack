@@ -221,6 +221,10 @@ const TeacherList = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
+
+  const handlePrint = () => {
+    alert('dd')
+  }
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
@@ -257,7 +261,7 @@ const TeacherList = () => {
             <AiOutlineUserAdd size={16} />
             <span className="font-semibold tracking-wider">Add</span>
           </button>
-          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+          <button onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
             <BsPrinter size={17} />
             <span className="font-semibold tracking-wider">Print</span>
           </button>

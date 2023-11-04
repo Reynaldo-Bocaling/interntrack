@@ -167,8 +167,7 @@ function ViewAttendanceRequest() {
                       </td>
                       <td className="text-sm text-center tracking-wide">
                       {
-                          `${Math.floor(item.totalHours)}:${Math.round((item.totalHours % 1) * 60)}`
-                        
+                        item.totalHours                        
                         } Hours
                       </td>
                       <td className="text-sm tracking-wide pl-2 w-1/6">

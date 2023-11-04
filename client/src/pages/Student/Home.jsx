@@ -6,26 +6,100 @@ import { BsCalendar2CheckFill, BsCalendarMinusFill } from "react-icons/bs";
 import PieChart from "../../components/charts/PieChart";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getTimesheet } from "../../api/Api";
+import { getCampus, getStudent, getTask, getTimesheet } from "../../api/Api";
 import { format, parse } from "date-fns";
 const Dashboard = () => {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
-
+  const currentDate = new Date();
   // piechart info
-  const piechartData = [325, 25, 150];
-  const colors = ["#2ECC71", "#FFA500", "#FF5733"];
-  const labels = ["Hours Taken", "Leave", "Hours Remaining"];
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["getStudentDailyLog"],
+  const { data: getProgram , isLoading:programLoading} = useQuery({
+    queryKey: ["getProgram2"],
+    queryFn: getCampus,
+  });
+  const { data: getTaskList, isLoading:taskLoading } = useQuery({
+    queryKey: ["getTask2"],
+    queryFn: getTask,
+  });
+  const { data: getStudentInfo, isLoading:studentLoading } = useQuery({
+    queryKey: ["getStudentInfo2"],
+    queryFn: getStudent,
+  });
+  const { data: getStudentTimesheet, isLoading:timesheetLoading } = useQuery({
+    queryKey: ["getTimesheet2"],
     queryFn: getTimesheet,
   });
 
-  const getTime = data ? data.find((item) => item.date === formattedDate) : [];
+
+
+  if(programLoading || taskLoading || studentLoading || timesheetLoading) {
+    return <center className="my-5 text-lg">Computing..</center>
+  }
+
+
+
+  const programList = getProgram
+    ? getProgram
+        .flatMap(({ college }) => college?.flatMap(({ program }) => program))
+        .map(({ trainingHours, program_description }) => ({
+          trainingHours,
+          program_description,
+        }))
+    : [];
+
+  const timesheetFilter = getStudentTimesheet
+    ?.filter((item) => new Date(item.date) <= currentDate)
+    .map(
+      ({
+        id,
+        timeIn,
+        timeOut,
+        totalHours,
+        date,
+        logStatus,
+        student_id,
+        week,
+      }) => ({
+        id,
+        timeIn: logStatus !== 0 ? timeIn : "0:00",
+        timeOut: logStatus !== 0 ? timeOut : "0:00",
+        totalHours: logStatus !== 0 ? totalHours : 0,
+        date,
+        logStatus,
+        student_id,
+        week,
+      })
+    );
+  const hoursTaken = Math.round(
+    timesheetFilter?.reduce((total, item) => total + item.totalHours, 0)
+  );
+  const totalHours = programList.find(
+    (item) => item.program_description === getStudentInfo?.program
+  )?.trainingHours;
+  const hoursRemaining = totalHours - hoursTaken;
+
+  const piechartData = [hoursTaken, hoursRemaining];
+  const colors = ["#2ECC71", "#FF5733"];
+  const labels = ["Hours Taken", "Hours Remaining"];
+
+ 
+
+  const getTime = getStudentTimesheet ? getStudentTimesheet.find((item) => item.date === formattedDate) : [];
   const timeInDB = getTime ? getTime.timeIn : "";
   const timeOutDB = getTime?.timeOut;
   const totalHoursDB = getTime?.totalHours;
   const timeId = getTime?.id;
+  const recentLogs = getStudentTimesheet
+    ?.filter((item) => new Date(item.date) <= currentDate)
+    .slice(timesheetFilter.length - 5, timesheetFilter.length + 1);
+const attendanceRequest = getStudentTimesheet?.filter(
+  (item) => item.totalHours != 0 && item.logStatus == 0
+);
+const totalRequest = getStudentTimesheet?.filter(
+  (item) => item.totalHours != 0 
+);
+
+const progressRate  = attendanceRequest.length / totalRequest.length *100;
 
   return (
     <div>
@@ -50,13 +124,14 @@ const Dashboard = () => {
             />
           </div>
           <h1 className="absolute top-[12%] right-[2%] text-2xl">
-            325 / 500 <span className="text-xs text-blue-500">hrs</span>
+            {`${hoursTaken} / ${totalHours}`}{" "}
+            <span className="text-xs text-blue-500">hrs</span>
           </h1>
 
           <div className="h-[110px] flex items-center justify-between px-8 pb-2 mt-3">
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                325
+                {hoursTaken}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
@@ -67,7 +142,7 @@ const Dashboard = () => {
             </div>
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                150
+                {hoursRemaining}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
@@ -78,13 +153,13 @@ const Dashboard = () => {
             </div>
             <div>
               <h1 className="text-lg font-semibold xl flex items-center gap-3">
-                25
+                {totalHours}
                 <span className="text-xs text-blue-500 tracking-wider">
                   hrs
                 </span>
               </h1>
               <span className="text-gray-500 text-xs tracking-wide">
-                Leave Hours
+                Total Hours
               </span>
             </div>
           </div>
@@ -110,24 +185,26 @@ const Dashboard = () => {
             </div>
             <div className="w-full flex flex-col gap-10">
               <div className="flex flex-col gap-2">
-                <h1 className="text-2xl font-semibold tracking-wider">
-                  56{" "}
+                <div className="text-2xl font-semibold tracking-wider flex items-center gap-3">
+                  {getTaskList.length}
                   <span className="text-xs font-medium text-blue-500">
                     items
                   </span>
-                </h1>
+                </div>
                 <small className="tracking-wide">total Task</small>
               </div>
               <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-center">
                   <span className="font-medium tracking-wide">
                     {" "}
-                    Progress rate{" "}
+                    Progress rate
                   </span>
-                  <span className="text-xs">62%</span>
+                  <span className="text-xs">
+                    { progressRate}%
+                  </span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-gray-200">
-                  <div className="rounded-full h-full w-[62%] bg-blue-500"></div>
+                  <div className={`rounded-full h-full w-[${progressRate}%]  bg-blue-500`}></div>
                 </div>
               </div>
             </div>
@@ -183,46 +260,31 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              <tr className="h-12">
-                <td className="text-left pl-3 text-sm tracking-wide">
-                  January 01
-                </td>
-                <td className="text-left pl-3 text-sm tracking-wide">8:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">4:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">8 hrs</td>
-              </tr>
-              <tr className="h-12">
-                <td className="text-left pl-3 text-sm tracking-wide">
-                  January 01
-                </td>
-                <td className="text-left pl-3 text-sm tracking-wide">8:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">4:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">8 hrs</td>
-              </tr>
-              <tr className="h-12">
-                <td className="text-left pl-3 text-sm tracking-wide">
-                  January 01
-                </td>
-                <td className="text-left pl-3 text-sm tracking-wide">8:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">4:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">8 hrs</td>
-              </tr>
-              <tr className="h-12">
-                <td className="text-left pl-3 text-sm tracking-wide">
-                  January 01
-                </td>
-                <td className="text-left pl-3 text-sm tracking-wide">8:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">4:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">8 hrs</td>
-              </tr>
-              <tr className="h-12">
-                <td className="text-left pl-3 text-sm tracking-wide">
-                  January 01
-                </td>
-                <td className="text-left pl-3 text-sm tracking-wide">8:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">4:00</td>
-                <td className="text-left pl-3 text-sm tracking-wide">8 hrs</td>
-              </tr>
+              {recentLogs.length > 0 ? (
+                recentLogs.map((item, index) => (
+                  <tr className="h-12" key={index}>
+                    <td className="text-left pl-3 text-sm tracking-wide">
+                      {item.date}
+                    </td>
+                    <td className="text-left pl-3 text-sm tracking-wide">
+                      {item.timeIn != "0:00"
+                        ? format(new Date(item.timeIn), "h:mm a")
+                        : "0"}
+                    </td>
+                    <td className="text-left pl-3 text-sm tracking-wide">
+                      {" "}
+                      {item.timeOut != "0:00"
+                        ? format(new Date(item.timeOut), "h:mm a")
+                        : "0"}
+                    </td>
+                    <td className="text-left pl-3 text-sm tracking-wide">
+                      {item.totalHours} hrs
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <h1>No logs</h1>
+              )}
             </tbody>
           </table>
         </div>

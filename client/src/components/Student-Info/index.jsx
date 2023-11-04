@@ -12,7 +12,7 @@ import StudentIfo from "./StudentIfo";
 import StudentRequirements from "./StudentRequirements";
 import StudentTask from "./StudentTask";
 import StudentTimesheet from "./StudentTimeSheet";
-import { getStudentInfo, resetData } from "../../api/Api";
+import { getCampus, getStudentInfo, resetData } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import PulseLloader from "react-spinners/PulseLoader";
 import { useMutation } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ const StudentViewInfo = () => {
   const currentDate = new Date();
   const { id } = useParams();
 
+
   const {
     data: studentlist,
     isLoading,
@@ -31,6 +32,19 @@ const StudentViewInfo = () => {
     queryKey: ["studentinfo"],
     queryFn: () => getStudentInfo(id),
   });
+
+
+  const { data: getProgram } = useQuery({
+    queryKey: ["getProgram"],
+    queryFn: getCampus,
+  });
+
+  const programList = getProgram
+  ? getProgram.flatMap(({ college }) =>
+      college?.flatMap(({ program }) => program)
+    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
+  : [];
+  
 
   const info = {
     id: studentlist?.id,
@@ -59,9 +73,40 @@ const StudentViewInfo = () => {
       : "",
   };
 
+
   const timesheet =
-    studentlist &&
-    studentlist.timesheet.filter((item) => new Date(item.date) <= currentDate);
+  studentlist &&
+  studentlist.timesheet.filter((item) => new Date(item.date) <= currentDate)
+  .map(({
+    id,
+    timeIn,
+    timeOut,
+    totalHours,
+    date,
+    logStatus,
+    student_id,
+    week
+  }) => ({
+    id,
+    timeIn: logStatus !== 0 ? timeIn : '0:00',
+    timeOut: logStatus !== 0 ? timeOut : '0:00',
+    totalHours: logStatus !== 0 ? totalHours : 0,
+    date,
+    logStatus,
+    student_id,
+    week
+  }))
+  ;
+
+
+
+  const pieChartData = {
+     totalHours : programList.find((item)=> item.program_description === studentlist?.program)?.trainingHours,
+     hoursTaken : Math.round(timesheet?.reduce((total, item) => total + item.totalHours, 0)),
+
+  }
+
+ 
 
   const requirementData = studentlist ? studentlist.requirement : null;
 
@@ -74,7 +119,9 @@ const StudentViewInfo = () => {
   }
 
 
-  // console.log(timesheet);
+
+  console.log('tm',timesheet);
+
   const { mutate } = useMutation(resetData, {
     onSuccess: () => {
       Swal.fire(
@@ -218,7 +265,7 @@ const StudentViewInfo = () => {
                   <StudentTask data={taskData} />
                 </Tabs.Panel>
                 <Tabs.Panel value="timesheet" pt="xs">
-                  <StudentTimesheet data={timesheet} />
+                  <StudentTimesheet data={timesheet} pieChartData={pieChartData}/>
                 </Tabs.Panel>
               </Tabs>
             </div>

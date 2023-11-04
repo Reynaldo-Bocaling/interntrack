@@ -12,7 +12,7 @@ import Avatar from "@mui/material/Avatar";
 import LineChart from "../../components/charts/LineChart";
 import coverDirector from "../../assets/images/DirectorCover.png";
 import ApexCharts from "react-apexcharts";
-import { getCompanyList, getCoordinatorList, getDirector, getStudentList, getTeacherList } from "../../api/Api";
+import { getCampus, getCompanyList, getCoordinatorList, getDirector, getStudentList, getTeacherList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 
@@ -21,23 +21,25 @@ const Dashboard = () => {
 
 
   const {
-    data: getDirectorInfo
+    data: getDirectorInfo, isLoading: directorLoading
   } = useQuery({
-    queryKey: ["getCompanyList"],
+    queryKey: ["getDirector"],
     queryFn: getDirector,
   });
 
 
+
   const {
-    data: company
+    data: company, isLoading: companyLoading
   } = useQuery({
     queryKey: ["getCompanyList"],
     queryFn: getCompanyList,
   });
 
+
   const {
     data: StudentList,
-    
+    isLoading: studentLoading
   } = useQuery({
     queryKey: ["getStudentList"],
     queryFn: getStudentList,
@@ -45,20 +47,42 @@ const Dashboard = () => {
 
 
   const {
-    data: coordinatorList,
+    data: coordinatorList, isLoading: coordinatorLoading
   } = useQuery({
     queryKey: ["getCoordinatorList"],
     queryFn: getCoordinatorList,
   });
 
   const  {
-    data: teacherList
+    data: teacherList, isLoading: teacherLoading
   } = useQuery({
     queryKey: ["getTeacherList"],
     queryFn: getTeacherList
   });
 
   
+  const { data: getProgram, isLoading: programLoading } = useQuery({
+    queryKey: ["getProgram"],
+    queryFn: getCampus,
+  });
+
+
+
+  if(directorLoading || companyLoading || coordinatorLoading|| teacherLoading || programLoading || studentLoading) {
+    return <center className="my-5 text-lg">Computing..</center>
+  }
+
+
+
+  const programList = getProgram
+  ? getProgram.flatMap(({ college }) =>
+      college?.flatMap(({ program }) => program)
+    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
+  : [];
+
+
+
+
   const getTime = StudentList 
   ? StudentList.flatMap(({timesheet}) => timesheet)
   .find((item)=> item.date === formattedDate)
@@ -81,12 +105,57 @@ const Dashboard = () => {
     }, {})
   : {};
   
+
+
+  
  
 
   const totalStudent = StudentList ? StudentList.length : [];
   const totalCoordinator = coordinatorList ? coordinatorList.length : [];
   const totalTeacher = teacherList ? teacherList.length : [];
   const companyList = company ? company.length : [];
+
+
+ 
+
+
+  const totalAllHoursStudent = StudentList
+  ?StudentList.map(({ program}) => 
+  programList.find((item)=> item.program_description === program)?.trainingHours)
+  .reduce((total, item) => total + item, 0)
+:[]
+
+
+const totalHoursStudent = StudentList
+?StudentList
+.flatMap(({ timesheet }) => timesheet)
+.filter((item)=>item.logStatus === 1)
+.reduce((total, item) => total + item.totalHours, 0)
+:[];
+
+const percentage = Math.floor(
+(Math.round(totalHoursStudent) / totalAllHoursStudent) * 100
+);
+
+
+ 
+
+  const totalAssign = `${
+    (StudentList.filter(
+      (item) => item.trainer !== null && item.areaAssigned_id !== null
+    ).length)}`;
+  const totalUnAssign = `${
+    (StudentList.filter(
+      (item) => item.trainer === null && item.areaAssigned_id === null
+    ).length )}`;
+
+
+
+    const totalSlot = company
+    ? company.flatMap(({areaOfAssignment}) => areaOfAssignment)
+    .reduce((total, item) => total + item.slot, 0) - totalAssign
+    :[] 
+
 
 
   const graphData = [
@@ -106,8 +175,8 @@ const Dashboard = () => {
       iconBackground: "text-sky-500 bg-sky-100",
       ShadowColor: "shadow-red-50",
       extraText: [
-        { label: "Assigned", totalCount: 150, color: "text-green-500" },
-        { label: "Unassigned", totalCount: 50, color: "text-red-500" },
+        { label: "Assigned", totalCount: totalAssign, color: "text-green-500" },
+        { label: "Unassigned", totalCount: totalUnAssign, color: "text-red-500" },
       ],
     },
     {
@@ -131,13 +200,12 @@ const Dashboard = () => {
       iconBackground: "text-orange-500 bg-orange-100",
       ShadowColor: "shadow-blue-50",
       extraText: [
-        { label: "Available slots", totalCount: 55, color: "text-green-500" },
+        { label: "Available slots", totalCount: totalSlot, color: "text-green-500" },
       ],
     },
   ];
 
 
-  const percentage = 75;
 
   return (
     <>
@@ -155,7 +223,9 @@ const Dashboard = () => {
               <DateNow />
             </div>
           </div>
-      <div className="grid grid-cols-6 grid-rows-3 gap-3">
+      <div className="flex gap-3">
+        <div className="flex flex-col gap-3 w-[70%]">
+
         <div className="relative col-span-4 h-[170px] bg-white rounded-lg p-3 shadow-xl overflow-hidden shadow-[#f4f2f2] border border-[#ecf0f1]">
           <img
             src={coverDirector}
@@ -177,7 +247,7 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-        <div className="col-span-4 row-span-2 bg-white rounded-lg  p-2 shadow-xl shadow-blue-50 border border-[#ecf0f1]">
+        <div className="col-span-4 row-span-2 bg-white rounded-lg  p-2 pb-10 shadow-xl shadow-blue-50 border border-[#ecf0f1]">
           <p className="text-base font-semibold mt-5 ml-4 mb-3">
             Student Hours rate per week
           </p>
@@ -185,11 +255,17 @@ const Dashboard = () => {
             <LineChart data={graphData} sizeHeight={260} />
           </div>
         </div>
-        <div className="col-span-2 col-start-5 row-span-2 row-start-1 grid grid-cols-2 gap-3">
+
+
+        </div>
+        
+
+        <div className="flex flex-col  gap-3 w-[35%] ">
+        <div className="grid grid-cols-2 gap-3">
           {countBox.map((item, index) => (
             <div
               key={index}
-              className="relative bg-white rounded-lg p-5 shadow-md shadow-[#f2f4f5] border border-[#ecf0f1]"
+              className="relative bg-white rounded-lg py-5 px-3  shadow-md shadow-[#f2f4f5] border border-[#ecf0f1]"
             >
               <BiDotsVerticalRounded className="absolute right-3 top-3" />
               <div className={`${item.iconBackground} p-2 rounded-lg w-[33px]`}>
@@ -198,9 +274,9 @@ const Dashboard = () => {
               <p className="text-xs text-gray-500 tracking-wide mt-5 mb-2">
                 {item.label}
               </p>
-              <span className="text-lg font-bold">{item.totalCount}</span>
+              <p className="text-lg font-bold pl-3">{item.totalCount}</p>
               {item.extraText && (
-                <div className=" absolute  left-2 text-xs flex items-center justify-between gap-2 mt-1">
+                <div className=" text-xs flex items-center justify-between gap-2 mt-1">
                   {item.extraText.map((text, i) => (
                     <p
                       key={i}
@@ -215,11 +291,27 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
-        <div className="col-span-2 col-start-5 row-span-1 row-start-3 bg-white rounded-lg p-3 shadow-xl shadow-blue-50 border border-[#ecf0f1]">
-          {/* <p className="text-base font-semibold mt-3 ml-3">
-                Student Hours rate per week
-              </p>
-            <LineChart data={graphData} sizeHeight={100} /> */}
+        <div className="col-span-2 bg-white rounded-lg shadow-xl p-3 shadow-blue-50 border border-[#ecf0f1] flex flex-col items-center justify-center">
+              <p className="text-lg font-semibold">Student Completion Rate</p>
+              <div className="max-w-[200px] w-full p-4 ">
+                <CircularProgressbar
+                  value={percentage}
+                  text={`${percentage} %`}
+                  styles={{
+                    path: { stroke: `#20D117` },
+                    trail: { stroke: "#E4F5E4", strokeWidth: 10 },
+                    text: {
+                      fill: `#333`,
+                      fontSize: `1rem`,
+                      fontWeight: 600,
+                      dominantBaseline: "middle",
+                      textAnchor: "middle",
+                    },
+                  }}
+                  strokeWidth={10}
+                />
+              </div>
+            </div>
         </div>
       </div>
     </>

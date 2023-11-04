@@ -9,36 +9,50 @@ import pic from "../../assets/images/dp.png";
 import { Link } from "react-router-dom";
 import DateNow from "../../components/Dates/DateNow";
 import { useQuery } from "@tanstack/react-query";
-import { getCampus, getStudentList, getTeacher, getTrainerList } from "../../api/Api";
+import {
+  getCampus,
+  getStudentList,
+  getTeacher,
+  getTrainerList,
+} from "../../api/Api";
 import { format } from "date-fns";
 import { CircularProgressbar } from "react-circular-progressbar";
 
 function Dashboard() {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
 
-  const { data: getProgram } = useQuery({
+  const { data: getProgram, isLoading:programLoading } = useQuery({
     queryKey: ["getProgram"],
     queryFn: getCampus,
   });
 
-  const { data: teacher, isLoading: studentListLoading } = useQuery({
+  const { data: teacher, isLoading: teacherLoading } = useQuery({
     queryKey: ["getTeacher"],
     queryFn: getTeacher,
   });
 
-  const { data: students } = useQuery({
+  const { data: students, isLoading:studentLoading } = useQuery({
     queryKey: ["getStudent"],
     queryFn: getStudentList,
   });
-
-  const data = teacher
-    ? teacher.student.filter((item) => item.deletedStatus === 0)
-    : [];
 
   const { data: trainerlist, isLoading: trainerlistLoading } = useQuery({
     queryKey: ["getTrainerList"],
     queryFn: getTrainerList,
   });
+
+
+  if(programLoading || studentLoading || teacherLoading, trainerlistLoading) {
+    return <center className="my-5 text-lg">Computing..</center>
+  }
+
+
+
+  const data = teacher
+    ? teacher.student.filter((item) => item.deletedStatus === 0)
+    : [];
+
+  
 
   const filterStudentList = students
     ? students.filter((item) => item.teacher_id === teacher?.id)
@@ -48,23 +62,26 @@ function Dashboard() {
     .flatMap(({ timesheet }) => timesheet)
     .find((item) => item.date === formattedDate);
 
-    const getWeeklyHoursRate = filterStudentList 
-  ? filterStudentList.flatMap(({ timesheet }) => timesheet)
-    .filter((item) => item.week === getTime?.week)
-    .map(({ date, totalHours }) => ({
-      date: format(new Date(date), "dd"),
-      day: format(new Date(date), "EEEE"),
-      totalHours
-    }))
-    .reduce((acc, { day, totalHours }) => {
-      if (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].includes(day)) {
-        acc[day] = (acc[day] || 0) + totalHours;
-      }
-      return acc;
-    }, {})
-  : {};
-
-
+  const getWeeklyHoursRate = filterStudentList
+    ? filterStudentList
+        .flatMap(({ timesheet }) => timesheet)
+        .filter((item) => item.week === getTime?.week)
+        .map(({ date, totalHours }) => ({
+          date: format(new Date(date), "dd"),
+          day: format(new Date(date), "EEEE"),
+          totalHours,
+        }))
+        .reduce((acc, { day, totalHours }) => {
+          if (
+            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].includes(
+              day
+            )
+          ) {
+            acc[day] = (acc[day] || 0) + totalHours;
+          }
+          return acc;
+        }, {})
+    : {};
 
   const getWeeklyAttendance = filterStudentList
     ? filterStudentList
@@ -104,25 +121,31 @@ function Dashboard() {
     }
   });
 
-
-
-
   const programList = getProgram
-  ? getProgram.flatMap(({ college }) =>
-      college?.flatMap(({ program }) => program)
-    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
-  : [];
+    ? getProgram
+        .flatMap(({ college }) => college?.flatMap(({ program }) => program))
+        .map(({ trainingHours, program_description }) => ({
+          trainingHours,
+          program_description,
+        }))
+    : [];
 
+  const totalAllHoursStudent = filterStudentList
+    .map(
+      ({ program }) =>
+        programList.find((item) => item.program_description === program)
+          ?.trainingHours
+    )
+    .reduce((total, item) => total + item, 0);
 
-  
-  const totalAllHoursStudent = filterStudentList.map(({ program}) => 
-    programList.find((item)=> item.program_description === program)?.trainingHours)
-    .reduce((total, item) => total + item, 0)
+  const totalHoursStudent = filterStudentList
+    .flatMap(({ timesheet }) => timesheet)
+    .filter((item) => item.logStatus === 1)
+    .reduce((total, item) => total + item.totalHours, 0);
 
-  const totalHoursStudent = filterStudentList.flatMap(({timesheet}) => timesheet).reduce((total, item) => total + item.totalHours, 0)
-
-
-  const percentage = Math.floor((totalHoursStudent / totalAllHoursStudent) * 100)
+  const percentage = Math.floor(
+    (Math.round(totalHoursStudent) / totalAllHoursStudent) * 100
+  );
 
   const trainer = trainerlist ? trainerlist : 0;
   const coordinatorStudent = teacher?.coordinator.teacher.flatMap(
@@ -159,12 +182,11 @@ function Dashboard() {
     {
       label: "Student",
       url: "/",
-      count: studentListLoading ? "Loading" : totalStudent,
+      count: studentLoading ? "Loading" : totalStudent,
       textColor: "text-green-500",
       shadow: "shadow-green-50",
     },
   ];
-
 
   // dummydata for charts
   const weeklyAttendanceGraphData = [
@@ -182,27 +204,22 @@ function Dashboard() {
     },
   ];
 
-
   const hoursRateGraphData = [
     {
-      name: 'Hours',
+      name: "Hours",
       data: Object.values(getWeeklyHoursRate),
-      color: '#00C6FD',
-      fillColor: 'rgba(255, 0, 0, 0.3)',
-    }
+      color: "#00C6FD",
+      fillColor: "rgba(255, 0, 0, 0.3)",
+    },
   ];
-
 
   return (
     <div className="min-h-full w-full">
       <div className="m-1 ">
         <div className="flex gap-3 mt-1 min-h-[550px]">
-
-
           {/* main dashboard content */}
           <main className="flex flex-col w-[62%]  relative ">
             {/* title */}
-
 
             <div className="left-content flex  items-center justify-between">
               <div className="flex flex-col gap-2">
@@ -291,10 +308,6 @@ function Dashboard() {
             </div>
           </main>
 
-
-
-
-
           {/* right side */}
           <div className="right-side w-[37%] flex flex-col gap-3 ">
             <div className="relative  max-w-full flex  flex-col p-4 bg-white shadow-2xl shadow-orange-50 rounded-md border px-7 py-7 border-slate-200">
@@ -340,19 +353,12 @@ function Dashboard() {
               </button>
             </div>
 
-
-
             <div className="col-span-3 bg-white rounded-lg shadow-xl shadow-blue-50 border border-[#ecf0f1] ">
-            <p className="text-base font-semibold mt-3 ml-3">
+              <p className="text-base font-semibold mt-3 ml-3">
                 Student Hours rate per week
               </p>
-            <LineChart data={hoursRateGraphData} sizeHeight={200} />
+              <LineChart data={hoursRateGraphData} sizeHeight={200} />
             </div>
-
-
-
-
-
 
             <div className="col-span-2 bg-white rounded-lg shadow-xl p-3 shadow-blue-50 border border-[#ecf0f1] flex flex-col items-center justify-center">
               <p className="text-lg font-semibold">Student Completion Rate</p>
@@ -375,7 +381,6 @@ function Dashboard() {
                 />
               </div>
             </div>
-
 
             {/* <div className="h-[65%] max-w-full p-4 bg-white shadow-lg shadow-slate-100 rounded-md border border-slate-200">
               <div className="flex items-center">

@@ -17,33 +17,40 @@ import { format } from "date-fns";
 const Dashboard = () => {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
 
-  const { data } = useQuery({
-    queryKey: ["getStudentList"],
+  const { data, isLoading:coordinatorLoading } = useQuery({
+    queryKey: ["coordinator"],
     queryFn: getCoordinator,
   });
 
- const {data:getCampusList} = useQuery({
+ const {data:getCampusList, isLoading: campusLoading} = useQuery({
   queryKey: ['getCampusList'],
   queryFn: getCampus
  });
 
- const {data:getCompany} = useQuery({
+ const {data:getCompany, isLoading:companyLoading} = useQuery({
   queryKey: ['getCompanyList'],
   queryFn: getCompanyList
  })
 
  const {
   data: StudentList,
-  
+  isLoading: studentLoading
 } = useQuery({
   queryKey: ["getStudentList2"],
   queryFn: getStudentList,
 });
 
-const { data: getProgram } = useQuery({
+const { data: getProgram, isLoading:programLoading } = useQuery({
   queryKey: ["getProgram"],
   queryFn: getCampus,
 });
+
+
+
+if(programLoading || studentLoading || companyLoading, coordinatorLoading) {
+  return <center className="my-5 text-lg">Computing..</center>
+}
+
 
 
 
@@ -106,12 +113,13 @@ const { data: getProgram } = useQuery({
     programList.find((item)=> item.program_description === program)?.trainingHours)
     .reduce((total, item) => total + item, 0)
 
-  const totalHoursStudent = filteredStudents.flatMap(({timesheet}) => timesheet).reduce((total, item) => total + item.totalHours, 0)
+  const totalHoursStudent = filteredStudents.flatMap(({timesheet}) => timesheet)
+  .filter((item)=>item.logStatus === 1)
+  .reduce((total, item) => total + item.totalHours, 0)
 
 
-  const percentage = Math.floor((totalHoursStudent / totalAllHoursStudent) * 100);
+  const percentage = Math.floor((Math.round(totalHoursStudent) / totalAllHoursStudent) * 100);
 
- console.log(percentage);
 
   const totalSTudent = filteredStudents.length;
   const totalTeacher = data?.teacher.length;

@@ -16,19 +16,25 @@ import pic from "../../assets/images/dp.png";
 function Dashboard() {
   const currentDate = new Date();
   const formattedDate = format(new Date(), "yyyy-MM-dd");
+
   const { data: studentlist, isLoading: studentListLoading } = useQuery({
     queryKey: ["getStudentTimesheet"],
     queryFn: getStudentList,
   });
 
-  const { data: getTrainer_id } = useQuery({
+  const { data: getTrainer_id, isLoading:trainerIdLoading } = useQuery({
     queryKey: ["getTrainer_id"],
     queryFn: getTrainer,
   });
-  const { data: getProgram } = useQuery({
+  const { data: getProgram , isLoading: programLoading} = useQuery({
     queryKey: ["getProgram"],
     queryFn: getCampus,
   });
+
+  if(programLoading || trainerIdLoading || studentListLoading) {
+    return <center className="my-5 text-lg">Computing..</center>
+  }
+
 
   const filterStudentList = studentlist
     ? studentlist.filter((item) => item.trainer_id === getTrainer_id?.id)
@@ -38,24 +44,26 @@ function Dashboard() {
     .flatMap(({ timesheet }) => timesheet)
     .find((item) => item.date === formattedDate);
 
-
-    const getWeeklyHoursRate = filterStudentList 
-    ? filterStudentList.flatMap(({ timesheet }) => timesheet)
-      .filter((item) => item.week === getTime?.week)
-      .map(({ date, totalHours }) => ({
-        date: format(new Date(date), "dd"),
-        day: format(new Date(date), "EEEE"),
-        totalHours
-      }))
-      .reduce((acc, { day, totalHours }) => {
-        if (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].includes(day)) {
-          acc[day] = (acc[day] || 0) + totalHours;
-        }
-        return acc;
-      }, {})
+  const getWeeklyHoursRate = filterStudentList
+    ? filterStudentList
+        .flatMap(({ timesheet }) => timesheet)
+        .filter((item) => item.week === getTime?.week)
+        .map(({ date, totalHours }) => ({
+          date: format(new Date(date), "dd"),
+          day: format(new Date(date), "EEEE"),
+          totalHours,
+        }))
+        .reduce((acc, { day, totalHours }) => {
+          if (
+            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].includes(
+              day
+            )
+          ) {
+            acc[day] = (acc[day] || 0) + totalHours;
+          }
+          return acc;
+        }, {})
     : {};
-
-
 
   const getWeeklyAttendance = filterStudentList
     ? filterStudentList
@@ -95,53 +103,82 @@ function Dashboard() {
     }
   });
 
- 
-
   const programList = getProgram
-  ? getProgram.flatMap(({ college }) =>
-      college?.flatMap(({ program }) => program)
-    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
-  : [];
+    ? getProgram
+        .flatMap(({ college }) => college?.flatMap(({ program }) => program))
+        .map(({ trainingHours, program_description }) => ({
+          trainingHours,
+          program_description,
+        }))
+    : [];
 
+  const totalAllHoursStudent = filterStudentList
+    .map(
+      ({ program }) =>
+        programList.find((item) => item.program_description === program)
+          ?.trainingHours
+    )
+    .reduce((total, item) => total + item, 0);
 
-  const totalAllHoursStudent = filterStudentList.map(({ program}) => 
-  programList.find((item)=> item.program_description === program)?.trainingHours)
-  .reduce((total, item) => total + item, 0)
+  const totalHoursStudent = filterStudentList
+    .flatMap(({ timesheet }) => timesheet)
+    .filter((item) => item.logStatus === 1)
+    .reduce((total, item) => total + item.totalHours, 0);
 
-const totalHoursStudent = filterStudentList.flatMap(({timesheet}) => timesheet).reduce((total, item) => total + item.totalHours, 0)
+  const percentage = Math.floor(
+    (Math.round(Math.round(totalHoursStudent)) / totalAllHoursStudent) * 100
+  );
 
+  console.log(totalHoursStudent);
+  const studentRequest =
+    filterStudentList && Array.isArray(filterStudentList)
+      ? filterStudentList
+          .filter((item) => item.trainer_id === getTrainer_id?.id)
+          .map(
+            ({
+              id,
+              firstname,
+              lastname,
+              accountStatus,
+              timesheet,
+              deletedStatus,
+            }) => ({
+              id,
+              firstname,
+              lastname,
+              accountStatus,
+              timesheet:
+                timesheet &&
+                timesheet.filter(
+                  (item) =>
+                    new Date(item.date) <= currentDate &&
+                    item.totalHours > 0 &&
+                    item.logStatus === 0
+                ),
+              deletedStatus,
+            })
+          )
+      : [];
 
-const percentage = Math.floor((totalHoursStudent / totalAllHoursStudent) * 100)
-
-
-
-const studentRequest = filterStudentList && Array.isArray(filterStudentList)
-  ? filterStudentList
-  .filter((item)=> item.trainer_id === getTrainer_id?.id)
-  .map(({ id, firstname, lastname, accountStatus, timesheet,deletedStatus }) => ({
+  const filterStudentRequest = studentRequest.map(
+    ({ id, firstname, lastname, deletedStatus, timesheet }) => ({
       id,
-      firstname,
-      lastname,
-      accountStatus,
-      timesheet: timesheet && timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0),
-      deletedStatus
-    }))
-  : [];
+      name: `${firstname} ${lastname}`,
+      deletedStatus,
+      totalRequest: timesheet.length,
+      totalPendingHours: timesheet.reduce(
+        (total, item) => total + item.totalHours,
+        0
+      ),
+    })
+  );
 
+  const currentAttendanceRequest = filterStudentRequest.slice(
+    filterStudentRequest.length - 3,
+    filterStudentRequest.length + 1
+  );
 
-  const filterStudentRequest = studentRequest.map(({id, firstname,lastname, deletedStatus, timesheet}) => ({
-    id,
-    name: `${firstname} ${lastname}`,
-    deletedStatus,
-    totalRequest : timesheet.length,
-    totalPendingHours: timesheet.reduce((total, item) => total + item.totalHours, 0)
-  }));
-  
-  const currentAttendanceRequest = filterStudentRequest.slice(filterStudentRequest.length -3, filterStudentRequest.length  +1 )
-
-  console.log('req',currentAttendanceRequest);
-
-
+  console.log("req", currentAttendanceRequest);
 
   const getTimesheet = filterStudentList
     ? filterStudentList
@@ -203,17 +240,14 @@ const studentRequest = filterStudentList && Array.isArray(filterStudentList)
     },
   ];
 
-
-
   const hoursRateGraphData = [
     {
-      name: 'Hours',
+      name: "Hours",
       data: Object.values(getWeeklyHoursRate),
-      color: '#00C6FD',
-      fillColor: 'rgba(255, 0, 0, 0.3)',
-    }
+      color: "#00C6FD",
+      fillColor: "rgba(255, 0, 0, 0.3)",
+    },
   ];
-
 
   return (
     <div className="min-h-full w-full">
@@ -273,54 +307,58 @@ const studentRequest = filterStudentList && Array.isArray(filterStudentList)
               </div>
               <div className="graph-box h-auto p-4 pr-2 shadow-lg bg-white shadow-slate-200 rounded-md border border-gray-100">
                 <h1 className=" text-base font-semibold text-gray-700 ">
-                Current Attendance Request
+                  Current Attendance Request
                 </h1>
 
                 <div>
-                <div className="mt-3 bg-white rounded-lg shadow-lg shadow-slate-50 border border-[#ecf0f1] overflow-hidden">
-                <table className="w-full">
-                  <thead>
-                    <tr className="h-10 bg-[#f1f4f5]">
-                      <th className="text-left pl-3 font-semibold text-sm">
-                        #
-                      </th>
-                      <th className="text-left pl-3 font-semibold text-sm w-[250px]">
-                        Name
-                      </th>
-                      <th className="text-center font-semibold text-sm">
-                        request
-                      </th>
-                      <th className="text-center font-semibold text-sm">
-                        Pending Hours
-                      </th>
-                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentAttendanceRequest?.map((item, index) => (
-                      <tr
-                        key={index}
-                        className="h-12 border-b border-[#ecf0f1]"
-                      >
-                        <td className="text-left pl-3 text-sm">{index + 1}</td>
-                        <td className="text-left pl-3 text-sm">
-                          <div className="flex items-center gap-2">
-                            <Avatar alt="Image profile" sx={{ width: 28, height: 28 }}  src={pic} />
-                            {item.name}
-                          </div>
-                        </td>
-                        <td className="text-center text-sm">
-                          {item.totalRequest}
-                        </td>
-                        <td className="text-center text-sm">
-                          {item.totalPendingHours} hrs
-                        </td>
-                        
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  <div className="mt-3 bg-white rounded-lg shadow-lg shadow-slate-50 border border-[#ecf0f1] overflow-hidden">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="h-10 bg-[#f1f4f5]">
+                          <th className="text-left pl-3 font-semibold text-sm">
+                            #
+                          </th>
+                          <th className="text-left pl-3 font-semibold text-sm w-[250px]">
+                            Name
+                          </th>
+                          <th className="text-center font-semibold text-sm">
+                            request
+                          </th>
+                          <th className="text-center font-semibold text-sm">
+                            Pending Hours
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {currentAttendanceRequest?.map((item, index) => (
+                          <tr
+                            key={index}
+                            className="h-12 border-b border-[#ecf0f1]"
+                          >
+                            <td className="text-left pl-3 text-sm">
+                              {index + 1}
+                            </td>
+                            <td className="text-left pl-3 text-sm">
+                              <div className="flex items-center gap-2">
+                                <Avatar
+                                  alt="Image profile"
+                                  sx={{ width: 28, height: 28 }}
+                                  src={pic}
+                                />
+                                {item.name}
+                              </div>
+                            </td>
+                            <td className="text-center text-sm">
+                              {item.totalRequest}
+                            </td>
+                            <td className="text-center text-sm">
+                              {item.totalPendingHours} hrs
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -338,10 +376,10 @@ const studentRequest = filterStudentList && Array.isArray(filterStudentList)
             </div>
 
             <div className="col-span-3 bg-white rounded-lg shadow-xl shadow-blue-50 border border-[#ecf0f1] ">
-            <p className="text-base font-semibold mt-3 ml-3">
+              <p className="text-base font-semibold mt-3 ml-3">
                 Student Hours rate per week
               </p>
-            <LineChart data={hoursRateGraphData} sizeHeight={200} />
+              <LineChart data={hoursRateGraphData} sizeHeight={200} />
             </div>
 
             <div className="col-span-2 bg-white rounded-lg shadow-xl p-3 shadow-blue-50 border border-[#ecf0f1] flex flex-col items-center justify-center">
@@ -365,8 +403,6 @@ const studentRequest = filterStudentList && Array.isArray(filterStudentList)
                 />
               </div>
             </div>
-
-
           </div>
         </div>
       </div>

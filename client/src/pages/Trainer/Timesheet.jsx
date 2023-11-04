@@ -35,12 +35,13 @@ function Timesheet() {
         name: `${firstname} ${lastname}`,
         program,
         trainingHours: programList.find((item) => item.program_description ==program)?.trainingHours,
+        totalHours: timesheet?.filter((item)=> item.logStatus === 1)?.reduce((total, item) => total + item.totalHours, 0),
         timeSheet: timesheet
           ? timesheet.map(
               ({ id, timeIn, timeOut, totalHours, date, logStatus }) => ({
                 id,
-                timeIn: logStatus !== 0 ? timeIn : 0,
-                timeOut: logStatus !== 0 ? timeOut : 0,
+                timeIn: logStatus !== 0 ? timeIn : '0:00',
+                timeOut: logStatus !== 0 ? timeOut : '0:00',
                 totalHours: logStatus !== 0 ? totalHours : 0,
                 date,
               })
@@ -52,6 +53,7 @@ function Timesheet() {
     : [];
 
 
+    console.log('dt',data);
   return (
     <div>
       <TimesheetTable data={data} />

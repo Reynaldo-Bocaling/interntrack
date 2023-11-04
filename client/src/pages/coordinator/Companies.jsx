@@ -51,7 +51,6 @@ const Companies = () => {
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Company list
         </h1>
-        <div className="flex items-center gap-3">
           <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
             <BiSearch />
             <input
@@ -60,13 +59,7 @@ const Companies = () => {
               className="outline-none text-sm"
               onChange={(e)=>setSearchInput(e.target.value)}
             />
-          </div>
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <BsPrinter size={17} />
-              <span className="font-semibold tracking-wider">Print</span>
-            </button>
-          </div>
+         
         </div>
       </div>
 
