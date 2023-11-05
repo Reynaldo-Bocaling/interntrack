@@ -4,7 +4,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { LiaTimesSolid } from "react-icons/lia";
 import { Input, Button } from "@nextui-org/react";
-import model from "../assets/images/LogInModel.png";
+import model from "../assets/images/homeModel.png";
 import unlockIcon from "../assets/images/unlock-vector-icon.jpg";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarGroup } from "@nextui-org/react";
@@ -60,10 +60,10 @@ const Login = () => {
   return (
     <div className="w-screen h-screen bg-white overflow-hidden">
       <div className="shadow-effect relative max-w-[1224px] mx-auto min-h-screen flex items-center">
-        <div className="absolute top-7 left-7 z-30 flex items-center gap-2">
+        <Link to="/welcome-to-InternTrack" className="absolute top-7 left-7 z-30 flex items-center gap-2">
           <img src={Img} alt="" className="w-[35px]" />
           <span className="text-xl font-semibold">InternTrack</span>
-        </div>
+        </Link>
         <div className="relative w-[55%] flex items-center justify-center mr-10">
           <img src={model} alt="" className="max-w-[380px] z-20" />
 

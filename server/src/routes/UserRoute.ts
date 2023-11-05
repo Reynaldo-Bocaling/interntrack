@@ -77,6 +77,7 @@ routes.get('/getStudentInfo/:id' ,UserController.getStudentInfo);
 routes.get('/getCampus' ,UserController.getCampus);
 routes.get('/getRequirement' ,verifyToken,UserController.getRequirement);
 routes.get('/getTask' ,verifyToken,UserController.getTask);
+routes.get('/getAnnouncement' ,UserController.getAnnouncement);
 
 
 
@@ -129,6 +130,11 @@ routes.post('/uploadRequirement' ,verifyToken, uploads.single('image'), UserCont
 
 // reset data
 routes.put('/resetData' , UserController.resetData);
+
+
+
+// announcement
+routes.post('/createAnnouncement', UserController.createAnnouncement)
 
 
 

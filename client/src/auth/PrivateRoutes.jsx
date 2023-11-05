@@ -34,6 +34,10 @@ import Records from "../pages/Student/Records"
 import Info from "../components/Student-profile/Information"
 import Requirements from "../components/Student-profile/Requirements"
 import Security from "../components/Student-profile/Security"
+
+import Announcement from "../pages/Student/Announcement"
+
+
 // SuperAdmin pages
 import SuperAdminDashboard from "../pages/SuperAdmin/Dashboard"
 import SuperAdmin_Trainer_list from "../pages/SuperAdmin/Trainer"
@@ -472,6 +476,11 @@ const PrivateRoutes = () => {
         path: "/record",
         element: <Records />,
       },
+      {
+        path: "/Announcement",
+        element: <Announcement />,
+      },
+      
     ],
   };
 

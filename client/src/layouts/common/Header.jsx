@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 
 import { BiSearch, BiHelpCircle } from "react-icons/bi";
 import { LiaSignOutAltSolid } from "react-icons/lia";
+import { IoNotificationsOutline } from "react-icons/io5";
 import { RiArrowRightSLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { RiArrowDropDownFill } from "react-icons/ri";
@@ -14,8 +15,13 @@ import { BsDot } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { logout } from "../../api/Api";
 import { useMutation } from "@tanstack/react-query";
+import { Drawer, Button, ScrollArea } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+
 
 function Header(props) {
+  const [opened, { open, close }] = useDisclosure(false);
+
   const navigate = useNavigate()
   const {
     toggleIsOpen,
@@ -79,12 +85,6 @@ function Header(props) {
 
     },
     onError: () => {
-      // Swal.fire({
-      //   icon: 'error',
-      //   title: 'Oops...',
-      //   text: 'Something went wrong!',
-      //   footer: '<a href="">Why do I have this issue?</a>'
-      // })
     }
   });
 
@@ -104,6 +104,11 @@ function Header(props) {
     })
 
 
+
+
+    const content = Array(100)
+    .fill(0)
+    .map((_, index) => <p key={index}>Drawer with scroll</p>);
 
 
    
@@ -134,49 +139,17 @@ function Header(props) {
           </div>
           <div
             className="relative flex items-center gap-4 cursor-pointer p-1"
-            onClick={toggleNotif}
+            onClick={open}
           >
             <div>
-              <MdNotificationsNone size={20} className="text-blue-500" />
+              <IoNotificationsOutline size={20} className="text-blue-500" />
               <BsDot
                 size={23}
                 className="absolute -top-1 -right-1 text-red-500"
               />
             </div>
 
-            {isOpenNotif && (
-              <div className="notification absolute top-[50px] right-1 w-[300px] flex flex-col gap-2 rounded-l-xl rounded-br-xl h-[400px] bg-white shadow-lg overflow-y-auto p-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg tracking-wide font-semibold ">
-                    Notifications
-                  </span>
-                  <div className="relative bg-slate-100p-2 rounded-full">
-                    {NotifLength > 0 && (
-                      <div>
-                        <span className="font-medium">{NotifLength}</span>
-                        <BsDot
-                          size={23}
-                          className="absolute top-0 -right-4 text-red-500"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-                {Notif.map((item, index) => (
-                  <div
-                    key={index}
-                    className="py-2 px-2 bg-slate-50 w-full rounded-lg border hover:bg-white"
-                  >
-                    <h3 className="text-base tracking-wide font-medium mb-1">
-                      {item.name}
-                    </h3>
-                    <span className="text-sm text-gray-600 tracking-wide">
-                      {item.subject}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+           
           </div>
 
           <div
@@ -188,6 +161,30 @@ function Header(props) {
               size={20}
               className="text-blue-500 absolute top-1/3 -right-4 -translate-y-1/2"
             />
+
+
+            <Drawer
+        opened={opened}
+        onClose={close}
+        title={<span className="text-lg font-semibold">Notifications</span>}
+        scrollAreaComponent={ScrollArea.Autosize}
+        position="right"
+      >
+        <div className="flex flex-col gap-3">
+          <div className="bg-gray-50 p-3 rounded-lg border-b flex gap-3">
+          <IoNotificationsOutline size={30} className="text-blue-500" />
+            <div>
+              <small className="text-xs text-gray-500 capitalize">Dear {role},</small>
+              <div>
+                <span className="font-semibold">Added Successfully</span>
+                <p className="mt-2 text-sm text-gray-500 font-light tracking-wide">We area pleased to inform  you that you have been added to the InternTrack system as a {role}. Your role in overseeing OJT matters is now active.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Drawer>
+
+            
 
             {isOpenProfile && (
               <div className="absolute top-[50px] right-1 w-[270px] flex flex-col gap-2 rounded-l-xl rounded-br-xl bg-white shadow-lg py-5 px-5">

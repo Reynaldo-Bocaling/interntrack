@@ -110,7 +110,7 @@ const Dashboard = () => {
   
  
 
-  const totalStudent = StudentList ? StudentList.length : [];
+  const totalStudent = StudentList ? StudentList .filter((item) => item.deletedStatus ===0).length : [];
   const totalCoordinator = coordinatorList ? coordinatorList.length : [];
   const totalTeacher = teacherList ? teacherList.length : [];
   const companyList = company ? company.length : [];

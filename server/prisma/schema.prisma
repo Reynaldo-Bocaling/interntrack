@@ -244,9 +244,13 @@ model Major {
 
 model Announcement {
   id Int @id @default(autoincrement())
-  description          String
-  role                 String
+  title                String?
+  description          String?
+  to                   String
   date                 String
+  createdBy            String
+  createdRole          String?
+
 }
 
 

@@ -38,6 +38,7 @@ function Dashboard() {
 
   const filterStudentList = studentlist
     ? studentlist.filter((item) => item.trainer_id === getTrainer_id?.id)
+    .filter((item) => item.deletedStatus ===0)
     : [];
 
   const getTime = filterStudentList

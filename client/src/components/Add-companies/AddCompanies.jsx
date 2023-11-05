@@ -149,6 +149,7 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
                           type="file"
                           onChange={(e) => setMoa(e.target.files[0])}
                           className="absolute scale-[3] opacity-0 cursor-pointer"
+                          accept=".pdf"
                         />
                     </button>
                   </Tooltip>

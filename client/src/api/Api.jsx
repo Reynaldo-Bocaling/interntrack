@@ -255,6 +255,17 @@ export const addTimeOut = async ({ id, timeOut, totalHours }) => {
   }
 }
 
+// createAnnouncement
+export const createAnnouncement = async (item) => {
+ 
+  try {
+    const response = await axios.post(`${url}createAnnouncement`, item);
+    return response.data;
+  } catch (error) {
+    throw new Error(error);  // You can handle the error as needed
+  }
+}
+
 
 
 
@@ -423,6 +434,15 @@ export const getRequirement = async () => {
 export const getTask = async () => {
   try {
     const response = await axios.get(`${url}getTask`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+// get announcement
+export const getAnnouncement = async () => {
+  try {
+    const response = await axios.get(`${url}getAnnouncement`, );
     return response.data;
   } catch (error) {
     throw new Error(error.message);

@@ -63,6 +63,7 @@ const ImportStudentModalUI = (props) => {
                     type="file"
                     onChange={handleFileChange}
                     className="absolute scale-[3] opacity-0 cursor-pointer "
+                    accept=".xlsx, xls"
                   />
                 </button>
                 <span

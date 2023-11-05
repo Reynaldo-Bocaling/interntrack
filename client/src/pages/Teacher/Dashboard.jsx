@@ -54,6 +54,7 @@ function Dashboard() {
 
   const filterStudentList = students
     ? students.filter((item) => item.teacher_id === teacher?.id)
+    .filter((item) => item.deletedStatus ===0)
     : [];
 
   const getTime = filterStudentList

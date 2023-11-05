@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,700&family=Patua+One&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -253,24 +254,25 @@
 {
     content: '';
     position: absolute;
-    top: 0px;
-    left: -300px;
+    top: -300px;
+    left: -200px;
     width: 700px;
-    height:800px ;
+    height:600px ;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, hsla(115, 81%, 81%, 0.3), 
+    background: radial-gradient(ellipse at center, hsla(0, 77%, 82%, 0.2), 
     transparent 64%);
+    z-index: .9;
 }
 .shadow-effect::before
 {
     content: '';
     position: absolute;
-    top: 100px;
-    right: 350px;
-    width: 800px;
-    height:800px ;
+    top: 50px;
+    left: 00px;
+    width: 600px;
+    height:600px ;
     border-radius: 50%;
-    background: radial-gradient(ellipse at center, hsla(198, 100%, 83%, 0.5), 
+    background: radial-gradient(ellipse at center, hsla(109, 100%, 83%, 0.2), 
     transparent 60%);
 }
 .form-shadow-effect{
@@ -302,4 +304,26 @@
   100% {
     transform: translateX(2px);
   }
+}
+
+
+
+/* home */
+.homeTitle {
+  font-family: 'Montserrat', sans-serif;
+font-family: 'Patua One', serif;
+}
+
+.home-Shadow::after
+{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height:800px ;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, hsla(202, 91%, 71%, 0.5), 
+    transparent 64%);
 }

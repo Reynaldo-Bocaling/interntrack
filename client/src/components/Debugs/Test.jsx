@@ -1,36 +1,26 @@
-import React, { useRef } from "react";
-import { Student } from "../../components/dummyData/Data";
-import {
-  Card,
-  Image,
-  Text,
-  Badge,
-  Button,
-  Table, // I-import ang Table component mula sa iyong UI library
-} from "@mantine/core";
-import { useReactToPrint } from "react-to-print";
-// import logo from "../../assets/images/neustLogo.png";
+import React, { useState } from "react";
 
-const Home = () => {
-  const student = Student;
-  const componentRef = useRef();
+function App() {
+  const sampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
+  const [showMore, setShowMore] = useState(false);
+
+  const toggleShowMore = () => {
+    setShowMore(!showMore);
+  }
+
+  const displayedText = showMore ? sampleText : sampleText.slice(0, 30);
 
   return (
     <div>
-      <button onClick={handlePrint} className="bg-red-500">Print</button>
-
-      <div style={{ display: "nones" }}>
-        <div ref={componentRef}>
-          <h1>Hello from Print Content</h1>
-          <Table data={student.attendance} columns={student.columns} />
-        </div>
-      </div>
+      <p>{displayedText}</p>
+      {sampleText.length > 30 && (
+        <button onClick={toggleShowMore}>
+          {showMore ? "See Less" : "See More"}
+        </button>
+      )}
     </div>
   );
-};
+}
 
-export default Home;
+export default App;

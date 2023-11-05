@@ -92,6 +92,16 @@ export class UserController {
           },
         },
       });
+
+      const mailOptions = {
+        from: "reynaldobocaling@gmail.com",
+        to:email,
+        subject: "IternTrack!",
+        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Coordinator`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error: any) {
       return res.status(500).json(error.message);
@@ -122,6 +132,15 @@ export class UserController {
           },
         },
       });
+
+      const mailOptions = {
+        from: "reynaldobocaling@gmail.com",
+        to:email,
+        subject: "IternTrack!",
+        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Trainer`,
+      };
+
+      await transporter.sendMail(mailOptions);
 
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
@@ -167,6 +186,16 @@ export class UserController {
           },
         },
       });
+
+      const mailOptions = {
+        from: "reynaldobocaling@gmail.com",
+        to:email,
+        subject: "IternTrack!",
+        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Teacher`,
+      };
+
+      await transporter.sendMail(mailOptions);
+
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error: any) {
       return res.status(500).json(error.message);
@@ -231,6 +260,7 @@ export class UserController {
 
       await transporter.sendMail(mailOptions);
 
+     
 
       return res.status(200).json('success');
     } catch (error: any) {
@@ -311,6 +341,9 @@ export class UserController {
         await transporter.sendMail(mailOptions);
       }
 
+     
+
+
       return res.status(201).json("success");
     } catch (error) {
       return res.status(201).json(error);
@@ -370,6 +403,8 @@ export class UserController {
           },
         },
       });
+
+      
 
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
@@ -1065,6 +1100,17 @@ export class UserController {
     }
   }
 
+  // get Announcement
+  static async getAnnouncement(req: any, res: Response) {
+    try {
+      const response = await prisma.announcement.findMany({});
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
+
+
   // update profile user
   // update coordinator
   static async EditCoordinatorProfile(req: any, res: Response) {
@@ -1517,6 +1563,45 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+
+
+  static async createAnnouncement(req:any, res:Response) {
+    const {title, description, to, createdBy, createdRole} = req.body;
+    try {
+      const response = await prisma.announcement.create({
+        data: {
+          title,
+          description,
+          to,
+          date: formattedDate,
+          createdBy,
+          createdRole
+        }
+      });
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+  static async addNotification(req:any, res:Response) {
+    const {description, role} = req.body;
+    try {
+      const response = await prisma.notification.create({
+        data: {
+          description,
+          date: formattedDate,
+          role,
+        }
+      });
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+  }
+
+
+
 }
 
 

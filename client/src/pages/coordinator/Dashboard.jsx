@@ -64,6 +64,7 @@ if(programLoading || studentLoading || companyLoading, coordinatorLoading) {
   ? StudentList.filter((student) => {
     return getTeacher_id?.includes(student.teacher_id);
   })
+   .filter((item) => item.deletedStatus ===0)
   :[];
 
   const getTime = filteredStudents 

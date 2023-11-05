@@ -13,12 +13,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getTimesheet } from "../../api/Api";
 import { format, parse } from "date-fns";
 import { AiOutlineCheck } from "react-icons/ai";
+import { TfiAnnouncement } from "react-icons/tfi";
+import { NavLink, useNavigate } from "react-router-dom";
 
-<BiHelpCircle size={20} />;
 
 function Drawer2({ opened, close }) {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
-
+  const navigate = useNavigate();
   const { data } = useQuery({
     queryKey: ["getStudentDailyLog"],
     queryFn: getTimesheet,
@@ -57,7 +58,17 @@ function Drawer2({ opened, close }) {
             }}
           />
 
-          <div className="my-5">
+          <div className="my-5" onClick={close}>
+            <div className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg hover:text-blue-500">
+              <div className="flex items-center gap-2">
+                <div className="text-blue-500 p-1 bg-blue-100 rounded-full">
+                  <TfiAnnouncement size={16} />
+                </div>
+                <NavLink to="/Announcement" className="text-sm">Announcements</NavLink>
+              </div>
+              <RiArrowRightSLine />
+            </div>
+
             <div className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg hover:text-blue-500">
               <div className="flex items-center gap-2">
                 <div className="text-blue-500 p-1 bg-blue-100 rounded-full">
