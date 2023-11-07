@@ -7,10 +7,15 @@ import Profile from "../../components/StudenrMenuDrawer/Profile";
 import Notification from "../../components/StudenrMenuDrawer/Notification";
 import { useDisclosure } from "@mantine/hooks";
 import Message from "../../components/StudenrMenuDrawer/Message";
+
 function StudentHeader() {
   const [openProfile, setOpenProfile] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
   const [openMessage, setOpenMessage] = useState(false);
+
+
+  
+
 
   return (
     <>

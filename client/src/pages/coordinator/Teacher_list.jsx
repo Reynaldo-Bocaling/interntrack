@@ -13,9 +13,10 @@ import { ImAttachment } from "react-icons/im";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoordinator, getTeacherList, addTeacher } from "../../api/Api";
-import picture from "../../assets/images/dp.png";
+import picture from "../../assets/images/emptyProfile.png";
 import {
   Switch,
+  Avatar,
   useDisclosure as AddTeacherDisclosure,
 } from "@nextui-org/react";
 import AddTeacherModal from "../../components/add-teacher/AddTeacher";
@@ -104,6 +105,7 @@ const TeacherList = () => {
             accountStatus,
             student,
             coordinator_id,
+            profile_url
           }) => ({
             id,
             name: `${firstname} ${
@@ -120,6 +122,7 @@ const TeacherList = () => {
             totalStudent: student.filter((item) => item.deletedStatus === 0)
               .length,
             coordinator_id,
+            url: profile_url
           })
         )
         .filter((item) => item?.coordinator_id == coordinatorId?.id)
@@ -150,13 +153,14 @@ const TeacherList = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
-          <span className="font-semibold tracking-wider">
-            {info.row.original.name}
-          </span>
-        </div>
+        <Avatar
+          src={info.row.original.url ? info.row.original.url : picture}
+          className="text-large"
+        />
+        <span className="font-semibold tracking-wider">
+          {info.row.original.name}
+        </span>
+      </div>
       ),
       header: "Name",
     }),

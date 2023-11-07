@@ -10,7 +10,7 @@ import fs from "fs";
 const formattedDate = format(new Date(), "yyyy-MM-dd");
 const formattedTime = format(new Date(), "HH:mm");
 
-export class UserController {
+export class UserController {  
   // POST
   // add company
   static async addCompany(req: any, res: Response) {
@@ -225,6 +225,18 @@ export class UserController {
 
       if (!findTeacher) return res.status(404).json("teacher not found");
 
+       const dates = await prisma.dateRangeTimesheet.findFirst({
+        where: { teacher_id },
+      });
+
+      if (!dates) {
+        return res.status(500).json("not set range date");
+      }
+
+      const startDate = dates?.start_date;
+      const endDate = dates?.end_date;
+
+
       await prisma.user.create({
         data: {
           username: email,
@@ -246,8 +258,15 @@ export class UserController {
               accountStatus: 0,
               deletedStatus: 0,
               teacher_id: teacher_id,
+              createAt: formattedDate,
+              timesheet: {
+                createMany: {
+                  data: generateTimeData(startDate, endDate),
+                },
+              },
             },
           },
+         
         },
       });
 
@@ -268,7 +287,7 @@ export class UserController {
     }
   }
 
-
+ 
 
   //newImport
   static async importStudent(req: any, res: Response) {
@@ -1490,7 +1509,7 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
-
+ 
   // add date ranage
   static async addDateRange(req: any, res: Response) {
     const { start_date, end_date } = req.body;
@@ -1547,9 +1566,18 @@ export class UserController {
 
   // reset all data
   static async resetData(req: any, res: Response) {
-    const { id } = req.body;
+    const { id , password} = req.body;
+    const passwordDb = req.user.password;
 
+
+    
     try {
+       const isValidPassword = await argon2.verify(passwordDb, password);
+    if (!isValidPassword) {
+      return res.status(500).json( "Incorrect password. Please ensure you've entered the correct password and try again.");
+    }
+
+
       await prisma.student.updateMany({
         where: {
           id: {

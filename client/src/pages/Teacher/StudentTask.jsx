@@ -4,8 +4,10 @@ import Task from "../../components/Student-Task/Task";
 import Table from "../../components/Student-Task/Table";
 import { useQuery } from "@tanstack/react-query";
 import { getStudentList, getTeacher } from "../../api/Api";
-import pic from "../../assets/images/dp.png";
+import pic from "../../assets/images/emptyProfile.png";
 import PulseLoader from "react-spinners/PulseLoader";
+
+
 
 const StudentTask = () => {
   const [StudentId, setStudentId] = useState(0);
@@ -21,47 +23,13 @@ const StudentTask = () => {
     queryFn: getTeacher,
   });
 
-  if (teacher_idLoading) {
-    return (
-      <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
-        <div className="flex flex-col gap-4">
-          <PulseLoader
-            color="#03A8F5"
-            margin={8}
-            size={15}
-            speedMultiplier={1}
-          />
 
-          <span className="text-gray-400 text-2xl tracking-wider font-medium">
-            Loading..
-          </span>
-        </div>
-      </div>
-    );
-  }
 
   const studentTaskFilter = studentTask
     ? studentTask.filter((item) => item.teacher_id == teacher_id?.id)
     : [];
 
-  if (isLoading) {
-    return (
-      <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
-        <div className="flex flex-col gap-4">
-          <PulseLoader
-            color="#03A8F5"
-            margin={8}
-            size={15}
-            speedMultiplier={1}
-          />
-
-          <span className="text-gray-400 text-2xl tracking-wider font-medium">
-            Loading..
-          </span>
-        </div>
-      </div>
-    );
-  }
+ 
 
   const data = studentTaskFilter
     ? studentTaskFilter.map(
@@ -73,7 +41,8 @@ const StudentTask = () => {
           task,
           status,
           tasImageUrl,
-          deletedStatus
+          deletedStatus,
+          profile_url
         }) => ({
           studentNo: id,
           name: `${firstname} ${lastname}`,
@@ -82,7 +51,8 @@ const StudentTask = () => {
           image: pic,
           Task: task,
           lastUpload: task.flatMap(({date})=>date)[task.flatMap(({date})=>date).length - 1],
-          deletedStatus
+          deletedStatus,
+          url: profile_url
         })
       )
       .filter((item)=> item.deletedStatus ===0)
@@ -97,7 +67,29 @@ const StudentTask = () => {
       : data.name.toLowerCase().includes(searchInput);
   });
 
-  console.log('data',data);
+
+
+
+
+   if (isLoading || teacher_idLoading) {
+    return (
+      <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
+        <div className="flex flex-col gap-4">
+          <PulseLoader
+            color="#03A8F5"
+            margin={8}
+            size={15}
+            speedMultiplier={1}
+          />
+
+          <span className="text-gray-400 text-2xl tracking-wider font-medium">
+            Loading..
+          </span>
+        </div>
+      </div>
+    );
+  }
+
 
 
   return (

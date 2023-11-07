@@ -18,7 +18,7 @@ function ViewAttendanceRequest({data}) {
     name: `${firstname} ${lastname}`,
     AreaOfAssignment: AreaOfAssignment.areaName,
     timesheet: timesheet 
-    ? timesheet.reduce((total, item)=> total + item.totalHours, 0)
+    ? timesheet.filter((item) => item.logStatus === 1).reduce((total, item)=> total + item.totalHours, 0)
     : [],
     trainer: trainer? `${trainer.firstname} ${trainer.lastname}`: [],
     deletedStatus

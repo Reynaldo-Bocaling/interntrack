@@ -145,9 +145,6 @@ const Companies = () => {
                   Email
                 </th>
                 <th className="text-sm text-left pl-5 font-bold tracking-wide ">
-                  Student Hours
-                </th>
-                <th className="text-sm text-left pl-5 font-bold tracking-wide ">
                   Total Students
                 </th>
                 <th className="text-sm text-left pl-5 font-bold tracking-wide ">
@@ -185,7 +182,6 @@ const Companies = () => {
                     <td className="text-sm text-left pl-5 tracking-wide ">
                       {item.email}
                     </td>
-                    <td className="text-sm text-center tracking-wide ">80%</td>
                     <td className="text-sm text-center font-semibold tracking-wide ">
                       {item.totalStudent}
                     </td>

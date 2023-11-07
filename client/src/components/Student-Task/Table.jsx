@@ -1,5 +1,7 @@
 import React from "react";
 import { DotIcons } from "../ReactIcon/React-Icons";
+import { Avatar } from "@nextui-org/react";
+import Empty from '../../assets/images/emptyProfile.png'
 
 const Table = (props) => {
   const {
@@ -37,19 +39,15 @@ const Table = (props) => {
                     {data.studentNo}
                   </td>
                   <td className="text-sm tracking-wide pl-2">
-                    <div className="profile flex items-center gap-3">
-                      <div className=" mt-3 rounded-full w-10 h-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                        <img
-                          src={data.image}
-                          alt=""
-                          width={30}
-                          className="rounded-full mx-[0.35rem]"
-                        />
-                      </div>
-                      <span className="mt-2 text-sm font-semibold">
-                        {data.name}
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <Avatar
+                      src={data.url ? data.url : Empty}
+                      className="text-large"
+                    />
+                  <span className="font-semibold tracking-wider">
+                    {data.name}
+                  </span>
+                </div>
                   </td>
                   <td className="text-sm tracking-wide pl-2 text-center">
                     {data.totalTask}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { MdOutlineArrowBackIosNew } from "react-icons/md";
-import profile from "../../assets/images/dp.png";
+import Empty from "../../assets/images/emptyProfile.png";
 import { getStudentInfo, attendanceRequest } from "../../api/Api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import PulseLloader from "react-spinners/PulseLoader";
@@ -14,6 +14,7 @@ import {
   ModalFooter,
   Button,
   useDisclosure,
+  Avatar,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
 
@@ -34,7 +35,11 @@ function ViewAttendanceRequest() {
   const { mutate } = useMutation({
     mutationFn: attendanceRequest,
     onSuccess: () => {
-      Swal.fire("Success", "Attendance successful accepted for the students", "success");
+      Swal.fire(
+        "Success",
+        "Attendance successful accepted for the students",
+        "success"
+      );
       queryClient.invalidateQueries({ queryKey: ["attendanceTimesheet"] });
     },
     onError: () => {
@@ -53,7 +58,6 @@ function ViewAttendanceRequest() {
     : [];
 
   const handleAttendanceRequest = (id) => {
-
     Swal.fire({
       title: "Are you sure?",
       text: "You want to accept the attendance request",
@@ -69,21 +73,11 @@ function ViewAttendanceRequest() {
     });
   };
 
-
-
-
-
-
-
-  
   //handle modal
   const openModal = (item) => {
     setSelectedItem(item);
     onOpen();
   };
-
-
-
 
   return (
     <div>
@@ -114,14 +108,10 @@ function ViewAttendanceRequest() {
             </Link>
 
             <div className="profile flex items-center gap-3">
-              <div className=" mt-2 rounded-full w-10 flex items-center justify-center bg-white border shadow-lg shadow-slate-200">
-                <img
-                  src={profile}
-                  alt=""
-                  width={35}
-                  className="rounded-full mx-[0.35rem]"
-                />
-              </div>
+              <Avatar
+                src={StudentItem.profile_url ? StudentItem.profile_url : Empty}
+                className="text-large"
+              />
               <div className="mt-2 text-lg font-semibold flex items-center gap-3">
                 <span className="capitalize">
                   {StudentItem ? StudentItem.firstname : ""}
@@ -166,9 +156,7 @@ function ViewAttendanceRequest() {
                         {item.timeOut}
                       </td>
                       <td className="text-sm text-center tracking-wide">
-                      {
-                        item.totalHours                        
-                        } Hours
+                        {item.totalHours} Hours
                       </td>
                       <td className="text-sm tracking-wide pl-2 w-1/6">
                         <div className="flex item-center gap-2">

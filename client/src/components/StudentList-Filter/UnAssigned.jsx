@@ -80,7 +80,7 @@ const Student_list = ({data, isLoading, isError}) => {
           {show === info.row.original.id && (
             <div
               onClick={() => setShow(!show)}
-              className="absolute top-3 right-7 h-[120px] w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
+              className="absolute top-3 right-7 py-4 w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
                 to={`/view-student/${info.row.original.id}`}
@@ -89,12 +89,12 @@ const Student_list = ({data, isLoading, isError}) => {
                 <CgProfile size={17} />
                 Profile
               </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
+              {/* <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
                 <FiEdit3 /> Update
               </NavLink>
               <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
                 <RiDeleteBinLine /> Delete
-              </NavLink>
+              </NavLink> */}
             </div>
           )}
         </div>

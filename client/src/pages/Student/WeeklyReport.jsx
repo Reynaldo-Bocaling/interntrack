@@ -8,7 +8,9 @@ import { getStudent, getTask, getTimesheet } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
-import Report from'../../components/print-layout/WeeklyReport'
+import Report from "../../components/print-layout/WeeklyReport";
+
+import {MdKeyboardArrowRight} from 'react-icons/md'
 const WeeklyReport = () => {
   const student = Student;
   const [opened, { open, close }] = useDisclosure();
@@ -38,9 +40,14 @@ const WeeklyReport = () => {
   const studentTask = getTaskList ? getTaskList : [];
   const studentInfo = data ? data : [];
 
+  const getWeekNuber = timesheet
+    ? timesheet.find((item) => item.date === format(new Date(), "yyyy-MM-dd"))
+        ?.week
+    : [];
+
   const StudentTimesheet = timesheet
     ? timesheet
-        .filter((item) => new Date(item.date) <= currentDate)
+        .filter((item) => new Date(item.week) <= getWeekNuber)
         .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
           id,
           totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
@@ -68,8 +75,7 @@ const WeeklyReport = () => {
     ? weeklyReport.reduce((total, item) => total + item.totalHours, 0)
     : [];
 
-  const Studentlabel = "Juan Dela Cruz";
-  const Trainerlabel = "Juanito Cruz";
+
 
   // Reference para sa pag-print
   const componentRef = useRef();
@@ -90,7 +96,7 @@ const WeeklyReport = () => {
     return <center className="my-5 text-lg">Computing..</center>;
   }
 
-
+  console.log(StudentTimesheet);
 
   return (
     <div>
@@ -99,21 +105,17 @@ const WeeklyReport = () => {
         {groupedTimeSheet.map((group, groupIndex) => (
           <div
             key={groupIndex}
-            className="p-3 rounded-lg border bg-gray-100 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
+            className="py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
             onClick={() => handleOpenWeeklyReport(group)}
           >
-            <Card.Section
-              component="a"
-              href="https://mantine.dev/"
-            ></Card.Section>
-            <Group position="apart" width={"100%"} mt="md" mb="xs">
-              <Text weight={500}>
-                {group[0].date} - {group[group.length - 1].date}
-              </Text>
-              <Badge color="green" variant="light">
-                Ok
-              </Badge>
-            </Group>
+              <span>
+                {`${format(new Date(group[0].date), "MMMM dd")} - ${format(
+                  new Date(group[group.length - 1].date),
+                  "MMMM dd"
+                )}`}
+              </span>
+
+              <MdKeyboardArrowRight />
           </div>
         ))}
       </Card>
@@ -254,14 +256,14 @@ const WeeklyReport = () => {
                 <div>
                   <p>Prepared by:</p>
                   <h1 className="mt-1 -mb-1 text-[12px] font-semibold">
-                  {` ${studentInfo.firstname}  ${studentInfo.lastname}`}
+                    {` ${studentInfo.firstname}  ${studentInfo.lastname}`}
                   </h1>
                   <p>On-the-Job Trainee</p>
                 </div>
                 <div>
                   <p>Noted by:</p>
                   <h1 className="mt-1 -mb-1 text-[12px] font-semibold">
-                  {` ${studentInfo.teacher?.coordinator?.firstname} ${studentInfo.teacher?.coordinator?.lastname}`}
+                    {` ${studentInfo.teacher?.coordinator?.firstname} ${studentInfo.teacher?.coordinator?.lastname}`}
                   </h1>
                   <p>Ojt Coordinator</p>
 
@@ -276,7 +278,7 @@ const WeeklyReport = () => {
                 <div>
                   <p>Checked by:</p>
                   <h1 className="mt-1 -mb-1 text-[12px] font-semibold">
-                  {` ${studentInfo.trainer?.firstname}  ${studentInfo.trainer?.lastname}`}
+                    {` ${studentInfo.trainer?.firstname}  ${studentInfo.trainer?.lastname}`}
                   </h1>
                   <p>Trainer/Supervisor</p>
                 </div>

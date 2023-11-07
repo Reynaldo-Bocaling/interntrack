@@ -9,7 +9,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import AddTrainer from "../../components/AddTrainer/Addtrainer";
-import picture from "../../assets/images/dp.png";
+import picture from "../../assets/images/emptyProfile.png";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import {
   AddTrainerAccount,
@@ -18,6 +18,7 @@ import {
 } from "../../api/Api";
 import {
   Switch,
+  Avatar,
   useDisclosure as AddCoordinatorDisclosure,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
@@ -91,7 +92,8 @@ const Trainer_list = () => {
             accountStatus,
             areaofAssignment,
             student,
-            deletedStatus
+            deletedStatus,
+            profile_url
           }) => ({
             id,
             firstname,
@@ -104,7 +106,8 @@ const Trainer_list = () => {
             areaAssign : areaofAssignment.areaName,
             accountStatus,
             student,
-            totalStudent: student.filter((item)=> item.deletedStatus === 0).length
+            totalStudent: student.filter((item)=> item.deletedStatus === 0).length,
+            url: profile_url
           })
         )
         .filter((item) => item.name.toLowerCase().includes(searchInput))
@@ -114,10 +117,6 @@ const Trainer_list = () => {
   const handleFormSubmit = async (trainerData) => {
     mutate(trainerData);
   };
-
-
-console.log('trainer list', data);
-
 
 
 
@@ -133,9 +132,10 @@ console.log('trainer list', data);
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
           <span className="font-semibold tracking-wider">
             {info.row.original.name}
           </span>

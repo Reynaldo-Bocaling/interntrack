@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink, Link, useParams, useNavigate } from "react-router-dom";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi";
@@ -6,7 +6,7 @@ import { BiInfoCircle } from "react-icons/bi";
 import { BsChatDots, BsFillTrash3Fill } from "react-icons/bs";
 import { GoTasklist } from "react-icons/go";
 import { AiOutlineFieldTime } from "react-icons/ai";
-import pic from "../../assets/images/dp.png";
+import pic from "../../assets/images/emptyProfile.png";
 import { Tabs } from "@mantine/core";
 import StudentIfo from "./StudentIfo";
 import StudentRequirements from "./StudentRequirements";
@@ -17,12 +17,26 @@ import { useQuery } from "@tanstack/react-query";
 import PulseLloader from "react-spinners/PulseLoader";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Input,
+  useDisclosure,
+  Avatar,
+} from "@nextui-org/react";
 
 const StudentViewInfo = () => {
   const navigate = useNavigate();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const currentDate = new Date();
   const { id } = useParams();
 
+  const [userPassword, setuserPassword] = useState("");
 
   const {
     data: studentlist,
@@ -33,18 +47,19 @@ const StudentViewInfo = () => {
     queryFn: () => getStudentInfo(id),
   });
 
-
   const { data: getProgram } = useQuery({
     queryKey: ["getProgram"],
     queryFn: getCampus,
   });
 
   const programList = getProgram
-  ? getProgram.flatMap(({ college }) =>
-      college?.flatMap(({ program }) => program)
-    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
-  : [];
-  
+    ? getProgram
+        .flatMap(({ college }) => college?.flatMap(({ program }) => program))
+        .map(({ trainingHours, program_description }) => ({
+          trainingHours,
+          program_description,
+        }))
+    : [];
 
   const info = {
     id: studentlist?.id,
@@ -73,40 +88,39 @@ const StudentViewInfo = () => {
       : "",
   };
 
-
   const timesheet =
-  studentlist &&
-  studentlist.timesheet.filter((item) => new Date(item.date) <= currentDate)
-  .map(({
-    id,
-    timeIn,
-    timeOut,
-    totalHours,
-    date,
-    logStatus,
-    student_id,
-    week
-  }) => ({
-    id,
-    timeIn: logStatus !== 0 ? timeIn : '0:00',
-    timeOut: logStatus !== 0 ? timeOut : '0:00',
-    totalHours: logStatus !== 0 ? totalHours : 0,
-    date,
-    logStatus,
-    student_id,
-    week
-  }))
-  ;
-
-
-
+    studentlist &&
+    studentlist.timesheet
+      .filter((item) => new Date(item.date) <= currentDate)
+      .map(
+        ({
+          id,
+          timeIn,
+          timeOut,
+          totalHours,
+          date,
+          logStatus,
+          student_id,
+          week,
+        }) => ({
+          id,
+          timeIn: logStatus !== 0 ? timeIn : "0:00",
+          timeOut: logStatus !== 0 ? timeOut : "0:00",
+          totalHours: logStatus !== 0 ? totalHours : 0,
+          date,
+          logStatus,
+          student_id,
+          week,
+        })
+      );
   const pieChartData = {
-     totalHours : programList.find((item)=> item.program_description === studentlist?.program)?.trainingHours,
-     hoursTaken : Math.round(timesheet?.reduce((total, item) => total + item.totalHours, 0)),
-
-  }
-
- 
+    totalHours: programList.find(
+      (item) => item.program_description === studentlist?.program
+    )?.trainingHours,
+    hoursTaken: Math.round(
+      timesheet?.reduce((total, item) => total + item.totalHours, 0)
+    ),
+  };
 
   const requirementData = studentlist ? studentlist.requirement : null;
 
@@ -118,9 +132,6 @@ const StudentViewInfo = () => {
     );
   }
 
-
-
-
   const { mutate } = useMutation(resetData, {
     onSuccess: () => {
       Swal.fire(
@@ -130,10 +141,10 @@ const StudentViewInfo = () => {
       );
       navigate("/student-list");
     },
-    onError: () => {
+    onError: (data) => {
       Swal.fire(
         "Error",
-        "There was an issue drop this student. \n Please try again.",
+        "Incorrect password. Please ensure you've entered the correct password \n Please try again.",
         "error"
       );
     },
@@ -142,6 +153,7 @@ const StudentViewInfo = () => {
   const handleSubmit = () => {
     const StudentId = Number(id);
 
+    // const isValid
     Swal.fire({
       title: "Are you sure you want to proceed with dropping this student?",
       icon: "warning",
@@ -151,7 +163,7 @@ const StudentViewInfo = () => {
       confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
-        mutate([StudentId]);
+        mutate({ id: [StudentId], password: userPassword });
       }
     });
   };
@@ -174,12 +186,14 @@ const StudentViewInfo = () => {
 
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
-              <div className=" ml-7 -mt-52 bg-white w-52 h-44 p-5 border-white right rounded-full shadow-md overflow-hidden">
-                <img
-                  className=" w-44 h-44 object-cover object-center mb-2 rounded-lg"
-                  src={pic}
-                  alt={"profile picture"}
-                />
+            <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
+             {
+              studentlist?.profile_url ? (
+                <Avatar src={studentlist?.profile_url && studentlist?.profile_url} className="w-40 h-40 text-large" />
+              ) : (
+                <Avatar src={pic} className="w-40 h-40 text-large" />
+              )
+             }
               </div>
 
               <div className="left p-5 pl-5 w-full py-5">
@@ -191,7 +205,7 @@ const StudentViewInfo = () => {
                       }`}
                     </h1>
                     <small className="text-blue-500 font-semibold tracking-wider">
-                      Trainee
+                      Student
                     </small>
                   </div>
 
@@ -201,7 +215,7 @@ const StudentViewInfo = () => {
                       Send message
                     </NavLink>
                     <button
-                      onClick={handleSubmit}
+                      onClick={onOpen}
                       className="flex items-center gap-1 text-red-500 text-sm bg-red-100 py-2 px-4 rounded-md"
                     >
                       <BsFillTrash3Fill />
@@ -258,17 +272,56 @@ const StudentViewInfo = () => {
                   <StudentIfo data={info} isLoading={isLoading} />
                 </Tabs.Panel>
                 <Tabs.Panel value="requirement" pt="xs">
-                  <StudentRequirements data={requirementData} isLoading={isLoading} />
+                  <StudentRequirements
+                    data={requirementData}
+                    isLoading={isLoading}
+                  />
                 </Tabs.Panel>
                 <Tabs.Panel value="task" pt="xs">
                   <StudentTask data={taskData} />
                 </Tabs.Panel>
                 <Tabs.Panel value="timesheet" pt="xs">
-                  <StudentTimesheet data={timesheet} pieChartData={pieChartData}/>
+                  <StudentTimesheet
+                    data={timesheet}
+                    pieChartData={pieChartData}
+                  />
                 </Tabs.Panel>
               </Tabs>
             </div>
           </div>
+
+          {/* drop modal */}
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="flex flex-col gap-1 text-base">
+                    Drop Student
+                  </ModalHeader>
+                  <ModalBody>
+                    <Input
+                    type="password"
+                      label="Enter password"
+                      onChange={(e) => setuserPassword(e.target.value)}
+                    />
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                      Close
+                    </Button>
+                    <Button
+                      color="primary"
+                      onClick={handleSubmit}
+                      className="font-medium"
+                      isDisabled={!userPassword}
+                    >
+                      Reset
+                    </Button>
+                  </ModalFooter>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
         </>
       )}
     </div>

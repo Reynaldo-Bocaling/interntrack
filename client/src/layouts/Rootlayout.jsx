@@ -7,7 +7,7 @@ import Footer from "./common/Footer";
 import StudentNavigate from "./common/StudentNavigation";
 
 const Rootlayout = (props) => {
-  const { role } = props;
+  const { role,data } = props;
   const [isOpen, setIsOpen] = useState(true);
   const [isOpenNotif, setIsOpenNotif] = useState(false);
   const [isOpenProfile, setIsOpenProfile] = useState(false);
@@ -42,6 +42,7 @@ const Rootlayout = (props) => {
                 isOpenNotif={isOpenNotif}
                 isOpenProfile={isOpenProfile}
                 role={role}
+                data={data}
               />
 
               <Sidebar

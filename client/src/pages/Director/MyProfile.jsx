@@ -127,7 +127,7 @@ const CoordinatorInfo = () => {
                       {`${data && data.firstname} ${data && data.lastname}`}
                     </h1>
                     <small className="text-blue-500 font-semibold tracking-wider">
-                      Teacher
+                      Director
                     </small>
                   </div>
 

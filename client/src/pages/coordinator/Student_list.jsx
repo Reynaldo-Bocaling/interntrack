@@ -32,8 +32,7 @@ const Student_list = () => {
   });
 
   const students = StudentList
-    ? StudentList.teacher
-        .flatMap(({ student }) =>
+    ? StudentList.teacher?.flatMap(({ student }) =>
           student
             ? student
                 .map(
@@ -50,7 +49,7 @@ const Student_list = () => {
                     college,
                     program,
                     major,
-                    profile,
+                    profile_url,
                     accountStatus,
                     teacher,
                     trainer,
@@ -68,7 +67,7 @@ const Student_list = () => {
                     college,
                     program,
                     major,
-                    profile,
+                    url:profile_url,
                     picture: picture,
                     company: AreaOfAssignment
                       ? AreaOfAssignment.company.companyName

@@ -24,13 +24,14 @@ const AttendanceRequest = () => {
   const studentRequest = StudentItem && Array.isArray(StudentItem)
   ? StudentItem
   .filter((item)=> item.trainer_id === getTrainer_id?.id)
-  .map(({ id, firstname, lastname, accountStatus, timesheet,deletedStatus }) => ({
+  .map(({ id, firstname, lastname, accountStatus, timesheet,deletedStatus,profile_url }) => ({
       id,
       firstname,
       lastname,
       accountStatus,
       timesheet: timesheet && timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0),
-      deletedStatus
+      deletedStatus,
+      url: profile_url
     })).filter((item)=> item.deletedStatus ===0).filter((val) => {
       if (searchInput === null) {
         return val;

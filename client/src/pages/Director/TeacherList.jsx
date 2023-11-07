@@ -11,8 +11,8 @@ import { NavLink } from "react-router-dom";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTeacherList } from "../../api/Api";
-import picture from '../../assets/images/dp.png'
-import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+import picture from '../../assets/images/emptyProfile.png'
+import {Switch ,  useDisclosure as AddTeacherDisclosure, Avatar} from "@nextui-org/react";
 import AddTeacherModal from '../../components/add-teacher/AddTeacher'
 import { useReactToPrint } from "react-to-print";
 import List from "../../components/print-layout/List";
@@ -53,7 +53,8 @@ const TeacherList = () => {
     program,
     major,
     accountStatus,
-    student
+    student,
+    profile_url
   })=> ({
     id,
     name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''} ${lastname}`,
@@ -63,9 +64,9 @@ const TeacherList = () => {
     college,
     program,
     major,
-    picture: picture,
     accountStatus,
-    totalStudent: student.filter((item)=>item.deletedStatus ===0).length
+    totalStudent: student.filter((item)=>item.deletedStatus ===0).length,
+    url: profile_url
   })).filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
   : []
 
@@ -87,9 +88,10 @@ const TeacherList = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
           <span className="font-semibold tracking-wider">
             {info.row.original.name}
           </span>
@@ -124,7 +126,9 @@ const TeacherList = () => {
     }),
     columnHelper.accessor("totalStudent", {
       id: "totalStudent",
-      cell: (info) => <div className="text-center font-semibold">{info.getValue()}</div>,
+      cell: (info) => (
+        <div className="text-center font-semibold">{info.getValue()}</div>
+      ),
       header: "Students",
     }),
 
@@ -132,8 +136,15 @@ const TeacherList = () => {
       id: "accountStatus",
       cell: (info) => (
         <div className="relative text-center">
-          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
-            
+          <Switch
+            isDisabled
+            className="mr-7"
+            size="sm"
+            defaultSelected={
+              info.row.original.accountStatus === 0 ? true : false
+            }
+          />
+
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}

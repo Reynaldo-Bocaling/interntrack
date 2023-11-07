@@ -8,6 +8,7 @@ import Major from "../../components/user-Settings/Major";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getDirector } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 function Settings() {
   const [valueEvent, setValueEvent] = useState(1);
@@ -34,41 +35,46 @@ function Settings() {
 
   const links = [
     {
+      id: 1,
       label: "Personal Information ",
-      url: "/Settings/",
       value: 1,
       element: Information,
       data: infoData,
       extraText: "Personal Data",
     },
     {
+      id: 2,
       label: "Change password ",
-      url: "/Settings/change-password",
       value: 2,
       element: ChangePassword,
     },
     {
+      id: 3,
+      label: "Old students ",
+      url: "/old-students",
+    },
+    {
+      id: 4,
       label: "Add campus ",
-      url: "/Settings/change-password",
       value: 3,
       element: Campus,
       extraText: "Adding Capuses",
     },
     {
+      id: 5,
       label: "Add college ",
-      url: "/Settings/change-password",
       value: 4,
       element: College,
     },
     {
+      id: 6,
       label: "Add program ",
-      url: "/Settings/change-password",
       value: 5,
       element: Program,
     },
     {
+      id: 7,
       label: "Add major ",
-      url: "/Settings/change-password",
       value: 6,
       element: Major,
     },
@@ -92,31 +98,42 @@ function Settings() {
       <div className="flex gap-4 w-full">
         <div className="mt-7 w-[25%] flex flex-col gap-3 items-start">
           {links.map((item, index) => (
-            <>
-              {item.extraText &&
-              (
-                <small className="text-[0.68rem] text-gray-400 mt-5">
+            <div key={index}>
+              {item.extraText && (
+                <small className="text-[0.68rem] text-gray-400 mt-5 block">
                   {item.extraText}
                 </small>
               )}
-              <button
-                onClick={() => setValueEvent(item?.value)}
-                key={index}
-                className={`${
-                  item.value === valueEvent
-                    ? "text-gray-700 underline"
-                    : "text-blue-500"
-                } text-sm hover:underline`}
-              >
-                {item.label}
-              </button>
-            </>
+
+              {item.url && (
+                <Link to={item.url} className="text-blue-500 text-sm hover:underline">
+                  Old Student
+                </Link>
+              )}
+              {!item.url && (
+                <button
+                  onClick={() => setValueEvent(item?.value)}
+                  key={index}
+                  className={`${
+                    item.value === valueEvent
+                      ? "text-gray-700 underline"
+                      : "text-blue-500"
+                  } text-sm hover:underline`}
+                >
+                  {item.label}
+                </button>
+              )}
+            </div>
           ))}
         </div>
 
         <div className="w-[75%]">
           {links.map((item, index) =>
-            valueEvent === item.value ? <item.element data={item.data} /> : ""
+            valueEvent === item.value ? (
+              <item.element key={item.id} data={item.data} />
+            ) : (
+              ""
+            )
           )}
         </div>
       </div>

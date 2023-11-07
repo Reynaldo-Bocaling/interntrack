@@ -5,6 +5,8 @@ import SetUpDate from "../../components/user-Settings/SetupDates";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getTeacher } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+
 
 function Settings() {
   const [valueEvent, setValueEvent] = useState(1);
@@ -36,6 +38,7 @@ function Settings() {
       value: 1,
       element: Information,
       data: infoData,
+      extraText: "Personal Data",
     },
     {
       label: "Change password ",
@@ -43,9 +46,15 @@ function Settings() {
       element: ChangePassword,
     },
     {
-      label: "Date Range Setup ",
+      id: 3,
+      label: "Old students ",
+      url: "/old-students",
+    },
+    {
+      label: "Date Range ",
       value: 3,
       element: SetUpDate,
+      extraText: "Date Range Setup",
     },
   ];
 
@@ -65,19 +74,38 @@ function Settings() {
       <span className="w-full text-2xl font-bold">Settings</span>
 
       <div className="flex gap-4 w-full mt-5">
-        <div className="mt-9 w-[25%] flex flex-col gap-3 items-start">
+      <div className="mt-3 w-[25%] flex flex-col gap-3 items-start">
           {links.map((item, index) => (
-            <button
-              onClick={() => setValueEvent(item?.value)}
-              key={index}
-              className={`${
-                item.value === valueEvent
-                  ? "text-gray-700 underline"
-                  : "text-blue-500"
-              } text-sm hover:underline`}
-            >
-              {item.label}
-            </button>
+            <div key={index}>
+              {item.extraText &&
+              (
+                <small  className="text-[0.68rem] text-gray-400 mt-5 block">
+                  {item.extraText}
+                </small>
+              )}
+              {item.url && (
+                <Link
+                  to={item.url}
+                  className="text-blue-500 text-sm hover:underline"
+                >
+                  Old Student
+                </Link>
+              )}
+
+              {!item.url && (
+                <button
+                  onClick={() => setValueEvent(item?.value)}
+                  key={index}
+                  className={`${
+                    item.value === valueEvent
+                      ? "text-gray-700 underline"
+                      : "text-blue-500"
+                  } text-sm hover:underline`}
+                >
+                  {item.label}
+                </button>
+              )}
+            </div>
           ))}
         </div>
 

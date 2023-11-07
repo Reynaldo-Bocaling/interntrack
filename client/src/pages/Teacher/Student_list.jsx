@@ -85,7 +85,7 @@ const Student_list = () => {
     college,
     program,
     major,
-    profile,
+    profile_url,
     accountStatus,
     teacher,
     trainer,
@@ -103,7 +103,7 @@ const Student_list = () => {
     college,
     program,
     major,
-    profile,
+    url: profile_url,
     picture:picture,
     company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
     trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',
@@ -157,7 +157,7 @@ const Student_list = () => {
       Swal.fire("Success", "Students has been successfully imported.", "success");
       setImportData(null);
       setError(null);
-      queryClient.invalidateQueries({ queryKey: ["getStudent"] });
+      queryClient.invalidateQueries({ queryKey: ["getTeacher2"] });
     },
     onError: () => {
       Swal.fire("Error", "There was an error during the student import process. \n Please review the data..", "error");    },
@@ -215,9 +215,11 @@ const Student_list = () => {
   const {mutate:addMutate, isLoading:addStudentLoading} = useMutation(addStudentAccount, {
     onSuccess: () => {
       Swal.fire("Success", "The Student has been added", "success");
+      queryClient.invalidateQueries({ queryKey: ["getTeacher2"] });
+
     },
     onError: () => {
-      wal.fire(
+      Swal.fire(
         "Error",
         "There was an issue adding the student. \n Please check the information provided and try again.",
         "error"

@@ -11,6 +11,9 @@ import StudentList from "./StudentList";
 import { useQuery } from "@tanstack/react-query";
 import PulseLloader from "react-spinners/PulseLoader";
 import { getTeacherList } from "../../api/Api";
+import { Avatar } from "@nextui-org/react";
+import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
+
 
 const CoordinatorInfo = () => {
   const { id } = useParams();
@@ -39,8 +42,7 @@ const CoordinatorInfo = () => {
     college: teacherInfo ? teacherInfo.college : "",
     program: teacherInfo ? teacherInfo.program : "",
     major: teacherInfo ? teacherInfo.major : "",
-    profile: teacherInfo ? teacherInfo.profile : "",
-  };
+    url: teacherInfo ? teacherInfo.profile_url : "",  };
 
   const studentList = teacherInfo?.student
     ? teacherInfo.student.map(
@@ -93,12 +95,14 @@ const CoordinatorInfo = () => {
           <div className="cover"></div>
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
-              <div className=" ml-7 -mt-52 bg-white w-52 h-44 p-5 border-white right rounded-full shadow-md overflow-hidden">
-                <img
-                  className=" w-44 h-44 object-cover object-center mb-2 rounded-lg"
-                  src={pic}
-                  alt={"profile picture"}
-                />
+            <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
+               {
+                info?.url ? (
+                  <Avatar src={info?.url && info?.url} className="w-40 h-40 text-large" />
+                ) : (
+                  <Avatar src={EmptyProfileIcon} className="w-40 h-40 text-large" />
+                )
+               }
               </div>
 
               <div className="left p-5 pl-5 w-full py-5">

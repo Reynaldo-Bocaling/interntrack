@@ -35,6 +35,8 @@ const StudentTimesheet = ({ data, isLoading, pieChartData }) => {
     ? groupedTimeSheet
     : groupedTimeSheet.slice(0, 1);
 
+
+    console.log({totalHours, hoursRemaining, hoursTaken});
   return (
     <div className="p-5">
       <div className="text-xl text-gray-700 font-semibold tracking-wide mb-5">

@@ -143,22 +143,20 @@ const Profile = () => {
             <small className="text-blue-500 font-medium">Student</small>
           </div>
         </div>
-        <div className="flex items-center justify-between px-2 mt-5">
-          <button 
+        <div className="flex items-center justify-center px-2 mt-5">
+          {/* <button 
           onClick={()=> setOpenMessage(true)}
             className="font-semibold bg-slate-100 py-2 px-4 rounded-lg"
           >
             Message
-          </button>
+          </button> */}
           <button
             onClick={()=>setOpenEdit(true)}
             className="font-semibold bg-slate-100 py-2 px-4 rounded-lg"
           >
             Edit Info
           </button>
-          <button className="text-red-500 font-semibold bg-red-100 py-2 px-4 rounded-lg">
-            Drop
-          </button>
+         
         </div>
 
         <ProfileInfo data={data} />

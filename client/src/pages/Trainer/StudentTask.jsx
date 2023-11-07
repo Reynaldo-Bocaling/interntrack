@@ -55,7 +55,8 @@ const StudentTask = () => {
           task,
           status,
           tasImageUrl,
-          deletedStatus
+          deletedStatus,
+          profile_url
         }) => ({
           studentNo: id,
           name: `${firstname} ${lastname}`,
@@ -64,7 +65,8 @@ const StudentTask = () => {
           image: pic,
           Task: task,
           lastUpload: task.flatMap(({date})=>date)[task.flatMap(({date})=>date).length - 1],
-          deletedStatus
+          deletedStatus,
+          url: profile_url
         })
       ).filter((item)=> item.deletedStatus ===0)
     : [];

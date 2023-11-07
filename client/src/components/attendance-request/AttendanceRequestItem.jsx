@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { BsDot } from "react-icons/bs";
-import dp from "../../assets/images/dp.png";
+import Empty from '../../assets/images/emptyProfile.png'
 import { FcCalendar } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import PulseLloader from "react-spinners/PulseLoader";
+import { Avatar } from "@nextui-org/react";
 
 const AttendanceRequestItem = ({ data, isLoading }) => {
   const [show, setShow] = useState(null);
@@ -18,7 +19,7 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
     ? data
         .filter((student) => student.timesheet.length > 0)
         .sort((a, b) => a.lastname.localeCompare(b.lastname))
-        .map(({ id, firstname, lastname, accountStatus, timesheet }) => ({
+        .map(({ id, firstname, lastname, accountStatus, timesheet,url }) => ({
           id,
           firstname,
           lastname,
@@ -30,10 +31,10 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
           ),
           startDate: timesheet[0].date,
           endDate: timesheet[timesheet.length - 1].date,
+          url
         }))
     : [];
 
-  console.log("attendace", studentAttendance);
 
   return (
     <div>
@@ -60,9 +61,10 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
                   onClick={() => handleFunc(index)}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="max-w-[45px] p-2 rounded-full overflow-hidden shadow-md shadow-gray-100">
-                      <img src={dp} alt="" />
-                    </div>
+                  <Avatar
+                      src={item.url ? item.url : Empty}
+                      className="text-large"
+                    />
                     <div className="flex flex-col gap-1">
                       <h1 className="font-semibold text-base tracking-wider capitalize flex items-center gap-2">
                         <span className="capitalize">{item.lastname},</span>

@@ -129,13 +129,16 @@ routes.post('/uploadRequirement' ,verifyToken, uploads.single('image'), UserCont
 
 
 // reset data
-routes.put('/resetData' , UserController.resetData);
+routes.put('/resetData' ,verifyToken, UserController.resetData);
 
 
 
 // announcement
 routes.post('/createAnnouncement', UserController.createAnnouncement)
 
+
+// get user
+routes.get('/getUser', verifyToken, (req:any, res:Response) => {res.json(req.user)})
 
 
 // logout

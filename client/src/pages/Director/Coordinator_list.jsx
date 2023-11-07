@@ -7,7 +7,7 @@ import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import picture from "../../assets/images/dp.png";
+import picture from "../../assets/images/emptyProfile.png";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AddCoordinatorAccount, getCoordinatorList } from "../../api/Api";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -15,6 +15,7 @@ import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
 import {
   Switch,
   useDisclosure as AddCoordinatorDisclosure,
+  Avatar,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { useReactToPrint } from "react-to-print";
@@ -81,6 +82,7 @@ const Trainer_list = () => {
             contact,
             teacher,
             accountStatus,
+            profile_url
           }) => ({
             id,
             name: `${firstname} ${
@@ -102,6 +104,7 @@ const Trainer_list = () => {
               ? teacher.flatMap(({ student }) => student)
               : [],
             accountStatus,
+            url: profile_url
           })
         )
         .filter((item) =>
@@ -125,9 +128,10 @@ const Trainer_list = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
+            <Avatar
+              src={info.row.original.url ? info.row.original.url : picture}
+              className="text-large"
+            />
           <span className="font-semibold tracking-wider">
             {info.row.original.name}
           </span>

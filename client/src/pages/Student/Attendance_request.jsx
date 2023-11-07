@@ -50,10 +50,12 @@ function Attendance_request() {
                       {format(new Date(item.date), "MMM dd")}
                     </td>
                     <td className="text-xs tracking-wide pl-2">
-                      {item.timeIn}
+                    {item.timeIn != '0:00' ? format(new Date(item.timeIn), "h:mm a") : '0'}
+
                     </td>
                     <td className="text-xs tracking-wide pl-2">
-                      {item.timeOut}
+                    {item.timeOut != '0:00' ? format(new Date(item.timeOut), "h:mm a") : '0'}
+
                     </td>
                     <td className="text-xs tracking-wide pl-2">
                       {item.totalHours} hrs

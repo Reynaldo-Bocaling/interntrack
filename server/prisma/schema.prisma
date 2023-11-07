@@ -130,6 +130,7 @@ model Student {
   profile               String?
   profile_url           String?
   deletedStatus         Int
+  createAt              String?
   areaAssigned_id       Int?
   trainer_id            Int?
   teacher_id            Int

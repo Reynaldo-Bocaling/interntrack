@@ -1,21 +1,84 @@
-import React, {useState } from "react";
-import TableFormat from "../ReusableTableFormat/TableFormat";
-import {BiDotsVerticalRounded } from "react-icons/bi";
+import React, { useState, useRef } from "react";
+import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import {Avatar, Switch} from "@nextui-org/react";
-import picture from '../../assets/images/emptyProfile.png'
+import { useQuery } from "@tanstack/react-query";
+import { getTeacher } from "../../api/Api";
+import picture from '../../assets/images/dp.png'
+import { format } from "date-fns";
 
 
-const Student_list = ({data, isLoading, isError}) => {
+const TeacherList = () => {
+  const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
+
+    // getStudent list
+    const {
+      data: StudentList,
+      isLoading,
+    } = useQuery({
+      queryKey: ["getTeacher2"],
+      queryFn: getTeacher,
+    });
+  
+    const data = StudentList
+    ? StudentList.student.map(({
+      id,
+      firstname,
+      middlename,
+      lastname,
+      email,
+      contact,
+      address,
+      gender,
+      campus,
+      college,
+      program,
+      major,
+      profile,
+      accountStatus,
+      teacher,
+      trainer,
+      AreaOfAssignment,
+      deletedStatus,
+      createAt
+    })=> ({
+      id,
+      middlename,
+      name: `${firstname} ${lastname}`,
+      email,
+      contact,
+      address,
+      gender,
+      campus,
+      college,
+      program,
+      major,
+      profile,
+      picture:picture,
+      company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
+      trainer: trainer? `${trainer.firstname} ${trainer.lastname}` : '',
+      accountStatus,
+      studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
+      studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned',
+      deletedStatus,
+      createAt
+    }))
+    .filter((item)=>item.deletedStatus === 1)
+    .filter((item)=> item.name.toLowerCase().includes(searchInput.toLocaleLowerCase()))
+     : []
+
+
+console.log(data);
+
+
   
 
-  //   columns
+
+
   const columns = [
     columnHelper.accessor("id", {
       id: "id",
@@ -26,14 +89,13 @@ const Student_list = ({data, isLoading, isError}) => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-        <Avatar
-          src={info.row.original.url ? info.row.original.url : picture}
-          className="text-large"
-        />
-      <span className="font-semibold tracking-wider">
-        {info.row.original.name}
-      </span>
-    </div>
+          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
+            <img src={info.row.original.picture} alt="error" />
+          </div>
+          <span className="font-semibold tracking-wider">
+            {info.row.original.name}
+          </span>
+        </div>
       ),
       header: "Name",
     }),
@@ -73,12 +135,16 @@ const Student_list = ({data, isLoading, isError}) => {
         header: "Trainer",
       }),
   
-    columnHelper.accessor("accountStatus", {
-      id: "accountStatus",
+    columnHelper.accessor("createAt", {
+      id: "createAt",
       cell: (info) => (
         <div className="relative">
           
-          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+          <div className="pr-10">
+          {
+             format(new Date(info.row.original.createAt), 'yyyy')
+          }
+        </div>
 
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
@@ -109,26 +175,49 @@ const Student_list = ({data, isLoading, isError}) => {
           )}
         </div>
       ),
-      header: "Active",
+      header: "Batch",
     }),
   ];
+
+
 
   const ShowFunction = (id) => {
     setShow((prev) => (prev === id ? null : id));
   };
 
   return (
-    <div className="mt-3">
-       {isError ? (
-        <h1 className="my-10 text-center py-5 border">
-          Server Failed. Please try again later
+    <div>
+      <div className="flex items-center justify-between px-2 mb-5">
+        <h1 className="text-xl font-bold tracking-wider text-gray-700">
+          Old Student
         </h1>
-       ): (
-        <TableFormat data={data} isLoading={isLoading}  columns={columns}  />
-       )
-       }
+
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-[250px] h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          >
+            <BiSearch
+              
+              className={ "text-blue-500 cursor-pointer"}
+            />
+            <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+          </div>
+        
+          
+        </div>
+      </div>
+
+      <TableFormat data={data} isLoading={isLoading} columns={columns} />
+    
+     
+
     </div>
   );
 };
 
-export default Student_list;
+export default TeacherList;

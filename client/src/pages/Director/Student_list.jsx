@@ -27,7 +27,7 @@ const Student_list = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["getStudentList"],
+    queryKey: ["getStudent"],
     queryFn: getStudentList,
   });
 
@@ -46,7 +46,7 @@ const Student_list = () => {
           college,
           program,
           major,
-          profile,
+          profile_url,
           accountStatus,
           teacher,
           trainer,
@@ -64,7 +64,7 @@ const Student_list = () => {
           college,
           program,
           major,
-          profile,
+          url: profile_url,
           picture: picture,
           company: AreaOfAssignment ? AreaOfAssignment.company.companyName : [],
           trainer: trainer ? `${trainer.firstname} ${trainer.lastname}` : "",
@@ -83,6 +83,8 @@ const Student_list = () => {
   while (defaultData.length < 15) {
     defaultData.push({ name: "", email: "", totalStudent: "" });
   }
+
+
 
   const ListTable = () => {
     return (

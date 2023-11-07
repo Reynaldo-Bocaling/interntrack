@@ -27,7 +27,8 @@ const index = ({data, isLoading, isError}) => {
   }
 
   
-  
+  if(isLoading) return <center className="my-5 ">Computing...</center>
+
   return (
     <div className="rounded-xl overflow-hidden -mt-3 -ml-2">
        {isLoading ? (

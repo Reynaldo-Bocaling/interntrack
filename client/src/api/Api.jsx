@@ -679,12 +679,26 @@ export const updateDateRange = async(item) => {
 
 
 //reset data
-export const resetData = async(id) => {
+export const resetData = async(item) => {
   try {
-    const response = await axios.put(`${url}resetData`, {id:id});
+    const response = await axios.put(`${url}resetData`, item, {withCredentials: true});
     return response.data;
   } catch (error) {
     throw new Error(error.message);
+
+  }
+}
+
+
+
+//get user info role, director, coor, trainer et.c
+export const getUser = async() => {
+  try {
+    const response = await axios.get(`${url}getUser`, {withCredentials: true});
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+
   }
 }
 

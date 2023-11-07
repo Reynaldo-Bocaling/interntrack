@@ -60,6 +60,7 @@ import TrainerMessage from "../pages/Trainer/Message"
 import TrainerAnnouncement from "../pages/Trainer/Announcement"
 import TrainerMyProfile from "../pages/Trainer/MyProfile"
 import TrainerSettings from "../pages/Trainer/Settings"
+import TrainerOldStudent from "../pages/Trainer/OldStudent"
 
 // Teacher pages
 import TeacherDashboard from "../pages/Teacher/Dashboard"
@@ -75,6 +76,7 @@ import TeacherMessage from "../pages/Teacher/Message"
 import TeacherAnnouncement from "../pages/Teacher/Announcement"
 import TeacherNyProfile from "../pages/Teacher/MyProfile"
 import TeacherSettings from "../pages/Teacher/Settings"
+import TeacherOldStudent from "../pages/Teacher/OldStudent"
 
 // Coordinator pages
 import CoordinatorDashboard from "../pages/Coordinator/Dashboard"
@@ -88,6 +90,7 @@ import CoordinatorMessage from "../pages/Coordinator/Message"
 import CoordinatorAnnouncement from "../pages/Coordinator/Announcement"
 import CoordinatorMyProfile from "../pages/Coordinator/MyProfile"
 import CoordinatorSettings from "../pages/Coordinator/Settings"
+import CoordinatorOldStudent from "../pages/Coordinator/OldStudent"
 
 // Director pages
 import DirectorDashboard from "../pages/Director/Dashboard"
@@ -102,6 +105,7 @@ import Director_Teacher_list from "../pages/Director/TeacherList"
 // import Director_Teacher_list from "../pages/Director/TeacherList"
 import DirectorMyProfile from "../pages/Director/MyProfile"
 import DirectorSettings from "../pages/Director/Settings"
+import DirectorOldStudent from "../pages/Director/OldStudent"
 
 
 
@@ -246,6 +250,10 @@ const PrivateRoutes = () => {
         path: "/Settings",
         element: <DirectorSettings />,
       },
+      {
+        path: "/old-students",
+        element: <DirectorOldStudent />,
+      },
     ],
 
     Coordinator: [
@@ -314,6 +322,10 @@ const PrivateRoutes = () => {
       {
         path: "/Settings",
         element: <CoordinatorSettings />,
+      },
+      {
+        path: "/old-students",
+        element: <CoordinatorOldStudent />,
       },
     ],
 
@@ -386,6 +398,10 @@ const PrivateRoutes = () => {
         path: "/Settings/",
         element: <TeacherSettings />,
       },
+      {
+        path: "/old-students",
+        element: <TeacherOldStudent />,
+      },
     ],
 
     Trainer: [
@@ -448,6 +464,10 @@ const PrivateRoutes = () => {
       {
         path: "/Settings",
         element: <TrainerSettings />,
+      },
+      {
+        path: "/old-students",
+        element: <TrainerOldStudent />,
       },
     ],
 

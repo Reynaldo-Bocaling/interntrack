@@ -7,6 +7,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { Input, Button } from "@nextui-org/react";
 
 import { IconTrash } from "@tabler/icons-react";
+import { getCampus, getStudentList } from "../../api/Api";
+import { useQuery } from "@tanstack/react-query";
 
 const CompanyInfo = ({ data }) => {
   const [Editable, setEditable] = useState(false);
@@ -15,7 +17,6 @@ const CompanyInfo = ({ data }) => {
 
   const [file, setFile] = useState("");
 
-  const percentage = 70;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,8 +34,49 @@ const CompanyInfo = ({ data }) => {
     setEditable(!Editable)
   }
 
+  
 
-  console.log(companyInfo);
+
+  const {
+    data: StudentList,
+    isLoading: studentLoading
+  } = useQuery({
+    queryKey: ["getStudentList33"],
+    queryFn: getStudentList,
+  });
+
+  const { data: getProgram, isLoading: programLoading } = useQuery({
+    queryKey: ["getProgram"],
+    queryFn: getCampus,
+  });
+
+
+  const programList = getProgram
+  ? getProgram.flatMap(({ college }) =>
+      college?.flatMap(({ program }) => program)
+    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
+  : [];
+
+
+  const totalAllHoursStudent = StudentList
+  ? StudentList.filter((item) => item.deletedStatus === 0 )
+  .map(({ program}) =>  programList.find((item)=> item.program_description === program)?.trainingHours)
+  .reduce((total, item) => total + item, 0)
+:[]
+
+
+const totalHoursStudent = StudentList
+?StudentList.flatMap(({ timesheet }) => timesheet)
+.filter((item)=>item.logStatus === 1)
+.reduce((total, item) => total + item.totalHours , 0)
+:[];
+
+const percentage = Math.floor(
+(Math.round(totalHoursStudent) / totalAllHoursStudent) * 100
+);
+
+
+if(studentLoading) return <center className="my-5 ">Computing...</center>
 
   return (
     <div>

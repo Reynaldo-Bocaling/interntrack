@@ -3,39 +3,64 @@ import DailyLogItem from "../../components/DailyLogs/DailyLogsItems";
 import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch } from "react-icons/bi";
 import { BsDot } from "react-icons/bs";
+import { HiOutlineDownload } from "react-icons/hi";
 import { createColumnHelper } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { getStudentList, getTrainer } from "../../api/Api";
+import { useQuery } from "@tanstack/react-query";
+import picture from "../../assets/images/emptyProfile.png";
+import { Avatar } from "@nextui-org/react";
 
 const DailyLogs = () => {
   const [currentDate] = useState(new Date());
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
-  
-  const data = userData
-    .map(
-      ({
-        id,
-        firstname,
-        middleName,
-        lastname,
-        picture,
-        status,
-        timesheet,
-      }) => ({
-        id,
-        name: `${firstname} ${middleName[0]}. ${lastname}`,
-        status,
-        picture,
-        date: currentDate.toLocaleDateString("en-US", { month: "long", day: "2-digit",}),
-        timeIn: `${timesheet.find((item) => item.date === currentDate.toLocaleDateString("en-US", {month: "long", day: "2-digit"}))?.timeIn} hrs`,
-        timeOut: `${timesheet.find((item) => item.date === currentDate.toLocaleDateString("en-US", {month: "long", day: "2-digit", }) )?.timeOut} hrs`,
-        totalHours: `${ timesheet.find((item) =>  item.date === currentDate.toLocaleDateString("en-US", { month: "long", day: "2-digit", }) )?.totalHours } hrs`,
-      })
-    )
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
-    );
 
-console.log(data);
+  const { data: trainer, isLoading: trainerLoading } = useQuery({
+    queryKey: ["gettrainer2333"],
+    queryFn: getTrainer,
+  });
+
+  const { data: student, isLoading: studentLoading } = useQuery({
+    queryKey: ["studentDailyLogs"],
+    queryFn: getStudentList,
+  });
+
+  const data = student
+    ? student
+        .filter((item) => item.trainer_id === trainer?.id)
+        .filter((item) => item.deletedStatus === 0)
+        .map(({ id, firstname, lastname, timesheet ,profile_url}) => ({
+          id,
+          name: `${firstname}  ${lastname}`,
+          timeIn: timesheet?.find(
+            (item) => item.date === format(currentDate, "yyyy-MM-dd")
+          )?.timeIn,
+          timeOut: timesheet?.find(
+            (item) => item.date === format(currentDate, "yyyy-MM-dd")
+          )?.timeOut,
+          totalHours: timesheet
+            ?.filter((item) => item.logStatus === 1)
+            .reduce((total, item) => total + item.totalHours, 0),
+            profile_url
+        }))
+        .filter((item) => item.totalHours > 0 || item.timeIn !== "0:00")
+        .map(({ id, name, timeIn, timeOut, totalHours, profile_url}) => ({
+          id,
+          name,
+          timeIn:
+            timeIn !== "0:00" ? format(new Date(timeIn), "hh:mm a") : "--",
+          timeOut:
+            timeOut !== "0:00" ? format(new Date(timeOut), "hh:mm a") : "--",
+          totalHours: totalHours > 0 ? `${totalHours} hrs` : "--",
+          date: format(currentDate, "MMMM dd yyyy"),
+          url: profile_url,
+        })).filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
+    : [];
+
+  // console.log(format(currentDate, 'yyyy-MM-dd'));
+  console.log(data, "s");
+
   const columns = [
     columnHelper.accessor("id", {
       id: "id",
@@ -46,13 +71,14 @@ console.log(data);
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
-          <span className="font-semibold tracking-wider">
-            {info.row.original.name}
-          </span>
-        </div>
+        <Avatar
+          src={info.row.original.url ? info.row.original.url : picture}
+          className="text-large"
+        />
+      <span className="font-semibold tracking-wider">
+        {info.row.original.name}
+      </span>
+    </div>
       ),
       header: "Name",
     }),
@@ -76,42 +102,26 @@ console.log(data);
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Date",
     }),
-    columnHelper.accessor("status", {
-      id: "status",
-      cell: (info) => (
-          <div className="relative">
-          {info.getValue() !== 0 ? (
-            <span className="text-green-500 font-medium tracking-wide flex items-center gap-1 justify-center w-[100px] bg-green-100 py-[2px] rounded-full">
-              Online
-              <BsDot size={25} />
-            </span>
-          ) : (
-            <span className="text-red-500 font-medium tracking-wide flex items-center gap-1 justify-center w-[100px] bg-red-100 py-[2px] rounded-full">
-              Offline
-              <BsDot size={25} />
-            </span>
-            
-          )}
-          </div>
-      ),
-      header: "Status",
-    }),
   ];
 
+  if (studentLoading) return <center className="my-12">Loading</center>;
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+      <div className="flex items-center justify-between px-2 mb-4">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Daily Logs
         </h1>
-        <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 ">
-          <BiSearch />
-          <input
-            type="text"
-            placeholder="Search.."
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="outline-none text-sm"
-          />
+
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 ">
+            <BiSearch />
+            <input
+              type="text"
+              placeholder="Search.."
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="outline-none text-sm"
+            />
+          </div>
         </div>
       </div>
 

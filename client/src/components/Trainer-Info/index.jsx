@@ -3,7 +3,7 @@ import { NavLink, Link, useParams } from "react-router-dom";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { BiInfoCircle } from "react-icons/bi";
 import { BsChatDots, BsFillTrash3Fill } from "react-icons/bs";
-import pic from "../../assets/images/dp.png";
+import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
 import { Tabs } from "@mantine/core";
 import TrainerIfo from "./TrainerIfo";
 import StudentList from "./StudentList";
@@ -11,6 +11,7 @@ import StudentList from "./StudentList";
 import { getTrainerList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import PulseLloader from "react-spinners/PulseLoader";
+import { Avatar } from "@nextui-org/react";
 
 const TrainerViewInfo = () => {
   const { id } = useParams();
@@ -35,7 +36,7 @@ const TrainerViewInfo = () => {
     lastname: TrainerData && TrainerData.lastname,
     contact: TrainerData && TrainerData.contact,
     email: TrainerData && TrainerData.email,
-    // company: TrainerData && TrainerData.company.companyName,
+    url: TrainerData ? TrainerData.profile_url : "",
   };
 
   const studentList = TrainerData.student
@@ -52,7 +53,8 @@ const TrainerViewInfo = () => {
           major,
           profile,
           teacher,
-          deletedStatus
+          deletedStatus,
+          profile_url
         }) => ({
           id,
           name: `${firstname} ${lastname}`,
@@ -63,7 +65,8 @@ const TrainerViewInfo = () => {
           program,
           major,
           profile,
-          deletedStatus
+          deletedStatus,
+          url: profile_url
         })
       ).filter((item)=>item.deletedStatus === 0)
     : [];
@@ -90,12 +93,14 @@ const TrainerViewInfo = () => {
 
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
-              <div className=" ml-7 -mt-52 bg-white w-52 h-44 p-5 border-white right rounded-full shadow-md overflow-hidden">
-                <img
-                  className=" w-44 h-44 object-cover object-center mb-2 rounded-lg"
-                  src={pic}
-                  alt={"profile picture"}
-                />
+            <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
+               {
+                info?.url ? (
+                  <Avatar src={info?.url && info?.url} className="w-40 h-40 text-large" />
+                ) : (
+                  <Avatar src={EmptyProfileIcon} className="w-40 h-40 text-large" />
+                )
+               }
               </div>
 
               <div className="left p-5 pl-5 w-full py-5">

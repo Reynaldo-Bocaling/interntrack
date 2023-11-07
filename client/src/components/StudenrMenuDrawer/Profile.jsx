@@ -9,12 +9,14 @@ import { RiArrowDropDownFill } from "react-icons/ri";
 import { BsDot } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { BiSearch, BiHelpCircle } from "react-icons/bi";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getTimesheet } from "../../api/Api";
 import { format, parse } from "date-fns";
 import { AiOutlineCheck } from "react-icons/ai";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../../api/Api";
+import Swal from "sweetalert2";
 
 
 function Drawer2({ opened, close }) {
@@ -30,6 +32,38 @@ function Drawer2({ opened, close }) {
   const timeOutDB = getTime?.timeOut;
   const totalHoursDB = getTime?.totalHours;
   const timeId = getTime?.id;
+
+
+   // logout
+   const { mutate } = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      navigate("/");
+      window.location.reload();
+    },
+    onError: () => {},
+  });
+
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure you want to logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#49A6F3",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutate();
+      }
+    });
+
+    const content = Array(100)
+      .fill(0)
+      .map((_, index) => <p key={index}>Drawer with scroll</p>);
+  };
+
 
   return (
     <div>
@@ -89,7 +123,7 @@ function Drawer2({ opened, close }) {
               <RiArrowRightSLine />
             </div>
 
-            <div className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg mt-3 hover:text-red-500 hover:bg-red-50">
+            <div onClick={handleLogout} className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg mt-3 hover:text-red-500 hover:bg-red-50">
               <div className="flex items-center gap-2">
                 <div className="text-red-500 p-1 bg-red-100 rounded-full">
                   <LiaSignOutAltSolid size={20} />
@@ -99,7 +133,7 @@ function Drawer2({ opened, close }) {
             </div>
           </div>
 
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+          {/* <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
             {totalHoursDB > 0 ? (
               <div className="my-10 text-xl flex items-center justify-center gap-1 text-green-500">
                 End Work <AiOutlineCheck />
@@ -117,7 +151,7 @@ function Drawer2({ opened, close }) {
                 Time in not yet <LiaTimesSolid className="text-red-500" />
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </Drawer>
     </div>

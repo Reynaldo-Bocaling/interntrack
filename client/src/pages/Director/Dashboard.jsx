@@ -212,10 +212,10 @@ const percentage = Math.floor(
        <div className="left-content flex  items-center justify-between mb-4">
             <div className="flex flex-col gap-2">
               <h1 className="text-xl font-semibold tracking-wider text-gray-700">
-                Coordinator overview
+                Director overview
               </h1>
               <small className="text-blue-500 font-semibold tracking-wider">
-                Coordinator Dashboard
+                Director Dashboard
               </small>
             </div>
             <div className="flex items-center gap-3">
