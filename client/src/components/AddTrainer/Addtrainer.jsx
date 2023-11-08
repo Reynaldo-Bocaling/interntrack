@@ -29,26 +29,54 @@ const AddTrainer = ({
     contact: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: validateField(name, value),
+    }));
+  };
+
+  const validateField = (name, value) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    const contactRegex = /^\d+$/;
+    const nameRegex = /^[A-Za-z\s]+$/;
+
+    switch (name) {
+      case "firstname":
+      case "lastname":
+      case "middlename":
+        return nameRegex.test(value) ? null : "Please enter a valid name";
+      case "email":
+        return emailRegex.test(value) ? null : "Please enter a valid email";
+      case "contact":
+        return contactRegex.test(value) ? null : "Please enter a valid contact number";
+      default:
+        return null;
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const selectedAreaId = {area_id: selectedArea}
-    onSubmit({...formData, ...selectedAreaId});
-  };
 
-  // console.log('trainer', companies);
+    // Check if there are any errors
+    if (Object.values(errors).every((error) => error === null)) {
+      const selectedAreaId = { area_id: selectedArea };
+      onSubmit({ ...formData, ...selectedAreaId });
+    }
+  };
 
   const handleCompanyChange = (e) => {
     setSelectedCompany(e.target.value);
-    setSelectedArea(null);
+    setSelectedArea("");
   };
+
   const handleAreaAssignChange = (e) => {
     setSelectedArea(e.target.value);
   };
@@ -58,13 +86,6 @@ const AddTrainer = ({
         ?.areaOfAssignment
     : [];
 
-  // const areaAssign = findCompany
-  // ? findCompany.areaOfAssignment.find(({id}) => id === parseInt(selectedArea))
-  // :[]
-
-  // console.log('..',Company);
-
-  console.log(selectedArea);
   return (
     <>
       <Modal
@@ -85,30 +106,33 @@ const AddTrainer = ({
                   className="flex flex-col gap-5 py-4 px-2"
                 >
                   <div className="flex items-center gap-4">
-                  <Select
-                  items={companies ? companies: []}
-                    onChange={handleCompanyChange}
-                    label="Select Company"
-                    className="max-w-[280px]"
-                    size="sm"
-                    isRequired
-                  >
-                   {(companies) => <SelectItem key={companies.id}>{`${companies.companyName} (${companies.address} )`}</SelectItem>}
-                  </Select>
+                    <Select
+                      items={companies ? companies : []}
+                      onChange={handleCompanyChange}
+                      label="Select Company"
+                      className="max-w-[280px]"
+                      size="sm"
+                      isRequired
+                    >
+                      {(companies) => (
+                        <SelectItem key={companies.id}>
+                          {`${companies.companyName} (${companies.address} )`}
+                        </SelectItem>
+                      )}
+                    </Select>
 
-                  <Select
-                    onChange={handleAreaAssignChange}
-                    items={findAreaList && findAreaList}
-                    name="area_id"
-                    label="Select Area"
-                    className="max-w-[280px]"
-                    size="sm"
-                    isRequired
-                    isDisabled={!selectedCompany}
-                  >
-                   {(item) => <SelectItem key={item.id}>{item.areaName}</SelectItem>}
-
-                  </Select>
+                    <Select
+                      onChange={handleAreaAssignChange}
+                      items={findAreaList && findAreaList}
+                      name="area_id"
+                      label="Select Area"
+                      className="max-w-[280px]"
+                      size="sm"
+                      isRequired
+                      isDisabled={!selectedCompany}
+                    >
+                      {(item) => <SelectItem key={item.id}>{item.areaName}</SelectItem>}
+                    </Select>
                   </div>
                   <div className="flex items-center gap-4">
                     <Input
@@ -119,6 +143,7 @@ const AddTrainer = ({
                       size="sm"
                       isRequired
                       className="w-[40%]"
+                      errorMessage={errors.firstname}
                     />
 
                     <Input
@@ -129,6 +154,7 @@ const AddTrainer = ({
                       size="sm"
                       isRequired
                       className="w-[40%]"
+                      errorMessage={errors.lastname}
                     />
 
                     <Input
@@ -142,6 +168,7 @@ const AddTrainer = ({
                       onChange={handleChange}
                       size="sm"
                       className="w-[20%]"
+                      errorMessage={errors.middlename}
                     />
                   </div>
                   <div className="flex items-center gap-4">
@@ -153,15 +180,17 @@ const AddTrainer = ({
                       size="sm"
                       isRequired
                       className="w-[60%]"
+                      errorMessage={errors.email}
                     />
                     <Input
-                      type="number"
+                      type="text"
                       label="Contact no."
                       name="contact"
                       onChange={handleChange}
                       size="sm"
                       isRequired
                       className="w-[40%]"
+                      errorMessage={errors.contact}
                     />
                   </div>
 
@@ -178,6 +207,7 @@ const AddTrainer = ({
                       type="submit"
                       color="primary"
                       className="font-medium tracking-wide px-8"
+                      disabled={!Object.values(errors).every((error) => error === null)}
                     >
                       {isLoading ? "Loading..." : "Submit"}
                     </Button>

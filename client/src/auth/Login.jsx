@@ -3,7 +3,7 @@ import Img from "../assets/icons/logo.png";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { LiaTimesSolid } from "react-icons/lia";
-import { Input, Button } from "@nextui-org/react";
+import { BiSolidKey } from "react-icons/bi";
 import model from "../assets/images/homeModel.png";
 import unlockIcon from "../assets/images/unlock-vector-icon.jpg";
 import { Link } from "react-router-dom";
@@ -14,12 +14,24 @@ import like from "../assets/images/like.png";
 import wow from "../assets/images/wow2.png";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { auth } from "../api/Api";
-import { Alert } from "@mantine/core";
 import { IconInfoCircle } from "@tabler/icons-react";
 import Swal from "sweetalert2";
+import { PinInput, Alert } from "@mantine/core";
 
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  Button,
+  Input,
+} from "@nextui-org/react";
+import AddAdmin from "../components/addAdmin/AddSuperAdmin";
 
 const Login = () => {
+  const [key, setKey] = useState(0);
+  const [pinError, setPinError] = useState(false);
+  const [operSuperAdmin, setOpenSuperAdmin] = useState(false);
   const icon = <IconInfoCircle />;
 
   const [isVisible, setIsVisible] = useState(false);
@@ -57,10 +69,21 @@ const Login = () => {
     mutate(form);
   };
 
+  const handlePinChange = (newValue) => {
+    if (Number(newValue) == 1234) {
+      setPinError(true);
+    } else {
+      setPinError(false);
+    }
+  };
+
   return (
     <div className="w-screen h-screen bg-white overflow-hidden">
       <div className="shadow-effect relative max-w-[1224px] mx-auto min-h-screen flex items-center">
-        <Link to="/welcome-to-InternTrack" className="absolute top-7 left-7 z-30 flex items-center gap-2">
+        <Link
+          to="/welcome-to-InternTrack"
+          className="absolute top-7 left-7 z-30 flex items-center gap-2"
+        >
           <img src={Img} alt="" className="w-[35px]" />
           <span className="text-xl font-semibold">InternTrack</span>
         </Link>
@@ -205,6 +228,16 @@ const Login = () => {
               >
                 {isLoading ? "Loading..." : "Sign in"}
               </Button>
+
+              <small className="text-center">Or</small>
+              <Button
+                onClick={() => setOpenSuperAdmin(true)}
+                // color="primary"
+                size="lg"
+                className="font-medium tracking-wide bg-blue-100 text-blue-500"
+              >
+                Sign up as Super admin
+              </Button>
             </div>
 
             <footer className="absolute bottom-5 right-15">
@@ -222,6 +255,35 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={operSuperAdmin}
+        onOpenChange={() => setOpenSuperAdmin(false)}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-base font-medium">
+                Super admin Sign in Form
+              </ModalHeader>
+              <ModalBody>
+                <div className="w-full pt-2 pb-7 flex items-center justify-center">
+                  {!pinError ? (
+                    <div className="flex flex-col items-center gap-5">
+                      <h1 className="flex items-center gap-2">
+                        Secret Key <BiSolidKey className="text-yellow-500" />
+                      </h1>
+                      <PinInput size="lg" onChange={handlePinChange} />
+                    </div>
+                  ) : (
+                    <AddAdmin />
+                  )}
+                </div>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

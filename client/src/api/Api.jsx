@@ -26,6 +26,15 @@ export const importStudent = async (data) => {
   }
 };
 
+export const addAdminAccount = async (data) => {
+  try {
+    const response = await axios.post(`${url}addSuperAdmin`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const addStudentAccount = async (data) => {
   try {
     const response = await axios.post(`${url}addStudent`, data,

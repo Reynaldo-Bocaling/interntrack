@@ -30,12 +30,7 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
 
       const fields = form.values.available_positions.map((item, index) => (
         <div key={item.key} className="flex items-center gap-3">
-            {/* <TextInput
-                placeholder={`Area Assignment ${index + 1}`}
-                withAsterisk
-                className="w-[270px] mt-2"
-                {...form.getInputProps(`available_positions.${index}.position`)}
-              /> */}
+            
             <Input
               type="text"
               label={`Area Assignment ${index + 1} `}
@@ -47,6 +42,7 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
             />
     
             <NumberInput
+            isRequired
               defaultValue={80}
               step={5}
               min={0}
@@ -157,6 +153,7 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
                    <Button
                     className="text-sm text-white font-medium tracking-wide bg-blue-500 mt-1"
                     type="submit"
+                    isDisabled={!Moa}
                   >
                     { 
                       isLoading  ? "Loading..." : "Submit"
@@ -193,6 +190,7 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
                         key: randomId(),
                       })
                     }
+                   
                   >
                     Add Row
                   </Button>

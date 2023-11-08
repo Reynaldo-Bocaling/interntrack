@@ -241,7 +241,7 @@ export class UserController {
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
-          role: "student",
+          role: "Student",
           student: {
             create: {
               firstname,

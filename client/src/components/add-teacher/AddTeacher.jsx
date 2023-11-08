@@ -1,24 +1,23 @@
 import React, { useState } from "react";
-import { Modal, 
-  ModalContent, 
-  ModalHeader, 
-  ModalBody, 
-  Button, 
-  Input ,
-  Select, 
-  SelectItem
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  Button,
+  Input,
+  Select,
+  SelectItem,
 } from "@nextui-org/react";
 
 import { getCampus } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
-const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
-
+const CustomModal = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
   const [selectedCampus, setSelectedCampus] = useState(null);
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [selectedMajor, setSelectedMajor] = useState(null);
-
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -28,11 +27,12 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
     contact: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   const { data: CampusList } = useQuery({
     queryKey: ["getCampus"],
     queryFn: getCampus,
   });
-
 
   const campus = CampusList;
   const college = selectedCampus
@@ -49,51 +49,81 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
       )
     : [];
 
-
   const handleCampusChange = (e) => {
     setSelectedCampus(e.target.value);
     setSelectedCollege(null);
     setSelectedProgram(null);
     setSelectedMajor(null);
   };
+
   const handleCollegeChange = (e) => {
     setSelectedCollege(e.target.value);
     setSelectedProgram(null);
     setSelectedMajor(null);
   };
+
   const handleProgramChange = (e) => {
     setSelectedProgram(e.target.value);
     setSelectedMajor(null);
   };
+
   const handleMajorChange = (e) => {
     setSelectedMajor(e.target.value);
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: validateField(name, value),
+    }));
+  };
 
-    
+  const validateField = (name, value) => {
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    const contactRegex = /^\d+$/;
 
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
+    switch (name) {
+      case "firstname":
+      case "lastname":
+      case "middlename":
+        return nameRegex.test(value)
+          ? null
+          : "Please enter a valid name";
+      case "email":
+        return emailRegex.test(value)
+          ? null
+          : "Please enter a valid email";
+      case "contact":
+        return contactRegex.test(value)
+          ? null
+          : "Please enter a valid contact number";
+      default:
+        return null;
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Check if there are any errors
+    if (Object.values(errors).every((error) => error === null)) {
+      const campus = {
+        campus: college.campus_Location,
+        college: program.college_description,
+        program: major.program_description,
+        major: selectedMajor,
       };
 
+      onSubmit({ ...formData, ...campus });
+    }
+  };
 
-      const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const campus = {
-          campus: college.campus_Location,
-          college: program.college_description,
-          program: major.program_description,
-          major: selectedMajor
-        };
-
-        onSubmit({...formData, ...campus})
-      }
-   
   return (
     <>
       <Modal
@@ -109,7 +139,10 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                 Add Teacher Form
               </ModalHeader>
               <ModalBody>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5 py-4 px-2">
+                <form
+                  onSubmit={handleSubmit}
+                  className="flex flex-col gap-5 py-4 px-2"
+                >
                   <div className="flex items-center gap-4">
                     <Input
                       type="text"
@@ -119,9 +152,10 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                       size="sm"
                       isRequired
                       className="w-[40%]"
+                      errorMessage={errors.firstname}
                     />
 
-                     <Input
+                    <Input
                       type="text"
                       label="Last Name"
                       name="lastname"
@@ -129,17 +163,23 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                       size="sm"
                       isRequired
                       className="w-[40%]"
+                      errorMessage={errors.lastname}
                     />
 
                     <Input
                       type="text"
-                      label={<p>MI <span className="text-[#a8a9a9]">(Optional)</span></p>}
+                      label={
+                        <p>
+                          MI{" "}
+                          <span className="text-[#a8a9a9]">(Optional)</span>
+                        </p>
+                      }
                       name="middlename"
                       onChange={handleChange}
                       size="sm"
+                      errorMessage={errors.middlename}
                       className="w-[20%]"
                     />
-                   
                   </div>
                   <div className="flex items-center gap-4">
                     <Input
@@ -150,6 +190,7 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                       size="sm"
                       isRequired
                       className="w-[60%]"
+                      errorMessage={errors.email}
                     />
                     <Input
                       type="text"
@@ -159,10 +200,10 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                       size="sm"
                       isRequired
                       className="w-[40%]"
+                      errorMessage={errors.contact}
                     />
                   </div>
-                  
-                    
+
                   <div className="flex items-center gap-3">
                     <Select
                       label="Campus"
@@ -174,8 +215,7 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                       {campus &&
                         campus.map(({ id, campus_Location }) => (
                           <SelectItem key={id}>{campus_Location}</SelectItem>
-                        ))
-                       }
+                        ))}
                     </Select>
 
                     <Select
@@ -203,7 +243,7 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                       isDisabled={!selectedCollege}
                     >
                       {selectedCollege &&
-                        program.program.map(({id, program_description }) => (
+                        program.program.map(({ id, program_description }) => (
                           <SelectItem key={id}>
                             {program_description}
                           </SelectItem>
@@ -228,13 +268,21 @@ const CustomModal = ({onSubmit , AddIsOpen, AddOnClose, isLoading   }) => {
                   </div>
 
                   <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
-                    <Button color="danger" variant="flat" onPress={AddOnClose} className="font-medium tracking-wide px-2">
+                    <Button
+                      color="danger"
+                      variant="flat"
+                      onPress={AddOnClose}
+                      className="font-medium tracking-wide px-2"
+                    >
                       Cancel
                     </Button>
-                    <Button type="submit" color="primary" className="font-medium tracking-wide px-8">
-                    { 
-                      isLoading  ? "Loading..." : "Submit"
-                     }
+                    <Button
+                      type="submit"
+                      color="primary"
+                      className="font-medium tracking-wide px-8"
+                      disabled={!Object.values(errors).every((error) => error === null)}
+                    >
+                      {isLoading ? "Loading..." : "Submit"}
                     </Button>
                   </div>
                 </form>

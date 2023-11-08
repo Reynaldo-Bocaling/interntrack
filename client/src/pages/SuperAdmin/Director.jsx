@@ -81,9 +81,6 @@ const navigate = useNavigate()
                 <Button color="primary" className="w-[130px]">
                   Edit
                 </Button>
-                <Button className="w-[130px] text-red-500 font-medium tracking-wide bg-[rgba(250,0,0,0.2)]">
-                  Drop
-                </Button>
               </div>
             </div>
           </div>
