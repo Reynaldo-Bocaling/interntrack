@@ -45,7 +45,7 @@ const DailyLogs = () => {
       name: `${firstname}  ${lastname}`,
       timeIn: timesheet?.find((item)=> item.date === format(currentDate, 'yyyy-MM-dd'))?.timeIn,
       timeOut: timesheet?.find((item)=> item.date === format(currentDate, 'yyyy-MM-dd'))?.timeOut,
-      totalHours: timesheet?.filter((item) => item.logStatus === 1).reduce((total, item) => total + item.totalHours, 0),
+      totalHours: timesheet?.filter((item) => item.logStatus === 1),
       profile_url
     }))
     .filter((item) => item.totalHours> 0 || item.timeIn !== '0:00')
@@ -67,10 +67,6 @@ const DailyLogs = () => {
     })).filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
     : [] 
 
-
-
-    // console.log(format(currentDate, 'yyyy-MM-dd'));
-    console.log(data,'s');
     
     
     

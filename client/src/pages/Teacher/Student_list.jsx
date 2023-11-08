@@ -163,10 +163,62 @@ const Student_list = () => {
       Swal.fire("Error", "There was an error during the student import process. \n Please review the data..", "error");    },
   });
 
+
+
+
   // import handle change
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = async (e) => {
+  //       const data = new Uint8Array(e.target.result);
+  //       const workbook = XLSX.read(data, { type: "array" });
+  //       const sheetName = workbook.SheetNames[0];
+  //       const worksheet = workbook.Sheets[sheetName];
+  //       const excelData = XLSX.utils.sheet_to_json(worksheet);
+
+  //       const isValid = validateData(excelData);
+
+  //       if (!isValid) {
+  //         setError("Invalid data in the excel file.");
+  //         setImportData(null);
+  //       } else {
+  //         setError(null);
+  //         setImportData(excelData);
+  //       }
+  //     };
+  //     reader.readAsArrayBuffer(file);
+  //   }
+  // };
+
+  // const handleImportExcel = () => {
+
+  //   mutate(ImportData);
+  // };
+
+  // // sanitation
+  // const validateData = (data) => {
+  //   const firstnameRegex = /^[A-Za-z\s]+$/;
+  //   const lastnameRegex = /^[A-Za-z\s]+$/;
+  //   const Regex = /^[A-Za-z\s]+$/;
+  //   const emailRegex = /^[A-Za-z\s]+$/;
+  
+  //   for (const row of data) {
+  //     if (!row.firstname || !firstnameRegex.test(row.firstname)) {
+  //       return false;
+  //     }else if (!row.lastname || !lastnameRegex.test(row.lastname)) {
+  //       return false;
+  //     }
+  //   }
+  // };
+  
+
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
+  
     if (file) {
       const reader = new FileReader();
       reader.onload = async (e) => {
@@ -175,38 +227,88 @@ const Student_list = () => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const excelData = XLSX.utils.sheet_to_json(worksheet);
-
-        const isValid = validateData(excelData);
-
-        if (!isValid) {
-          setError("Invalid data in the excel file.");
-          setImportData(null);
-        } else {
-          setError(null);
+  
+        try {
+          validateData(excelData);
+          setError(null); 
           setImportData(excelData);
+        } catch (error) {
+          setError(error.message);
+          setImportData(null);
         }
       };
       reader.readAsArrayBuffer(file);
     }
   };
-
+  
   const handleImportExcel = () => {
-
-    mutate(ImportData);
+    if (ImportData) {
+      mutate(ImportData);
+    }
   };
-
-  // sanitation
+  
   const validateData = (data) => {
-    const nameRegex = /^[A-Za-z\s]+$/;
-    const emailRegex = /^[A-Za-z\s]+$/;
-
+    const firstnameRegex = /^[A-Za-z\s]+$/;
+    const lastnameRegex = /^[A-Za-z\s]+$/;
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;    
+    const mobileRegex = /^(09[0-9]{1}([0-9]{2}[-\s]?[0-9]{3}[-\s]?[0-9]{4}|[0-9]{8}))$/;    
+    const addressRegex = /^[A-Za-z0-9\s\.,-]+,\s[A-Za-z0-9\s\.,-]+,\s[A-Za-z0-9\s\.,-]+$/;
+    const genderRegex = /^(male|female)$/i;
+    const majorRegex = /^[A-Za-z\s]+$/;
+  
     for (const row of data) {
-      if (!nameRegex.test(row.firstname)) {
-        return false;
+      if (!row.firstname) {
+        throw new Error('Firstname is empty');
+      }  else if (!row.lastname) {
+        throw new Error('Lastname is empty');
+      } else if (!row.email) {
+        throw new Error('Email is empty');
+      } else if (!row.contact) {
+        throw new Error('Contact is empty');
+      } else if (!row.address) {
+        throw new Error('Address is empty');
+      } else if (!row.gender) {
+        throw new Error('Gender is empty');
+      } else if (!row.major) {
+        throw new Error('Major is empty');
+      }
+
+      //invalid type
+      else if (!firstnameRegex.test(row.firstname)) {
+        throw new Error(`"${row.firstname}" is invalid for a firstname. \nPlease enter a valid firstname`);
+      }
+      else if (!lastnameRegex.test(row.lastname)) {
+        throw new Error(`"${row.lastname}" is invalid for a lastname. \nPlease enter a valid lastname`);
+      }
+      else if (!emailRegex.test(row.email)) {
+        throw new Error(`"${row.email}" is invalid for a email. \nPlease enter a valid email`);
+      }
+      else if (!genderRegex.test(row.gender)) {
+        throw new Error(`"${row.gender}" is invalid for a Gender. \nPlease enter a valid Gender (Male | Female)`);
+      }
+      else if (!mobileRegex.test(row.contact)) {
+        throw new Error(`"${row.contact}" is invalid for a Contact. \nPlease enter a valid Contact (Ex. 09489946337)`);
+      }
+      else if (!addressRegex.test(row.address)) {
+        throw new Error(`"${row.address}" is invalid for a Address. \nPlease enter a valid Address, Ex. 45, San Juan, Metro Manila, 9876 Philippines (Brgy, City, Province)`);
+      }
+      else if (!majorRegex.test(row.major)) {
+        throw new Error(`"${row.major}" is invalid for a Major. \nPlease enter a valid Major`);
       }
     }
-    return true;
   };
+  
+
+
+
+
+
+
+
+
+
+
+
 
   // Student data
 

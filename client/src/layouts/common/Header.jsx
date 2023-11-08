@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SidebarData } from "./SidebarLinks";
-import Dp from "../../assets/images/dp.png";
-import { MdNotificationsNone } from "react-icons/md";
+import Empty from "../../assets/images/emptyProfile.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -17,6 +16,7 @@ import { getUser, logout } from "../../api/Api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Drawer, Button, ScrollArea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { Avatar } from "@nextui-org/react";
 
 
 
@@ -146,10 +146,10 @@ const {data: getUserData} = useQuery({
           </div>
 
           <div
-            className="relative h-fit w-fit rounded-full bg-white shadow-lg p-2 "
+            className="relative h-fit w-fit rounded-full bg-white shadow-lg p- "
             onClick={toggleProfile}
           >
-            <img src={user?.url} alt="profile" width={18} className="cursor-pointer " />
+            <Avatar src={user?.url ? user?.url : Empty} className="cursor-pointer w-8 h-8 shadow-md" />
             <RiArrowDropDownFill
               size={20}
               className="text-blue-500 absolute top-1/3 -right-4 -translate-y-1/2"
@@ -187,14 +187,7 @@ const {data: getUserData} = useQuery({
             {isOpenProfile && (
               <div className="absolute top-[50px] right-1 w-[270px] flex flex-col gap-2 rounded-l-xl rounded-br-xl bg-white shadow-lg py-5 px-5">
                 <div className="flex items-center gap-2 cursor-pointer mb-5 border-b pb-3">
-                  <div className="h-fit w-fit rounded-full bg-white shadow-lg p-2">
-                  <img 
-                  src={user?.url} 
-                  alt="profile"
-                      width={22}
-                      className="cursor-pointer "
-                    />
-                  </div>
+                  <Avatar src={user?.url ? user?.url : Empty} className="cursor-pointer w-8 h-8 shadow-md mr-2" />
                   <div className="flex flex-col">
                     <span className=" tracking-wider font-medium">
                       {user?.name}

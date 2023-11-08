@@ -1,31 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
-import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
-import { BsPrinter } from "react-icons/bs";
+import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getCoordinator } from "../../api/Api";
-import picture from "../../assets/images/dp.png";
-import {
-  Switch,
-  useDisclosure as AddTeacherDisclosure,
-} from "@nextui-org/react";
-import AddTeacherModal from "../../components/add-teacher/AddTeacher";
-import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
-import { format } from "date-fns";
 
+import { format } from "date-fns";
+import { Avatar } from "@nextui-org/react";
+import picture from "../../assets/images/emptyProfile.png";
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  const [searchLength, setSearchLength] = useState(false);
 
   const {
     data: StudentList,
@@ -62,7 +51,8 @@ const TeacherList = () => {
                     trainer,
                     AreaOfAssignment,
                     deletedStatus,
-                    createAt
+                    createAt,
+                    profile_url,
                   }) => ({
                     id,
                     middlename,
@@ -89,7 +79,8 @@ const TeacherList = () => {
                       ? "Assigned"
                       : "Unassigned",
                     deletedStatus,
-                    createAt
+                    createAt,
+                    url: profile_url,
                   })
                 )
                 .filter((item) => item.deletedStatus === 1)
@@ -120,9 +111,10 @@ const TeacherList = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
           <span className="font-semibold tracking-wider">
             {info.row.original.name}
           </span>
@@ -198,12 +190,9 @@ const TeacherList = () => {
       id: "createAt",
       cell: (info) => (
         <div className="relative">
-          
           <div className="pr-10">
-          {
-             format(new Date(info.row.original.createAt), 'yyyy')
-          }
-        </div>
+            {format(new Date(info.row.original.createAt), "yyyy")}
+          </div>
 
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
@@ -250,19 +239,16 @@ const TeacherList = () => {
         </h1>
 
         <div className="flex items-center gap-3">
-        <div
+          <div
             className={`w-[250px] h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
           >
-            <BiSearch
-              
-              className={ "text-blue-500 cursor-pointer"}
-            />
+            <BiSearch className={"text-blue-500 cursor-pointer"} />
             <input
-                type="text"
-                placeholder="Search.."
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="outline-none text-sm"
-              />
+              type="text"
+              placeholder="Search.."
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="outline-none text-sm"
+            />
           </div>
         </div>
       </div>

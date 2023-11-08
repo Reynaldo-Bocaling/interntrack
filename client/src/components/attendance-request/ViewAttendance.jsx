@@ -21,9 +21,11 @@ import Swal from "sweetalert2";
 function ViewAttendanceRequest() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedItem, setSelectedItem] = useState(null);
+  const [timesheetDate, setTimesheetDate] = useState(null)
   const queryClient = useQueryClient();
 
   const currentDate = new Date();
+
   const { id } = useParams();
 
   const { data: StudentItem, isLoading } = useQuery({
@@ -48,6 +50,9 @@ function ViewAttendanceRequest() {
   });
 
   const timesheet = StudentItem?.timesheet;
+  const task = StudentItem?.task;
+
+
   const timsheetInfo = timesheet
     ? timesheet.filter(
         (item) =>
@@ -55,6 +60,10 @@ function ViewAttendanceRequest() {
           item.totalHours > 0 &&
           item.logStatus === 0
       )
+    : [];
+
+  const taskInfo = task
+    ? task.find((item) => item.date === timesheetDate)
     : [];
 
   const handleAttendanceRequest = (id) => {
@@ -75,9 +84,12 @@ function ViewAttendanceRequest() {
 
   //handle modal
   const openModal = (item) => {
-    setSelectedItem(item);
+    setTimesheetDate(item);
     onOpen();
   };
+
+
+  console.log();
 
   return (
     <div>
@@ -150,10 +162,10 @@ function ViewAttendanceRequest() {
                         {format(new Date(item.date), "MMMM dd")}
                       </td>
                       <td className="text-sm tracking-wide pl-2">
-                        {item.timeIn}
+                      {item.timeIn != '0:00' ? format(new Date(item.timeIn), "h:mm a") : '0'}
                       </td>
                       <td className="text-sm tracking-wide pl-2">
-                        {item.timeOut}
+                      {item.timeOut != '0:00' ? format(new Date(item.timeOut), "h:mm a") : '0'}
                       </td>
                       <td className="text-sm text-center tracking-wide">
                         {item.totalHours} Hours
@@ -168,7 +180,7 @@ function ViewAttendanceRequest() {
                           </button>
                           <button
                             className="text-blue-500 text-sm font-medium tracking-wider bg-white border border-blue-500 py-[7px] w-20 rounded-full"
-                            onClick={() => openModal(StudentItem)}
+                            onClick={() => openModal(item.date)}
                           >
                             Task
                           </button>
@@ -182,27 +194,26 @@ function ViewAttendanceRequest() {
           </div>
 
           {/* MODAL */}
-          <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <Modal isOpen={isOpen} onOpenChange={onOpenChange} >
             <ModalContent>
               {(onClose) => (
                 <>
-                  <ModalHeader className="flex flex-col gap-1">
-                    Modal Title
-                  </ModalHeader>
+                  <ModalHeader className="flex flex-col gap-1 font-medium text-sm">
+                    {taskInfo?.date && format(new Date(taskInfo?.date), 'MMMM dd, yyyy')}
+                   </ModalHeader>
                   <ModalBody>
-                    <h1>ID: {selectedItem ? selectedItem.id : ""}</h1>
-                    <h1>
-                      First Name: {selectedItem ? selectedItem.firstname : ""}
-                    </h1>
+                  <div className="h-[290px]">
+                  {
+                    taskInfo?.tasImageUrl? 
+                     <img src={ taskInfo?.tasImageUrl} alt="" className="h-[230px] w-full rounded-lg" />
+                     :
+                     <div className="h-[230px] bg-gray-100 text-xl flex items-center justify-center capitalize rounded-lg">no task</div>
+                  }
+
+                  <div className="capitalize text-lg py-5 font-semibold">{taskInfo?.description}</div>
+                  </div>
                   </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" variant="light" onPress={onClose}>
-                      Close
-                    </Button>
-                    <Button color="primary" onPress={onClose}>
-                      Action
-                    </Button>
-                  </ModalFooter>
+                  
                 </>
               )}
             </ModalContent>

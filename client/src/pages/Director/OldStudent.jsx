@@ -1,31 +1,20 @@
 import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
-import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
-import { BsPrinter } from "react-icons/bs";
+import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getStudentList, getTeacherList } from "../../api/Api";
-import picture from '../../assets/images/dp.png'
-import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
-import AddTeacherModal from '../../components/add-teacher/AddTeacher'
-import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
 import { format } from "date-fns";
-
+import { Avatar } from "@nextui-org/react";
+import picture from '../../assets/images/emptyProfile.png'
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  const [searchLength, setSearchLength] = useState(false);
-
-//   cons
 
 
  
@@ -59,7 +48,8 @@ const TeacherList = () => {
           trainer,
           AreaOfAssignment,
           deletedStatus,
-          createAt
+          createAt,
+          profile_url
         }) => ({
           id,
           middlename,
@@ -80,7 +70,8 @@ const TeacherList = () => {
           studentTrainerStatus: trainer ? "Assigned" : "Unassigned",
           studentAreaOfAssignment: AreaOfAssignment ? "Assigned" : "Unassigned",
           deletedStatus,
-          createAt
+          createAt,
+          url: profile_url
         })
       )
       .filter((item) => item.deletedStatus === 1)
@@ -108,13 +99,14 @@ console.log(data);
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
-          <span className="font-semibold tracking-wider">
-            {info.row.original.name}
-          </span>
-        </div>
+        <Avatar
+          src={info.row.original.url ? info.row.original.url : picture}
+          className="text-large"
+        />
+      <span className="font-semibold tracking-wider">
+        {info.row.original.name}
+      </span>
+    </div>
       ),
       header: "Name",
     }),

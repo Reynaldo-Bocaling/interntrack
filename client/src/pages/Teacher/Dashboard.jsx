@@ -153,21 +153,18 @@ function Dashboard() {
 
   const totalStudent = filterStudentList.length;
 
-  const totalAssign = `${
+  const totalAssign = `${Math.round(
     (data.filter(
       (item) => item.trainer !== null && item.areaAssigned_id !== null
     ).length /
       totalStudent) *
-    100
-  }%`;
-  const totalUnAssign = `${
+    100)} %`;
+  const totalUnAssign = `${Math.round(
     (data.filter(
       (item) => item.trainer === null && item.areaAssigned_id === null
     ).length /
       totalStudent) *
-    100
-  }%`;
-
+    100)} %`;
   // console.log('student',getWeeklyAttendance);
 
   const totalCountBox = [

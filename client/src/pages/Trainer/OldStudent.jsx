@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
-import picture from "../../assets/images/dp.png";
-import { BsPrinter } from "react-icons/bs";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getTrainer, getStudentList } from "../../api/Api";
-import { Switch } from "@nextui-org/react";
-import List from "../../components/print-layout/List";
 import { format } from "date-fns";
+import { Avatar } from "@nextui-org/react";
+import picture from '../../assets/images/emptyProfile.png'
 
 const Student_list = () => {
   const [searchLength, setSearchLength] = useState(false);
@@ -57,7 +54,8 @@ const Student_list = () => {
             AreaOfAssignment,
             deletedStatus,
             timesheet,
-            createAt
+            createAt,
+            profile_url
           }) => ({
             id,
             middlename,
@@ -80,7 +78,8 @@ const Student_list = () => {
               ?.filter((item) => item.logStatus === 1)
               .reduce((total, item) => total + item.totalHours, 0),
             deletedStatus,
-            createAt
+            createAt,
+            url: profile_url
           })
         )
         .filter((item) => item.deletedStatus === 1)
@@ -100,13 +99,14 @@ const Student_list = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
-          <span className="font-semibold tracking-wider">
-            {info.row.original.name}
-          </span>
-        </div>
+        <Avatar
+          src={info.row.original.url ? info.row.original.url : picture}
+          className="text-large"
+        />
+      <span className="font-semibold tracking-wider">
+        {info.row.original.name}
+      </span>
+    </div>
       ),
       header: "Name",
     }),

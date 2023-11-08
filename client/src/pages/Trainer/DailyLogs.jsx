@@ -40,8 +40,7 @@ const DailyLogs = () => {
             (item) => item.date === format(currentDate, "yyyy-MM-dd")
           )?.timeOut,
           totalHours: timesheet
-            ?.filter((item) => item.logStatus === 1)
-            .reduce((total, item) => total + item.totalHours, 0),
+            ?.filter((item) => item.logStatus === 1),
             profile_url
         }))
         .filter((item) => item.totalHours > 0 || item.timeIn !== "0:00")

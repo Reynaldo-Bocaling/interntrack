@@ -6,9 +6,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getTeacher } from "../../api/Api";
-import picture from '../../assets/images/dp.png'
 import { format } from "date-fns";
-
+import { Avatar } from "@nextui-org/react";
+import picture from '../../assets/images/emptyProfile.png'
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -44,7 +44,8 @@ const TeacherList = () => {
       trainer,
       AreaOfAssignment,
       deletedStatus,
-      createAt
+      createAt,
+      profile_url
     })=> ({
       id,
       middlename,
@@ -65,14 +66,14 @@ const TeacherList = () => {
       studentTrainerStatus: trainer ? 'Assigned': 'Unassigned' ,
       studentAreaOfAssignment: AreaOfAssignment ? 'Assigned': 'Unassigned',
       deletedStatus,
-      createAt
+      createAt,
+      url: profile_url
     }))
     .filter((item)=>item.deletedStatus === 1)
     .filter((item)=> item.name.toLowerCase().includes(searchInput.toLocaleLowerCase()))
      : []
 
 
-console.log(data);
 
 
   
@@ -89,13 +90,14 @@ console.log(data);
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
-          <span className="font-semibold tracking-wider">
-            {info.row.original.name}
-          </span>
-        </div>
+        <Avatar
+          src={info.row.original.url ? info.row.original.url : picture}
+          className="text-large"
+        />
+      <span className="font-semibold tracking-wider">
+        {info.row.original.name}
+      </span>
+    </div>
       ),
       header: "Name",
     }),
