@@ -13,7 +13,7 @@ import {
 import { getCampus } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
-const CustomModal = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
+const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
   const [selectedCampus, setSelectedCampus] = useState(null);
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [selectedProgram, setSelectedProgram] = useState(null);
@@ -295,4 +295,4 @@ const CustomModal = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
   );
 };
 
-export default CustomModal;
+export default AddTeacher;

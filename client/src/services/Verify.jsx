@@ -1,1 +1,0 @@
-export const localhost ='https://localhost:3001/'

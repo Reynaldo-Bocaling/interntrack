@@ -4,7 +4,7 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { BsDot } from "react-icons/bs";
 
 
-function Notification({opened, onClose}) {
+const Notification = ({opened, onClose}) => {
   return (
     <div>
        <Drawer

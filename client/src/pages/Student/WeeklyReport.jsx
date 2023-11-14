@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { Student } from "../../components/dummyData/Data";
 import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
@@ -10,9 +9,8 @@ import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
 import Report from "../../components/print-layout/WeeklyReport";
 
-import {MdKeyboardArrowRight} from 'react-icons/md'
+import { MdKeyboardArrowRight } from "react-icons/md";
 const WeeklyReport = () => {
-  const student = Student;
   const [opened, { open, close }] = useDisclosure();
   const [weeklyReport, setWeeklyReport] = useState([]);
   const calculateTotalHours = (timeSheet) => {
@@ -75,8 +73,6 @@ const WeeklyReport = () => {
     ? weeklyReport.reduce((total, item) => total + item.totalHours, 0)
     : [];
 
-
-
   // Reference para sa pag-print
   const componentRef = useRef();
 
@@ -108,14 +104,14 @@ const WeeklyReport = () => {
             className="py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
             onClick={() => handleOpenWeeklyReport(group)}
           >
-              <span>
-                {`${format(new Date(group[0].date), "MMMM dd")} - ${format(
-                  new Date(group[group.length - 1].date),
-                  "MMMM dd"
-                )}`}
-              </span>
+            <span>
+              {`${format(new Date(group[0].date), "MMMM dd")} - ${format(
+                new Date(group[group.length - 1].date),
+                "MMMM dd"
+              )}`}
+            </span>
 
-              <MdKeyboardArrowRight />
+            <MdKeyboardArrowRight />
           </div>
         ))}
       </Card>
@@ -175,7 +171,7 @@ const WeeklyReport = () => {
 
             <div className="grid grid-cols-3 gap-2 sm:gap-4 items-center justify-between border-[2px] border-[#000] rounded-[4px] mt-3">
               <div className="h-[50px] sm:h-[80px] overflow-hidden pl-2 py-2">
-                Course and Section: {student.courseSection}
+                Course and Section: {studentInfo.program}
               </div>
               <div className="h-[50px] sm:h-[80px] overflow-hidden border-l-[2px]  border-[#000] pl-2 py-2 flex flex-col">
                 Training Station:

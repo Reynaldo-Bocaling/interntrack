@@ -1,13 +1,22 @@
-import React from 'react';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
+import React from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
 
-function CustomAutocomplete({isOptionEqualToValue, options, label, value, onChange,size ,getOptionLabel }) {
+const CustomAutocomplete = (props) => {
+  const {
+    isOptionEqualToValue,
+    options,
+    label,
+    value,
+    onChange,
+    size,
+    getOptionLabel,
+  } = props;
   return (
     <Autocomplete
-    className={size}
+      className={size}
       options={options}
       getOptionLabel={getOptionLabel}
       value={value}
@@ -16,7 +25,9 @@ function CustomAutocomplete({isOptionEqualToValue, options, label, value, onChan
       renderOption={(props, option) => (
         <Box component="li" {...props}>
           <Avatar>{option.avatar}</Avatar>
-          <h1 className="pl-3 text-gray-700 text-sm">{getOptionLabel(option)}</h1>
+          <h1 className="pl-3 text-gray-700 text-sm">
+            {getOptionLabel(option)}
+          </h1>
         </Box>
       )}
       renderInput={(params) => (
@@ -28,10 +39,10 @@ function CustomAutocomplete({isOptionEqualToValue, options, label, value, onChan
             ...params.inputProps,
             autoComplete: "new-password",
           }}
-                  />
+        />
       )}
     />
   );
-}
+};
 
 export default CustomAutocomplete;

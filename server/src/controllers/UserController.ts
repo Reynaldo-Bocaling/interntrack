@@ -737,6 +737,23 @@ export class UserController {
   }
 
   // GET
+  // get super admin info
+  static async getSuperAdmin(req: any, res: Response) {
+    const admin_id = req.user.superadmin[0]?.id;
+    try {
+      const response = await prisma.superAdmin.findUnique({
+        where: {
+          id: admin_id,
+        },
+        include: {
+          user: true,
+        },
+      });
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({ message: error });
+    }
+  }
   // get director info
   static async getDirector(req: any, res: Response) {
     const director_id = req.user.director[0]?.id;
@@ -1130,6 +1147,7 @@ export class UserController {
   }
 
 
+
   // update profile user
   // update coordinator
   static async EditCoordinatorProfile(req: any, res: Response) {
@@ -1150,6 +1168,31 @@ export class UserController {
           campus: item.campus,
           college: item.college,
           program: item.program,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+
+  static async editSuperAdminProfile(req: any, res: Response) {
+    const { item } = req.body;
+
+    try {
+      const id = req.user.superadmin[0].id;
+      const response = await prisma.superAdmin.update({
+        where: {
+          id: id,
+        },
+        data: {
+          firstname: item.firstname,
+          lastname: item.lastname,
+          middlename: item.middlename,
+          email: item.email,
+          contact: item.contact,
         },
       });
 
@@ -1292,6 +1335,42 @@ export class UserController {
   }
 
   // update profile picture
+
+  //update superadmin profile
+  static async updateSuperAdminProfilePicture(req: any, res: Response) {
+    const id = req.user.superadmin[0]?.id;
+    const url = `${req.protocol}://${req.get("host")}/images/${
+      req.file.filename
+    }`;
+    const profile = req.file?.filename;
+
+    const existingFile = await prisma.teacher.findUnique({ where: { id } });
+    if (!existingFile)
+      return res.status(404).json({ message: "teacher not found" });
+
+    if (existingFile?.profile) {
+      const filePath = `./public/images/${existingFile.profile}`;
+      fs.unlinkSync(filePath);
+    }
+
+    try {
+      if (req.file) {
+        await prisma.teacher.update({
+          where: { id },
+          data: {
+            profile_url: url,
+            profile,
+          },
+        });
+      }
+
+      return res.status(200).json(url);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+
   //update teacher profile
   static async updateTeacherProfilePicture(req: any, res: Response) {
     const id = req.user.teacher[0]?.id;

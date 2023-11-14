@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { Input, Button } from "@nextui-org/react";
-const Info = ({ data, InputTypes,handleSubmit, Editable, setEditable}) => {
-    const defaultData = data || {};
 
-    const [coordinatorInfo, setCoordinatorIndo] = useState(data);
- 
+const Info = ({ data, InputTypes, handleSubmit, Editable, setEditable }) => {
+  const [coordinatorInfo, setCoordinatorIndo] = useState(data);
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-      setCoordinatorIndo({ ...coordinatorInfo, [name]: value });
-    };
+    setCoordinatorIndo({ ...coordinatorInfo, [name]: value });
+  };
 
-    useEffect(() => {
-      setCoordinatorIndo(data);
-    }, [data]);
+  useEffect(() => {
+    setCoordinatorIndo(data);
+  }, [data]);
 
   const handleEditable = (e) => {
     e.preventDefault();
@@ -24,9 +22,8 @@ const Info = ({ data, InputTypes,handleSubmit, Editable, setEditable}) => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    handleSubmit(coordinatorInfo)
-  }
-
+    handleSubmit(coordinatorInfo);
+  };
 
   return (
     <div className="bg-slate-50 w-full">
@@ -50,20 +47,18 @@ const Info = ({ data, InputTypes,handleSubmit, Editable, setEditable}) => {
                 </button>
               </div>
               <div className=" w-full grid grid-cols-3 gap-7">
-                {
-                    InputTypes?.map(({id, type, name, label})=> (
-                        <Input
-                        key={id}
-                            type={type}
-                            value={coordinatorInfo[name]}
-                            name={name}
-                            onChange={handleChange}
-                            variant="underlined"
-                            label={label}
-                            isDisabled={!Editable}
-                        />
-                    ))
-                }
+                {InputTypes?.map(({ id, type, name, label }) => (
+                  <Input
+                    key={id}
+                    type={type}
+                    value={coordinatorInfo[name]}
+                    name={name}
+                    onChange={handleChange}
+                    variant="underlined"
+                    label={label}
+                    isDisabled={!Editable}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -71,7 +66,7 @@ const Info = ({ data, InputTypes,handleSubmit, Editable, setEditable}) => {
 
         <div className="mt-3 mb-2 flex items-center gap-3 justify-end">
           <Button
-          onClick={handleClick}
+            onClick={handleClick}
             type="submit"
             className={`${
               !Editable ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500"

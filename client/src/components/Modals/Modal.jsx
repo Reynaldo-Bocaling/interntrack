@@ -48,13 +48,11 @@ const ModalSetup = (props) => {
             </div>
           </header>
 
-          <main className=" max-h-full w-full overflow-y-auto pt-[60px]" >
+          <main className=" max-h-full w-full overflow-y-auto pt-[60px]">
             {content}
           </main>
 
-          <footer className="absolute bottom-0 left-0 h-10 w-full bg-white z-20 rounded-b-lg">
-
-          </footer>
+          <footer className="absolute bottom-0 left-0 h-10 w-full bg-white z-20 rounded-b-lg"></footer>
         </div>
       </div>
     </>

@@ -64,6 +64,7 @@ routes.put('/timeOut' ,UserController.timeOut);
 // get user info
 routes.get('/getCompanyList' ,UserController.getCompanyList);
 routes.get('/getTrainerList' ,UserController.getTrainerList);
+routes.get('/getSuperAdmin' , verifyToken,UserController.getSuperAdmin);
 routes.get('/getCoordinatorList' ,UserController.getCoordinatorList);
 routes.get('/getDirector',verifyToken ,UserController.getDirector);
 routes.get('/getTeacherList' ,UserController.getTeacherList);
@@ -84,6 +85,7 @@ routes.get('/getAnnouncement' ,UserController.getAnnouncement);
 
 
 // edit profile
+routes.put('/editSuperAdminProfile' ,verifyToken,UserController.editSuperAdminProfile);
 routes.put('/editProfileCoordinator' ,verifyToken,UserController.EditCoordinatorProfile);
 routes.put('/editProfileTeacher' ,verifyToken, UserController.editTeacherProfile);
 routes.put('/editProfileTrainer' ,verifyToken,UserController.EditTrainerProfile);
@@ -106,6 +108,7 @@ routes.put('/changeStudentPassword' ,verifyToken,UserController.changeStudentPas
 
 // update profile
 routes.put('/updateTeacherProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateTeacherProfilePicture);
+routes.put('/updateSuperAdminProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateSuperAdminProfilePicture);
 routes.put('/updateCoordinatorProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateCoordinatorProfilePicture);
 routes.put('/updateDirectorProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateDirectorProfilePicture);
 routes.put('/updateTrainerProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateTrainerProfilePicture);

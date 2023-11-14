@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import Information from "../../components/user-Settings/Information";
 import ChangePassword from "../../components/user-Settings/ChangePassword";
-import SetUpDate from "../../components/user-Settings/SetupDates";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getTrainer } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
-function Settings() {
+const Settings = () => {
   const [valueEvent, setValueEvent] = useState(1);
 
   const { data } = useQuery({
@@ -114,6 +113,6 @@ function Settings() {
       </div>
     </div>
   );
-}
+};
 
 export default Settings;

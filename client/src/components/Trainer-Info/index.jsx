@@ -40,40 +40,46 @@ const TrainerViewInfo = () => {
   };
 
   const studentList = TrainerData.student
-    ? TrainerData.student.map(
-        ({
-          id,
-          firstname,
-          lastname,
-          email,
-          contact,
-          campus,
-          college,
-          program,
-          major,
-          profile,
-          teacher,
-          deletedStatus,
-          profile_url
-        }) => ({
-          id,
-          name: `${firstname} ${lastname}`,
-          email,
-          contact,
-          campus,
-          college,
-          program,
-          major,
-          profile,
-          deletedStatus,
-          url: profile_url
-        })
-      ).filter((item)=>item.deletedStatus === 0)
+    ? TrainerData.student
+        .map(
+          ({
+            id,
+            firstname,
+            lastname,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            profile,
+            teacher,
+            deletedStatus,
+            profile_url,
+          }) => ({
+            id,
+            name: `${firstname} ${lastname}`,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            profile,
+            deletedStatus,
+            url: profile_url,
+          })
+        )
+        .filter((item) => item.deletedStatus === 0)
     : [];
 
-    if(trainerListError){
-      return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
-    }
+  if (trainerListError) {
+    return (
+      <h1 className="text-center my-10">
+        Server Failed. Please Try Again Later
+      </h1>
+    );
+  }
 
   return (
     <div className="rounded-xl overflow-hidden -mt-3 -ml-2">
@@ -93,14 +99,18 @@ const TrainerViewInfo = () => {
 
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
-            <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
-               {
-                info?.url ? (
-                  <Avatar src={info?.url && info?.url} className="w-40 h-40 text-large" />
+              <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
+                {info?.url ? (
+                  <Avatar
+                    src={info?.url && info?.url}
+                    className="w-40 h-40 text-large"
+                  />
                 ) : (
-                  <Avatar src={EmptyProfileIcon} className="w-40 h-40 text-large" />
-                )
-               }
+                  <Avatar
+                    src={EmptyProfileIcon}
+                    className="w-40 h-40 text-large"
+                  />
+                )}
               </div>
 
               <div className="left p-5 pl-5 w-full py-5">

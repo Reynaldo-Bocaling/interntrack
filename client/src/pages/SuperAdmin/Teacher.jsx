@@ -1,88 +1,101 @@
-import React, {useState } from "react";
-import StudentItem from "../../components/ReusableTableFormat/TableFormat";
-import { userData } from "../../services/AttendanceRequestData";
+import React, { useState, useRef } from "react";
+import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { AiOutlineUsergroupAdd,AiOutlineUserAdd } from "react-icons/ai";
 import { FiEdit3 } from "react-icons/fi";
-import { ImAttachment } from "react-icons/im";
+import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
-import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
-const companies = [
-  {
-    id: 1,
-    name: "7-Eleven2",
-    trainers: [
-      { id: 1, name: "Alex" },
-      { id: 2, name: "Roan" }
-    ],
-    areasOfAssignment: [
-      { id: 1, name: "Cashier", slots: 5 },
-      { id: 2, name: "OAR", slots: 3 },
-    ],
-  },
-  {
-    id: 2,
-    name: "SM",
-    trainers: [
-      { id: 3, name: "Drew" },
-      { id: 4, name: "Gel" }
-    ],
-    areasOfAssignment: [
-      { id: 3, name: "Guard", slots: 5 },
-      { id: 4, name: "Office", slots: 3 },
-      { id: 5, name: "Stores", slots: 3 },
-    ],
-  },
-  // ...Iba pang mga kumpanya
-]
-const Student_list = () => {
+import { useQuery } from "@tanstack/react-query";
+import { getTeacherList } from "../../api/Api";
+import picture from "../../assets/images/emptyProfile.png";
+import { Switch, Avatar } from "@nextui-org/react";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
+
+const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
-  const [AssignStudentModalIsOpen, setAssignStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
 
+  const componentRef = useRef();
 
-  
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
+  const {
+    data: teacherList,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["getTeacherList"],
+    queryFn: getTeacherList,
+  });
 
+  const data = teacherList
+    ? teacherList
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            accountStatus,
+            student,
+            profile_url,
+          }) => ({
+            id,
+            name: `${firstname} ${
+              middlename ? middlename[0].toUpperCase() : ""
+            } ${lastname}`,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            accountStatus,
+            totalStudent: student.filter((item) => item.deletedStatus === 0)
+              .length,
+            url: profile_url,
+          })
+        )
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+    : [];
 
-
-  //   data
-  const data = userData
-    .map(({ id, firstname, middleName, lastname, email, picture }) => ({
-      id,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
-      gender: "Male",
-      email,
-      picture,
-      department: "CICT Building",
-      AccountStatus: 1,
-    }))
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
+  if (isError) {
+    return (
+      <h1 className="text-center my-10">
+        Server Failed. Please Try Again Later
+      </h1>
     );
+  }
 
-  //   columns
   const columns = [
     columnHelper.accessor("id", {
       id: "id",
-      cell: (info) => <span>{info.getValue()}</span>,
+      cell: (info) => <span>{info.row.index + 1}</span>,
       header: "ID",
     }),
     columnHelper.accessor("name", {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
           <span className="font-semibold tracking-wider">
             {info.row.original.name}
           </span>
@@ -95,29 +108,47 @@ const Student_list = () => {
       cell: (info) => <span>{info.getValue()}</span>,
       header: "Email",
     }),
-    columnHelper.accessor("gender", {
-      id: "gender",
+    columnHelper.accessor("campus", {
+      id: "campus",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Gender",
+      header: "Campus",
     }),
-    columnHelper.accessor("department", {
-      id: "department",
+    columnHelper.accessor("college", {
+      id: "college",
       cell: (info) => <span>{info.getValue()}</span>,
-      header: "Department",
+      header: "College",
     }),
-    columnHelper.accessor("AccountStatus", {
-      id: "AccountStatus",
+    columnHelper.accessor("program", {
+      id: "program",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Program",
+    }),
+    columnHelper.accessor("major", {
+      id: "major",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Major",
+    }),
+    columnHelper.accessor("totalStudent", {
+      id: "totalStudent",
       cell: (info) => (
-        <div className="relative">
-          {info.getValue() !== 0 ? (
-            <span className="text-green-500 font-medium tracking-wide bg-green-100 px-2 py-1 rounded-lg">
-              Assigned
-            </span>
-          ) : (
-            <span className="text-red-500 font-medium tracking-wide bg-red-100 px-2 py-1 rounded-lg duration-300 transition-all">
-              Unassign
-            </span>
-          )}
+        <div className="text-center font-semibold">{info.getValue()}</div>
+      ),
+      header: "Students",
+    }),
+
+    columnHelper.accessor("accountStatus", {
+      id: "accountStatus",
+      cell: (info) => (
+        <div className="relative text-center">
+          <Switch
+            isDisabled
+            className="mr-7"
+            size="sm"
+            defaultSelected={
+              info.row.original.accountStatus === 0 ? true : false
+            }
+          />
+
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -128,15 +159,28 @@ const Student_list = () => {
           {show === info.row.original.id && (
             <div
               onClick={() => setShow(!show)}
-              className="absolute top-3 right-7 h-[120px] w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
+              className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
-                to="/student/"
+                to={`/view-teacher/${info.row.original.id}`}
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
                 Profile
               </NavLink>
+
+              <NavLink
+                to="/trainer-student-list"
+                state={{
+                  List: info.row.original.studentList,
+                  trainerName: info.row.original.firstname,
+                }}
+                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
+              >
+                <RiUserSearchLine size={17} />
+                Student list
+              </NavLink>
+
               <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
                 <FiEdit3 /> Update
               </NavLink>
@@ -147,12 +191,50 @@ const Student_list = () => {
           )}
         </div>
       ),
-      header: "AccountStatus",
+      header: "Active",
     }),
   ];
 
   const ShowFunction = (id) => {
     setShow((prev) => (prev === id ? null : id));
+  };
+
+  const defaultData = [...data];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
+  }
+
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[20%] border font-semibold text-[13px]">
+              Total Students
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px]">
+                {item.totalStudent}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
   };
 
   return (
@@ -161,58 +243,48 @@ const Student_list = () => {
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Teacher list
         </h1>
-        
+
         <div className="flex items-center gap-3">
-          <div 
-            className={`${searchLength? 'w-[250px]': 'w-[40px]'} h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          <div
+            className={`${
+              searchLength ? "w-[250px]" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
           >
-            <BiSearch  
-            onClick={()=> setSearchLength(!searchLength)} 
-            
-            className={`${searchLength? 'text-blue-500': 'text-gray-600'} cursor-pointer`} />
-            {
-              searchLength && (
-                <input
-                  type="text"
-                  placeholder="Search.."
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  className="outline-none text-sm"
-                />
-              )
-            }
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
+            />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
           </div>
-          <button 
-          onClick={()=> alert("Import")}
-          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <ImAttachment size={15} />
-              <span className='font-semibold tracking-wider'>Import</span>
-          </button>
-          <button 
-          onClick={()=> setAddStudentModalIsOpen(true)}
-          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <AiOutlineUserAdd size={16} />
-              <span className='font-semibold tracking-wider'>Add</span>
-          </button>
-          <button 
-          onClick={()=> setAssignStudentModalIsOpen(true)}
-          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <AiOutlineUsergroupAdd size={17} />
-              <span className='font-semibold tracking-wider'>Assign Student</span>
-          </button>
-          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <BsPrinter size={17} />
-              <span className='font-semibold tracking-wider'>Print</span>
+
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
+            <BsPrinter size={17} />
+            <span className="font-semibold tracking-wider">Print</span>
           </button>
         </div>
       </div>
 
-      {/* modal asign student */}
-      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} companies={companies}  />
-      <AddStudentModal isOpen={AddStudentModalIsOpen} closeModal={()=> setAddStudentModalIsOpen(false)} />
+      <TableFormat data={data} isLoading={isLoading} columns={columns} />
 
-      <StudentItem data={data} columns={columns} />
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Teacher List`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Student_list;
+export default TeacherList;

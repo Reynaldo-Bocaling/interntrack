@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { RiArrowUpDownLine } from "react-icons/ri";
-import { BiDotsVerticalRounded } from "react-icons/bi";
 import { BiSearch } from "react-icons/bi";
 import { FiDownload } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Button, Tooltip } from "@nextui-org/react";
 
 const TimeSheetTable = ({ data }) => {
   const navigate = useNavigate();

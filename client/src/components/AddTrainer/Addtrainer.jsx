@@ -56,7 +56,9 @@ const AddTrainer = ({
       case "email":
         return emailRegex.test(value) ? null : "Please enter a valid email";
       case "contact":
-        return contactRegex.test(value) ? null : "Please enter a valid contact number";
+        return contactRegex.test(value)
+          ? null
+          : "Please enter a valid contact number";
       default:
         return null;
     }
@@ -131,7 +133,9 @@ const AddTrainer = ({
                       isRequired
                       isDisabled={!selectedCompany}
                     >
-                      {(item) => <SelectItem key={item.id}>{item.areaName}</SelectItem>}
+                      {(item) => (
+                        <SelectItem key={item.id}>{item.areaName}</SelectItem>
+                      )}
                     </Select>
                   </div>
                   <div className="flex items-center gap-4">
@@ -207,7 +211,9 @@ const AddTrainer = ({
                       type="submit"
                       color="primary"
                       className="font-medium tracking-wide px-8"
-                      disabled={!Object.values(errors).every((error) => error === null)}
+                      disabled={
+                        !Object.values(errors).every((error) => error === null)
+                      }
                     >
                       {isLoading ? "Loading..." : "Submit"}
                     </Button>

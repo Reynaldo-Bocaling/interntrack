@@ -1,7 +1,9 @@
 import React from "react";
 import CustomAutocomplete from "../SelectCompany/SelectCompany";
 import { Button } from "@nextui-org/react";
-function SelectCompanyTrainer(props) {
+
+
+const SelectCompanyTrainer = (props) => {
   const {
     selectedCompany,
     setSelectedCompany,
@@ -52,10 +54,11 @@ function SelectCompanyTrainer(props) {
     setSelectedTrainer(newValue);
   };
 
-  const areaTotalStudent= selectedAreaOfAssignment?.student.length;
-  const areaSlot= selectedAreaOfAssignment?.slot ? selectedAreaOfAssignment?.slot : 'notSelectArea';
-    const totalAvailable = areaSlot - areaTotalStudent;
-  
+  const areaTotalStudent = selectedAreaOfAssignment?.student.length;
+  const areaSlot = selectedAreaOfAssignment?.slot
+    ? selectedAreaOfAssignment?.slot
+    : "notSelectArea";
+  const totalAvailable = areaSlot - areaTotalStudent;
 
   return (
     <div className="p-5 flex flex-col gap-3">

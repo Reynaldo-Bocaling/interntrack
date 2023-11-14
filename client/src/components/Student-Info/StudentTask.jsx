@@ -1,18 +1,13 @@
 import React, { useState } from "react";
-import { TimeIcon } from "../../components/ReactIcon/React-Icons";
-import { NavLink } from "react-router-dom";
-
-import pic from "../../assets/images/task1.jpg";
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
-  Avatar,
 } from "@nextui-org/react";
+
 const StudentTask = ({ data }) => {
   const [taskData, setTaskData] = useState({});
 
@@ -23,10 +18,9 @@ const StudentTask = ({ data }) => {
     onOpen();
   };
 
-  
   return (
     <div>
-      {data.length  >0 ?(
+      {data.length > 0 ? (
         <>
           <div className="container py-2 px-5">
             <header className="flex items-center justify-between mb-5">

@@ -7,7 +7,7 @@ import { getRequirement, uploadRequirement } from "../../api/Api";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
-function Requirements() {
+const Requirements = () => {
   const [OpenBrgyCertificate, setOpenBrgyCertificate] = useState(false);
   const [OpenPhilhealth, setOpenPhilhealth] = useState(false);
   const [OpenNso, setOpenNso] = useState(false);
@@ -19,31 +19,47 @@ function Requirements() {
 
   const { mutate: BrgyMutate } = useMutation(uploadRequirement, {
     onSuccess: () => {
-      Swal.fire("Success", "Barangay Certificate successfully added.", "success");
-      setOpenBrgyCertificate(false)
+      Swal.fire(
+        "Success",
+        "Barangay Certificate successfully added.",
+        "success"
+      );
+      setOpenBrgyCertificate(false);
     },
     onError: () => {
-      Swal.fire("Error", "Failed to add the  Barangay Certificate. \n Please try again.", "error");  
+      Swal.fire(
+        "Error",
+        "Failed to add the  Barangay Certificate. \n Please try again.",
+        "error"
+      );
     },
   });
 
   const { mutate: PhilhealthMutate } = useMutation(uploadRequirement, {
     onSuccess: () => {
       Swal.fire("Success", "Philhealth successfully added.", "success");
-      setOpenPhilhealth(false)
+      setOpenPhilhealth(false);
     },
     onError: () => {
-      Swal.fire("Error", "Failed to add the  Philhealth \n Please try again.", "error");
+      Swal.fire(
+        "Error",
+        "Failed to add the  Philhealth \n Please try again.",
+        "error"
+      );
     },
   });
 
   const { mutate: NsoMutate } = useMutation(uploadRequirement, {
     onSuccess: () => {
       Swal.fire("Success", "NSO successfully added.", "success");
-      setOpenNso(false)
+      setOpenNso(false);
     },
     onError: () => {
-      Swal.fire("Error", "Failed to add the  NSO \n Please try again.", "error");
+      Swal.fire(
+        "Error",
+        "Failed to add the  NSO \n Please try again.",
+        "error"
+      );
     },
   });
 
@@ -125,6 +141,6 @@ function Requirements() {
       />
     </div>
   );
-}
+};
 
 export default Requirements;

@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactApexChart from 'react-apexcharts';
+import React from "react";
+import ReactApexChart from "react-apexcharts";
 
 const CustomizedPieChart = ({ data, labels, colors, title }) => {
   const options = {
     chart: {
-      type: 'donut',
+      type: "donut",
     },
-    colors: colors, 
+    colors: colors,
     labels: labels,
     plotOptions: {
       pie: {
@@ -17,16 +17,16 @@ const CustomizedPieChart = ({ data, labels, colors, title }) => {
               show: true,
               showAlways: true,
               label: title,
-              fontSize: '14px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontSize: "14px",
+              fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 600,
-              color: '#333',
+              color: "#333",
             },
             value: {
               show: true,
-              color: '#2ECC71', // Change label color here
-              fontSize: '22px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
+              color: "#2ECC71", // Change label color here
+              fontSize: "22px",
+              fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
               offsetY: 5, // Add padding
             },
@@ -38,7 +38,7 @@ const CustomizedPieChart = ({ data, labels, colors, title }) => {
       },
     },
     legend: {
-      position: 'right',
+      position: "right",
       offsetY: 70,
       offsetX: 0,
     },

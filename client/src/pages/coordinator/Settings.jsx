@@ -7,7 +7,7 @@ import { getCoordinator } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
-function Settings() {
+const Settings = () => {
   const [valueEvent, setValueEvent] = useState(1);
 
   const { data } = useQuery({
@@ -56,7 +56,6 @@ function Settings() {
       value: 3,
       element: ResetData,
     },
-    
   ];
 
   return (
@@ -75,24 +74,25 @@ function Settings() {
       <span className="w-full text-2xl font-bold">Settings</span>
 
       <div className="flex gap-4 w-full mt-5">
-      <div className="mt-3 w-[25%] flex flex-col gap-3 items-start">
+        <div className="mt-3 w-[25%] flex flex-col gap-3 items-start">
           {links.map((item, index) => (
             <div key={index}>
-              {item.extraText &&
-              (
-                <small  className="text-[0.68rem] text-gray-400 mt-5 block">
+              {item.extraText && (
+                <small className="text-[0.68rem] text-gray-400 mt-5 block">
                   {item.extraText}
                 </small>
               )}
 
-{item.url && (
-                <Link to={item.url} className="text-blue-500 text-sm hover:underline">
+              {item.url && (
+                <Link
+                  to={item.url}
+                  className="text-blue-500 text-sm hover:underline"
+                >
                   Old Student
                 </Link>
               )}
 
-
-               {!item.url && (
+              {!item.url && (
                 <button
                   onClick={() => setValueEvent(item?.value)}
                   key={index}
@@ -111,12 +111,16 @@ function Settings() {
 
         <div className="w-[75%]">
           {links.map((item, index) =>
-            valueEvent === item.value ? <item.element key={item.id} data={item.data} /> : ""
+            valueEvent === item.value ? (
+              <item.element key={item.id} data={item.data} />
+            ) : (
+              ""
+            )
           )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Settings;

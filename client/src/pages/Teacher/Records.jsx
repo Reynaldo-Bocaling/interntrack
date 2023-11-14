@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Records() {
+const Records = () => {
   return (
     <div>
       <h1>teacher records</h1>

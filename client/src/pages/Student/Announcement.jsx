@@ -1,27 +1,10 @@
 import { format } from "date-fns";
-import React, { useState } from "react";
-import { MultiSelect, Tabs } from "@mantine/core";
-import { FaUsersRays } from "react-icons/fa6";
+import React from "react";
 import { TfiAnnouncement } from "react-icons/tfi";
-import {
-  createAnnouncement,
-  getAnnouncement,
-  getStudent,
-} from "../../api/Api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Input,
-  Textarea,
-  Button,
-  useDisclosure,
-} from "@nextui-org/react";
+import { getAnnouncement } from "../../api/Api";
+import { useQuery } from "@tanstack/react-query";
 
-function Announcement() {
-
+const Announcement = () => {
   const { data: getAnnouncementList, isLoading: announcementLoading } =
     useQuery({
       queryKey: ["getAnnouncement"],
@@ -30,14 +13,13 @@ function Announcement() {
 
   const announcementList = getAnnouncementList ? getAnnouncementList : [];
 
+  const otherPost = announcementList
+    .filter((item) => item.to.toLowerCase().includes("student"))
+    .slice()
+    .sort((a, b) => b.id - a.id);
 
-  const otherPost = announcementList.filter(
-    (item) =>
-      item.to.toLowerCase().includes("student")
-  ).slice().sort((a, b) => b.id - a.id);
-
-  // console.log(otherPost,'d');
   if (announcementLoading) return <center>Loading</center>;
+
   return (
     <div className="bg-white rounded-lg p-5 w-full">
       <h1 className="text-xl font-semibold tracking-wide text-gray-700">
@@ -48,7 +30,8 @@ function Announcement() {
         {otherPost.length > 0 ? (
           otherPost.map((item, index) => (
             <div key={index} className="py-7 px-1 flex gap-4 border-b ">
-              <TfiAnnouncement size={25} className="text-gray-400" /> {index+1}
+              <TfiAnnouncement size={25} className="text-gray-400" />{" "}
+              {index + 1}
               <div className="w-full">
                 <div className="flex items-center justify-between gap-2 mb-5 w-full">
                   <div className="flex items-center justify-between w-full">
@@ -90,6 +73,6 @@ function Announcement() {
       </div>
     </div>
   );
-}
+};
 
 export default Announcement;

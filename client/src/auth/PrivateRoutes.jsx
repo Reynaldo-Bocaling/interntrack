@@ -23,17 +23,10 @@ import CoordinatorInfoView from "../components/Coordinator-Info/index"
 import TeacherInfoView from "../components/Teacher-Info/index"
 
 // student
-import Activities from "../pages/Student/Activities"
 import Attendance from "../pages/Student/Attendance"
 import Home from "../pages/Student/Home"
 import Profile from "../pages/Student/Profile"
-import Timesheet from "../pages/Student/TimeSheet"
-import Weekly from "../pages/Student/WeeklyReport"
-import ViewWeeklyReport from "../components/Weekly-Report/WeeklyReport"
 import Records from "../pages/Student/Records"
-import Info from "../components/Student-profile/Information"
-import Requirements from "../components/Student-profile/Requirements"
-import Security from "../components/Student-profile/Security"
 
 import Announcement from "../pages/Student/Announcement"
 
@@ -47,6 +40,9 @@ import SuperAdmin_Coordinator_list from "../pages/SuperAdmin/Coordinator"
 import SuperAdmin_Teacher_list from "../pages/SuperAdmin/Teacher"
 import SuperAdmin_Company from "../pages/SuperAdmin/Companies"
 import SuperAdmin_DirectorInfo from "../pages/SuperAdmin/Director"
+import SuperAdmin_MyProfile from "../pages/SuperAdmin/MyProfile"
+import SuperAdmin_Settings from "../pages/SuperAdmin/Settings"
+
 
 // Trainer pages
 import TrainerDashboard from "../pages/Trainer/Dashboard"
@@ -55,7 +51,6 @@ import Trainer_StudentTimesheets from "../pages/Trainer/Timesheet"
 import Trainer_studentDailylog from "../pages/Trainer/DailyLogs"
 import Trainer_StudentTask from "../pages/Trainer/StudentTask"
 import Trainer_StudentAttendanceRequest from "../pages/Trainer/AttendanceRequest"
-import Trainer_StudentLeave from "../pages/Trainer/LeaveRequest"
 import TrainerMessage from "../pages/Trainer/Message"
 import TrainerAnnouncement from "../pages/Trainer/Announcement"
 import TrainerMyProfile from "../pages/Trainer/MyProfile"
@@ -71,7 +66,6 @@ import Teacher_Student_list from "../pages/Teacher/Student_list"
 import Teacher_StudentTimesheets from "../pages/Teacher/Timesheet"
 import Teacher_studentDailylog from "../pages/Teacher/DailyLogs"
 import Teacher_StudentTask from "../pages/Teacher/StudentTask"
-import Teacher_StudentLeave from "../pages/Teacher/LeaveRequest"
 import TeacherMessage from "../pages/Teacher/Message"
 import TeacherAnnouncement from "../pages/Teacher/Announcement"
 import TeacherNyProfile from "../pages/Teacher/MyProfile"
@@ -85,7 +79,6 @@ import CoordinatorViewCompany from "../pages/Coordinator/ViewCompany"
 import Coordinator_Trainer_list from "../pages/Coordinator/Trainer_list"
 import Coordinator_Student_list from "../pages/Coordinator/Student_list"
 import Coordinator_Teacher_list from "../pages/Coordinator/Teacher_list"
-import Coordinator_StudentLeave from "../pages/Coordinator/LeaveRequest"
 import CoordinatorMessage from "../pages/Coordinator/Message"
 import CoordinatorAnnouncement from "../pages/Coordinator/Announcement"
 import CoordinatorMyProfile from "../pages/Coordinator/MyProfile"
@@ -102,7 +95,6 @@ import DirectorMessage from "../pages/Director/Message"
 import DirectorAnnouncement from "../pages/Director/Announcement"
 import Director_Coordinator_list from "../pages/Director/Coordinator_list"
 import Director_Teacher_list from "../pages/Director/TeacherList"
-// import Director_Teacher_list from "../pages/Director/TeacherList"
 import DirectorMyProfile from "../pages/Director/MyProfile"
 import DirectorSettings from "../pages/Director/Settings"
 import DirectorOldStudent from "../pages/Director/OldStudent"
@@ -185,6 +177,14 @@ const PrivateRoutes = () => {
       {
         path: "/director",
         element: <SuperAdmin_DirectorInfo />,
+      },
+      {
+        path: "/MyProfile",
+        element: <SuperAdmin_MyProfile />,
+      },
+      {
+        path: "/Settings",
+        element: <SuperAdmin_Settings />,
       },
     ],
 
@@ -296,10 +296,6 @@ const PrivateRoutes = () => {
         element: <ViewUploadTask />,
       },
       {
-        path: "/leave-request",
-        element: <Coordinator_StudentLeave />,
-      },
-      {
         path: "/message",
         element: <CoordinatorMessage />,
       },
@@ -371,10 +367,6 @@ const PrivateRoutes = () => {
         element: <Teacher_studentDailylog />,
       },
       {
-        path: "/leave-request",
-        element: <Teacher_StudentLeave />,
-      },
-      {
         path: "/message",
         element: <TeacherMessage />,
       },
@@ -442,10 +434,6 @@ const PrivateRoutes = () => {
         element: <ViewAttendanceRequest />,
       },
       {
-        path: "/leave-request",
-        element: <Trainer_StudentLeave />,
-      },
-      {
         path: "/message",
         element: <TrainerMessage />,
       },
@@ -476,11 +464,6 @@ const PrivateRoutes = () => {
       {
         path: "/",
         element: <Home />,
-      },
-
-      {
-        path: "/weeklyreport",
-        element: <ViewWeeklyReport />,
       },
       {
         path: "/Attendance",

@@ -8,7 +8,7 @@ import { getTimesheet } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 
-function Attendance_request() {
+const Attendance_request = () => {
   const { data } = useQuery({
     queryKey: ["getStudentDailyLog"],
     queryFn: getTimesheet,
@@ -50,12 +50,14 @@ function Attendance_request() {
                       {format(new Date(item.date), "MMM dd")}
                     </td>
                     <td className="text-xs tracking-wide pl-2">
-                    {item.timeIn != '0:00' ? format(new Date(item.timeIn), "h:mm a") : '0'}
-
+                      {item.timeIn != "0:00"
+                        ? format(new Date(item.timeIn), "h:mm a")
+                        : "0"}
                     </td>
                     <td className="text-xs tracking-wide pl-2">
-                    {item.timeOut != '0:00' ? format(new Date(item.timeOut), "h:mm a") : '0'}
-
+                      {item.timeOut != "0:00"
+                        ? format(new Date(item.timeOut), "h:mm a")
+                        : "0"}
                     </td>
                     <td className="text-xs tracking-wide pl-2">
                       {item.totalHours} hrs
@@ -82,6 +84,6 @@ function Attendance_request() {
       </div>
     </div>
   );
-}
+};
 
 export default Attendance_request;

@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
-import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -8,15 +7,12 @@ import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import {useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getTeacherList } from "../../api/Api";
-import picture from '../../assets/images/emptyProfile.png'
-import {Switch ,  useDisclosure as AddTeacherDisclosure, Avatar} from "@nextui-org/react";
-import AddTeacherModal from '../../components/add-teacher/AddTeacher'
+import picture from "../../assets/images/emptyProfile.png";
+import { Switch, Avatar } from "@nextui-org/react";
 import { useReactToPrint } from "react-to-print";
 import List from "../../components/print-layout/List";
-
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -30,53 +26,61 @@ const TeacherList = () => {
     content: () => componentRef.current,
   });
 
-
-  const  {
+  const {
     data: teacherList,
     isLoading,
-    isError
+    isError,
   } = useQuery({
     queryKey: ["getTeacherList"],
-    queryFn: getTeacherList
+    queryFn: getTeacherList,
   });
 
-  const data = teacherList 
-  ? teacherList.map(({
-    id,
-    firstname,
-    middlename,
-    lastname,
-    email,
-    contact,
-    campus,
-    college,
-    program,
-    major,
-    accountStatus,
-    student,
-    profile_url
-  })=> ({
-    id,
-    name: `${firstname} ${middlename ? middlename[0].toUpperCase() : ''} ${lastname}`,
-    email,
-    contact,
-    campus,
-    college,
-    program,
-    major,
-    accountStatus,
-    totalStudent: student.filter((item)=>item.deletedStatus ===0).length,
-    url: profile_url
-  })).filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
-  : []
+  const data = teacherList
+    ? teacherList
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            accountStatus,
+            student,
+            profile_url,
+          }) => ({
+            id,
+            name: `${firstname} ${
+              middlename ? middlename[0].toUpperCase() : ""
+            } ${lastname}`,
+            email,
+            contact,
+            campus,
+            college,
+            program,
+            major,
+            accountStatus,
+            totalStudent: student.filter((item) => item.deletedStatus === 0)
+              .length,
+            url: profile_url,
+          })
+        )
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+    : [];
 
-
-
-  if(isError){
-    return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
+  if (isError) {
+    return (
+      <h1 className="text-center my-10">
+        Server Failed. Please Try Again Later
+      </h1>
+    );
   }
-
-
 
   const columns = [
     columnHelper.accessor("id", {
@@ -195,7 +199,6 @@ const TeacherList = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
-
   const defaultData = [...data];
   while (defaultData.length < 15) {
     defaultData.push({ name: "", email: "", totalStudent: "" });
@@ -204,29 +207,35 @@ const TeacherList = () => {
   const ListTable = () => {
     return (
       <table className="border w-full mt-2">
-              <thead>
-                <tr className="h-11">
-                  <th className="w-[10%] border font-semibold text-[13px]">No.</th>
-                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Name</th>
-                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Email</th>
-                  <th className="w-[20%] border font-semibold text-[13px]">Total Students</th>
-                </tr>
-              </thead>
-              <tbody>
-                {defaultData.map((item, index) => (
-                  <tr key={index} className="h-11">
-                    <td className="text-center border text-[13px]">{index + 1}</td>
-                    <td className=" border pl-4 text-[13px]">{item.name}</td>
-                    <td className=" border pl-4 text-[13px]">{item.email}</td>
-                    <td className="text-center border text-[13px]">{item.totalStudent}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-    )
-  }
-
-
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[20%] border font-semibold text-[13px]">
+              Total Students
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px]">
+                {item.totalStudent}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <div>
@@ -256,8 +265,11 @@ const TeacherList = () => {
               />
             )}
           </div>
-        
-          <button  onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
             <BsPrinter size={17} />
             <span className="font-semibold tracking-wider">Print</span>
           </button>
@@ -265,13 +277,12 @@ const TeacherList = () => {
       </div>
 
       <TableFormat data={data} isLoading={isLoading} columns={columns} />
-    
+
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <List title={`Teacher List`} ListTable={ListTable} />
         </div>
       </div>
-
     </div>
   );
 };

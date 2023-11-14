@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import DailyLogItem from "../../components/DailyLogs/DailyLogsItems";
-import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch } from "react-icons/bi";
-import { BsDot } from "react-icons/bs";
-import { HiOutlineDownload } from "react-icons/hi";
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { getStudentList, getTrainer } from "../../api/Api";
@@ -30,7 +27,7 @@ const DailyLogs = () => {
     ? student
         .filter((item) => item.trainer_id === trainer?.id)
         .filter((item) => item.deletedStatus === 0)
-        .map(({ id, firstname, lastname, timesheet ,profile_url}) => ({
+        .map(({ id, firstname, lastname, timesheet, profile_url }) => ({
           id,
           name: `${firstname}  ${lastname}`,
           timeIn: timesheet?.find(
@@ -39,12 +36,11 @@ const DailyLogs = () => {
           timeOut: timesheet?.find(
             (item) => item.date === format(currentDate, "yyyy-MM-dd")
           )?.timeOut,
-          totalHours: timesheet
-            ?.filter((item) => item.logStatus === 1),
-            profile_url
+          totalHours: timesheet?.filter((item) => item.logStatus === 1),
+          profile_url,
         }))
         .filter((item) => item.totalHours > 0 || item.timeIn !== "0:00")
-        .map(({ id, name, timeIn, timeOut, totalHours, profile_url}) => ({
+        .map(({ id, name, timeIn, timeOut, totalHours, profile_url }) => ({
           id,
           name,
           timeIn:
@@ -54,7 +50,10 @@ const DailyLogs = () => {
           totalHours: totalHours > 0 ? `${totalHours} hrs` : "--",
           date: format(currentDate, "MMMM dd yyyy"),
           url: profile_url,
-        })).filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
+        }))
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
     : [];
 
   // console.log(format(currentDate, 'yyyy-MM-dd'));
@@ -70,14 +69,14 @@ const DailyLogs = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-        <Avatar
-          src={info.row.original.url ? info.row.original.url : picture}
-          className="text-large"
-        />
-      <span className="font-semibold tracking-wider">
-        {info.row.original.name}
-      </span>
-    </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
+          <span className="font-semibold tracking-wider">
+            {info.row.original.name}
+          </span>
+        </div>
       ),
       header: "Name",
     }),

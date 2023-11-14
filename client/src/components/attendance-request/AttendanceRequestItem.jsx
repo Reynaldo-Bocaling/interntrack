@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
-import { BsDot } from "react-icons/bs";
-import Empty from '../../assets/images/emptyProfile.png'
+import Empty from "../../assets/images/emptyProfile.png";
 import { FcCalendar } from "react-icons/fc";
 import { Link } from "react-router-dom";
-import { format } from "date-fns";
 import PulseLloader from "react-spinners/PulseLoader";
 import { Avatar } from "@nextui-org/react";
 
@@ -19,7 +17,7 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
     ? data
         .filter((student) => student.timesheet.length > 0)
         .sort((a, b) => a.lastname.localeCompare(b.lastname))
-        .map(({ id, firstname, lastname, accountStatus, timesheet,url }) => ({
+        .map(({ id, firstname, lastname, accountStatus, timesheet, url }) => ({
           id,
           firstname,
           lastname,
@@ -31,10 +29,9 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
           ),
           startDate: timesheet[0].date,
           endDate: timesheet[timesheet.length - 1].date,
-          url
+          url,
         }))
     : [];
-
 
   return (
     <div>
@@ -61,7 +58,7 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
                   onClick={() => handleFunc(index)}
                 >
                   <div className="flex items-center gap-3">
-                  <Avatar
+                    <Avatar
                       src={item.url ? item.url : Empty}
                       className="text-large"
                     />
@@ -86,9 +83,7 @@ const AttendanceRequestItem = ({ data, isLoading }) => {
                       <div className="text-base font-medium tracking-wider">
                         {item.totalDays} Days
                       </div>
-                      <p className="text-sm tracking-wider">
-                       
-                      </p>
+                      <p className="text-sm tracking-wider"></p>
                     </div>
                     <div>
                       <FiChevronDown

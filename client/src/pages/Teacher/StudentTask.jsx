@@ -7,8 +7,6 @@ import { getStudentList, getTeacher } from "../../api/Api";
 import pic from "../../assets/images/emptyProfile.png";
 import PulseLoader from "react-spinners/PulseLoader";
 
-
-
 const StudentTask = () => {
   const [StudentId, setStudentId] = useState(0);
   const [Fullscreen, setFullscreen] = useState(false);
@@ -23,40 +21,41 @@ const StudentTask = () => {
     queryFn: getTeacher,
   });
 
-
-
   const studentTaskFilter = studentTask
     ? studentTask.filter((item) => item.teacher_id == teacher_id?.id)
     : [];
 
- 
-
   const data = studentTaskFilter
-    ? studentTaskFilter.map(
-        ({
-          id,
-          firstname,
-          middlename,
-          lastname,
-          task,
-          status,
-          tasImageUrl,
-          deletedStatus,
-          profile_url
-        }) => ({
-          studentNo: id,
-          name: `${firstname} ${lastname}`,
-          status: 1,
-          totalTask: task.length,
-          image: pic,
-          Task: task,
-          lastUpload: task.flatMap(({date})=>date)[task.flatMap(({date})=>date).length - 1],
-          deletedStatus,
-          url: profile_url
-        })
-      )
-      .filter((item)=> item.deletedStatus ===0)
-      .filter((item)=> item.name.toLowerCase().includes(searchInput.toLowerCase()))
+    ? studentTaskFilter
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            task,
+            status,
+            tasImageUrl,
+            deletedStatus,
+            profile_url,
+          }) => ({
+            studentNo: id,
+            name: `${firstname} ${lastname}`,
+            status: 1,
+            totalTask: task.length,
+            image: pic,
+            Task: task,
+            lastUpload: task.flatMap(({ date }) => date)[
+              task.flatMap(({ date }) => date).length - 1
+            ],
+            deletedStatus,
+            url: profile_url,
+          })
+        )
+        .filter((item) => item.deletedStatus === 0)
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
     : [];
 
   const taskRecords = data.filter((student) => student.studentNo === StudentId);
@@ -67,11 +66,7 @@ const StudentTask = () => {
       : data.name.toLowerCase().includes(searchInput);
   });
 
-
-
-
-
-   if (isLoading || teacher_idLoading) {
+  if (isLoading || teacher_idLoading) {
     return (
       <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
         <div className="flex flex-col gap-4">
@@ -89,8 +84,6 @@ const StudentTask = () => {
       </div>
     );
   }
-
-
 
   return (
     <div className="relative">

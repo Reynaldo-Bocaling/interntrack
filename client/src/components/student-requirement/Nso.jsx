@@ -3,7 +3,7 @@ import { Drawer } from "@mantine/core";
 import { Button, Tooltip, Textarea, image } from "@nextui-org/react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
-function Nso(props) {
+const Nso = (props) => {
   const { opened, onClose, handleSubmit, data } = props;
   const [File, setFile] = useState(null);
   const [Preview, setPreview] = useState(null);
@@ -76,6 +76,6 @@ function Nso(props) {
       </Drawer>
     </div>
   );
-}
+};
 
 export default Nso;

@@ -4,35 +4,30 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AddDirectorAccount, getDirectorList } from "../../api/Api";
 import AddDirector from "../../components/addDirector/AddDirector";
 import { Button, useDisclosure } from "@nextui-org/react";
-import { logout } from "../../api/Api";
 import { useNavigate } from "react-router-dom";
-
-
-
 
 const Director = () => {
   const queryClient = useQueryClient();
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const {
     isOpen: AddIsOpen,
     onOpen: AddOnOpen,
     onClose: AddOnClose,
   } = useDisclosure();
 
-
-  const {mutate} = useMutation({
+  const { mutate } = useMutation({
     mutationFn: AddDirectorAccount,
     onSuccess: (data) => {
-      console.log({username: data.username, password: data.password});
-      queryClient.invalidateQueries({queryKey: ['directorInfo']})
+      console.log({ username: data.username, password: data.password });
+      queryClient.invalidateQueries({ queryKey: ["directorInfo"] });
     },
-    onError: ()=> {
-      alert('error');
-    }
-  })
+    onError: () => {
+      alert("error");
+    },
+  });
 
   const handleSubmit = (directorData) => {
-    mutate(directorData)
+    mutate(directorData);
   };
 
   const { data, isLoading, isError } = useQuery({
@@ -40,23 +35,13 @@ const navigate = useNavigate()
     queryFn: getDirectorList,
   });
 
-  
   if (isLoading) {
     return <span>Loading</span>;
   }
 
-
-
-
-
-
-  
-
-  
-
   return (
     <div>
-      {data ? (
+      {data.length > 0 ? (
         <div className="max-w-[900px] mx-auto py-12 flex items-center justify-center gap-7">
           <div className="bg-blue-500 w-[300px] h-[300px]  overflow-hidden rounded-full flex items-center justify-center">
             <img src={picture} alt="" />
@@ -93,9 +78,8 @@ const navigate = useNavigate()
           <Button color="primary" size="lg" onPress={AddOnOpen}>
             Add Director
           </Button>
-        
-        
-           {/* modal components */}
+
+          {/* modal components */}
           <AddDirector
             submit={handleSubmit}
             AddIsOpen={AddIsOpen}

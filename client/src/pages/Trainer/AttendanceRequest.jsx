@@ -1,46 +1,67 @@
 import React, { useState } from "react";
 import AttendanceRequestItem from "../../components/attendance-request/AttendanceRequestItem";
-import { userData } from "../../services/AttendanceRequestData";
 import { BiSearch } from "react-icons/bi";
-import { getTrainer, getStudentList } from '../../api/Api'
-import {useQuery} from '@tanstack/react-query'
+import { getTrainer, getStudentList } from "../../api/Api";
+import { useQuery } from "@tanstack/react-query";
+
 const AttendanceRequest = () => {
   const currentDate = new Date();
 
   const [searchInput, setSearchInput] = useState(null);
 
-// get trainer id
-  const {data: getTrainer_id} = useQuery({
-    queryKey: ['getTrainer_id'],
-    queryFn: getTrainer
-  })
-
-  // get student list
-  const {data:StudentItem, isLoading} = useQuery({
-    queryKey: ["getTimesheet"],
-    queryFn: getStudentList
+  // get trainer id
+  const { data: getTrainer_id } = useQuery({
+    queryKey: ["getTrainer_id"],
+    queryFn: getTrainer,
   });
 
-  const studentRequest = StudentItem && Array.isArray(StudentItem)
-  ? StudentItem
-  .filter((item)=> item.trainer_id === getTrainer_id?.id)
-  .map(({ id, firstname, lastname, accountStatus, timesheet,deletedStatus,profile_url }) => ({
-      id,
-      firstname,
-      lastname,
-      accountStatus,
-      timesheet: timesheet && timesheet.filter((item) => new Date(item.date) <= currentDate && item.totalHours > 0 && item.logStatus === 0),
-      deletedStatus,
-      url: profile_url
-    })).filter((item)=> item.deletedStatus ===0).filter((val) => {
-      if (searchInput === null) {
-        return val;
-      } else if (val.firstname.toLowerCase().includes(searchInput) || val.lastname.toLowerCase().includes(searchInput)) {
-        return val;
-      }
-    })
-  : [];
+  // get student list
+  const { data: StudentItem, isLoading } = useQuery({
+    queryKey: ["getTimesheet"],
+    queryFn: getStudentList,
+  });
 
+  const studentRequest =
+    StudentItem && Array.isArray(StudentItem)
+      ? StudentItem.filter((item) => item.trainer_id === getTrainer_id?.id)
+          .map(
+            ({
+              id,
+              firstname,
+              lastname,
+              accountStatus,
+              timesheet,
+              deletedStatus,
+              profile_url,
+            }) => ({
+              id,
+              firstname,
+              lastname,
+              accountStatus,
+              timesheet:
+                timesheet &&
+                timesheet.filter(
+                  (item) =>
+                    new Date(item.date) <= currentDate &&
+                    item.totalHours > 0 &&
+                    item.logStatus === 0
+                ),
+              deletedStatus,
+              url: profile_url,
+            })
+          )
+          .filter((item) => item.deletedStatus === 0)
+          .filter((val) => {
+            if (searchInput === null) {
+              return val;
+            } else if (
+              val.firstname.toLowerCase().includes(searchInput) ||
+              val.lastname.toLowerCase().includes(searchInput)
+            ) {
+              return val;
+            }
+          })
+      : [];
 
   return (
     <div>

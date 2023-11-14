@@ -4,38 +4,17 @@ import { Drawer } from "@mantine/core";
 import pic from "../../assets/images/dp.png";
 import { LiaSignOutAltSolid } from "react-icons/lia";
 import { RiArrowRightSLine } from "react-icons/ri";
-import { LiaTimesSolid } from "react-icons/lia";
-import { RiArrowDropDownFill } from "react-icons/ri";
-import { BsDot } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
-import { BiSearch, BiHelpCircle } from "react-icons/bi";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { getTimesheet } from "../../api/Api";
-import { format, parse } from "date-fns";
-import { AiOutlineCheck } from "react-icons/ai";
+import { BiHelpCircle } from "react-icons/bi";
+import { useMutation } from "@tanstack/react-query";
 import { TfiAnnouncement } from "react-icons/tfi";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { logout } from "../../api/Api";
 import Swal from "sweetalert2";
 
-
-function Drawer2({ opened, close }) {
-  const formattedDate = format(new Date(), "yyyy-MM-dd");
-  const navigate = useNavigate();
-  const { data } = useQuery({
-    queryKey: ["getStudentDailyLog"],
-    queryFn: getTimesheet,
-  });
-
-  const getTime = data ? data.find((item) => item.date === formattedDate) : [];
-  const timeInDB = getTime?.timeIn;
-  const timeOutDB = getTime?.timeOut;
-  const totalHoursDB = getTime?.totalHours;
-  const timeId = getTime?.id;
-
-
-   // logout
-   const { mutate } = useMutation({
+const Profile = ({ opened, close }) => {
+  // logout
+  const { mutate } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       navigate("/");
@@ -43,7 +22,6 @@ function Drawer2({ opened, close }) {
     },
     onError: () => {},
   });
-
 
   const handleLogout = () => {
     Swal.fire({
@@ -58,12 +36,7 @@ function Drawer2({ opened, close }) {
         mutate();
       }
     });
-
-    const content = Array(100)
-      .fill(0)
-      .map((_, index) => <p key={index}>Drawer with scroll</p>);
   };
-
 
   return (
     <div>
@@ -98,7 +71,9 @@ function Drawer2({ opened, close }) {
                 <div className="text-blue-500 p-1 bg-blue-100 rounded-full">
                   <TfiAnnouncement size={16} />
                 </div>
-                <NavLink to="/Announcement" className="text-sm">Announcements</NavLink>
+                <NavLink to="/Announcement" className="text-sm">
+                  Announcements
+                </NavLink>
               </div>
               <RiArrowRightSLine />
             </div>
@@ -123,7 +98,10 @@ function Drawer2({ opened, close }) {
               <RiArrowRightSLine />
             </div>
 
-            <div onClick={handleLogout} className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg mt-3 hover:text-red-500 hover:bg-red-50">
+            <div
+              onClick={handleLogout}
+              className="flex items-center justify-between cursor-pointer py-2 px-2 rounded-lg mt-3 hover:text-red-500 hover:bg-red-50"
+            >
               <div className="flex items-center gap-2">
                 <div className="text-red-500 p-1 bg-red-100 rounded-full">
                   <LiaSignOutAltSolid size={20} />
@@ -132,30 +110,10 @@ function Drawer2({ opened, close }) {
               </div>
             </div>
           </div>
-
-          {/* <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
-            {totalHoursDB > 0 ? (
-              <div className="my-10 text-xl flex items-center justify-center gap-1 text-green-500">
-                End Work <AiOutlineCheck />
-              </div>
-            ) : timeInDB !== "0:00" ? (
-              <div className="flex flex-col items-center justify-center gap-3 my-10">
-                <small className="text-gray-500 tracking-wide">
-                  Time-in for today
-                  <h1></h1>
-                </small>
-                <h1 className="text-3xl font-bold">{timeInDB}</h1>
-              </div>
-            ) : (
-              <div className="w-full text-xl text-gray-500 my-10 flex items-center justify-center gap-1">
-                Time in not yet <LiaTimesSolid className="text-red-500" />
-              </div>
-            )}
-          </div> */}
         </div>
       </Drawer>
     </div>
   );
-}
+};
 
-export default Drawer2;
+export default Profile;

@@ -1,12 +1,12 @@
 // components/Charts/ApexChart.jsx
-import React from 'react';
-import ReactApexChart from 'react-apexcharts';
+import React from "react";
+import ReactApexChart from "react-apexcharts";
 
 const ApexChart = ({ data, sizeHeight }) => {
   const options = {
     chart: {
       height: 350,
-      type: 'area',
+      type: "area",
       toolbar: {
         show: false,
       },
@@ -15,22 +15,27 @@ const ApexChart = ({ data, sizeHeight }) => {
       enabled: false,
     },
     stroke: {
-      curve: 'smooth',
+      curve: "smooth",
     },
     xaxis: {
-      type: 'category',
-      categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      type: "category",
+      categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     },
     tooltip: {
       x: {
-        format: 'dd/MM/yy HH:mm',
+        format: "dd/MM/yy HH:mm",
       },
     },
   };
 
   return (
     <div id="chart">
-      <ReactApexChart options={options} series={data} type="area" height={sizeHeight} />
+      <ReactApexChart
+        options={options}
+        series={data}
+        type="area"
+        height={sizeHeight}
+      />
     </div>
   );
 };

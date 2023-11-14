@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import picture from "../../assets/images/dp.png";
 import { BsPrinter } from "react-icons/bs";
@@ -8,12 +8,11 @@ import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import {useQuery} from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 import { getTrainer, getStudentList } from "../../api/Api";
-import {Avatar, Switch} from "@nextui-org/react";
+import { Avatar, Switch } from "@nextui-org/react";
 import { useReactToPrint } from "react-to-print";
 import List from "../../components/print-layout/List";
-
 
 const Student_list = () => {
   const [searchLength, setSearchLength] = useState(false);
@@ -27,60 +26,72 @@ const Student_list = () => {
     content: () => componentRef.current,
   });
 
-  const {data:StudentTimesheet,isLoading: studentListLoading, isError} = useQuery({
+  const {
+    data: StudentTimesheet,
+    isLoading: studentListLoading,
+    isError,
+  } = useQuery({
     queryKey: ["getStudentTimesheet"],
-    queryFn: getStudentList
+    queryFn: getStudentList,
   });
 
-  const {data: getTrainer_id} = useQuery({
-    queryKey: ['getTrainer_id'],
-    queryFn: getTrainer
-  })
+  const { data: getTrainer_id } = useQuery({
+    queryKey: ["getTrainer_id"],
+    queryFn: getTrainer,
+  });
 
   //   data
-  const data = StudentTimesheet ?  
-  StudentTimesheet
-  .filter((item)=> item.trainer_id === getTrainer_id?.id)
-  .map(({
-    id,
-    firstname,
-    middlename,
-    lastname,
-    email,
-    contact,
-    address,
-    gender,
-    campus,
-    college,
-    program,
-    major,
-    profile_url,
-    accountStatus,
-    teacher,
-    AreaOfAssignment,
-    deletedStatus,
-    timesheet
-  })=> ({
-    id,
-    middlename,
-    name: `${firstname} ${lastname}`,
-    email,
-    contact,
-    address,
-    gender,
-    campus,
-    college,
-    program,
-    major,
-    url: profile_url,
-    picture:picture,
-    company: AreaOfAssignment ? AreaOfAssignment.company.companyName: [],
-    accountStatus,
-    totalHours: timesheet?.filter((item)=> item.logStatus ===1).reduce((total, item) => total + item.totalHours, 0),
-    deletedStatus
-  })).filter((item)=>item.deletedStatus === 0)
-  .filter((item) => item.name.toLowerCase().includes(searchInput.toLowerCase()))
-  : []
+  const data = StudentTimesheet
+    ? StudentTimesheet.filter((item) => item.trainer_id === getTrainer_id?.id)
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            email,
+            contact,
+            address,
+            gender,
+            campus,
+            college,
+            program,
+            major,
+            profile_url,
+            accountStatus,
+            teacher,
+            AreaOfAssignment,
+            deletedStatus,
+            timesheet,
+          }) => ({
+            id,
+            middlename,
+            name: `${firstname} ${lastname}`,
+            email,
+            contact,
+            address,
+            gender,
+            campus,
+            college,
+            program,
+            major,
+            url: profile_url,
+            picture: picture,
+            company: AreaOfAssignment
+              ? AreaOfAssignment.company.companyName
+              : [],
+            accountStatus,
+            totalHours: timesheet
+              ?.filter((item) => item.logStatus === 1)
+              .reduce((total, item) => total + item.totalHours, 0),
+            deletedStatus,
+          })
+        )
+        .filter((item) => item.deletedStatus === 0)
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+    : [];
 
   //   columns
   const columns = [
@@ -93,14 +104,14 @@ const Student_list = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-        <Avatar
-          src={info.row.original.url ? info.row.original.url : picture}
-          className="text-large"
-        />
-      <span className="font-semibold tracking-wider">
-        {info.row.original.name}
-      </span>
-    </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
+          <span className="font-semibold tracking-wider">
+            {info.row.original.name}
+          </span>
+        </div>
       ),
       header: "Name",
     }),
@@ -111,31 +122,37 @@ const Student_list = () => {
     }),
     columnHelper.accessor("program", {
       id: "program",
-      cell: (info) =>  <span>{info.getValue()}</span>,
+      cell: (info) => <span>{info.getValue()}</span>,
       header: "Program",
     }),
     columnHelper.accessor("major", {
-        id: "major",
-        cell: (info) =>  <span>{info.getValue()}</span>,
-        header: "major",
-      }),
+      id: "major",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "major",
+    }),
     columnHelper.accessor("company", {
-        id: "company",
-        cell: (info) => <span>{info.getValue()}</span>,
-        header: "Company",
-      }),
+      id: "company",
+      cell: (info) => <span>{info.getValue()}</span>,
+      header: "Company",
+    }),
     columnHelper.accessor("totalHours", {
-        id: "totalHours",
-        cell: (info) => <span>{info.getValue()} hrs</span>,
-        header: "Total Hours",
-      }),
-  
+      id: "totalHours",
+      cell: (info) => <span>{info.getValue()} hrs</span>,
+      header: "Total Hours",
+    }),
+
     columnHelper.accessor("accountStatus", {
       id: "accountStatus",
       cell: (info) => (
         <div className="relative">
-          
-          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+          <Switch
+            isDisabled
+            className="mr-7"
+            size="sm"
+            defaultSelected={
+              info.row.original.accountStatus === 0 ? true : false
+            }
+          />
 
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
@@ -174,9 +191,6 @@ const Student_list = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
-
-
-
   const defaultData = [...data];
   while (defaultData.length < 15) {
     defaultData.push({ name: "", email: "", totalStudent: "" });
@@ -194,15 +208,11 @@ const Student_list = () => {
             <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
               Email
             </th>
-            <th className="w-[10%] border font-semibold text-[13px]">
-              Sex
-            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">Sex</th>
             <th className="w-[10%] border font-semibold text-[13px]">
               Program
             </th>
-            <th className="w-[10%] border font-semibold text-[13px]">
-              Major
-            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">Major</th>
           </tr>
         </thead>
         <tbody>
@@ -211,19 +221,21 @@ const Student_list = () => {
               <td className="text-center border text-[13px]">{index + 1}</td>
               <td className=" border pl-4 text-[13px]">{item.name}</td>
               <td className=" border pl-4 text-[13px]">{item.email}</td>
-              <td className="text-center border text-[13px] capitalize">{item.gender}</td>
-              <td className="text-center border text-[13px] uppercase">{item.program}</td>
-              <td className="text-center border text-[13px] uppercase">{item.major}</td>
+              <td className="text-center border text-[13px] capitalize">
+                {item.gender}
+              </td>
+              <td className="text-center border text-[13px] uppercase">
+                {item.program}
+              </td>
+              <td className="text-center border text-[13px] uppercase">
+                {item.major}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
     );
   };
-
-
-
-
 
   return (
     <div>
@@ -263,16 +275,18 @@ const Student_list = () => {
         </div>
       </div>
 
-      <TableFormat isError={isError} data={data} columns={columns} isLoading={studentListLoading} />
-
+      <TableFormat
+        isError={isError}
+        data={data}
+        columns={columns}
+        isLoading={studentListLoading}
+      />
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
           <List title={`Student List`} ListTable={ListTable} />
         </div>
       </div>
-
-
     </div>
   );
 };

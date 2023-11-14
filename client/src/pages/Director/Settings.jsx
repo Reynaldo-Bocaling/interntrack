@@ -10,7 +10,7 @@ import { getDirector } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
-function Settings() {
+const Settings = () => {
   const [valueEvent, setValueEvent] = useState(1);
 
   const { data } = useQuery({
@@ -106,7 +106,10 @@ function Settings() {
               )}
 
               {item.url && (
-                <Link to={item.url} className="text-blue-500 text-sm hover:underline">
+                <Link
+                  to={item.url}
+                  className="text-blue-500 text-sm hover:underline"
+                >
                   Old Student
                 </Link>
               )}
@@ -139,6 +142,6 @@ function Settings() {
       </div>
     </div>
   );
-}
+};
 
 export default Settings;

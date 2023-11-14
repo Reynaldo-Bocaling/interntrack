@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import { Student } from "../../components/dummyData/Data";
 import image from '../../assets/images/dp.png'
 import { Link, useLocation } from "react-router-dom";
 import { format } from "date-fns";

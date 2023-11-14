@@ -186,14 +186,15 @@ const StudentViewInfo = () => {
 
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
-            <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
-             {
-              studentlist?.profile_url ? (
-                <Avatar src={studentlist?.profile_url && studentlist?.profile_url} className="w-40 h-40 text-large" />
-              ) : (
-                <Avatar src={pic} className="w-40 h-40 text-large" />
-              )
-             }
+              <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
+                {studentlist?.profile_url ? (
+                  <Avatar
+                    src={studentlist?.profile_url && studentlist?.profile_url}
+                    className="w-40 h-40 text-large"
+                  />
+                ) : (
+                  <Avatar src={pic} className="w-40 h-40 text-large" />
+                )}
               </div>
 
               <div className="left p-5 pl-5 w-full py-5">
@@ -300,7 +301,7 @@ const StudentViewInfo = () => {
                   </ModalHeader>
                   <ModalBody>
                     <Input
-                    type="password"
+                      type="password"
                       label="Enter password"
                       onChange={(e) => setuserPassword(e.target.value)}
                     />

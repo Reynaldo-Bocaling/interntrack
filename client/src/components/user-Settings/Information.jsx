@@ -1,7 +1,7 @@
 import React from "react";
 import { Input } from "@nextui-org/react";
 
-function Information({ data }) {
+const Information = ({ data }) => {
 
   return (
     <div>

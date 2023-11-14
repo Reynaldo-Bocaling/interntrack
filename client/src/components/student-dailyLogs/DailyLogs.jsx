@@ -8,12 +8,10 @@ import { getTimesheet, addTimeIn, addTimeOut } from "../../api/Api";
 import {
   format,
   parse,
-  differenceInMinutes,
-  addMinutes,
   setMinutes,
   getMinutes,
   getHours,
-  setHours
+  setHours,
 } from "date-fns";
 import { AiOutlineCheck } from "react-icons/ai";
 import Swal from "sweetalert2";
@@ -24,6 +22,7 @@ const DailyLogs = () => {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
   const timeFormat = format(new Date(), "HH:mm");
   const [totalHours, setTotalHours] = useState(0);
+  const getTimeNow = new Date().getHours();
 
   // timeIn
   const { mutate: mutateTimeIn } = useMutation({
@@ -97,8 +96,6 @@ const DailyLogs = () => {
         }))
     : [];
 
-
-
   //addjust time
   const adjustTime = (time) => {
     const minutes = getMinutes(time);
@@ -121,99 +118,45 @@ const DailyLogs = () => {
     return adjustedMinutes / 60;
   };
 
+  // timeIn Function
+  const handleTimeIn = (e) => {
+    e.preventDefault();
+    const currentTime = new Date();
+    const adjustedTime = adjustTime(currentTime);
 
-// timeIn Function
-const handleTimeIn = (e) => {
-  e.preventDefault();
-  const currentTime = new Date();
-  const adjustedTime = adjustTime(currentTime);
+    mutateTimeIn({
+      id: timeId,
+      timeIn: adjustedTime,
+    });
+  };
 
-  mutateTimeIn({
-    id: timeId,
-    timeIn: adjustedTime,
-  });
-};
+  // timeOut Function
+  const handleTimeOut = () => {
+    const currentTime = new Date();
+    const adjustedTime = adjustTime(currentTime);
 
-// timeOut Function
-const handleTimeOut = () => {
-  const currentTime = new Date();
-  const adjustedTime = adjustTime(currentTime);
-
-  // if (timeInDB !== "0:00") {
-  //   const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
-  //   const hoursWorked = minutesWorked / 60;
-  //   const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
-
-  //   mutateTimeOut({
-  //     id: timeId,
-  //     timeOut: adjustedTime,
-  //     totalHours: parseFloat(newTotalHours.toFixed(2)),
-  //   });
-  // }
-
-
-  //second
-
-
-  // if (timeInDB !== "0:00") {
-  //   const lunchBreakStart = setHours(setMinutes(new Date(), 0), 12); 
-
-  //   if (timeInDBFormat < lunchBreakStart) {
-  //     const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
-  //     const hoursWorked = minutesWorked / 60;
-  //     const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
-
-  //     const lunchBreakHours = 1.0;
-  //     const adjustedTotalHours = newTotalHours - lunchBreakHours;
-
-  //     mutateTimeOut({
-  //       id: timeId,
-  //       timeOut: adjustedTime,
-  //       totalHours: parseFloat(adjustedTotalHours.toFixed(2)),
-  //     });
-  //   } else {
-  //     const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
-  //     const hoursWorked = minutesWorked / 60;
-  //     const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
-
-  //     mutateTimeOut({
-  //       id: timeId,
-  //       timeOut: adjustedTime,
-  //       totalHours: parseFloat(newTotalHours.toFixed(2)),
-  //     });
-  //   }
-  // }
-
-
-
-  //third
+    //third
     if (timeInDB !== "0:00") {
       const lunchBreakStart = setHours(setMinutes(new Date(), 0), 12);
-  
+
       const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
       const hoursWorked = minutesWorked / 60;
       const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
-  
+
       let adjustedTotalHours = newTotalHours;
-      
+
       if (timeInDBFormat < lunchBreakStart) {
         const lunchBreakHours = 1.0;
         adjustedTotalHours -= lunchBreakHours;
       }
-  
+
       mutateTimeOut({
         id: timeId,
         timeOut: adjustedTime,
         totalHours: parseFloat(adjustedTotalHours.toFixed(2)),
       });
     }
-  
-  
-  
-};
-
-
-
+  };
 
   return (
     <div className="mt-2 border-r">
@@ -302,9 +245,11 @@ const handleTimeOut = () => {
                 <span className="text-gray-700">Total hours</span>
               </div>
               <span className="font-semibold tracking-wide">
-                {timeInDB === "0:00" || timeOutDB === "0:00"
-                  ? 0
-                  : `${totalHoursDB} hrs`}
+                {timeInDB === "0:00" || timeOutDB === "0:00" ? (
+                  <span className="text-red-500 text-xl font-semibold">--</span>
+                ) : (
+                  `${totalHoursDB} hrs`
+                )}
               </span>
             </div>
           </div>
@@ -319,7 +264,9 @@ const handleTimeOut = () => {
               color="primary"
               size="lg"
               className="w-[150px] font-medium tracking-wide"
-              isDisabled={timeInDB !== "0:00" && timeOutDB !== "0:00"}
+              isDisabled={
+                (timeInDB !== "0:00" && timeOutDB !== "0:00") || getTimeNow < 8
+              }
             >
               Time in{" "}
             </Button>

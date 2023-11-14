@@ -1,19 +1,15 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import TableFormat from "../ReusableTableFormat/TableFormat";
-import {BiDotsVerticalRounded } from "react-icons/bi";
+import { BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import {Avatar, Switch} from "@nextui-org/react";
-import picture from '../../assets/images/emptyProfile.png'
+import { Switch, Avatar } from "@nextui-org/react";
+import picture from "../../assets/images/emptyProfile.png";
 
-
-const Student_list = ({data, isLoading, isError}) => {
+const Student_list = ({ data, isLoading, isError }) => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
-  
 
   //   columns
   const columns = [
@@ -26,14 +22,14 @@ const Student_list = ({data, isLoading, isError}) => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-        <Avatar
-          src={info.row.original.url ? info.row.original.url : picture}
-          className="text-large"
-        />
-      <span className="font-semibold tracking-wider">
-        {info.row.original.name}
-      </span>
-    </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
+          <span className="font-semibold tracking-wider">
+            {info.row.original.name}
+          </span>
+        </div>
       ),
       header: "Name",
     }),
@@ -44,41 +40,53 @@ const Student_list = ({data, isLoading, isError}) => {
     }),
     columnHelper.accessor("program", {
       id: "program",
-      cell: (info) => <span className={`${info.getValue() == "Not Assigned" && "text-red-500"} text-xs`}>{info.getValue()}</span>,
+      cell: (info) => (
+        <span
+          className={`${
+            info.getValue() == "Not Assigned" && "text-red-500"
+          } text-xs`}
+        >
+          {info.getValue()}
+        </span>
+      ),
       header: "Program",
     }),
     columnHelper.accessor("major", {
-        id: "major",
-        cell: (info) => <span className={`${info.getValue() == "Not Assigned" && "text-red-500"} text-xs`}>{info.getValue()}</span>,
-        header: "major",
-      }),
+      id: "major",
+      cell: (info) => (
+        <span
+          className={`${
+            info.getValue() == "Not Assigned" && "text-red-500"
+          } text-xs`}
+        >
+          {info.getValue()}
+        </span>
+      ),
+      header: "major",
+    }),
     columnHelper.accessor("company", {
-        id: "company",
-        cell: (info) => 
-        <span className={`${info.row.original.studentTrainerStatus === "Unassigned" && 'text-red-500'}`}>
-          {
-            info.row.original.studentAreaOfAssignment === "Assigned" ?  info.row.original.company : 'Not assigned'
-          }
-        </span>,
-        header: "Company",
-      }),
+      id: "company",
+      cell: (info) => <div className="text-center">{info.getValue()}</div>,
+      header: "Company",
+    }),
     columnHelper.accessor("trainer", {
-        id: "trainer",
-        cell: (info) => 
-        <span className={`${info.row.original.studentTrainerStatus === "Unassigned" && 'text-red-500'}`}>
-          {
-            info.row.original.studentTrainerStatus === "Assigned" ?  info.row.original.trainer : 'Not assigned'
-          }
-        </span>,
-        header: "Trainer",
-      }),
-  
+      id: "trainer",
+      cell: (info) => <div className="text-center">{info.getValue()}</div>,
+      header: "Trainer",
+    }),
+
     columnHelper.accessor("accountStatus", {
       id: "accountStatus",
       cell: (info) => (
         <div className="relative">
-          
-          <Switch  isDisabled className="mr-7" size="sm" defaultSelected={info.row.original.accountStatus === 0 ? true : false} />
+          <Switch
+            isDisabled
+            className="mr-7"
+            size="sm"
+            defaultSelected={
+              info.row.original.accountStatus === 0 ? true : false
+            }
+          />
 
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
@@ -99,12 +107,6 @@ const Student_list = ({data, isLoading, isError}) => {
                 <CgProfile size={17} />
                 Profile
               </NavLink>
-              {/* <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink> */}
             </div>
           )}
         </div>
@@ -119,14 +121,13 @@ const Student_list = ({data, isLoading, isError}) => {
 
   return (
     <div className="mt-3">
-       {isError ? (
+      {isError ? (
         <h1 className="my-10 text-center py-5 border">
           Server Failed. Please try again later
         </h1>
-       ): (
-        <TableFormat data={data} isLoading={isLoading}  columns={columns}  />
-       )
-       }
+      ) : (
+        <TableFormat data={data} isLoading={isLoading} columns={columns} />
+      )}
     </div>
   );
 };

@@ -16,7 +16,8 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
         trainer: true,
         teacher: true,
         director: true,
-        coordinator: true
+        coordinator: true,
+        superadmin:true
       }
     });
 

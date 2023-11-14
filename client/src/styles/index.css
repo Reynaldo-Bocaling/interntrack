@@ -327,3 +327,65 @@ font-family: 'Patua One', serif;
     background: radial-gradient(ellipse at center, hsla(202, 91%, 71%, 0.5), 
     transparent 64%);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* login responsive */
+
+
+
+/* Mobile Devices */
+@media only screen and (max-width: 767px) {
+  .loginContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 70px;
+    gap: 90px;
+    padding-bottom: 80px;
+  }
+  .rightSideImageModel{
+    top: 32%;
+   right: -38%;
+    height: 60px;
+    width: 180px;
+    font-size: .68rem;
+    padding: 7px;
+  }
+  .rightSideImageModel > img {
+    width: 30px;
+  }
+
+  .extraTool1{
+    top: 10%;
+    transform: rotate(45deg);
+  }
+  .extraTool2{
+    right: -38%;
+    height: 60px;
+    width: 180px;
+  }
+  .totalStundetBox {
+    left: -35%;
+    font-size: .8rem;
+    padding: 10px;
+  }
+}
+
+/* Tablet Devices */
+@media only screen and (min-width: 768px) and (max-width: 1023px) {
+}
+
+/* Desktop Devices */
+@media only screen and (min-width: 1024px) {
+}

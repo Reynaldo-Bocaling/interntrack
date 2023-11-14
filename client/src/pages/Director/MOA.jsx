@@ -5,8 +5,8 @@ import { Document, Page } from "react-pdf";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 
-function LeaveRequest() {
-  const [searchInput, setSearchInput] = useState('');
+const LeaveRequest = () => {
+  const [searchInput, setSearchInput] = useState("");
   const [viewMoa, setViewMoa] = useState(false);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -21,8 +21,9 @@ function LeaveRequest() {
     setViewMoa(true);
   };
 
-
-  const searchFilter = data?.filter((item)=>item.companyName.toLowerCase().includes(searchInput.toLowerCase()))
+  const searchFilter = data?.filter((item) =>
+    item.companyName.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   return (
     <div>
@@ -37,7 +38,7 @@ function LeaveRequest() {
             type="text"
             placeholder="Search.."
             className="outline-none text-sm"
-            onChange={(e)=>setSearchInput(e.target.value)}
+            onChange={(e) => setSearchInput(e.target.value)}
           />
         </div>
       </div>
@@ -100,6 +101,6 @@ function LeaveRequest() {
       </div>
     </div>
   );
-}
+};
 
 export default LeaveRequest;

@@ -1,7 +1,7 @@
 import {MdOutlineDashboard} from 'react-icons/md'
 import {FaRegUser} from 'react-icons/fa'
-import {PiUsersThree, PiStudentBold} from 'react-icons/pi'
-import {AiOutlineMessage} from 'react-icons/ai'
+import {PiBuildingsBold} from 'react-icons/pi'
+import {AiOutlineMessage, AiOutlineUser} from 'react-icons/ai'
 import {MdOutlineAnnouncement} from 'react-icons/md'
 import {TbUserSearch, TbCalendarCancel} from 'react-icons/tb'
 import {LuFileSpreadsheet} from 'react-icons/lu'
@@ -71,7 +71,7 @@ import {CgFileDocument} from 'react-icons/cg'
       },
       { label: "Companies", 
       url: "/companies",  
-      icon: FiUsers,
+      icon: PiBuildingsBold,
       size: 16,
     },
       { label: "Teacher", 
@@ -117,7 +117,7 @@ import {CgFileDocument} from 'react-icons/cg'
       },
       { label: "Companies", 
         url: "/companies",  
-        icon: FiUsers,
+        icon: PiBuildingsBold,
         size: 16,
       },
       { label: "Trainer", 
@@ -168,32 +168,37 @@ import {CgFileDocument} from 'react-icons/cg'
       },
       { label: "Companies", 
         url: "/Companies",  
+        icon: PiBuildingsBold,
+        size: 16,
+      },
+
+
+      { label: "Coordinator", 
+        url: "/Coordinator-list",  
         icon: FiUsers,
         size: 16,
       },
-      { label: "Users",   
-      icon: RxCalendar, 
+      { label: "Trainer", 
+        url: "/Trainer-list",  
+        icon: FiUsers,
         size: 16,
-        subMenu: [
-          { label: "Coordinator", url: "/Coordinator-list"},
-          { label: "Trainer", url: "/Trainer-list" },
-          { label: "Students", url: "/Student-list" },
-          { label: "Teacher", url: "/Teacher-list" },
-          { label: "Director", url: "/director" },
-        ],
       },
-      { label: "Messages", 
-        url:  "/message",  
-        icon: AiOutlineMessage,
-        size: 17,
-        space: true,
-        extraText: "MESSAGES",
+      { label: "Students", 
+        url: "/Student-list",  
+        icon: FiUsers,
+        size: 16,
       },
-      { label: "Announcements", 
-        url: "/announcement",    
-        icon: CgFileDocument,
-        size: 17
-    },
+      { label: "Teacher", 
+        url: "/Teacher-list",  
+        icon: FiUsers,
+        size: 16,
+      },
+      { label: "Director", 
+        url: "/director",  
+        icon: AiOutlineUser,
+        size: 16,
+      },
+   
   
         
     ],
@@ -207,7 +212,7 @@ import {CgFileDocument} from 'react-icons/cg'
       },
       { label: "Company", 
         url: "/Companies",  
-        icon: FiUsers,
+        icon: PiBuildingsBold,
         size: 16,
       },
       { label: "Coordinator list", 

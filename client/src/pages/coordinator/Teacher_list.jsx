@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
-import { TrainerList } from "../../services/TrainerList";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -8,8 +7,6 @@ import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
-import { ImAttachment } from "react-icons/im";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCoordinator, getTeacherList, addTeacher } from "../../api/Api";
@@ -45,11 +42,7 @@ const TeacherList = () => {
 
   const queryClient = useQueryClient();
 
-  const {
-    mutate,
-    isLoading: AddTeacherLoading,
-    isError: AddTeacherError,
-  } = useMutation({
+  const { mutate, isLoading: AddTeacherLoading } = useMutation({
     mutationFn: addTeacher,
     onSuccess: (data) => {
       Swal.fire(
@@ -73,7 +66,6 @@ const TeacherList = () => {
   });
 
   //find coordinator id
-
   const { data: coordinatorId, isLoading: coordinator_idLoading } = useQuery({
     queryKey: ["getCoordinatorId"],
     queryFn: getCoordinator,
@@ -105,7 +97,7 @@ const TeacherList = () => {
             accountStatus,
             student,
             coordinator_id,
-            profile_url
+            profile_url,
           }) => ({
             id,
             name: `${firstname} ${
@@ -122,7 +114,7 @@ const TeacherList = () => {
             totalStudent: student.filter((item) => item.deletedStatus === 0)
               .length,
             coordinator_id,
-            url: profile_url
+            url: profile_url,
           })
         )
         .filter((item) => item?.coordinator_id == coordinatorId?.id)
@@ -153,14 +145,14 @@ const TeacherList = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-        <Avatar
-          src={info.row.original.url ? info.row.original.url : picture}
-          className="text-large"
-        />
-        <span className="font-semibold tracking-wider">
-          {info.row.original.name}
-        </span>
-      </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
+          <span className="font-semibold tracking-wider">
+            {info.row.original.name}
+          </span>
+        </div>
       ),
       header: "Name",
     }),
@@ -259,7 +251,6 @@ const TeacherList = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
-
   const defaultData = [...data];
   while (defaultData.length < 15) {
     defaultData.push({ name: "", email: "", totalStudent: "" });
@@ -268,28 +259,35 @@ const TeacherList = () => {
   const ListTable = () => {
     return (
       <table className="border w-full mt-2">
-              <thead>
-                <tr className="h-11">
-                  <th className="w-[10%] border font-semibold text-[13px]">No.</th>
-                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Name</th>
-                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Email</th>
-                  <th className="w-[20%] border font-semibold text-[13px]">Total Students</th>
-                </tr>
-              </thead>
-              <tbody>
-                {defaultData.map((item, index) => (
-                  <tr key={index} className="h-11">
-                    <td className="text-center border text-[13px]">{index + 1}</td>
-                    <td className=" border pl-4 text-[13px]">{item.name}</td>
-                    <td className=" border pl-4 text-[13px]">{item.email}</td>
-                    <td className="text-center border text-[13px]">{item.totalStudent}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-    )
-  }
-
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[20%] border font-semibold text-[13px]">
+              Total Students
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px]">
+                {item.totalStudent}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <div>
@@ -349,7 +347,7 @@ const TeacherList = () => {
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>
-          <List  title={`Teacher's List`} ListTable={ListTable} />
+          <List title={`Teacher's List`} ListTable={ListTable} />
         </div>
       </div>
     </div>

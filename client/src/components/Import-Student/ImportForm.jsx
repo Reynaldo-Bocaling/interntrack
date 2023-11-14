@@ -7,7 +7,6 @@ import excel4 from "../../assets/icons/excelImg6.png";
 import logo from "../../assets/icons/logo.png";
 import { AiOutlineCloudDownload } from "react-icons/ai";
 import { FiCheck } from "react-icons/fi";
-import { PiWarningOctagonBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import WarningIcon from "../../assets/images/warning.png";
 
@@ -89,7 +88,7 @@ const ImportStudentModalUI = (props) => {
                         Click to upload
                       </small>
                     ) : (
-                      error 
+                      error
                     )}
                   </span>
                   <button

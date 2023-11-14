@@ -1,6 +1,6 @@
 import React from "react";
 
-function ViewAttendanceRequest({data}) {
+const  ViewAttendanceRequest = ({data}) => {
 
   const studentList = data.areaOfAssignment
   ?  data.areaOfAssignment.flatMap(({student})=> student

@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
@@ -10,7 +10,6 @@ import AssignedStudent from "../../components/StudentList-Filter/Assigned";
 import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
 import { useReactToPrint } from "react-to-print";
 import List from "../../components/print-layout/List";
-
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -74,17 +73,16 @@ const Student_list = () => {
           deletedStatus,
         })
       )
-      .filter((item) => item.deletedStatus === 0)
-      .filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
+        .filter((item) => item.deletedStatus === 0)
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
     : [];
 
-
-    const defaultData = [...data];
+  const defaultData = [...data];
   while (defaultData.length < 15) {
     defaultData.push({ name: "", email: "", totalStudent: "" });
   }
-
-
 
   const ListTable = () => {
     return (
@@ -98,15 +96,11 @@ const Student_list = () => {
             <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
               Email
             </th>
-            <th className="w-[10%] border font-semibold text-[13px]">
-              Sex
-            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">Sex</th>
             <th className="w-[10%] border font-semibold text-[13px]">
               Program
             </th>
-            <th className="w-[10%] border font-semibold text-[13px]">
-              Major
-            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">Major</th>
           </tr>
         </thead>
         <tbody>
@@ -115,16 +109,21 @@ const Student_list = () => {
               <td className="text-center border text-[13px]">{index + 1}</td>
               <td className=" border pl-4 text-[13px]">{item.name}</td>
               <td className=" border pl-4 text-[13px]">{item.email}</td>
-              <td className="text-center border text-[13px] capitalize">{item.gender}</td>
-              <td className="text-center border text-[13px] uppercase">{item.program}</td>
-              <td className="text-center border text-[13px] uppercase">{item.major}</td>
+              <td className="text-center border text-[13px] capitalize">
+                {item.gender}
+              </td>
+              <td className="text-center border text-[13px] uppercase">
+                {item.program}
+              </td>
+              <td className="text-center border text-[13px] uppercase">
+                {item.major}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
     );
   };
-
 
   return (
     <div>
@@ -155,7 +154,10 @@ const Student_list = () => {
             )}
           </div>
 
-          <button  onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
             <BsPrinter size={17} />
             <span className="font-semibold tracking-wider">Print</span>
           </button>

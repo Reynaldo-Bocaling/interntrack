@@ -27,8 +27,7 @@ const CoordinatorInfo = () => {
   });
 
   const CoordinatorInfo =
-    coordinatorList &&
-    coordinatorList.find((item) => item.id === parseInt(id));
+    coordinatorList && coordinatorList.find((item) => item.id === parseInt(id));
 
   const info = {
     id: CoordinatorInfo ? CoordinatorInfo.id : "",
@@ -43,38 +42,39 @@ const CoordinatorInfo = () => {
     url: CoordinatorInfo ? CoordinatorInfo.profile_url : "",
   };
 
-
   const studentList = CoordinatorInfo
     ? CoordinatorInfo.teacher.flatMap(({ student }) =>
         student
-          ? student.map(
-              ({
-                id,
-                firstname,
-                lastname,
-                email,
-                contact,
-                campus,
-                college,
-                program,
-                major,
-                profile,
-                AreaOfAssignment,
-                deletedStatus
-              }) => ({
-                id,
-                name: `${firstname} ${lastname}`,
-                email,
-                contact,
-                campus,
-                college,
-                program,
-                major,
-                profile,
-                company: AreaOfAssignment?.company.companyName,
-                deletedStatus
-              })
-            ).filter((item)=> item.deletedStatus ===0)
+          ? student
+              .map(
+                ({
+                  id,
+                  firstname,
+                  lastname,
+                  email,
+                  contact,
+                  campus,
+                  college,
+                  program,
+                  major,
+                  profile,
+                  AreaOfAssignment,
+                  deletedStatus,
+                }) => ({
+                  id,
+                  name: `${firstname} ${lastname}`,
+                  email,
+                  contact,
+                  campus,
+                  college,
+                  program,
+                  major,
+                  profile,
+                  company: AreaOfAssignment?.company.companyName,
+                  deletedStatus,
+                })
+              )
+              .filter((item) => item.deletedStatus === 0)
           : []
       )
     : [];
@@ -105,22 +105,25 @@ const CoordinatorInfo = () => {
           program,
           major,
           picture: pic,
-          totalStudent: student.filter((item)=>item.deletedStatus ===0).length,
+          totalStudent: student.filter((item) => item.deletedStatus === 0)
+            .length,
         })
       )
     : [];
 
+  console.log("s", studentList);
 
-    console.log('s', studentList);
-
-    if(isError){
-      return <h1 className="text-center my-10">Server Failed. Please Try Again Later</h1>
-    }
-
+  if (isError) {
+    return (
+      <h1 className="text-center my-10">
+        Server Failed. Please Try Again Later
+      </h1>
+    );
+  }
 
   return (
     <div className="rounded-xl overflow-hidden -mt-3 -ml-2">
-     {isLoading ? (
+      {isLoading ? (
         <h1 className="text-center my-14 py-5 border rounded-lg">
           <PulseLloader
             color="#1892fc"
@@ -137,13 +140,17 @@ const CoordinatorInfo = () => {
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
               <div className=" ml-7 -mt-52 bg-white w-56 h-44 border-white right rounded-full shadow-md overflow-hidden flex items-center justify-center">
-               {
-                info?.url ? (
-                  <Avatar src={info?.url && info?.url} className="w-40 h-40 text-large" />
+                {info?.url ? (
+                  <Avatar
+                    src={info?.url && info?.url}
+                    className="w-40 h-40 text-large"
+                  />
                 ) : (
-                  <Avatar src={EmptyProfileIcon} className="w-40 h-40 text-large" />
-                )
-               }
+                  <Avatar
+                    src={EmptyProfileIcon}
+                    className="w-40 h-40 text-large"
+                  />
+                )}
               </div>
 
               <div className="left p-5 pl-5 w-full py-5">
@@ -212,7 +219,7 @@ const CoordinatorInfo = () => {
                   <TrainerIfo data={info} />
                 </Tabs.Panel>
                 <Tabs.Panel value="studentList" pt="xs">
-                  <StudentList data={studentList}/>
+                  <StudentList data={studentList} />
                 </Tabs.Panel>
                 <Tabs.Panel value="teacherList" pt="xs">
                   <TeacherList data={teacherList} />

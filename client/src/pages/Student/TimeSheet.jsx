@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Student } from "../../components/dummyData/Data";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTimesheet } from "../../api/Api";
 import { format } from "date-fns";
@@ -10,28 +9,24 @@ const TimeSheet = () => {
   const [showAllTables, setShowAllTables] = useState(false);
 
   const currentDate = new Date();
-  const { data: timesheet,isLoading:timesheetLoading } = useQuery({
+  const { data: timesheet, isLoading: timesheetLoading } = useQuery({
     queryKey: ["getStudentDailyLog"],
     queryFn: getTimesheet,
   });
 
-  const { data: getStudentInfo,isLoading:studentLoading } = useQuery({
+  const { data: getStudentInfo, isLoading: studentLoading } = useQuery({
     queryKey: ["getStudentInfo"],
     queryFn: getStudent,
   });
 
-  const { data: getProgram, isLoading:programLoading } = useQuery({
+  const { data: getProgram, isLoading: programLoading } = useQuery({
     queryKey: ["getProgram"],
     queryFn: getCampus,
   });
 
-
-  if(programLoading || studentLoading || timesheetLoading) {
-    return <center className="my-5 text-lg">Computing..</center>
+  if (programLoading || studentLoading || timesheetLoading) {
+    return <center className="my-5 text-lg">Computing..</center>;
   }
-
-
-
 
   const programList = getProgram
     ? getProgram
@@ -92,7 +87,6 @@ const TimeSheet = () => {
     (item) => item.program_description === getStudentInfo?.program
   )?.trainingHours;
   const hoursRemaining = Number(totalHours - hoursTaken);
-
 
   const piechartData = [hoursTaken, hoursRemaining];
   const colors = ["#2ECC71", "#FF5733"];

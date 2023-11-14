@@ -130,19 +130,8 @@ const CoordinatorInfo = () => {
                       {`${data && data.firstname} ${data && data.lastname}`}
                     </h1>
                     <small className="text-blue-500 font-semibold tracking-wider">
-                      Coordinator
+                      My Profile
                     </small>
-                  </div>
-
-                  <div className="flex items-center gap-5 mb-3 font-semibold">
-                    <NavLink className="flex items-center gap-1 text-blue-500 text-sm bg-blue-100 py-2 px-4 rounded-md">
-                      <BsChatDots />
-                      Send message
-                    </NavLink>
-                    <NavLink className="flex items-center gap-1 text-red-500 text-sm bg-red-100 py-2 px-4 rounded-md">
-                      <BsFillTrash3Fill />
-                      Drop
-                    </NavLink>
                   </div>
                 </div>
               </div>
@@ -191,7 +180,7 @@ const CoordinatorInfo = () => {
                       onClick={handleEditProfile}
                     >
                       Upload Profile
-                    </Button> 
+                    </Button>
                   ) : (
                     <Button
                       color="primary"

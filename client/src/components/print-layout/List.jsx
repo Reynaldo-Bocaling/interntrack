@@ -3,9 +3,7 @@ import logo from "../../assets/images/neust_logo-1.png";
 import isologo from "../../assets/images/isoLogo.png";
 import { format } from "date-fns";
 
-function List({ title, ListTable }) {
-  // Gawa tayo ng isang kopya ng data para sa default na 30 rows
-
+const List = ({ title, ListTable }) => {
   return (
     <div className="mx-auto">
       <div className=" mt-5 px-4">
@@ -60,6 +58,6 @@ function List({ title, ListTable }) {
       </div>
     </div>
   );
-}
+};
 
 export default List;

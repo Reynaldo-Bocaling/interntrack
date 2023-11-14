@@ -14,9 +14,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-
-
-function ResetData() {
+const ResetData = () => {
   const queryClient = useQueryClient();
   const [userPassword, setuserPassword] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -56,9 +54,6 @@ function ResetData() {
     },
   });
 
- 
-
-
   const handleSubmit = () => {
     Swal.fire({
       title: "Are you sure you want to reset all data?",
@@ -75,8 +70,7 @@ function ResetData() {
     });
   };
 
-  if(isLoading) return <center className="my-5 ">Computing...</center>
-
+  if (isLoading) return <center className="my-5 ">Computing...</center>;
 
   return (
     <div>
@@ -92,7 +86,7 @@ function ResetData() {
         </div>
 
         <Button
-         onClick={onOpen}
+          onClick={onOpen}
           color="danger"
           className="mt-5 font-medium tracking-wide"
         >
@@ -100,45 +94,40 @@ function ResetData() {
         </Button>
       </div>
 
-
-
       {/* drop modal */}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-            <ModalContent>
-              {(onClose) => (
-                <>
-                  <ModalHeader className="flex flex-col gap-1 text-base">
-                    Drop Student
-                  </ModalHeader>
-                  <ModalBody>
-                    <Input
-                    type="password"
-                      label="Enter password"
-                      onChange={(e) => setuserPassword(e.target.value)}
-                    />
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="danger" variant="light" onPress={onClose}>
-                      Close
-                    </Button>
-                    <Button
-                      color="primary"
-                      onClick={handleSubmit}
-                      className="font-medium"
-                      isDisabled={!userPassword}
-                    >
-                      Reset
-                    </Button>
-                  </ModalFooter>
-                </>
-              )}
-            </ModalContent>
-          </Modal>
-
-
-
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-base">
+                Drop Student
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  type="password"
+                  label="Enter password"
+                  onChange={(e) => setuserPassword(e.target.value)}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Close
+                </Button>
+                <Button
+                  color="primary"
+                  onClick={handleSubmit}
+                  className="font-medium"
+                  isDisabled={!userPassword}
+                >
+                  Reset
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
-}
+};
 
 export default ResetData;

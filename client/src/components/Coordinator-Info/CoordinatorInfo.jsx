@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { Input, Button } from "@nextui-org/react";
-import CoordinatorInfo from ".";
-const StudentIfo = ({ data }) => {
-  const defaultData = data || {};
 
+const StudentIfo = ({ data }) => {
   const [coordinatorInfo, setCoordinatorIndo] = useState(data);
   const [Editable, setEditable] = useState(false);
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,9 +18,8 @@ const StudentIfo = ({ data }) => {
 
   const handleEditable = (e) => {
     e.preventDefault();
-    setEditable(!Editable)
-  }
-
+    setEditable(!Editable);
+  };
 
   return (
     <div className="bg-slate-50">
@@ -48,7 +44,7 @@ const StudentIfo = ({ data }) => {
               </div>
               <div className=" w-full grid gap-7">
                 <div className="mt-5 flex items-center gap-10 max-w-full">
-                <Input
+                  <Input
                     type="text"
                     value={coordinatorInfo.firstname || ""}
                     name="firstname"
@@ -78,7 +74,7 @@ const StudentIfo = ({ data }) => {
                 </div>
 
                 <div className="flex items-center gap-4">
-                <Input
+                  <Input
                     type="text"
                     value={coordinatorInfo.email || ""}
                     name="email"
@@ -133,11 +129,8 @@ const StudentIfo = ({ data }) => {
                       label="Contact"
                       isDisabled={!Editable}
                     />
-
                   </div>
                 </div>
-
-
               </div>
             </div>
           </div>

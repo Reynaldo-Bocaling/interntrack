@@ -95,6 +95,8 @@ const {data: getUserData} = useQuery({
       setDataValue(data?.teacher)
     }else if(data?.role === 'Trainer'){
       setDataValue(data?.trainer)
+    }else if(data?.role === 'SuperAdmin'){
+      setDataValue(data?.superadmin)
     }
   }, [data])
 

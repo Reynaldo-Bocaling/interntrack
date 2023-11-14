@@ -17,7 +17,6 @@ const CompanyInfo = ({ data }) => {
 
   const [file, setFile] = useState("");
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -28,19 +27,12 @@ const CompanyInfo = ({ data }) => {
     setCompanyInfo(data);
   }, [data]);
 
-
   const handleEditable = (e) => {
     e.preventDefault();
-    setEditable(!Editable)
-  }
+    setEditable(!Editable);
+  };
 
-  
-
-
-  const {
-    data: StudentList,
-    isLoading: studentLoading
-  } = useQuery({
+  const { data: StudentList, isLoading: studentLoading } = useQuery({
     queryKey: ["getStudentList33"],
     queryFn: getStudentList,
   });
@@ -50,33 +42,36 @@ const CompanyInfo = ({ data }) => {
     queryFn: getCampus,
   });
 
-
   const programList = getProgram
-  ? getProgram.flatMap(({ college }) =>
-      college?.flatMap(({ program }) => program)
-    ).map(({trainingHours,program_description}) => ({trainingHours,program_description}) )
-  : [];
-
+    ? getProgram
+        .flatMap(({ college }) => college?.flatMap(({ program }) => program))
+        .map(({ trainingHours, program_description }) => ({
+          trainingHours,
+          program_description,
+        }))
+    : [];
 
   const totalAllHoursStudent = StudentList
-  ? StudentList.filter((item) => item.deletedStatus === 0 )
-  .map(({ program}) =>  programList.find((item)=> item.program_description === program)?.trainingHours)
-  .reduce((total, item) => total + item, 0)
-:[]
+    ? StudentList.filter((item) => item.deletedStatus === 0)
+        .map(
+          ({ program }) =>
+            programList.find((item) => item.program_description === program)
+              ?.trainingHours
+        )
+        .reduce((total, item) => total + item, 0)
+    : [];
 
+  const totalHoursStudent = StudentList
+    ? StudentList.flatMap(({ timesheet }) => timesheet)
+        .filter((item) => item.logStatus === 1)
+        .reduce((total, item) => total + item.totalHours, 0)
+    : [];
 
-const totalHoursStudent = StudentList
-?StudentList.flatMap(({ timesheet }) => timesheet)
-.filter((item)=>item.logStatus === 1)
-.reduce((total, item) => total + item.totalHours , 0)
-:[];
+  const percentage = Math.floor(
+    (Math.round(totalHoursStudent) / totalAllHoursStudent) * 100
+  );
 
-const percentage = Math.floor(
-(Math.round(totalHoursStudent) / totalAllHoursStudent) * 100
-);
-
-
-if(studentLoading) return <center className="my-5 ">Computing...</center>
+  if (studentLoading) return <center className="my-5 ">Computing...</center>;
 
   return (
     <div>
@@ -87,9 +82,7 @@ if(studentLoading) return <center className="my-5 ">Computing...</center>
               Company Information
             </small>
             <form className=" flex items-start gap-5 p-1  w-full">
-
               <div className="relative mr-5 w-1/2 grid gap-4 bg-white p-5 py-7 rounded-lg shadow-md shadow-slate-200">
-                
                 <Input
                   type="text"
                   value={companyInfo.companyName || ""}
@@ -100,45 +93,48 @@ if(studentLoading) return <center className="my-5 ">Computing...</center>
                   isDisabled={!Editable}
                 />
 
-                <Input 
-                type="text" 
-                value={companyInfo.address || ''} 
-                variant={"underlined"}
-                 label="Address" 
-                 isDisabled={!Editable}
-                 />
+                <Input
+                  type="text"
+                  value={companyInfo.address || ""}
+                  variant={"underlined"}
+                  label="Address"
+                  isDisabled={!Editable}
+                />
 
-                <Input 
-                type="text" 
-                value={companyInfo.email || ''} 
-                variant={"underlined"}
-                 label="Email" 
-                 isDisabled={!Editable}
-                 />
+                <Input
+                  type="text"
+                  value={companyInfo.email || ""}
+                  variant={"underlined"}
+                  label="Email"
+                  isDisabled={!Editable}
+                />
 
                 <Input
                   type="number"
-                  value={companyInfo.contact || ''} 
+                  value={companyInfo.contact || ""}
                   variant={"underlined"}
                   label="Contact Number"
                   isDisabled={!Editable}
                 />
 
-               
+                <button
+                  className="absolute top-3 right-3 flex items-center gap-2 rounded-full py-2 px-5 border text-blue-500 text-xs font-medium overflow-hidden"
+                  onClick={handleEditable}
+                >
+                  {!Editable ? (
+                    <>
+                      Edit <BiEditAlt />{" "}
+                    </>
+                  ) : (
+                    <span className="text-red-500">Cancel</span>
+                  )}
+                </button>
 
-
-               <button className="absolute top-3 right-3 flex items-center gap-2 rounded-full py-2 px-5 border text-blue-500 text-xs font-medium overflow-hidden" onClick={handleEditable}>
-                {
-                  !Editable ? <>Edit <BiEditAlt /> </> : <span className="text-red-500">Cancel</span>
-                } 
-              </button>
-
-              {
-                Editable && <Button className="bg-blue-500 text-white font-medium tracking-wide">
-                Save Changes
-              </Button>
-              }
-
+                {Editable && (
+                  <Button className="bg-blue-500 text-white font-medium tracking-wide">
+                    Save Changes
+                  </Button>
+                )}
               </div>
 
               <div className="relative w-1/2 h-[300px] bg-green-50 shadow-2xl shadow-green-50 flex flex-col items-center justify-center gap-5">

@@ -4,7 +4,6 @@ import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
 import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
-import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import { AiOutlineUserAdd } from "react-icons/ai";
@@ -41,12 +40,23 @@ const Trainer_list = () => {
   const { mutate, isLoading: AddLoading } = useMutation({
     mutationFn: AddTrainerAccount,
     onSuccess: (data) => {
-      Swal.fire("Success", "The trainer has been added to the system", "success");
+      Swal.fire(
+        "Success",
+        "The trainer has been added to the system",
+        "success"
+      );
       queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
-      console.log('trainer', {username: data.username, password: data.password});
+      console.log("trainer", {
+        username: data.username,
+        password: data.password,
+      });
     },
     onError: () => {
-      Swal.fire("Error", "There was an issue adding the trainer. \n Please check the information provided and try again.", "error");
+      Swal.fire(
+        "Error",
+        "There was an issue adding the trainer. \n Please check the information provided and try again.",
+        "error"
+      );
     },
   });
 
@@ -81,21 +91,24 @@ const Trainer_list = () => {
   const data = trainerlist
     ? trainerlist
         .map(
-          ({
-            id,
-            firstname,
-            middlename,
-            lastname,
-            email,
-            contact,
-            profile,
-            accountStatus,
-            areaofAssignment,
-            student,
-            deletedStatus,
-            profile_url
-          }) => ({
-            id,
+          (
+            {
+              id,
+              firstname,
+              middlename,
+              lastname,
+              email,
+              contact,
+              profile,
+              accountStatus,
+              areaofAssignment,
+              student,
+              deletedStatus,
+              profile_url,
+            },
+            index
+          ) => ({
+            id: index + 1,
             firstname,
             name: `${firstname} ${lastname}`,
             email,
@@ -103,23 +116,20 @@ const Trainer_list = () => {
             picture: picture,
             contact,
             profile,
-            areaAssign : areaofAssignment.areaName,
+            areaAssign: areaofAssignment.areaName,
             accountStatus,
             student,
-            totalStudent: student.filter((item)=> item.deletedStatus === 0).length,
-            url: profile_url
+            totalStudent: student.filter((item) => item.deletedStatus === 0)
+              .length,
+            url: profile_url,
           })
         )
         .filter((item) => item.name.toLowerCase().includes(searchInput))
     : [];
 
-
   const handleFormSubmit = async (trainerData) => {
     mutate(trainerData);
   };
-
-
-
 
   //   columns
   const columns = [
@@ -239,7 +249,7 @@ const Trainer_list = () => {
         </h1>
 
         <div className="flex items-center gap-3">
-        <div
+          <div
             className={`${
               searchLength ? "w-[250px]" : "w-[40px]"
             } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
@@ -259,14 +269,13 @@ const Trainer_list = () => {
               />
             )}
           </div>
-            <button
-              onClick={AddOnOpen}
-              className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-            >
-              <AiOutlineUserAdd size={16} />
-              <span className="font-semibold tracking-wider">Add</span>
-            </button>
-           
+          <button
+            onClick={AddOnOpen}
+            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
+            <AiOutlineUserAdd size={16} />
+            <span className="font-semibold tracking-wider">Add</span>
+          </button>
         </div>
       </div>
 

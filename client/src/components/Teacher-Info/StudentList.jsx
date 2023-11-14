@@ -3,8 +3,7 @@ import pic from "../../assets/images/dp.png";
 import { Avatar } from "@nextui-org/react";
 import PulseLoader from "react-spinners/PulseLoader";
 
-function StudentList({ data, isLoading }) {
-
+const StudentList = ({ data, isLoading }) => {
   return (
     <div>
       <div className="text-xl text-gray-700 font-semibold tracking-wide mt-3 mb-5 ml-5">
@@ -68,6 +67,6 @@ function StudentList({ data, isLoading }) {
       )}
     </div>
   );
-}
+};
 
 export default StudentList;

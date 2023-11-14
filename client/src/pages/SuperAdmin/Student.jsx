@@ -1,159 +1,128 @@
-import React, {useState } from "react";
-import StudentItem from "../../components/ReusableTableFormat/TableFormat";
-import { userData } from "../../services/AttendanceRequestData";
-import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
-import { AiOutlineUsergroupAdd,AiOutlineUserAdd } from "react-icons/ai";
-import { FiEdit3 } from "react-icons/fi";
-import { ImAttachment } from "react-icons/im";
+import React, { useState,useRef } from "react";
+import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { createColumnHelper } from "@tanstack/react-table";
-import { NavLink } from "react-router-dom";
-import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
-import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
-const companies = [
-  {
-    id: 1,
-    name: "7-Eleven2",
-    trainers: [
-      { id: 1, name: "Alex" },
-      { id: 2, name: "Roan" }
-    ],
-    areasOfAssignment: [
-      { id: 1, name: "Cashier", slots: 5 },
-      { id: 2, name: "OAR", slots: 3 },
-    ],
-  },
-  {
-    id: 2,
-    name: "SM",
-    trainers: [
-      { id: 3, name: "Drew" },
-      { id: 4, name: "Gel" }
-    ],
-    areasOfAssignment: [
-      { id: 3, name: "Guard", slots: 5 },
-      { id: 4, name: "Office", slots: 3 },
-      { id: 5, name: "Stores", slots: 3 },
-    ],
-  },
-  // ...Iba pang mga kumpanya
-]
+import { useQuery } from "@tanstack/react-query";
+import { getStudentList } from "../../api/Api";
+import picture from "../../assets/images/dp.png";
+import { Tabs } from "@mantine/core";
+import LatestStudent from "../../components/StudentList-Filter/Latest";
+import OldStudent from "../../components/StudentList-Filter/Old";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
+
+
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");
-  const columnHelper = createColumnHelper();
-  const [show, setShow] = useState(null);
-  const [AddStudentModalIsOpen, setAddStudentModalIsOpen] = useState(false);
-  const [AssignStudentModalIsOpen, setAssignStudentModalIsOpen] = useState(false);
   const [searchLength, setSearchLength] = useState(false);
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const {
+    data: StudentList,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["getStudent"],
+    queryFn: getStudentList,
+  });
+
+  const data = StudentList
+    ? StudentList.map(
+        ({
+          id,
+          firstname,
+          middlename,
+          lastname,
+          email,
+          contact,
+          address,
+          gender,
+          campus,
+          college,
+          program,
+          major,
+          profile_url,
+          accountStatus,
+          teacher,
+          trainer,
+          AreaOfAssignment,
+          deletedStatus,
+        }) => ({
+          id,
+          middlename,
+          name: `${firstname} ${lastname}`,
+          email,
+          contact,
+          address,
+          gender,
+          campus,
+          college,
+          program,
+          major,
+          url: profile_url,
+          picture: picture,
+          company: AreaOfAssignment ? AreaOfAssignment.company.companyName : [],
+          trainer: trainer ? `${trainer.firstname} ${trainer.lastname}` : "",
+          accountStatus,
+          studentTrainerStatus: trainer ? "Assigned" : "Unassigned",
+          studentAreaOfAssignment: AreaOfAssignment ? "Assigned" : "Unassigned",
+          deletedStatus,
+        })
+      )
+      .filter((item)=>item.name.toLowerCase().includes(searchInput.toLowerCase()))
+    : [];
 
 
-  
+    const defaultData = [...data];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
+  }
 
 
 
-
-  //   data
-  const data = userData
-    .map(({ id, firstname, middleName, lastname, email, picture }) => ({
-      id,
-      name: `${firstname} ${middleName[0]}. ${lastname}`,
-      gender: "Male",
-      email,
-      picture,
-      department: "CICT Building",
-      AccountStatus: 1,
-    }))
-    .filter((item) =>
-      item.name.toLocaleLowerCase().includes(searchInput.toLowerCase())
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Sex
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Program
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">
+              Major
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px] capitalize">{item.gender}</td>
+              <td className="text-center border text-[13px] uppercase">{item.program}</td>
+              <td className="text-center border text-[13px] uppercase">{item.major}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     );
-
-  //   columns
-  const columns = [
-    columnHelper.accessor("id", {
-      id: "id",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "ID",
-    }),
-    columnHelper.accessor("name", {
-      id: "name",
-      cell: (info) => (
-        <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
-          <span className="font-semibold tracking-wider">
-            {info.row.original.name}
-          </span>
-        </div>
-      ),
-      header: "Name",
-    }),
-    columnHelper.accessor("email", {
-      id: "email",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Email",
-    }),
-    columnHelper.accessor("gender", {
-      id: "gender",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Gender",
-    }),
-    columnHelper.accessor("department", {
-      id: "department",
-      cell: (info) => <span>{info.getValue()}</span>,
-      header: "Department",
-    }),
-    columnHelper.accessor("AccountStatus", {
-      id: "AccountStatus",
-      cell: (info) => (
-        <div className="relative">
-          {info.getValue() !== 0 ? (
-            <span className="text-green-500 font-medium tracking-wide bg-green-100 px-2 py-1 rounded-lg">
-              Assigned
-            </span>
-          ) : (
-            <span className="text-red-500 font-medium tracking-wide bg-red-100 px-2 py-1 rounded-lg duration-300 transition-all">
-              Unassign
-            </span>
-          )}
-          <BiDotsVerticalRounded
-            onClick={() => ShowFunction(info.row.original.id)}
-            size={20}
-            className={`${
-              show === info.row.original.id ? "text-blue-500" : "text-gray-500"
-            } absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer hover:text-gray-800`}
-          />
-          {show === info.row.original.id && (
-            <div
-              onClick={() => setShow(!show)}
-              className="absolute top-3 right-7 h-[120px] w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
-            >
-              <NavLink
-                to="/student/"
-                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
-              >
-                <CgProfile size={17} />
-                Profile
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink>
-            </div>
-          )}
-        </div>
-      ),
-      header: "AccountStatus",
-    }),
-  ];
-
-  const ShowFunction = (id) => {
-    setShow((prev) => (prev === id ? null : id));
   };
+
 
   return (
     <div>
@@ -161,56 +130,74 @@ const Student_list = () => {
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Student list
         </h1>
-        
+
         <div className="flex items-center gap-3">
-          <div 
-            className={`${searchLength? 'w-[250px]': 'w-[40px]'} h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          <div
+            className={`${
+              searchLength ? "w-[250px]" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
           >
-            <BiSearch  
-            onClick={()=> setSearchLength(!searchLength)} 
-            
-            className={`${searchLength? 'text-blue-500': 'text-gray-600'} cursor-pointer`} />
-            {
-              searchLength && (
-                <input
-                  type="text"
-                  placeholder="Search.."
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  className="outline-none text-sm"
-                />
-              )
-            }
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
+            />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
           </div>
-          <button 
-          onClick={()=> alert("Import")}
-          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <ImAttachment size={15} />
-              <span className='font-semibold tracking-wider'>Import</span>
-          </button>
-          <button 
-          onClick={()=> setAddStudentModalIsOpen(true)}
-          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <AiOutlineUserAdd size={16} />
-              <span className='font-semibold tracking-wider'>Add</span>
-          </button>
-          <button 
-          onClick={()=> setAssignStudentModalIsOpen(true)}
-          className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <AiOutlineUsergroupAdd size={17} />
-              <span className='font-semibold tracking-wider'>Assign Student</span>
-          </button>
-          <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <BsPrinter size={17} />
-              <span className='font-semibold tracking-wider'>Print</span>
+
+          <button  onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+            <BsPrinter size={17} />
+            <span className="font-semibold tracking-wider">Print</span>
           </button>
         </div>
       </div>
 
-      {/* modal asign student */}
-      <AssignStudentModal closeModal={()=> setAssignStudentModalIsOpen(false)} isOpen={AssignStudentModalIsOpen} companies={companies}  />
-      <AddStudentModal isOpen={AddStudentModalIsOpen} closeModal={()=> setAddStudentModalIsOpen(false)} />
+      <div className="flex items-center justify-between">
+        <Tabs defaultValue="first" className="w-full">
+          <Tabs.List sx={{ borderColor: "#ecf0f1" }}>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="first"
+            >
+              Latest
+            </Tabs.Tab>
+            <Tabs.Tab
+              className="text-base text-gray-500 tracking-wide"
+              value="second"
+            >
+              Old
+            </Tabs.Tab>
+            
+          </Tabs.List>
 
-      <StudentItem data={data} columns={columns} />
+          <Tabs.Panel value="first" pt="xs">
+            <LatestStudent data={data} isLoading={isLoading} isError={isError} />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="second" pt="xs">
+            <OldStudent
+              data={data}
+              isLoading={isLoading}
+              isError={isError}
+            />
+          </Tabs.Panel>
+          
+        </Tabs>
+      </div>
+
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Student List`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,8 @@ import React from 'react'
 import pic from "../../assets/images/task1.jpg";
 import { ArrowLeft } from '../ReactIcon/React-Icons';
 import { NavLink } from 'react-router-dom';
-function ViewUploadTask() {
+
+const ViewUploadTask = () => {
   return (
     <div className='mx-5'>
         <div className='text-xl font-semibold tracking-wide flex flex-col justify-center gap-5'> 

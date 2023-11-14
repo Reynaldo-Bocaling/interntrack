@@ -11,16 +11,14 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
-  Button,
   useDisclosure,
   Avatar,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
 
-function ViewAttendanceRequest() {
+
+const ViewAttendanceRequest = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [selectedItem, setSelectedItem] = useState(null);
   const [timesheetDate, setTimesheetDate] = useState(null)
   const queryClient = useQueryClient();
 

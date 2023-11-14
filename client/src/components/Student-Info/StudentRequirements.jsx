@@ -1,22 +1,10 @@
 import React from "react";
-import brgyCert from "../../assets/images/barangay-logo.png";
-import nso from "../../assets/images/nso.jpg";
-import cv from "../../assets/images/cv.jpg";
-import philhealth from "../../assets/images/phil.jpg";
-
 import { CheckIcons } from "../../components/ReactIcon/React-Icons";
 
 const StudentRequirements = ({ data }) => {
-  const Requiremens_list = [
-    { label: "CV Resume", image: cv },
-    { label: "Brgy Certificate", image: brgyCert },
-    { label: "NSO", image: nso },
-    { label: "Philhealth", image: philhealth },
-  ];
-
   return (
     <div>
-      {data.length  >0 ? (
+      {data.length > 0 ? (
         <div className="container flex items-center justify-center flex-col">
           <h1 className="text-2xl font-semibold my-3">Student Requirements</h1>
 

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Drawer } from "@mantine/core";
-import { Button, Tooltip, Textarea, image } from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 
-function Philhealth(props) {
+const Philhealth = (props) => {
   const { opened, onClose, handleSubmit, data } = props;
   const [File, setFile] = useState(null);
   const [Preview, setPreview] = useState(null);
@@ -76,6 +76,6 @@ function Philhealth(props) {
       </Drawer>
     </div>
   );
-}
+};
 
 export default Philhealth;

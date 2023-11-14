@@ -8,7 +8,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
-function Major() {
+const Major = () => {
   const queryClient = useQueryClient();
   const [selectedCampus, setSelectedCampus] = useState(null);
   const [selectedCollege, setSelectedCollege] = useState(null);
@@ -354,6 +354,6 @@ function Major() {
       </div>
     </div>
   );
-}
+};
 
 export default Major;

@@ -3,8 +3,8 @@ import TimesheetTable from "../../components/StudentTimesheets/Timesheet_table";
 import { useQuery } from "@tanstack/react-query";
 import { getTrainer, getStudentList,getCampus } from "../../api/Api";
 
-function Timesheet() {
-  const currentDate = new Date();
+const Timesheet = () => {
+
   const { data: StudentTimesheet } = useQuery({
     queryKey: ["getTimesheet"],
     queryFn: getStudentList,

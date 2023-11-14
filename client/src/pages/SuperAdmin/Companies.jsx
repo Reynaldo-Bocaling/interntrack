@@ -3,16 +3,12 @@ import { BiSearch } from "react-icons/bi";
 import { HiOutlineDotsVertical, HiOutlineEye } from "react-icons/hi";
 import { IconTrash } from "@tabler/icons-react";
 import { BsPrinter } from "react-icons/bs";
-import { useNavigate } from "react-router-dom"; 
-import sm from "../../assets/images/SM Logo.png";
-import sevenEleven from "../../assets/images/7eleven.jpg";
-import neust from "../../assets/images/neustLogo.png";
+import { useNavigate } from "react-router-dom";
 import { getCompanyList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
 
 const Companies = () => {
-  const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
   const [OpenTableMenu, setOpenTableMenu] = useState(null);
   const navigate = useNavigate();
 
@@ -148,7 +144,9 @@ const Companies = () => {
                             >
                               <button
                                 onClick={() =>
-                                  navigate(`/view-company/${item.id && item.id}`)
+                                  navigate(
+                                    `/view-company/${item.id && item.id}`
+                                  )
                                 }
                                 className="flex items-center gap-1 text-gray-700 font-medium tracking-wide hover:underline"
                               >

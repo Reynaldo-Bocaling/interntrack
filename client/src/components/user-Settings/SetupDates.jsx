@@ -5,7 +5,8 @@ import { addDateRange, getDateRange, updateDateRange } from "../../api/Api";
 import { FiEdit3 } from "react-icons/fi";
 import { MdEditOff } from "react-icons/md";
 import Swal from "sweetalert2";
-function SetupDates() {
+
+const SetupDates = () => {
   const queryClient = useQueryClient();
   const [isDisable, setIsDisable] = useState(true);
 

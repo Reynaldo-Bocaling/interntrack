@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Input, Button } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 import { changeStudentPassword } from "../../api/Api";
-function ChangePassword() {
+
+const ChangePassword = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [reEnterNewPassword, setReEnterNewPassword] = useState("");

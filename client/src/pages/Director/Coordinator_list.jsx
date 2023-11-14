@@ -1,4 +1,4 @@
-import React, { useState,useRef } from "react";
+import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -82,7 +82,7 @@ const Trainer_list = () => {
             contact,
             teacher,
             accountStatus,
-            profile_url
+            profile_url,
           }) => ({
             id,
             name: `${firstname} ${
@@ -104,7 +104,7 @@ const Trainer_list = () => {
               ? teacher.flatMap(({ student }) => student)
               : [],
             accountStatus,
-            url: profile_url
+            url: profile_url,
           })
         )
         .filter((item) =>
@@ -128,10 +128,10 @@ const Trainer_list = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-            <Avatar
-              src={info.row.original.url ? info.row.original.url : picture}
-              className="text-large"
-            />
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
           <span className="font-semibold tracking-wider">
             {info.row.original.name}
           </span>
@@ -240,11 +240,6 @@ const Trainer_list = () => {
     );
   }
 
-
-
-
-
-
   const defaultData = [...data];
   while (defaultData.length < 15) {
     defaultData.push({ name: "", email: "", totalStudent: "" });
@@ -253,29 +248,35 @@ const Trainer_list = () => {
   const ListTable = () => {
     return (
       <table className="border w-full mt-2">
-              <thead>
-                <tr className="h-11">
-                  <th className="w-[10%] border font-semibold text-[13px]">No.</th>
-                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Name</th>
-                  <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">Email</th>
-                  <th className="w-[20%] border font-semibold text-[13px]">Total Students</th>
-                </tr>
-              </thead>
-              <tbody>
-                {defaultData.map((item, index) => (
-                  <tr key={index} className="h-11">
-                    <td className="text-center border text-[13px]">{index + 1}</td>
-                    <td className=" border pl-4 text-[13px]">{item.name}</td>
-                    <td className=" border pl-4 text-[13px]">{item.email}</td>
-                    <td className="text-center border text-[13px]">{item.totalStudent}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-    )
-  }
-
-
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[20%] border font-semibold text-[13px]">
+              Total Students
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-center border text-[13px]">
+                {item.totalStudent}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
     <div>
@@ -303,7 +304,10 @@ const Trainer_list = () => {
               <span className="font-semibold tracking-wider">Add</span>
             </button>
 
-            <button onClick={handlePrint} className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
               <BsPrinter size={17} />
               <span className="font-semibold tracking-wider">Print</span>
             </button>

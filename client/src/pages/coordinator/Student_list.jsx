@@ -32,7 +32,8 @@ const Student_list = () => {
   });
 
   const students = StudentList
-    ? StudentList.teacher?.flatMap(({ student }) =>
+    ? StudentList.teacher
+        ?.flatMap(({ student }) =>
           student
             ? student
                 .map(
@@ -67,7 +68,7 @@ const Student_list = () => {
                     college,
                     program,
                     major,
-                    url:profile_url,
+                    url: profile_url,
                     picture: picture,
                     company: AreaOfAssignment
                       ? AreaOfAssignment.company.companyName
@@ -108,15 +109,11 @@ const Student_list = () => {
             <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
               Email
             </th>
-            <th className="w-[10%] border font-semibold text-[13px]">
-              Sex
-            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">Sex</th>
             <th className="w-[10%] border font-semibold text-[13px]">
               Program
             </th>
-            <th className="w-[10%] border font-semibold text-[13px]">
-              Major
-            </th>
+            <th className="w-[10%] border font-semibold text-[13px]">Major</th>
           </tr>
         </thead>
         <tbody>
@@ -125,16 +122,21 @@ const Student_list = () => {
               <td className="text-center border text-[13px]">{index + 1}</td>
               <td className=" border pl-4 text-[13px]">{item.name}</td>
               <td className=" border pl-4 text-[13px]">{item.email}</td>
-              <td className="text-center border text-[13px] capitalize">{item.gender}</td>
-              <td className="text-center border text-[13px] uppercase">{item.program}</td>
-              <td className="text-center border text-[13px] uppercase">{item.major}</td>
+              <td className="text-center border text-[13px] capitalize">
+                {item.gender}
+              </td>
+              <td className="text-center border text-[13px] uppercase">
+                {item.program}
+              </td>
+              <td className="text-center border text-[13px] uppercase">
+                {item.major}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
     );
   };
-
 
   return (
     <div>

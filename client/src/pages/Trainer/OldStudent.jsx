@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getTrainer, getStudentList } from "../../api/Api";
 import { format } from "date-fns";
 import { Avatar } from "@nextui-org/react";
-import picture from '../../assets/images/emptyProfile.png'
+import picture from "../../assets/images/emptyProfile.png";
 
 const Student_list = () => {
   const [searchLength, setSearchLength] = useState(false);
@@ -55,7 +54,7 @@ const Student_list = () => {
             deletedStatus,
             timesheet,
             createAt,
-            profile_url
+            profile_url,
           }) => ({
             id,
             middlename,
@@ -79,7 +78,7 @@ const Student_list = () => {
               .reduce((total, item) => total + item.totalHours, 0),
             deletedStatus,
             createAt,
-            url: profile_url
+            url: profile_url,
           })
         )
         .filter((item) => item.deletedStatus === 1)
@@ -99,14 +98,14 @@ const Student_list = () => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-        <Avatar
-          src={info.row.original.url ? info.row.original.url : picture}
-          className="text-large"
-        />
-      <span className="font-semibold tracking-wider">
-        {info.row.original.name}
-      </span>
-    </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
+          <span className="font-semibold tracking-wider">
+            {info.row.original.name}
+          </span>
+        </div>
       ),
       header: "Name",
     }),
@@ -140,12 +139,9 @@ const Student_list = () => {
       id: "createAt",
       cell: (info) => (
         <div className="relative">
-          
           <div className="pr-10">
-          {
-             format(new Date(info.row.original.createAt), 'yyyy')
-          }
-        </div>
+            {format(new Date(info.row.original.createAt), "yyyy")}
+          </div>
 
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
@@ -166,12 +162,7 @@ const Student_list = () => {
                 <CgProfile size={17} />
                 Profile
               </NavLink>
-              {/* <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink> */}
+             
             </div>
           )}
         </div>

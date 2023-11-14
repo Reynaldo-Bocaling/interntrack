@@ -3,7 +3,7 @@ import React from 'react'
 import pic from '../../assets/images/dp.png'
 import {Avatar} from "@nextui-org/react";
 
-function StudentList({data}) {
+const StudentList = ({data}) => {
   console.log('student',data);
 
   return (

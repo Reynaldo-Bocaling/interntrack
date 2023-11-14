@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import { BsChatDots, BsCamera, BsFillTrash3Fill } from "react-icons/bs";
-import { AiOutlineCloudUpload, AiOutlineUser } from "react-icons/ai";
+import { BsCamera } from "react-icons/bs";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 import {
   getTeacher,
   editTeacherProfile,
@@ -17,7 +16,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
   Avatar,
@@ -132,20 +130,11 @@ const CoordinatorInfo = () => {
                       {`${data && data.firstname} ${data && data.lastname}`}
                     </h1>
                     <small className="text-blue-500 font-semibold tracking-wider">
-                      Teacher
+                      My Profile
                     </small>
                   </div>
 
-                  <div className="flex items-center gap-5 mb-3 font-semibold">
-                    <NavLink className="flex items-center gap-1 text-blue-500 text-sm bg-blue-100 py-2 px-4 rounded-md">
-                      <BsChatDots />
-                      Send message
-                    </NavLink>
-                    <NavLink className="flex items-center gap-1 text-red-500 text-sm bg-red-100 py-2 px-4 rounded-md">
-                      <BsFillTrash3Fill />
-                      Drop
-                    </NavLink>
-                  </div>
+                 
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   add,
   eachDayOfInterval,
@@ -12,22 +12,22 @@ import {
   parse,
   parseISO,
   startOfToday,
-} from 'date-fns';
-import { Fragment, useState } from 'react';
+} from "date-fns";
+import { Fragment, useState } from "react";
 
 const meetings = [
   // ... (meeting data)
 ];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
+const classNames = (...classes) => {
+  return classes.filter(Boolean).join(" ");
+};
 
 export default function Calendar() {
   let today = startOfToday();
   let [selectedDay, setSelectedDay] = useState(today);
-  let [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'));
-  let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date());
+  let [currentMonth, setCurrentMonth] = useState(format(today, "MMM-yyyy"));
+  let firstDayCurrentMonth = parse(currentMonth, "MMM-yyyy", new Date());
 
   let days = eachDayOfInterval({
     start: firstDayCurrentMonth,
@@ -36,12 +36,12 @@ export default function Calendar() {
 
   function previousMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: -1 });
-    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
   function nextMonth() {
     let firstDayNextMonth = add(firstDayCurrentMonth, { months: 1 });
-    setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'));
+    setCurrentMonth(format(firstDayNextMonth, "MMM-yyyy"));
   }
 
   let selectedDayMeetings = meetings.filter((meeting) =>
@@ -52,7 +52,7 @@ export default function Calendar() {
     <div className="w-full">
       <div className="md:flex md:items-center md:justify-between">
         <h2 className="flex-auto font-semibold text-gray-900">
-          {format(firstDayCurrentMonth, 'MMMM yyyy')}
+          {format(firstDayCurrentMonth, "MMMM yyyy")}
         </h2>
         <div className="flex space-x-2">
           <button
@@ -111,31 +111,24 @@ export default function Calendar() {
             type="button"
             onClick={() => setSelectedDay(day)}
             className={classNames(
-              isEqual(day, selectedDay) && 'text-white',
-              !isEqual(day, selectedDay) &&
-                isToday(day) &&
-                'text-red-500',
+              isEqual(day, selectedDay) && "text-white",
+              !isEqual(day, selectedDay) && isToday(day) && "text-red-500",
               !isEqual(day, selectedDay) &&
                 !isToday(day) &&
                 isSameMonth(day, firstDayCurrentMonth) &&
-                'text-gray-900',
+                "text-gray-900",
               !isEqual(day, selectedDay) &&
                 !isToday(day) &&
                 !isSameMonth(day, firstDayCurrentMonth) &&
-                'text-gray-400',
-              isEqual(day, selectedDay) && isToday(day) && 'bg-red-500',
-              isEqual(day, selectedDay) &&
-                !isToday(day) &&
-                'bg-gray-900',
-              !isEqual(day, selectedDay) && 'hover:bg-gray-200',
-              (isEqual(day, selectedDay) || isToday(day)) &&
-                'font-semibold',
-              'flex items-center justify-center h-8 w-8 rounded-full'
+                "text-gray-400",
+              isEqual(day, selectedDay) && isToday(day) && "bg-red-500",
+              isEqual(day, selectedDay) && !isToday(day) && "bg-gray-900",
+              !isEqual(day, selectedDay) && "hover:bg-gray-200",
+              (isEqual(day, selectedDay) || isToday(day)) && "font-semibold",
+              "flex items-center justify-center h-8 w-8 rounded-full"
             )}
           >
-            <time dateTime={format(day, 'yyyy-MM-dd')}>
-              {format(day, 'd')}
-            </time>
+            <time dateTime={format(day, "yyyy-MM-dd")}>{format(day, "d")}</time>
           </button>
         ))}
       </div>

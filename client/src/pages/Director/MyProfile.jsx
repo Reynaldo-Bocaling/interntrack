@@ -22,6 +22,7 @@ import {
   useDisclosure,
   Avatar,
 } from "@nextui-org/react";
+
 const CoordinatorInfo = () => {
   const [Editable, setEditable] = useState(false);
   const [File, setFile] = useState(null);
@@ -73,7 +74,6 @@ const CoordinatorInfo = () => {
     { id: 2, type: "text", name: "middlename", label: "Middle Initial" },
     { id: 3, type: "text", name: "email", label: "Email" },
     { id: 4, type: "number", name: "contact", label: "Contact" },
-   
   ];
 
   const handleSubmit = (item) => {
@@ -127,19 +127,8 @@ const CoordinatorInfo = () => {
                       {`${data && data.firstname} ${data && data.lastname}`}
                     </h1>
                     <small className="text-blue-500 font-semibold tracking-wider">
-                      Director
+                      My profile
                     </small>
-                  </div>
-
-                  <div className="flex items-center gap-5 mb-3 font-semibold">
-                    <NavLink className="flex items-center gap-1 text-blue-500 text-sm bg-blue-100 py-2 px-4 rounded-md">
-                      <BsChatDots />
-                      Send message
-                    </NavLink>
-                    <NavLink className="flex items-center gap-1 text-red-500 text-sm bg-red-100 py-2 px-4 rounded-md">
-                      <BsFillTrash3Fill />
-                      Drop
-                    </NavLink>
                   </div>
                 </div>
               </div>

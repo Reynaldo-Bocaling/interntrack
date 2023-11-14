@@ -1,6 +1,6 @@
 import React from 'react'
 import StudentInfo from '../../components/Student-Info/index'
-function StudentViewInfo() {
+const StudentViewInfo = ()  =>{
 
   
   return (

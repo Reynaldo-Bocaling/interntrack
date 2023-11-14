@@ -13,7 +13,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import { Avatar } from "@nextui-org/react";
 import pic from "../../assets/images/dp.png";
 
-function Dashboard() {
+const Dashboard = () => {
   const currentDate = new Date();
   const formattedDate = format(new Date(), "yyyy-MM-dd");
 
@@ -22,23 +22,23 @@ function Dashboard() {
     queryFn: getStudentList,
   });
 
-  const { data: getTrainer_id, isLoading:trainerIdLoading } = useQuery({
+  const { data: getTrainer_id, isLoading: trainerIdLoading } = useQuery({
     queryKey: ["getTrainer_id"],
     queryFn: getTrainer,
   });
-  const { data: getProgram , isLoading: programLoading} = useQuery({
+  const { data: getProgram, isLoading: programLoading } = useQuery({
     queryKey: ["getProgram"],
     queryFn: getCampus,
   });
 
-  if(programLoading || trainerIdLoading || studentListLoading) {
-    return <center className="my-5 text-lg">Computing..</center>
+  if (programLoading || trainerIdLoading || studentListLoading) {
+    return <center className="my-5 text-lg">Computing..</center>;
   }
 
-
   const filterStudentList = studentlist
-    ? studentlist.filter((item) => item.trainer_id === getTrainer_id?.id)
-    .filter((item) => item.deletedStatus ===0)
+    ? studentlist
+        .filter((item) => item.trainer_id === getTrainer_id?.id)
+        .filter((item) => item.deletedStatus === 0)
     : [];
 
   const getTime = filterStudentList
@@ -130,7 +130,6 @@ function Dashboard() {
     (Math.round(Math.round(totalHoursStudent)) / totalAllHoursStudent) * 100
   );
 
-  console.log(totalHoursStudent);
   const studentRequest =
     filterStudentList && Array.isArray(filterStudentList)
       ? filterStudentList
@@ -409,6 +408,6 @@ function Dashboard() {
       </div>
     </div>
   );
-}
+};
 
 export default Dashboard;

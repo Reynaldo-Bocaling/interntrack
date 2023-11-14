@@ -1,7 +1,7 @@
 import React from 'react';
 import Calendar from './Calendar';
 
-function Index() {
+const Index = () => {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="max-w-[400px] w-full min-h-[200px] bg-gray-200">

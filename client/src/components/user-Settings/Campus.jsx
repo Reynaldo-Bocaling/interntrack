@@ -14,14 +14,14 @@ import Box from "@mui/material/Box";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { MdEditOff } from "react-icons/md";
 
-function Campus() {
+const Campus = () => {
   const queryClient = useQueryClient();
   const [campus, setCampus] = useState("");
   const [campusId, setCampusId] = useState(0);
 
   const [value, setValue] = useState(0);
   const [searchInput, setSearchInput] = useState("");
-  
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -29,7 +29,7 @@ function Campus() {
   const { mutate } = useMutation(addCampus, {
     onSuccess: () => {
       Swal.fire("Success", "Campus has been successfully added.", "success");
-      queryClient.invalidateQueries("getCampuses")
+      queryClient.invalidateQueries("getCampuses");
     },
     onError: () => {
       Swal.fire(
@@ -67,7 +67,7 @@ function Campus() {
   const { mutate: deleteMutate } = useMutation(deleteCampus, {
     onSuccess: () => {
       Swal.fire("Success", "Campus has been successfully deleted.", "success");
-      queryClient.invalidateQueries("getCampuses")
+      queryClient.invalidateQueries("getCampuses");
     },
     onError: () => {
       Swal.fire("Error", "Failed \n Please try again", "error");
@@ -77,11 +77,15 @@ function Campus() {
   const { mutate: updateMutate } = useMutation(updateCampus, {
     onSuccess: () => {
       Swal.fire("Success", "Campus has been successfully updated.", "success");
-      queryClient.invalidateQueries("getCampuses")
+      queryClient.invalidateQueries("getCampuses");
       setCampusId(0);
     },
     onError: () => {
-      Swal.fire("Error", "Failed to updated Campus. \n Please try again", "error");
+      Swal.fire(
+        "Error",
+        "Failed to updated Campus. \n Please try again",
+        "error"
+      );
     },
   });
 
@@ -96,15 +100,11 @@ function Campus() {
     updateMutate(upDataViewData[0]);
   };
 
-  
-
-
   const [searchValue, setSearchValue] = useState("");
 
   const filteredCampuses = updateView.filter((item) =>
     item.campus_Location.toLowerCase().includes(searchValue.toLowerCase())
   );
-
 
   return (
     <div className="max-w-[450px]">
@@ -160,15 +160,13 @@ function Campus() {
       {value === 1 && (
         <div className="w-full">
           <div className="scrollBar h-[300px] overflow-y-auto flex flex-col gap-2">
-
-          <Input
+            <Input
               type="text"
               label="Search"
               className="max-w-full"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
             />
-
 
             {filteredCampuses?.map((item, index) => (
               <div className="flex items-center gap-3" key={index}>
@@ -224,6 +222,6 @@ function Campus() {
       )}
     </div>
   );
-}
+};
 
 export default Campus;

@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
 
-function Settings() {
+const Settings = () => {
   const [valueEvent, setValueEvent] = useState(1);
 
   const { data } = useQuery({

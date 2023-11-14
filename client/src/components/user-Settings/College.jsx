@@ -13,7 +13,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
-function College() {
+const College = () => {
   const queryClient = useQueryClient();
   const [campusId, setCampusId] = useState(0);
   const [valueTab, setValueTab] = useState(0);
@@ -94,13 +94,13 @@ function College() {
 
   const [searchValue, setSearchValue] = useState("");
 
-  const filteredCollege = getCollegeList.filter((item) =>
-    item.college_description.toLowerCase().includes(searchValue.toLowerCase())
-    || item.campusName.toLowerCase().includes(searchValue.toLowerCase())
-
+  const filteredCollege = getCollegeList.filter(
+    (item) =>
+      item.college_description
+        .toLowerCase()
+        .includes(searchValue.toLowerCase()) ||
+      item.campusName.toLowerCase().includes(searchValue.toLowerCase())
   );
-
-
 
   const { mutate: deleteMutate } = useMutation(deleteCollege, {
     onSuccess: (id) => {
@@ -121,17 +121,17 @@ function College() {
       setCampusId(0);
     },
     onError: () => {
-      Swal.fire("Error", "Failed to updated College. \n Please try again", "error");
+      Swal.fire(
+        "Error",
+        "Failed to updated College. \n Please try again",
+        "error"
+      );
     },
   });
-
-
 
   const handleDelete = (id) => {
     deleteMutate(id);
   };
-
-
 
   const handleUpdate = (id, college_desc) => {
     const updatedValue = itemList[id]?.college_description;
@@ -140,7 +140,7 @@ function College() {
       updatedValue !== undefined ? updatedValue : college_desc;
     setCampusId(0);
 
-    updateMutate({id, college_description: updateCollegeDesc})
+    updateMutate({ id, college_description: updateCollegeDesc });
   };
 
   return (
@@ -215,7 +215,7 @@ function College() {
       {valueTab === 1 && (
         <div className="w-full">
           <div className="scrollBar h-[300px] overflow-y-auto flex flex-col gap-2">
-          <Input
+            <Input
               type="text"
               label="Search"
               className="max-w-full"
@@ -297,6 +297,6 @@ function College() {
       )}
     </div>
   );
-}
+};
 
 export default College;

@@ -1,14 +1,10 @@
 import React from "react";
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdMoreTime,
-} from "react-icons/md";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 import { getTimesheet } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 
-function DailyLogsHistory() {
+const DailyLogsHistory = () => {
   const { data } = useQuery({
     queryKey: ["getStudentDailyLog"],
     queryFn: getTimesheet,
@@ -88,6 +84,6 @@ function DailyLogsHistory() {
       </div>
     </div>
   );
-}
+};
 
 export default DailyLogsHistory;

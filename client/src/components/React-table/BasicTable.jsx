@@ -12,10 +12,7 @@ import {
   MdKeyboardArrowRight,
 } from "react-icons/md";
 
-
 const BasicTable = ({ data, columns }) => {
-  
-
   console.log(data);
 
   const table = useReactTable({

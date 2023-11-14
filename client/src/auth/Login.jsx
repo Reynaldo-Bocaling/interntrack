@@ -78,8 +78,8 @@ const Login = () => {
   };
 
   return (
-    <div className="w-screen h-screen bg-white overflow-hidden">
-      <div className="shadow-effect relative max-w-[1224px] mx-auto min-h-screen flex items-center">
+    <div className="shadow-effect w-screen h-screen bg-white overflow-hidden2">
+      <div className="loginContainer relative max-w-[1224px] mx-auto min-h-screen flex items-center">
         <Link
           to="/welcome-to-InternTrack"
           className="absolute top-7 left-7 z-30 flex items-center gap-2"
@@ -87,11 +87,11 @@ const Login = () => {
           <img src={Img} alt="" className="w-[35px]" />
           <span className="text-xl font-semibold">InternTrack</span>
         </Link>
-        <div className="relative w-[55%] flex items-center justify-center mr-10">
+        <div className="relative w-[55%] flex items-center justify-center mr-0 lg:mr-10">
           <img src={model} alt="" className="max-w-[380px] z-20" />
 
           {/* total box */}
-          <div className="absolute -bottom-7 left-16 max-w-[160px] w-full bg-white rounded-lg flex flex-col items-center gap-3 shadow-md py-4 px-2 z-20 shadow-slate-200 border border-slate-200">
+          <div className="totalStundetBox absolute -bottom-7 left-16 max-w-[160px] w-full bg-white rounded-lg flex flex-col items-center gap-3 shadow-md py-4 px-2 z-20 shadow-slate-200 border border-slate-200">
             <div className="shadow-lg shadow-slate-200 rounded-full p-3">
               <AiOutlineUser size={25} className="text-violet-500" />
             </div>
@@ -140,7 +140,7 @@ const Login = () => {
           />
 
           {/* top right */}
-          <div className="absolute top-32 -right-3 max-w-[300px] bg-white rounded-lg shadow-sm shadow-slate-200 border border-slate-200 pr-5 pl-2 py-3 z-20 flex items-center gap-2">
+          <div className="rightSideImageModel absolute top-32 -right-3 max-w-[300px] bg-white rounded-lg shadow-sm shadow-slate-200 border border-slate-200 pr-5 pl-2 py-3 z-20 flex items-center gap-2">
             <img src={CheckIcon} alt="" className="w-[40px]" />
             <span className="font-semibold">
               Start Your Adventure with InternTrack.
@@ -148,17 +148,19 @@ const Login = () => {
           </div>
 
           {/* bottom */}
-          <div className="absolute -bottom-7 right-16   bg-white rounded-lg shadow-lg shadow-slate-200 border border-slate-200 pr-5 pl-2 py-3 z-20 flex items-center gap-2">
+          <div className="extraTool2 absolute -bottom-7 right-16   bg-white rounded-lg shadow-lg shadow-slate-200 border border-slate-200 pr-5 pl-2 py-3 z-20 flex items-center gap-2">
             <img src={unlockIcon} alt="" className="w-[40px]" />
             <span className="font-semibold">Unlock Opportunities</span>
           </div>
 
-          <div className="absolute top-[30%] left-1/2 -translate-x-1/2 z-1 h-[300px] w-[300px] bg-blue-500 shadow-2xl shadow-blue-300 rounded-[40px] rotate-45 "></div>
-          <div className="absolute left-32 top-32 z-1 h-[40px] -rotate-45 w-[100px] bg-yellow-500  shadow-2xl shadow-yellow-300 rounded-full "></div>
+          <div className=" absolute top-[30%] left-1/2 -translate-x-1/2 z-1 h-[300px] w-[250px] md:w-[300px] bg-blue-500 shadow-2xl shadow-blue-300 rounded-[40px] rotate-45 "></div>
+         
+         
+          <div className="extraTool1 absolute left-32 top-32 z-1 h-[40px] -rotate-45 w-[100px] bg-yellow-500  shadow-2xl shadow-yellow-300 rounded-full "></div>
         </div>
 
-        <div className=" w-[45%] h-screen  flex items-center justify-center">
-          <div className="max-w-[400px] w-full flex flex-col p-5 gap-3">
+        <div className="    flex items-center justify-center">
+          <div className="  flex flex-col gap-3  px-10 w-full  md:max-w-[400px] md:p-5">
             <span className="font-semibold text-2xl tracking-tight">
               Welcome back!
             </span>

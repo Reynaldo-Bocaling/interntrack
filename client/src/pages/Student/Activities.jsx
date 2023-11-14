@@ -9,8 +9,6 @@ import { uploadTask, getTask } from "../../api/Api";
 import Swal from "sweetalert2";
 
 const groupTasksByMonth = (tasks) => {
-  
-
   const groupedTasks = {};
   tasks.forEach((task) => {
     const month = task.date.split("-")[1];
@@ -22,9 +20,6 @@ const groupTasksByMonth = (tasks) => {
   return groupedTasks;
 };
 
-
-
-
 const Activities = () => {
   const [addTask, setAddTask] = useState(false);
   const [File, setFile] = useState(null);
@@ -34,7 +29,6 @@ const Activities = () => {
     desc: "",
   });
   const queryClient = useQueryClient();
-  
 
   const handleOnchane = (e) => {
     const { name, value } = e.target;

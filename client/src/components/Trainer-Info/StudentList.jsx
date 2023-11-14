@@ -3,9 +3,7 @@ import pic from "../../assets/images/dp.png";
 import { Avatar } from "@nextui-org/react";
 import Pulseloader from "react-spinners/PulseLoader";
 
-function StudentList({ data, isLoading }) {
-  console.log("student", data);
-
+const StudentList = ({ data, isLoading }) => {
   return (
     <div>
       <div className="text-xl text-gray-700 font-semibold tracking-wide mt-3 mb-5 ml-5">
@@ -13,7 +11,7 @@ function StudentList({ data, isLoading }) {
       </div>
       {isLoading ? (
         <h1 className="text-center my-14 py-5 border rounded-lg">
-          <PulseLoader
+          <Pulseloader
             color="#1892fc"
             margin={5}
             size={13}
@@ -66,6 +64,6 @@ function StudentList({ data, isLoading }) {
       )}
     </div>
   );
-}
+};
 
 export default StudentList;

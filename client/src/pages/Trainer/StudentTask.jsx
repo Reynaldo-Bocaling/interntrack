@@ -46,29 +46,33 @@ const StudentTask = () => {
     : [];
 
   const data = studentTaskFilter
-    ? studentTaskFilter.map(
-        ({
-          id,
-          firstname,
-          middlename,
-          lastname,
-          task,
-          status,
-          tasImageUrl,
-          deletedStatus,
-          profile_url
-        }) => ({
-          studentNo: id,
-          name: `${firstname} ${lastname}`,
-          status: 1,
-          totalTask: task.length,
-          image: pic,
-          Task: task,
-          lastUpload: task.flatMap(({date})=>date)[task.flatMap(({date})=>date).length - 1],
-          deletedStatus,
-          url: profile_url
-        })
-      ).filter((item)=> item.deletedStatus ===0)
+    ? studentTaskFilter
+        .map(
+          ({
+            id,
+            firstname,
+            middlename,
+            lastname,
+            task,
+            status,
+            tasImageUrl,
+            deletedStatus,
+            profile_url,
+          }) => ({
+            studentNo: id,
+            name: `${firstname} ${lastname}`,
+            status: 1,
+            totalTask: task.length,
+            image: pic,
+            Task: task,
+            lastUpload: task.flatMap(({ date }) => date)[
+              task.flatMap(({ date }) => date).length - 1
+            ],
+            deletedStatus,
+            url: profile_url,
+          })
+        )
+        .filter((item) => item.deletedStatus === 0)
     : [];
 
   const taskRecords = data.filter((student) => student.studentNo === StudentId);
@@ -78,8 +82,6 @@ const StudentTask = () => {
       ? data
       : data.name.toLowerCase().includes(searchInput);
   });
-
-
 
   return (
     <div className="relative">

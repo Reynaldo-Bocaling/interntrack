@@ -331,6 +331,14 @@ export const getCoordinatorList = async () => {
 
 
 // info
+export const getSuperAdmin = async () => {
+  try {
+    const response = await axios.get(`${url}getSuperAdmin`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 export const getDirector = async () => {
   try {
     const response = await axios.get(`${url}getDirector`, { withCredentials: true });
@@ -477,6 +485,18 @@ export const editDirectorProfile = async (item) => {
   }
 };
 
+//edit super admin profiile 
+export const editSuperAdminProfile = async (item) => {
+  try {
+    const response = await axios.put(`${url}editSuperAdminProfile`, {item}, {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 
 // edit coordinator profile
 export const editCoordinatorProfile = async (item) => {
@@ -577,6 +597,20 @@ export const updateCoordinatorProfilePicture = async (formData) => {
 export const updateDirectorProfilePicture = async (formData) => {
   try {
     const response = await axios.put(`${url}updateDirectorProfilePicture`, formData, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const updateSuperAdminProfilePicture = async (formData) => {
+  try {
+    const response = await axios.put(`${url}updateSuperAdminProfilePicture`, formData, {
       withCredentials: true,
       headers: {
         'Content-Type': 'multipart/form-data'

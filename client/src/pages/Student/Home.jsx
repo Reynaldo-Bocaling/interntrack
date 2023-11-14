@@ -1,42 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import taskUploadModel from "../../assets/images/studentTaskModel.png";
 import { AiOutlineCheck } from "react-icons/ai";
 import { LiaTimesSolid } from "react-icons/lia";
-import { BsCalendar2CheckFill, BsCalendarMinusFill } from "react-icons/bs";
 import PieChart from "../../components/charts/PieChart";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTask, getTimesheet } from "../../api/Api";
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
+
 const Dashboard = () => {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
   const currentDate = new Date();
   // piechart info
 
-  const { data: getProgram , isLoading:programLoading} = useQuery({
+  const { data: getProgram, isLoading: programLoading } = useQuery({
     queryKey: ["getProgram2"],
     queryFn: getCampus,
   });
-  const { data: getTaskList, isLoading:taskLoading } = useQuery({
+  const { data: getTaskList, isLoading: taskLoading } = useQuery({
     queryKey: ["getTask2"],
     queryFn: getTask,
   });
-  const { data: getStudentInfo, isLoading:studentLoading } = useQuery({
+  const { data: getStudentInfo, isLoading: studentLoading } = useQuery({
     queryKey: ["getStudentInfo2"],
     queryFn: getStudent,
   });
-  const { data: getStudentTimesheet, isLoading:timesheetLoading } = useQuery({
+  const { data: getStudentTimesheet, isLoading: timesheetLoading } = useQuery({
     queryKey: ["getTimesheet2"],
     queryFn: getTimesheet,
   });
 
-
-
-  if(programLoading || taskLoading || studentLoading || timesheetLoading) {
-    return <center className="my-5 text-lg">Computing..</center>
+  if (programLoading || taskLoading || studentLoading || timesheetLoading) {
+    return <center className="my-5 text-lg">Computing..</center>;
   }
-
-
 
   const programList = getProgram
     ? getProgram
@@ -82,9 +78,9 @@ const Dashboard = () => {
   const colors = ["#2ECC71", "#FF5733"];
   const labels = ["Hours Taken", "Hours Remaining"];
 
- 
-
-  const getTime = getStudentTimesheet ? getStudentTimesheet.find((item) => item.date === formattedDate) : [];
+  const getTime = getStudentTimesheet
+    ? getStudentTimesheet.find((item) => item.date === formattedDate)
+    : [];
   const timeInDB = getTime ? getTime.timeIn : "";
   const timeOutDB = getTime?.timeOut;
   const totalHoursDB = getTime?.totalHours;
@@ -92,14 +88,14 @@ const Dashboard = () => {
   const recentLogs = getStudentTimesheet
     ?.filter((item) => new Date(item.date) <= currentDate)
     .slice(timesheetFilter.length - 5, timesheetFilter.length + 1);
-const attendanceRequest = getStudentTimesheet?.filter(
-  (item) => item.totalHours != 0 && item.logStatus == 0
-);
-const totalRequest = getStudentTimesheet?.filter(
-  (item) => item.totalHours != 0 
-);
+  const attendanceRequest = getStudentTimesheet?.filter(
+    (item) => item.totalHours != 0 && item.logStatus == 0
+  );
+  const totalRequest = getStudentTimesheet?.filter(
+    (item) => item.totalHours != 0
+  );
 
-const progressRate  = attendanceRequest.length / totalRequest.length *100;
+  const progressRate = (attendanceRequest.length / totalRequest.length) * 100;
 
   return (
     <div>
@@ -199,12 +195,12 @@ const progressRate  = attendanceRequest.length / totalRequest.length *100;
                     {" "}
                     Progress rate
                   </span>
-                  <span className="text-xs">
-                    { progressRate}%
-                  </span>
+                  <span className="text-xs">{progressRate}%</span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-gray-200">
-                  <div className={`rounded-full h-full w-[${progressRate}%]  bg-blue-500`}></div>
+                  <div
+                    className={`rounded-full h-full w-[${progressRate}%]  bg-blue-500`}
+                  ></div>
                 </div>
               </div>
             </div>

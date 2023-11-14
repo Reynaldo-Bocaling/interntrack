@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import profile from "../../assets/images/dp.png";
-import { Input, Drawer } from "@mantine/core";
 import { CgMenuMotion } from "react-icons/cg";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import ProfileInfo from "../../components/Student-profile/index";
 import Editinfo from "../../components/Student-profile/Editinfo";
 import Message from "../../components/Student-profile/Message";
-import { BsChatDots, BsCamera, BsFillTrash3Fill } from "react-icons/bs";
+import { BsCamera } from "react-icons/bs";
 import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
-import { AiOutlineCloudUpload, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 import Swal from "sweetalert2";
 
 import {
@@ -16,7 +14,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Button,
   useDisclosure,
   Avatar,

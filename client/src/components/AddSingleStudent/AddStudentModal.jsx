@@ -17,7 +17,7 @@ const AddSingStudent = ({
   AddIsOpen,
   AddOnClose,
   handleAddStudent,
-  isLoading
+  isLoading,
 }) => {
   const [formData, setFormData] = useState({
     firstname: "",
@@ -35,7 +35,8 @@ const AddSingStudent = ({
   const firstnameRegex = /^[A-Za-z\s]+$/;
   const lastnameRegex = /^[A-Za-z\s]+$/;
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-  const mobileRegex = /^(9[0-9]{1}([0-9]{2}[-\s]?[0-9]{3}[-\s]?[0-9]{4}|[0-9]{8}))$/;
+  const mobileRegex =
+    /^(9[0-9]{1}([0-9]{2}[-\s]?[0-9]{3}[-\s]?[0-9]{4}|[0-9]{8}))$/;
   const addressRegex = /^[A-Za-z\s]+$/;
   const genderRegex = /^(male|female)$/i;
   const majorRegex = /^[A-Za-z\s]+$/;
@@ -67,7 +68,9 @@ const AddSingStudent = ({
       ...prevData,
       [name]: value,
     }));
-    const error = validateField(name, value) ? null : "Please enter a valid input";
+    const error = validateField(name, value)
+      ? null
+      : "Please enter a valid input";
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: error,
@@ -130,8 +133,7 @@ const AddSingStudent = ({
                       type="text"
                       label={
                         <p>
-                          MI{" "}
-                          <span className="text-[#a8a9a9]">(Optional)</span>
+                          MI <span className="text-[#a8a9a9]">(Optional)</span>
                         </p>
                       }
                       name="middlename"

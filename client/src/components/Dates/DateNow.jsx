@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function DateNow() {
+const DateNow = () => {
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {

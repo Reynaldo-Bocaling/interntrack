@@ -1,17 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FiUsers } from "react-icons/fi";
 import { FcCalendar } from "react-icons/fc";
 import { PiBuildingsBold } from "react-icons/pi";
-import { HiOutlineBookOpen } from "react-icons/hi";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { CircularProgressbar } from "react-circular-progressbar";
-import pic from "../../assets/images/dp.png";
-import { Link } from "react-router-dom";
 import DateNow from "../../components/Dates/DateNow";
-import Avatar from "@mui/material/Avatar";
 import LineChart from "../../components/charts/LineChart";
 import coverDirector from "../../assets/images/DirectorCover.png";
-import ApexCharts from "react-apexcharts";
 import { getCampus, getCompanyList, getCoordinatorList, getDirector, getStudentList, getTeacherList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";

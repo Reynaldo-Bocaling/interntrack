@@ -3,11 +3,7 @@ import React, { useState } from "react";
 import { MultiSelect, Tabs } from "@mantine/core";
 import { FaUsersRays } from "react-icons/fa6";
 import { TfiAnnouncement } from "react-icons/tfi";
-import {
-  createAnnouncement,
-  getAnnouncement,
-  getTrainer,
-} from "../../api/Api";
+import { createAnnouncement, getAnnouncement, getTrainer } from "../../api/Api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Modal,
@@ -20,7 +16,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-function Announcement() {
+const Announcement = () => {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data: getAnnouncementList, isLoading: announcementLoading } =
@@ -152,7 +148,13 @@ function Announcement() {
                         </small>
                       </div>
                       <div className="text-sm text-[#828383] flex items-center gap-2">
-                      <Button onClick={()=> alert(item.id)} size="sm" className="bg-red-100 text-red-500 font-medium">Delete</Button>
+                        <Button
+                          onClick={() => alert(item.id)}
+                          size="sm"
+                          className="bg-red-100 text-red-500 font-medium"
+                        >
+                          Delete
+                        </Button>
                       </div>
                     </div>
                     <p className="text-sm text-[#828383] text-justify">
@@ -202,7 +204,9 @@ function Announcement() {
                             {item.createdBy}
                           </span>
                         </div>
-                        <small className="text-blue-500 font-medium pr-4">{item.createdRole}</small>
+                        <small className="text-blue-500 font-medium pr-4">
+                          {item.createdRole}
+                        </small>
                       </div>
                     </div>
                     <p className="text-sm text-[#828383] text-justify">
@@ -226,7 +230,6 @@ function Announcement() {
               <center>No Announcemnet</center>
             )}
           </div>
-          
         </Tabs.Panel>
       </Tabs>
 
@@ -292,6 +295,6 @@ function Announcement() {
       </Modal>
     </div>
   );
-}
+};
 
 export default Announcement;

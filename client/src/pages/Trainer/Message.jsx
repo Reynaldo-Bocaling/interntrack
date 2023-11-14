@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Message() {
+const Message = () => {
   return (
     <div>
       <h1>teacher message</h1>

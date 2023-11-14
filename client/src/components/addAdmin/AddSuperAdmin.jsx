@@ -1,19 +1,10 @@
 import React, { useState } from "react";
-import {
-  Input,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-} from "@nextui-org/react";
+import { Input, Button } from "@nextui-org/react";
 import { addAdminAccount } from "../../api/Api";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
-function AddAdmin({ onSubmit }) {
+function AddAdmin() {
   const [formData, setFormatData] = useState({
     firstname: "",
     middlename: "",

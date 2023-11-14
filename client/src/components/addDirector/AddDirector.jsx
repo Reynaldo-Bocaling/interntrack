@@ -10,7 +10,6 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 
-
 function AddDirector({ submit, AddIsOpen, AddOnClose }) {
   const [formData, setFormatData] = useState({
     firstname: "",
@@ -30,28 +29,18 @@ function AddDirector({ submit, AddIsOpen, AddOnClose }) {
 
   const handleSubmit = (e) => submit(formData);
 
-
-
-
-
   const handleLogout = () => {
-
-    const {
-      data, isError, isLoading
-    } = useQuery({
-      queryKey: ['logout'],
-      queryFn: logout
+    const { data, isError, isLoading } = useQuery({
+      queryKey: ["logout"],
+      queryFn: logout,
     });
 
-
-    if(data && data.Status === "success") {
-      alert('success')
-    }else{
-      alert('errror logout')
+    if (data && data.Status === "success") {
+      alert("success");
+    } else {
+      alert("errror logout");
     }
-  }
-
-
+  };
 
   return (
     <div>
@@ -101,15 +90,13 @@ function AddDirector({ submit, AddIsOpen, AddOnClose }) {
                   Close
                 </Button>
                 <Button color="primary" onClick={handleSubmit}>
-                    Submit
+                  Submit
                 </Button>
               </ModalFooter>
             </>
           )}
         </ModalContent>
       </Modal>
-
-     
     </div>
   );
 }

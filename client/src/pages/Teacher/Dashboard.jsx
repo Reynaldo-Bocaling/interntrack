@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { TbUsersGroup } from "react-icons/tb";
+import React from "react";
 import { FcCalendar } from "react-icons/fc";
 import { LiaUsersSolid } from "react-icons/lia";
-import { PiDotsThreeCircle } from "react-icons/pi";
-import { BsDot } from "react-icons/bs";
 import LineChart from "../../components/charts/LineChart";
 import pic from "../../assets/images/dp.png";
 import { Link } from "react-router-dom";
@@ -18,10 +15,10 @@ import {
 import { format } from "date-fns";
 import { CircularProgressbar } from "react-circular-progressbar";
 
-function Dashboard() {
+const Dashboard = () => {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
 
-  const { data: getProgram, isLoading:programLoading } = useQuery({
+  const { data: getProgram, isLoading: programLoading } = useQuery({
     queryKey: ["getProgram"],
     queryFn: getCampus,
   });
@@ -31,7 +28,7 @@ function Dashboard() {
     queryFn: getTeacher,
   });
 
-  const { data: students, isLoading:studentLoading } = useQuery({
+  const { data: students, isLoading: studentLoading } = useQuery({
     queryKey: ["getStudent2"],
     queryFn: getStudentList,
   });
@@ -41,20 +38,14 @@ function Dashboard() {
     queryFn: getTrainerList,
   });
 
-
-  
-
-
-
   const data = teacher
     ? teacher.student.filter((item) => item.deletedStatus === 0)
     : [];
 
-  
-
   const filterStudentList = students
-    ? students.filter((item) => item.teacher_id === teacher?.id)
-    .filter((item) => item.deletedStatus ===0)
+    ? students
+        .filter((item) => item.teacher_id === teacher?.id)
+        .filter((item) => item.deletedStatus === 0)
     : [];
 
   const getTime = filterStudentList
@@ -158,13 +149,15 @@ function Dashboard() {
       (item) => item.trainer !== null && item.areaAssigned_id !== null
     ).length /
       totalStudent) *
-    100)} %`;
+      100
+  )} %`;
   const totalUnAssign = `${Math.round(
     (data.filter(
       (item) => item.trainer === null && item.areaAssigned_id === null
     ).length /
       totalStudent) *
-    100)} %`;
+      100
+  )} %`;
   // console.log('student',getWeeklyAttendance);
 
   const totalCountBox = [
@@ -209,14 +202,11 @@ function Dashboard() {
     },
   ];
 
-
-
-  if(programLoading || studentLoading || teacherLoading, trainerlistLoading) {
-    return <center className="my-5 text-lg">Computing..</center>
+  if (
+    (programLoading || studentLoading || teacherLoading, trainerlistLoading)
+  ) {
+    return <center className="my-5 text-lg">Computing..</center>;
   }
-
-
-
 
   return (
     <div className="min-h-full w-full">
@@ -386,62 +376,11 @@ function Dashboard() {
                 />
               </div>
             </div>
-
-            {/* <div className="h-[65%] max-w-full p-4 bg-white shadow-lg shadow-slate-100 rounded-md border border-slate-200">
-              <div className="flex items-center">
-                <span className="text-gray-500 tracking-wide">Active now</span>
-                <BsDot size={23} className="text-green-500" />
-              </div>
-
-              <div className="mt-5">
-                <ul className="list-none flex flex-col gap-4">
-                  <li className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={pic}
-                        alt="error"
-                        className="h-[40px] w-[40px] bg-yellow-400 p-1 rounded-full"
-                      />
-                      <div className="font-medium tracking-wide">
-                        Reynaldo F. Bocaling
-                      </div>
-                    </div>
-                    <PiDotsThreeCircle size={23} className="text-gray-500" />
-                  </li>
-                  <li className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={pic}
-                        alt="error"
-                        className="h-[40px] w-[40px] bg-violet-400 p-1 rounded-full"
-                      />
-                      <div className="font-medium tracking-wide">
-                        Reynaldo F. Bocaling
-                      </div>
-                    </div>
-                    <PiDotsThreeCircle size={23} className="text-gray-500" />
-                  </li>
-                  <li className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={pic}
-                        alt="error"
-                        className="h-[40px] w-[40px] bg-green-400 p-1 rounded-full"
-                      />
-                      <div className="font-medium tracking-wide">
-                        Reynaldo F. Bocaling
-                      </div>
-                    </div>
-                    <PiDotsThreeCircle size={23} className="text-gray-500" />
-                  </li>
-                </ul>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Dashboard;

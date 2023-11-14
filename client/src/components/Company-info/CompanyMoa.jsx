@@ -1,26 +1,14 @@
+import React from "react";
 
-import React from 'react'
-import {TimeIcon } from "../ReactIcon/React-Icons";
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import pic from '../../assets/images/task1.jpg'
+const StudentTask = () => {
 
-const  StudentTask = () => {
-  
-    const navigate = useNavigate();
-    const location = useLocation();
-    const moa_list = location.state;
-
-   
-
-    return (
+  return (
+    <div>
       <div>
-        <div>
-          <h1>MOA</h1>
-          
-        </div>
-        
+        <h1>MOA</h1>
       </div>
-  )
-}
+    </div>
+  );
+};
 
-export default StudentTask
+export default StudentTask;

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import { Input, Button } from "@nextui-org/react";
 const StudentIfo = ({ data }) => {
-  const defaultData = data || {};
-
   const [teacherInfo, setTeacherInfo] = useState(data);
   const [Editable, setEditable] = useState(false);
 

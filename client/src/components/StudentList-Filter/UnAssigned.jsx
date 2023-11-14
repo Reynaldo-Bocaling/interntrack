@@ -2,12 +2,10 @@ import React, {useState } from "react";
 import TableFormat from "../ReusableTableFormat/TableFormat";
 import {BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine } from "react-icons/ri";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import {Switch ,  useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
-
+import {Switch , Avatar, useDisclosure as AddTeacherDisclosure} from "@nextui-org/react";
+import picture from "../../assets/images/emptyProfile.png";
 
 const Student_list = ({data, isLoading, isError}) => {
   const columnHelper = createColumnHelper();
@@ -27,9 +25,10 @@ const Student_list = ({data, isLoading, isError}) => {
       id: "name",
       cell: (info) => (
         <div className="flex items-center gap-3">
-          <div className="max-w-[40px] w-full h-[40px] bg-white shadow-md p-2 rounded-full overflow-hidden">
-            <img src={info.row.original.picture} alt="error" />
-          </div>
+          <Avatar
+            src={info.row.original.url ? info.row.original.url : picture}
+            className="text-large"
+          />
           <span className="font-semibold tracking-wider">
             {info.row.original.name}
           </span>
@@ -89,12 +88,6 @@ const Student_list = ({data, isLoading, isError}) => {
                 <CgProfile size={17} />
                 Profile
               </NavLink>
-              {/* <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink> */}
             </div>
           )}
         </div>

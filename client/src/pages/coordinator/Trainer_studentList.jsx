@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
-import { useLocation, } from 'react-router-dom'
-
-
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import StudentItem from "../../components/ReusableTableFormat/TableFormat";
-import { BiSearch, BiDotsVerticalRounded, } from "react-icons/bi";
+import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -14,42 +12,39 @@ import { MdKeyboardArrowLeft } from "react-icons/md";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 
-
-
-
 const Trainer_studentList = () => {
-    
-    const location = useLocation();
-    const studentList = location.state.List;
-    const TrainerName = location.state.trainerName;
-    const columnHelper = createColumnHelper();
-    const [show, setShow] = useState(null);
+  const location = useLocation();
+  const studentList = location.state.List;
+  const TrainerName = location.state.trainerName;
+  const columnHelper = createColumnHelper();
+  const [show, setShow] = useState(null);
 
-    const data = studentList.map(({
-        id,
-        firstname,
-        middleName,
-        lastname,
-        email,
-        gender,
-        department,
-        status,
-        picture,
-        timesheet        
-
+  const data = studentList.map(
+    ({
+      id,
+      firstname,
+      middleName,
+      lastname,
+      email,
+      gender,
+      department,
+      status,
+      picture,
+      timesheet,
     }) => ({
-        id,
-        name: `${firstname} ${middleName[0]}. ${lastname}`,
-        email,
-        gender,
-        department,
-        status,
-        picture,
-        totalHours: timesheet.reduce((acc, item)=> acc + item.totalHours, 0)
-    }))
+      id,
+      name: `${firstname} ${middleName[0]}. ${lastname}`,
+      email,
+      gender,
+      department,
+      status,
+      picture,
+      totalHours: timesheet.reduce((acc, item) => acc + item.totalHours, 0),
+    })
+  );
 
-//   columns
-const columns = [
+  //   columns
+  const columns = [
     columnHelper.accessor("id", {
       id: "id",
       cell: (info) => <span>{info.getValue()}</span>,
@@ -88,11 +83,11 @@ const columns = [
       id: "totalHours",
       cell: (info) => (
         <div className="relative text-center">
-         <span className='-ml-10 font-medium tracking-wide'> {info.getValue()} hrs</span>
-            
-          
+          <span className="-ml-10 font-medium tracking-wide">
+            {" "}
+            {info.getValue()} hrs
+          </span>
 
-          
           <BiDotsVerticalRounded
             onClick={() => ShowFunction(info.row.original.id)}
             size={20}
@@ -133,15 +128,18 @@ const columns = [
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-5">
-        <div className='flex flex-col gap-3 items-start'>
-            <NavLink to="/Trainer-list" className="text-blue-500 text-sm font-medium mb-2 rounded-full flex items-center ">
-              <MdKeyboardArrowLeft size={23} />
-              <span className='text-base font-semibold tracking-wider'>Back</span>
-              </NavLink>
-            <h1 className="text-xl font-semibold tracking-wider text-gray-700 flex items-center gap-5">
+        <div className="flex flex-col gap-3 items-start">
+          <NavLink
+            to="/Trainer-list"
+            className="text-blue-500 text-sm font-medium mb-2 rounded-full flex items-center "
+          >
+            <MdKeyboardArrowLeft size={23} />
+            <span className="text-base font-semibold tracking-wider">Back</span>
+          </NavLink>
+          <h1 className="text-xl font-semibold tracking-wider text-gray-700 flex items-center gap-5">
             {TrainerName}'s
             <span>Students</span>
-            </h1>
+          </h1>
         </div>
 
         <div className="flex items-center gap-3">
@@ -155,8 +153,8 @@ const columns = [
             />
           </div>
           <button className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full">
-              <BsPrinter size={17} />
-              <span className='font-semibold tracking-wider'>Print</span>
+            <BsPrinter size={17} />
+            <span className="font-semibold tracking-wider">Print</span>
           </button>
         </div>
       </div>
@@ -167,4 +165,3 @@ const columns = [
 };
 
 export default Trainer_studentList;
-
