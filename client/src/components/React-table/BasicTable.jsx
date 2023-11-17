@@ -25,7 +25,8 @@ const BasicTable = ({ data, columns }) => {
   return (
     <>
       {data.length > 0 ? (
-        <div className="bg-white border p-2 rounded-lg">
+        <>
+        <div className="bg-white border p-2 rounded-lg overflow-x-auto">
           <table className="w-full">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -60,8 +61,8 @@ const BasicTable = ({ data, columns }) => {
               ))}
             </tbody>
           </table>
-
-          <div className="mt-8 mb-3 mr-3 flex items-center justify-end gap-3">
+          </div>
+          <div className="mt-5 mb-3 mr-7 flex items-center justify-end gap-3 w-full">
             <button
               onClick={() => {
                 table.previousPage();
@@ -89,7 +90,7 @@ const BasicTable = ({ data, columns }) => {
               </strong>
             </span>
           </div>
-        </div>
+        </>
       ) : (
         <div className="text-center text-gray-500">No data</div>
       )}

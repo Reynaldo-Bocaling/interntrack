@@ -131,12 +131,12 @@ const Companies = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+      <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Company list
         </h1>
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+          <div className="h-10 w-full sm:w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
             <BiSearch />
             <input
               type="text"
@@ -169,7 +169,7 @@ const Companies = () => {
           Server Failed. Please try again later
         </h1>
       ) : (
-        <div className="max-w-full p-2 border rounded-lg bg-white">
+        <div className="min-w-screen p-2 border rounded-lg bg-white overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="h-14 border-b">

@@ -280,13 +280,13 @@ const Trainer_list = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+      <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Coordinator list
         </h1>
 
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+          <div className="h-10 w-full sm:w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
             <BiSearch />
             <input
               type="text"
@@ -295,7 +295,7 @@ const Trainer_list = () => {
               className="outline-none text-sm"
             />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-end gap-3 w-full">
             <button
               onClick={AddOnOpen}
               className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
