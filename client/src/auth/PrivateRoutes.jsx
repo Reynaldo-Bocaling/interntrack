@@ -1,110 +1,102 @@
-import React, {useEffect, useState } from "react";
-import { Routes, Route, Outlet, useNavigate } from "react-router-dom";
+import React from "react";
+import { Routes, Route, Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { verifyToken } from "../api/Api";
 import PulseLoader from "react-spinners/PulseLoader";
 
-import Rootlayout from "../layouts/Rootlayout"
-import Login from "./Login"
+import Rootlayout from "../layouts/Rootlayout";
+import Login from "./Login";
 
-
-import  ViewUploadTask from "../components/Student-Task/ViewUploadTask"
+import ViewUploadTask from "../components/Student-Task/ViewUploadTask";
 
 // view Attendance Request Reuasable
 import ViewAttendanceRequest from "../components/attendance-request/ViewAttendance";
 
 // view timesheets
-import ViewTimesheets from "../components/StudentTimesheets/ViewTimesheets"
+import ViewTimesheets from "../components/StudentTimesheets/ViewTimesheets";
 
 // view user resubale
-import TrainerInfoView from "../components/Trainer-Info/index"
-import StudentInfoView from "../components/Student-Info/index"
-import CoordinatorInfoView from "../components/Coordinator-Info/index"
-import TeacherInfoView from "../components/Teacher-Info/index"
+import TrainerInfoView from "../components/Trainer-Info/index";
+import StudentInfoView from "../components/Student-Info/index";
+import CoordinatorInfoView from "../components/Coordinator-Info/index";
+import TeacherInfoView from "../components/Teacher-Info/index";
 
 // student
-import Attendance from "../pages/Student/Attendance"
-import Home from "../pages/Student/Home"
-import Profile from "../pages/Student/Profile"
-import Records from "../pages/Student/Records"
+import Attendance from "../pages/Student/Attendance";
+import Home from "../pages/Student/Home";
+import Profile from "../pages/Student/Profile";
+import Records from "../pages/Student/Records";
 
-import Announcement from "../pages/Student/Announcement"
-
+import Announcement from "../pages/Student/Announcement";
 
 // SuperAdmin pages
-import SuperAdminDashboard from "../pages/SuperAdmin/Dashboard"
-import SuperAdmin_Trainer_list from "../pages/SuperAdmin/Trainer"
-import SuperAdmin_Student_list from "../pages/SuperAdmin/Student"
-import SuperAdmin_StudentInfoView from "../pages/SuperAdmin/StudentViewInfo"
-import SuperAdmin_Coordinator_list from "../pages/SuperAdmin/Coordinator"
-import SuperAdmin_Teacher_list from "../pages/SuperAdmin/Teacher"
-import SuperAdmin_Company from "../pages/SuperAdmin/Companies"
-import SuperAdmin_DirectorInfo from "../pages/SuperAdmin/Director"
-import SuperAdmin_MyProfile from "../pages/SuperAdmin/MyProfile"
-import SuperAdmin_Settings from "../pages/SuperAdmin/Settings"
-
+import SuperAdminDashboard from "../pages/SuperAdmin/Dashboard";
+import SuperAdmin_Trainer_list from "../pages/SuperAdmin/Trainer";
+import SuperAdmin_Student_list from "../pages/SuperAdmin/Student";
+import SuperAdmin_StudentInfoView from "../pages/SuperAdmin/StudentViewInfo";
+import SuperAdmin_Coordinator_list from "../pages/SuperAdmin/Coordinator";
+import SuperAdmin_Teacher_list from "../pages/SuperAdmin/Teacher";
+import SuperAdmin_Company from "../pages/SuperAdmin/Companies";
+import SuperAdmin_DirectorInfo from "../pages/SuperAdmin/Director";
+import SuperAdmin_MyProfile from "../pages/SuperAdmin/MyProfile";
+import SuperAdmin_Settings from "../pages/SuperAdmin/Settings";
 
 // Trainer pages
-import TrainerDashboard from "../pages/Trainer/Dashboard"
-import Trainer_Student_list from "../pages/Trainer/Student_list"
-import Trainer_StudentTimesheets from "../pages/Trainer/Timesheet"
-import Trainer_studentDailylog from "../pages/Trainer/DailyLogs"
-import Trainer_StudentTask from "../pages/Trainer/StudentTask"
-import Trainer_StudentAttendanceRequest from "../pages/Trainer/AttendanceRequest"
-import TrainerMessage from "../pages/Trainer/Message"
-import TrainerAnnouncement from "../pages/Trainer/Announcement"
-import TrainerMyProfile from "../pages/Trainer/MyProfile"
-import TrainerSettings from "../pages/Trainer/Settings"
-import TrainerOldStudent from "../pages/Trainer/OldStudent"
+import TrainerDashboard from "../pages/Trainer/Dashboard";
+import Trainer_Student_list from "../pages/Trainer/Student_list";
+import Trainer_StudentTimesheets from "../pages/Trainer/Timesheet";
+import Trainer_studentDailylog from "../pages/Trainer/DailyLogs";
+import Trainer_StudentTask from "../pages/Trainer/StudentTask";
+import Trainer_StudentAttendanceRequest from "../pages/Trainer/AttendanceRequest";
+import TrainerMessage from "../pages/Trainer/Message";
+import TrainerAnnouncement from "../pages/Trainer/Announcement";
+import TrainerMyProfile from "../pages/Trainer/MyProfile";
+import TrainerSettings from "../pages/Trainer/Settings";
+import TrainerOldStudent from "../pages/Trainer/OldStudent";
 
 // Teacher pages
-import TeacherDashboard from "../pages/Teacher/Dashboard"
-import TeacherrCompanies from "../pages/Teacher/Companies"
-import TeacherViewCompany from "../pages/Teacher/ViewCompany"
-import Teacher_Trainer_list from "../pages/Teacher/Trainer_list"
-import Teacher_Student_list from "../pages/Teacher/Student_list"
-import Teacher_StudentTimesheets from "../pages/Teacher/Timesheet"
-import Teacher_studentDailylog from "../pages/Teacher/DailyLogs"
-import Teacher_StudentTask from "../pages/Teacher/StudentTask"
-import TeacherMessage from "../pages/Teacher/Message"
-import TeacherAnnouncement from "../pages/Teacher/Announcement"
-import TeacherNyProfile from "../pages/Teacher/MyProfile"
-import TeacherSettings from "../pages/Teacher/Settings"
-import TeacherOldStudent from "../pages/Teacher/OldStudent"
+import TeacherDashboard from "../pages/Teacher/Dashboard";
+import TeacherrCompanies from "../pages/Teacher/Companies";
+import TeacherViewCompany from "../pages/Teacher/ViewCompany";
+import Teacher_Trainer_list from "../pages/Teacher/Trainer_list";
+import Teacher_Student_list from "../pages/Teacher/Student_list";
+import Teacher_StudentTimesheets from "../pages/Teacher/Timesheet";
+import Teacher_studentDailylog from "../pages/Teacher/DailyLogs";
+import Teacher_StudentTask from "../pages/Teacher/StudentTask";
+import TeacherMessage from "../pages/Teacher/Message";
+import TeacherAnnouncement from "../pages/Teacher/Announcement";
+import TeacherNyProfile from "../pages/Teacher/MyProfile";
+import TeacherSettings from "../pages/Teacher/Settings";
+import TeacherOldStudent from "../pages/Teacher/OldStudent";
 
 // Coordinator pages
-import CoordinatorDashboard from "../pages/Coordinator/Dashboard"
-import CoordinatorCompanies from "../pages/Coordinator/Companies"
-import CoordinatorViewCompany from "../pages/Coordinator/ViewCompany"
-import Coordinator_Trainer_list from "../pages/Coordinator/Trainer_list"
-import Coordinator_Student_list from "../pages/Coordinator/Student_list"
-import Coordinator_Teacher_list from "../pages/Coordinator/Teacher_list"
-import CoordinatorMessage from "../pages/Coordinator/Message"
-import CoordinatorAnnouncement from "../pages/Coordinator/Announcement"
-import CoordinatorMyProfile from "../pages/Coordinator/MyProfile"
-import CoordinatorSettings from "../pages/Coordinator/Settings"
-import CoordinatorOldStudent from "../pages/Coordinator/OldStudent"
+import CoordinatorDashboard from "../pages/Coordinator/Dashboard";
+import CoordinatorCompanies from "../pages/Coordinator/Companies";
+import CoordinatorViewCompany from "../pages/Coordinator/ViewCompany";
+import Coordinator_Trainer_list from "../pages/Coordinator/Trainer_list";
+import Coordinator_Student_list from "../pages/Coordinator/Student_list";
+import Coordinator_Teacher_list from "../pages/Coordinator/Teacher_list";
+import CoordinatorMessage from "../pages/Coordinator/Message";
+import CoordinatorAnnouncement from "../pages/Coordinator/Announcement";
+import CoordinatorMyProfile from "../pages/Coordinator/MyProfile";
+import CoordinatorSettings from "../pages/Coordinator/Settings";
+import CoordinatorOldStudent from "../pages/Coordinator/OldStudent";
 
 // Director pages
-import DirectorDashboard from "../pages/Director/Dashboard"
-import DirectorCompanies from "../pages/Director/Companies"
-import DirectorStudentList from "../pages/Director/Student_list"
-import DirectorMoa from "../pages/Director/MOA"
-import DirectorViewCompany from "../pages/Director/ViewCompany"
-import DirectorMessage from "../pages/Director/Message"
-import DirectorAnnouncement from "../pages/Director/Announcement"
-import Director_Coordinator_list from "../pages/Director/Coordinator_list"
-import Director_Teacher_list from "../pages/Director/TeacherList"
-import DirectorMyProfile from "../pages/Director/MyProfile"
-import DirectorSettings from "../pages/Director/Settings"
-import DirectorOldStudent from "../pages/Director/OldStudent"
-
-
+import DirectorDashboard from "../pages/Director/Dashboard";
+import DirectorCompanies from "../pages/Director/Companies";
+import DirectorStudentList from "../pages/Director/Student_list";
+import DirectorMoa from "../pages/Director/MOA";
+import DirectorViewCompany from "../pages/Director/ViewCompany";
+import DirectorMessage from "../pages/Director/Message";
+import DirectorAnnouncement from "../pages/Director/Announcement";
+import Director_Coordinator_list from "../pages/Director/Coordinator_list";
+import Director_Teacher_list from "../pages/Director/TeacherList";
+import DirectorMyProfile from "../pages/Director/MyProfile";
+import DirectorSettings from "../pages/Director/Settings";
+import DirectorOldStudent from "../pages/Director/OldStudent";
 
 const PrivateRoutes = () => {
-  const navigate = useNavigate();
-  const [isLogged, setIslogged] = useState(false);
-
   const {
     data: isRole,
     isLoading,
@@ -114,13 +106,7 @@ const PrivateRoutes = () => {
     queryFn: verifyToken,
   });
 
-  useEffect(() => {
-    if (isRole === "Unauthorized" || isError) {
-      setIslogged(false);
-    } else {
-      setIslogged(true);
-    }
-  }, [isError, isRole, navigate]);
+  const isLogged = !(isRole === "Unauthorized" || isError);
 
   if (isLoading) {
     return (
@@ -290,7 +276,7 @@ const PrivateRoutes = () => {
         path: "/view-timeSheet",
         element: <ViewTimesheets />,
       },
-      
+
       {
         path: "/StudentTask/view",
         element: <ViewUploadTask />,
@@ -459,7 +445,6 @@ const PrivateRoutes = () => {
       },
     ],
 
-
     Student: [
       {
         path: "/",
@@ -483,7 +468,6 @@ const PrivateRoutes = () => {
         path: "/Announcement",
         element: <Announcement />,
       },
-      
     ],
   };
 

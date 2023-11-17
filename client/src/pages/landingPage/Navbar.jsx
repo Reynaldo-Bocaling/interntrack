@@ -1,6 +1,5 @@
 import React from "react";
 import Logo from "../../assets/icons/logo.png";
-import Styles from "../../styles/LandingPage.module.css";
 import { Button } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +8,7 @@ function Navbar() {
   return (
     <div className="relative z-50">
       <nav
-        className={`${Styles.container} flex items-center justify-between py-6  `}
+        className={`flex items-center justify-between py-6  `}
       >
         <div className="flex items-center gap-1">
           <img src={Logo} alt="" className="w-8 h-8" />
