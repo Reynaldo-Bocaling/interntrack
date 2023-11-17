@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { SidebarData } from "./SidebarLinks";
 import Empty from "../../assets/images/emptyProfile.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-import { BiSearch, BiHelpCircle } from "react-icons/bi";
+import {HiOutlineMenuAlt4 } from "react-icons/hi";
+import {  BiHelpCircle } from "react-icons/bi";
 import { LiaSignOutAltSolid } from "react-icons/lia";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { RiArrowRightSLine } from "react-icons/ri";
@@ -111,12 +111,15 @@ const {data: getUserData} = useQuery({
  console.log('d', data);
   return (
     <div
-      className={`${
-        toggleIsOpen ? "pl-[16rem]" : "pl-[4rem]"
-      } fixed top-0 left-0 h-[60px] w-full duration-300 z-20 bg-white shadow-sm shadow-slate-100`}
+      className={`fixed top-0 left-0 h-[60px] max-w-full w-full duration-300 z-20 bg-white shadow-sm shadow-slate-100`}
     >
-      <div className="p-3 pt-3  flex items-center justify-between px-7 w-full">
-        <div className="text-[1.1rem] font-normal">
+      <div className="p-3 pt-3  flex items-center justify-between px-7 w-full md:pl-[17.5rem]">
+        
+        <button className="md:hidden"><HiOutlineMenuAlt4 size={27}/></button>
+
+
+
+        <div className="text-[1rem] font-normal hidden md:flex">
           Welcome back,{" "}
           <span className="font-medium tracking-wide pl-2">
             {capitalizeFirstLetter(role)}
@@ -124,16 +127,6 @@ const {data: getUserData} = useQuery({
         </div>
 
         <div className="flex items-center justify-center gap-3">
-          <div className="flex items-center gap-2 bg-white border rounded-full text-sm shadow-sm px-3">
-            <div className="text-blue-500">
-              <BiSearch size={18} />
-            </div>
-            <input
-              type="text"
-              className="mt-1 block w-48 text-xs py-[6px] outline-none placeholder-slate-400"
-              placeholder="Search features"
-            />
-          </div>
           <div
             className="relative flex items-center gap-4 cursor-pointer p-1"
             onClick={open}

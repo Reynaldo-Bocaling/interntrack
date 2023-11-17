@@ -20,6 +20,7 @@ import {
   useDisclosure,
   Avatar,
 } from "@nextui-org/react";
+import picture from '../../assets/images/emptyProfile.png'
 
 
 const CoordinatorInfo = () => {
@@ -107,17 +108,12 @@ const CoordinatorInfo = () => {
 
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="ml-7 -mt-48 bg-white w-44 h-44 p-5 border-white right rounded-full shadow-md overflow-hidden">
-                  {data?.profile ? (
-                    <img src={data.profile_url} alt={data.profile_url} />
-                  ) : (
-                    ""
-                  )}
-                </div>
+            <div className="relative">
+                <Avatar src={data?.profile ? data.profile_url : picture} className="ml-4 -mt-48 w-40 h-40 text-large shadow-md border" />
+                {/* </div> */}
                 <button
                   onClick={onOpen}
-                  className="absolute bottom-3 right-5 bg-gray-200 px-2 h-[35px] w-[35px] flex items-center justify-center rounded-full cursor-pointer"
+                  className="absolute bottom-5 right-5 bg-gray-200 px-2 h-[35px] w-[35px] flex items-center justify-center rounded-full cursor-pointer z-20"
                 >
                   <BsCamera />
                 </button>

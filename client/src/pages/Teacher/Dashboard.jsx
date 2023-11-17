@@ -2,7 +2,7 @@ import React from "react";
 import { FcCalendar } from "react-icons/fc";
 import { LiaUsersSolid } from "react-icons/lia";
 import LineChart from "../../components/charts/LineChart";
-import pic from "../../assets/images/dp.png";
+import pic from "../../assets/images/emptyProfile.png";
 import { Link } from "react-router-dom";
 import DateNow from "../../components/Dates/DateNow";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import {
 } from "../../api/Api";
 import { format } from "date-fns";
 import { CircularProgressbar } from "react-circular-progressbar";
+import { Avatar } from "@nextui-org/react";
 
 const Dashboard = () => {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
@@ -307,9 +308,7 @@ const Dashboard = () => {
           <div className="right-side w-[37%] flex flex-col gap-3 ">
             <div className="relative  max-w-full flex  flex-col p-4 bg-white shadow-2xl shadow-orange-50 rounded-md border px-7 py-7 border-slate-200">
               <div className="flex items-center gap-5">
-                <div className="h-[50px] w-[50px] rounded-full overflow-hidden shadow-lg p-2 border border-slate-100">
-                  <img src={pic} alt="error" />
-                </div>
+                  <Avatar src={teacher?.coordinator? teacher?.coordinator.profile_url : pic} alt="error" size="lg" className="shadow-md border"/>
 
                 <div>
                   <h4 className="text-xl font-semibold tracking-wider">

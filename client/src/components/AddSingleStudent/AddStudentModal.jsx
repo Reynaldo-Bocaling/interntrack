@@ -35,8 +35,7 @@ const AddSingStudent = ({
   const firstnameRegex = /^[A-Za-z\s]+$/;
   const lastnameRegex = /^[A-Za-z\s]+$/;
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-  const mobileRegex =
-    /^(9[0-9]{1}([0-9]{2}[-\s]?[0-9]{3}[-\s]?[0-9]{4}|[0-9]{8}))$/;
+  const mobileRegex = /^[0-9]/
   const addressRegex = /^[A-Za-z\s]+$/;
   const genderRegex = /^(male|female)$/i;
   const majorRegex = /^[A-Za-z\s]+$/;

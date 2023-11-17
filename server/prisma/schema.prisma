@@ -51,7 +51,6 @@ model Director {
   accountStatus         Int
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
-  coordinator           Coordinator[]
   company               Company[]   
 }
 
@@ -68,10 +67,8 @@ model Coordinator {
   profile               String?
    profile_url           String?
   accountStatus         Int
-  director_id           Int
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
-  director              Director @relation(fields: [director_id], references: [id]) 
   teacher               Teacher[]
 }
 

@@ -3,7 +3,7 @@ import picture from "../../assets/images/dp.png";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AddDirectorAccount, getDirectorList } from "../../api/Api";
 import AddDirector from "../../components/addDirector/AddDirector";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Avatar, Button, useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 
 const Director = () => {
@@ -43,9 +43,7 @@ const Director = () => {
     <div>
       {data.length > 0 ? (
         <div className="max-w-[900px] mx-auto py-12 flex items-center justify-center gap-7">
-          <div className="bg-blue-500 w-[300px] h-[300px]  overflow-hidden rounded-full flex items-center justify-center">
-            <img src={picture} alt="" />
-          </div>
+          <Avatar src={data[0].profile_url?data[0].profile_url : picture} className="bg-blue-500 w-[300px] h-[300px]" />
 
           <div className="max-w-[420px] w-full grid gap-7">
             <div>

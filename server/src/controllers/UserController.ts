@@ -58,7 +58,6 @@ export class UserController {
   // add coordinator
   static async AddCoordinator(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const director_id = req.user.director[0]?.id;
 
     const {
       firstname,
@@ -86,7 +85,6 @@ export class UserController {
               campus,
               college,
               program,
-              director_id: director_id,
               accountStatus: 0,
             },
           },
@@ -393,6 +391,16 @@ export class UserController {
         },
       });
 
+      const mailOptions = {
+          from: "reynaldobocaling@gmail.com",
+          to: email,
+          subject: "IternTrack!",
+          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n SuperAdmin`,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
       return res.status(500).json(error);
@@ -423,7 +431,14 @@ export class UserController {
         },
       });
 
-      
+      const mailOptions = {
+        from: "reynaldobocaling@gmail.com",
+        to: email,
+        subject: "IternTrack!",
+        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Director`,
+      };
+
+      await transporter.sendMail(mailOptions);
 
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
@@ -1344,7 +1359,7 @@ export class UserController {
     }`;
     const profile = req.file?.filename;
 
-    const existingFile = await prisma.teacher.findUnique({ where: { id } });
+    const existingFile = await prisma.superAdmin.findUnique({ where: { id } });
     if (!existingFile)
       return res.status(404).json({ message: "teacher not found" });
 
@@ -1355,7 +1370,7 @@ export class UserController {
 
     try {
       if (req.file) {
-        await prisma.teacher.update({
+        await prisma.superAdmin.update({
           where: { id },
           data: {
             profile_url: url,

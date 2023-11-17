@@ -206,10 +206,10 @@ const percentage = Math.floor(
     <>
        <div className="left-content flex  items-center justify-between mb-4">
             <div className="flex flex-col gap-2">
-              <h1 className="text-xl font-semibold tracking-wider text-gray-700">
+              <h1 className=" text-sm md:text-xl font-semibold tracking-wider text-gray-700">
                 Director overview
               </h1>
-              <small className="text-blue-500 font-semibold tracking-wider">
+              <small className="text-[0.6rem] text-blue-500 font-semibold tracking-wider">
                 Director Dashboard
               </small>
             </div>
@@ -218,10 +218,10 @@ const percentage = Math.floor(
               <DateNow />
             </div>
           </div>
-      <div className="flex gap-3">
-        <div className="flex flex-col gap-3 w-[70%]">
+      <div className="flex flex-col md:flex md:flex-row gap-3">
+        <div className="flex flex-col gap-3 w-full md:w-[70%]">
 
-        <div className="relative col-span-4 h-[170px] bg-white rounded-lg p-3 shadow-xl overflow-hidden shadow-[#f4f2f2] border border-[#ecf0f1]">
+        <div className="relative col-span-4 h-auto bg-white rounded-lg p-3 shadow-xl overflow-hidden shadow-[#f4f2f2] border border-[#ecf0f1]">
           <img
             src={coverDirector}
             alt=""
@@ -255,8 +255,8 @@ const percentage = Math.floor(
         </div>
         
 
-        <div className="flex flex-col  gap-3 w-[35%] ">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col  gap-3 sm:w-full md:w-[35%] ">
+        <div className="grid grid-cols-2 gap-3 ">
           {countBox.map((item, index) => (
             <div
               key={index}

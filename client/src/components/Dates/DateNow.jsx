@@ -11,8 +11,8 @@ const DateNow = () => {
   }, []);
 
   return (
-    <div className='pr-2'>
-      <p className='text-gray-600'>
+    <div className='pr-2 '>
+      <p className='text-gray-600 text-[0.7rem] md:lg '>
         {currentDate}
       </p>
     </div>

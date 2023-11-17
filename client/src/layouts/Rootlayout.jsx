@@ -55,8 +55,8 @@ const Rootlayout = (props) => {
 
           <div
             className={`${
-              role !== "Student" && "ml-[16rem]"
-            } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50`}
+              role !== "Student" && "lg:ml-[16rem]"
+            } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50 `}
             onClick={() => {
               setIsOpenNotif(false), setIsOpenProfile(false);
             }}

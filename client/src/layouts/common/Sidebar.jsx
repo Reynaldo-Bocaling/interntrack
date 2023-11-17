@@ -10,7 +10,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { BsFillCircleFill } from "react-icons/bs";
 
 const Sidebar = (props) => {
-  const {toggleIsOpen, toggleSetIsOpen, role} = props;
+  const { toggleIsOpen, toggleSetIsOpen, role } = props;
   const [openSubmenus, setOpenSubmenus] = useState([]);
   const Menu = SidebarData[role] || [];
 
@@ -27,25 +27,17 @@ const Sidebar = (props) => {
 
   return (
     <div>
-      <div
-        className={` ${toggleIsOpen ? 'w-[16.5rem]':'w-[4rem]'} 
-        sidebar fixed z-50 top-0 left-0 bg-white shadow-xl shadow-gray-100 pt-5 w-[16rem] h-screen overflow-y-auto duration-500`}
-      >
-        <div
-          onClick={() => toggleSetIsOpen(!toggleIsOpen)}
-          className={`${toggleIsOpen? 'rotate-0': 'rotate-180'} absolute z-50 bottom-12 right-1 text-blue-500 rounded-full flex items-center justify-center duration-300 cursor-pointer `}
-        >
-          <IoIosArrowBack size={30} />
-        </div>
+      <div className="sidebar md:fixed z-50 top-0 left-0 bg-white shadow-xl shadow-gray-100 pt-5 w-[16rem] h-screen overflow-y-auto duration-500  hidden lg:flex lg:flex-col">
+        
 
         {/* logo */}
         <div
-          className={`${
-            !toggleIsOpen && "border-b border-slate-300 mt-5"
-          } flex flex-col items-center gap-2 mx-2 pb-2`}
+          className='flex flex-col items-center gap-2 mx-2 pb-2'
         >
           <img src={Logo} alt="Logo icon" width={32} />
-          <span className={`${!toggleIsOpen && "hidden"} font-semibold text-xl whitespace-pre`}>
+          <span
+            className='font-semibold text-xl whitespace-pre'
+          >
             InternTrack
           </span>
         </div>
@@ -55,16 +47,20 @@ const Sidebar = (props) => {
           <div className="flex flex-col gap-3 duration-700">
             {Menu.map((item, index) => (
               <div key={index}>
-                {item.subMenu ? 
-                (
-                  <div 
-                  onClick={() => {handleSubmenuToggle(index)}}
-                  className={`${!toggleIsOpen? '0': 'p-3'} link cursor-pointer flex flex-col items-center`}
+                {item.subMenu ? (
+                  <div
+                    onClick={() => {
+                      handleSubmenuToggle(index);
+                    }}
+                    className='link cursor-pointer flex flex-col items-center p-3'
                   >
                     <div className="w-full flex items-center justify-between">
                       <div className="link gap-2 tracking-wide text-[#4c4b50]">
-                        <item.icon size={item.size && item.size} className="bg-blue-50 text-blue-500 h-[32px] w-[32px] p-2 rounded-md"  />
-                       {toggleIsOpen && item.label}
+                        <item.icon
+                          size={item.size && item.size}
+                          className="bg-blue-50 text-blue-500 h-[32px] w-[32px] p-2 rounded-md"
+                        />
+                        {item.label}
                       </div>
                       <span>
                         {toggleIsOpen && item.subMenu && (
@@ -72,40 +68,55 @@ const Sidebar = (props) => {
                         )}
                       </span>
                     </div>
-                    {toggleIsOpen && (
-                        item.subMenu && openSubmenus.includes(index) && (
-                          <div className="w-full flex flex-col gap-1 rounded-lg duration-1000 ">
-                            {item.subMenu.map((subItem, subIndex) => (
-                              <NavLink
-                                className="link p-3"
-                                to={subItem.url}
-                                key={subIndex}
-                              >
-                                <span className="flex  items-center gap-2 text-[#4c4b50]">
-                                  <BsFillCircleFill size={7} className="text-blue-500" />
-                                  {subItem.label}
-                                </span>
-                              </NavLink>
-                            ))}
-                          </div>
-                      ))
-                    }
+                    {toggleIsOpen &&
+                      item.subMenu &&
+                      openSubmenus.includes(index) && (
+                        <div className="w-full flex flex-col gap-1 rounded-lg duration-1000 ">
+                          {item.subMenu.map((subItem, subIndex) => (
+                            <NavLink
+                              className="link p-3"
+                              to={subItem.url}
+                              key={subIndex}
+                            >
+                              <span className="flex  items-center gap-2 text-[#4c4b50]">
+                                <BsFillCircleFill
+                                  size={7}
+                                  className="text-blue-500"
+                                />
+                                {subItem.label}
+                              </span>
+                            </NavLink>
+                          ))}
+                        </div>
+                      )}
                   </div>
                 ) : (
-                  <div className={`SidebarLink cursor-pointer`} >
-                    {
-                      item.extraText && (
-                        <div className={`flex ${!toggleIsOpen? 'justify-center': 'ml-1'} mb-3 `}>
-                          <span className={`text-[0.670rem] text-gray-400 tracking-wide`}>
-                            {item.extraText}
-                          </span>
-                        </div>
-                      )
-                    }
-                    
-                    <NavLink to={item.url} className={`${!toggleIsOpen? '0': 'p-3'} link  text-base tracking-wide text-slate-400-100 text-[#686475]`}>
-                      <item.icon size={item.size ? item.size : ""} className="bg-blue-50 text-blue-500 h-[32px] w-[32px] p-2 rounded-md" />
-                      {toggleIsOpen ?  item.label: ''}
+                  <div className={`SidebarLink cursor-pointer`}>
+                    {item.extraText && (
+                      <div
+                        className={`flex ${
+                          !toggleIsOpen ? "justify-center" : "ml-1"
+                        } mb-3 `}
+                      >
+                        <span
+                          className={`text-[0.670rem] text-gray-400 tracking-wide`}
+                        >
+                          {item.extraText}
+                        </span>
+                      </div>
+                    )}
+
+                    <NavLink
+                      to={item.url}
+                      className={`${
+                        !toggleIsOpen ? "0" : "p-3"
+                      } link  text-base tracking-wide text-slate-400-100 text-[#686475]`}
+                    >
+                      <item.icon
+                        size={item.size ? item.size : ""}
+                        className="bg-blue-50 text-blue-500 h-[32px] w-[32px] p-2 rounded-md"
+                      />
+                      {toggleIsOpen ? item.label : ""}
                     </NavLink>
                   </div>
                 )}
@@ -116,6 +127,6 @@ const Sidebar = (props) => {
       </div>
     </div>
   );
-}
+};
 
 export default Sidebar;
