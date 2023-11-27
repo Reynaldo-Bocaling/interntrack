@@ -1117,6 +1117,7 @@ export class UserController {
       const response = await prisma.teacher.findMany({
         include: {
           student: true,
+          coordinator: true
         },
       });
       return res.status(200).json(response);
@@ -1658,6 +1659,54 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+
+  // submit rerport
+  static async submitReport(req: any, res: Response) {
+   const {id, week} = req.body;
+    try {
+      const response = await prisma.timesheet.updateMany({
+        where: {
+          AND: [
+            {student_id: id, week}
+          ]
+        },
+        data: {
+          studentMark: 1,
+          dateSubmitted: formattedDate
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+
+
+
+  // submit rerport
+  static async reportReport(req: any, res: Response) {
+   const {id, week, isStatus} = req.body;
+    try {
+      const response = await prisma.timesheet.updateMany({
+        where: {
+          AND: [
+            {student_id: id, week}
+          ]
+        },
+        data: {
+          teacherMark: isStatus ? 1 : 0,
+          studentMark: isStatus ? 1 : 0,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
 
   // add date ranage
   static async getDateRange(req: any, res: Response) {

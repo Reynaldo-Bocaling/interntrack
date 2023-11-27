@@ -54,7 +54,7 @@ const index = ({ data, isLoading, isError }) => {
           <div className="company-cover"></div>
           <div className="flex flex-col gap-3 border-b bg-white">
             <div className="flex items-center gap-3">
-              <div className=" ml-7 -mt-52 bg-white w-52 h-44 p-5 border-white right rounded-full shadow-md overflow-hidden">
+              <div className=" ml-7 -mt-40 bg-white w-52 h-44 p-5 border-white right rounded-full shadow-md overflow-hidden">
                 <img
                   className=" w-44 h-44 object-cover object-center mb-2 rounded-lg"
                   src={pic}
@@ -73,16 +73,7 @@ const index = ({ data, isLoading, isError }) => {
                     </small>
                   </div>
 
-                  <div className="flex items-center gap-5 mb-3 font-semibold">
-                    <NavLink className="flex items-center gap-1 text-blue-500 text-sm bg-blue-100 py-2 px-4 rounded-md">
-                      <BsChatDots />
-                      Send message
-                    </NavLink>
-                    <NavLink className="flex items-center gap-1 text-red-500 text-sm bg-red-100 py-2 px-4 rounded-md">
-                      <BsFillTrash3Fill />
-                      Drop
-                    </NavLink>
-                  </div>
+                  
                 </div>
               </div>
             </div>

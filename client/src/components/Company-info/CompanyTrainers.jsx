@@ -16,7 +16,7 @@ const ViewAttendanceRequest = ({ data }) => {
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
         <span className="text-xl text-gray-700 font-semibold tracking-wide">
-          Students
+          Trainers
         </span>
 
         <div className="bg-white p-1 px-3 py-1 flex items-center gap-2 rounded-full shadow-md shadow-slate-200 border border-gray-100">

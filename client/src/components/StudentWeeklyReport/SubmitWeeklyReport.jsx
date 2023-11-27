@@ -3,44 +3,74 @@ import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
 import logo from "../../assets/images/neust_logo-1.png";
-import { getStudentInfo } from "../../api/Api";
+import { getStudent, getTask, getTimesheet } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
 import Report from "../../components/print-layout/WeeklyReport";
-import { useParams } from "react-router-dom";
-import { MdKeyboardArrowRight } from "react-icons/md";
 
+import { MdKeyboardArrowRight } from "react-icons/md";
 const WeeklyReport = () => {
   const [opened, { open, close }] = useDisclosure();
   const [weeklyReport, setWeeklyReport] = useState([]);
+  const calculateTotalHours = (timeSheet) => {
+    return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
+  };
 
-  const { id } = useParams();
+  // /timesheet
+  const currentDate = new Date();
 
-  const { data, isLoading: studentLoading } = useQuery({
-    queryKey: ["getStudentweeklyreport"],
-    queryFn: () => getStudentInfo(id),
+  const { data: timesheet, isLoading: timesheetLoading } = useQuery({
+    queryKey: ["getTimesheetStudent2"],
+    queryFn: getTimesheet,
   });
 
+  const { data: getTaskList, isLoading: taskLoading } = useQuery({
+    queryKey: ["getTaskStudent2"],
+    queryFn: getTask,
+  });
+
+  const { data, isLoading: studentLoading } = useQuery({
+    queryKey: ["getStudent2"],
+    queryFn: getStudent,
+  });
+
+  const studentTask = getTaskList ? getTaskList : [];
   const studentInfo = data ? data : [];
 
-  const timesheet = studentInfo?.timesheet ? studentInfo?.timesheet : [];
-  const studentTask = studentInfo?.task;
+  const getWeekNuber = timesheet
+    ? timesheet.find((item) => item.date === format(new Date(), "yyyy-MM-dd"))
+        ?.week
+    : [];
 
   const StudentTimesheet = timesheet
-    ?.filter((item) => item.studentMark === 1 && item.teacherMark === 1)
-    .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
-      id,
-      totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
-      date,
-      logStatus,
-      student_id,
-      week,
-      taskDescription:
-        logStatus !== 0
-          ? studentTask.find((item) => item.date === date)?.description
-          : "",
-    }));
+    ? timesheet
+        .filter((item) => item.studentMark === 1)
+        .filter((item) => new Date(item.week) <= getWeekNuber)
+        .map(
+          ({
+            id,
+            totalHours,
+            date,
+            logStatus,
+            student_id,
+            week,
+            dateSubmitted,
+          }) => ({
+            id,
+            totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
+            date,
+            logStatus,
+            student_id,
+            week,
+            dateSubmitted,
+            taskDescription:
+              logStatus !== 0
+                ? studentTask.find((item) => item.date === date)?.description
+                : "",
+          })
+        )
+    : [];
 
   const groupedTimeSheet = [];
   for (let i = 0; i < StudentTimesheet.length; i += 5) {
@@ -55,41 +85,61 @@ const WeeklyReport = () => {
     ? weeklyReport.reduce((total, item) => total + item.totalHours, 0)
     : [];
 
-  // print
+  // Reference para sa pag-print
   const componentRef = useRef();
+
+  // React-to-Print function
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
+  
   const handleOpenWeeklyReport = (item) => {
     setWeeklyReport(item);
     open();
   };
 
-  if (studentLoading) {
+  if (taskLoading || timesheetLoading || studentLoading) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
 
-    console.log(groupedTimeSheet,'s');
+  console.log(getWeekNuber);
 
   return (
     <div>
       <Card className="flex flex-col gap-5">
-        <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
         {groupedTimeSheet.map((group, groupIndex) => (
           <div
             key={groupIndex}
             className="py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
             onClick={() => handleOpenWeeklyReport(group)}
           >
-            <span>
-              {`${format(new Date(group[0].date), "MMMM dd")} - ${format(
-                new Date(group[group.length - 1].date),
-                "MMMM dd"
-              )}`}
-            </span>
+            <div className="flex flex-col gap-2 justify-center">
+              <div className="flex  gap-7 items-center">
+                <span className="text-gray-400 text-[0.7rem] font-medium tracking-wider">
+                  Report Period:
+                </span>
+
+                <small className="text-blue-500">
+                  {`${format(new Date(group[0].date), "MMM dd")} - ${format(
+                    new Date(group[group.length - 1].date),
+                    "MMM dd"
+                  )}`}
+                </small>
+              </div>
+
+              <div className=" flex gap-4 items-center">
+                <span className="text-gray-400 text-[0.7rem] font-medium tracking-wider">
+                  Date Submitted:
+                </span>
+
+                <small className="text-green-500">
+                  {format(new Date(group[0].dateSubmitted), "MMMM dd, yyyy")}
+                </small>
+              </div>
+            </div>
 
             <MdKeyboardArrowRight />
           </div>

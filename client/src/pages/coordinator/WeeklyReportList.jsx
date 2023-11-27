@@ -3,48 +3,102 @@ import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
 import logo from "../../assets/images/neust_logo-1.png";
-import { getStudentInfo } from "../../api/Api";
+import {
+  getCoordinator,
+  getStudentInfo,
+  getStudentList,
+  getTeacherList,
+} from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@nextui-org/react";
+import { Button, Avatar } from "@nextui-org/react";
 import { format } from "date-fns";
-import Report from "../../components/print-layout/WeeklyReport";
-import { useParams } from "react-router-dom";
-import { MdKeyboardArrowRight } from "react-icons/md";
+import Report from "../../components/print-layout/ViewWeeklyReport";
+import { Link, NavLink, useParams } from "react-router-dom";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import pic from "../../assets/images/emptyProfile.png";
+import { BiSearch } from "react-icons/bi";
 
 const WeeklyReport = () => {
+  const [searchInput, setSearchInput] = useState("");
+  const [searchLength, setSearchLength] = useState(false);
+
   const [opened, { open, close }] = useDisclosure();
   const [weeklyReport, setWeeklyReport] = useState([]);
 
-  const { id } = useParams();
-
-  const { data, isLoading: studentLoading } = useQuery({
-    queryKey: ["getStudentweeklyreport"],
-    queryFn: () => getStudentInfo(id),
+  const { data, isLoading } = useQuery({
+    queryKey: ["getStudentweeklyreport23"],
+    queryFn: getStudentList,
   });
-
+  const { data: teacherList, isLoading: teacherLoading } = useQuery({
+    queryKey: ["teacherList22"],
+    queryFn: getTeacherList,
+  });
+  const { data: coordinator, isLoading: coordinatorLoading } = useQuery({
+    queryKey: ["coordinatorList22"],
+    queryFn: getCoordinator,
+  });
   const studentInfo = data ? data : [];
+  const coordinatorInfo = coordinator ? coordinator : [];
 
-  const timesheet = studentInfo?.timesheet ? studentInfo?.timesheet : [];
-  const studentTask = studentInfo?.task;
-
-  const StudentTimesheet = timesheet
-    ?.filter((item) => item.studentMark === 1 && item.teacherMark === 1)
-    .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
-      id,
-      totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
-      date,
-      logStatus,
-      student_id,
-      week,
-      taskDescription:
-        logStatus !== 0
-          ? studentTask.find((item) => item.date === date)?.description
-          : "",
-    }));
+  const newData = data
+    ? data
+        .flatMap(({ timesheet }) => timesheet)
+        .filter((item) => item.teacherMark === 1 && item.studentMark === 1)
+        .map(
+          ({
+            id,
+            totalHours,
+            date,
+            logStatus,
+            student_id,
+            week,
+            dateSubmitted,
+          }) => ({
+            id,
+            totalHours,
+            date,
+            logStatus,
+            student_id,
+            week,
+            students: data?.find((item) => item.id === student_id),
+            dateSubmitted,
+            coordinator_id: teacherList?.find(
+              (item) =>
+                item.id ==
+                data?.find((item) => item.id === student_id)?.teacher_id
+            )?.coordinator.id,
+            coordinator: teacherList?.find(
+              (item) =>
+                item.id ==
+                data?.find((item) => item.id === student_id)?.teacher_id
+            )?.coordinator,
+            deletedStatus: data?.find((item) => item.id === student_id)
+              ?.deletedStatus,
+            trainer_id: data?.find((item) => item.id === student_id)
+              ?.trainer_id,
+            name: `${data?.find((item) => item.id === student_id)?.firstname} ${
+              data?.find((item) => item.id === student_id)?.lastname
+            }`,
+          })
+        )
+        .filter(
+          (item) =>
+            item.deletedStatus === 0 &&
+            item.trainer_id != null &&
+            item.coordinator_id == coordinatorInfo?.id
+        )
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+            format(new Date(item.date), "MMMM dd")
+              .toLowerCase()
+              .includes(searchInput.toLowerCase())
+        )
+    : [];
 
   const groupedTimeSheet = [];
-  for (let i = 0; i < StudentTimesheet.length; i += 5) {
-    groupedTimeSheet.push(StudentTimesheet.slice(i, i + 5));
+  for (let i = 0; i < newData.length; i += 5) {
+    groupedTimeSheet.push(newData.slice(i, i + 5));
   }
 
   groupedTimeSheet.sort((a, b) => {
@@ -68,33 +122,87 @@ const WeeklyReport = () => {
     open();
   };
 
-  if (studentLoading) {
+  if (isLoading || teacherLoading || coordinatorLoading) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
 
-    console.log(groupedTimeSheet,'s');
-
+  // console.log(groupedTimeSheet);
   return (
     <div>
-      <Card className="flex flex-col gap-5">
-        <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
-        {groupedTimeSheet.map((group, groupIndex) => (
-          <div
-            key={groupIndex}
-            className="py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
-            onClick={() => handleOpenWeeklyReport(group)}
-          >
-            <span>
-              {`${format(new Date(group[0].date), "MMMM dd")} - ${format(
-                new Date(group[group.length - 1].date),
-                "MMMM dd"
-              )}`}
-            </span>
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center justify-between w-full pr-5">
+          <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
 
-            <MdKeyboardArrowRight />
+          <div className="flex items-center gap-3">
+            <div
+              className={`${
+                searchLength ? "w-[250px]" : "w-[40px]"
+              } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+            >
+              <BiSearch
+                onClick={() => setSearchLength(!searchLength)}
+                className={`${
+                  searchLength ? "text-blue-500" : "text-gray-600"
+                } cursor-pointer`}
+              />
+              {searchLength && (
+                <input
+                  type="text"
+                  placeholder="Search.."
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="outline-none text-sm"
+                />
+              )}
+            </div>
           </div>
-        ))}
-      </Card>
+        </div>
+        {groupedTimeSheet.length > 0 ? (
+          groupedTimeSheet.map((group, groupIndex) => (
+            <div
+              key={groupIndex}
+              className="relative py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
+              onClick={() => handleOpenWeeklyReport(group)}
+            >
+              <div className="flex items-center gap-3">
+                <span className="capitalize font-medium">
+                  {group[0].students.firstname}
+                </span>
+                <span className="capitalize font-medium">
+                  {group[0].students.lastname}
+                </span>
+              </div>
+
+              <div className="absolute top-1/2 left-1/2 -translate-y-1/2 flex flex-col items-center">
+                <small className="text-green-500">
+                  {format(new Date(group[0].dateSubmitted), "MMMM dd, yyyy")}
+                </small>
+
+                <span className="text-gray-500 text-[0.7rem] font-medium">
+                  Date Submitted
+                </span>
+              </div>
+              <div className="flex items-center gap-8">
+                <div className="flex flex-col items-center">
+                  <small className="text-blue-500">
+                    {`${format(new Date(group[0].date), "MMMM dd")} - ${format(
+                      new Date(group[group.length - 1].date),
+                      "MMMM dd"
+                    )}`}
+                  </small>
+
+                  <span className="text-gray-500 text-[0.7rem] font-medium">
+                    Report Period
+                  </span>
+                </div>
+
+                <MdKeyboardArrowRight size={23} className="text-blue-500" />
+              </div>
+            </div>
+          ))
+        ) : (
+          <h1 className="text-center py-4">No Weekly Report</h1>
+        )}
+      </div>
 
       <Drawer
         position="bottom"
@@ -102,35 +210,35 @@ const WeeklyReport = () => {
         opened={opened}
         onClose={close}
         title={
-          <header className="mt-2">
+          <header className="mt-2 ">
             <span className="text-xl font-semibold">Weekly report</span>
           </header>
         }
       >
-        <div className="weekly-report-container mx-auto px-2 sm:px-10">
-          <div className="m-4 border-b-2 border-black flex items-center justify-between pb-2">
-            <img src={logo} alt="" className="w-20 sm:w-28" />
+        <div className="weekly-report-container  sm:px-10 mx-auto max-w-[550px] w-full border rounded-lg shadow-sm ">
+          <div className="m-4 border-b-2 border-black flex items-center justify-between pb-2 mx-10">
+            <img src={logo} alt="" className="w-20 md:w-16" />
             <div className="mt-4 flex flex-col items-end text-[10px] sm:text-[12px]">
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] md:text-[6.5px] font-light">
                 Republic of the Philippines
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] md:text-[6.5px] font-light">
                 NUEVA ECIJA UNIVERSITY OF SCIENCE AND TECHNOLOGY
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] md:text-[6.5px] font-light">
                 On–the–Job Training and Career Development Center
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] md:text-[6.5px] font-light">
                 Cabanatuan City
               </span>
-              <span className="text-[8px] sm:text-[9.5px] font-light">
+              <span className="text-[8px] md:text-[6.5px] font-light">
                 ISO 9001:2015 Certified
               </span>
             </div>
           </div>
 
-          <main className="text-[10px] sm:text-[12px]">
-            <h5 className="text-center text-[10px] sm:text-[12px] max-w-[330px] mx-auto mt-3">
+          <main className="text-[10px] sm:text-[12px] mx-10 pb-10">
+            <h5 className="text-center text-[10px] max-w-[330px] mx-auto mt-3">
               STUDENT ON–THE–JOB–TRAINING WEEKLY REPORT
             </h5>
 
@@ -138,25 +246,25 @@ const WeeklyReport = () => {
               <div className="pl-2 py-2">
                 Name:
                 <span className="capitalize font-semibold">
-                  {` ${studentInfo.firstname}  ${studentInfo.lastname}`}
+                  {` ${weeklyReport[0]?.students.firstname}  ${weeklyReport[0]?.students.lastname}`}
                 </span>
               </div>
               <div className="border-l-[2px] border-[#000] pl-2 py-2">
                 Company:
                 <span className="capitalize font-semibold">
-                  {` ${studentInfo.AreaOfAssignment?.company.companyName}`}
+                  {` ${weeklyReport[0]?.students.AreaOfAssignment?.company.companyName}`}
                 </span>
               </div>
             </div>
 
             <div className="grid grid-cols-3 gap-2 sm:gap-4 items-center justify-between border-[2px] border-[#000] rounded-[4px] mt-3">
               <div className="h-[50px] sm:h-[80px] overflow-hidden pl-2 py-2">
-                Course and Section: {studentInfo.program}
+                Course and Section: {weeklyReport[0]?.students.program}
               </div>
               <div className="h-[50px] sm:h-[80px] overflow-hidden border-l-[2px]  border-[#000] pl-2 py-2 flex flex-col">
                 Training Station:
                 <span className="capitalize font-semibold">
-                  {studentInfo.AreaOfAssignment?.areaName}
+                  {weeklyReport[0]?.students.AreaOfAssignment?.areaName}
                 </span>
               </div>
               <div className="h-[50px] sm:h-[80px] overflow-hidden border-l-[2px]  border-[#000] pl-2 py-2 flex flex-col">
@@ -232,14 +340,14 @@ const WeeklyReport = () => {
                 <div>
                   <p>Prepared by:</p>
                   <h1 className="mt-1 -mb-1 text-[12px] font-semibold">
-                    {` ${studentInfo.firstname}  ${studentInfo.lastname}`}
+                    {` ${weeklyReport[0]?.students.firstname}  ${weeklyReport[0]?.students.lastname}`}
                   </h1>
                   <p>On-the-Job Trainee</p>
                 </div>
                 <div>
                   <p>Noted by:</p>
                   <h1 className="mt-1 -mb-1 text-[12px] font-semibold">
-                    {` ${studentInfo.teacher?.coordinator?.firstname} ${studentInfo.teacher?.coordinator?.lastname}`}
+                    {` ${weeklyReport[0]?.coordinator.firstname} ${weeklyReport[0]?.coordinator.lastname}`}
                   </h1>
                   <p>Ojt Coordinator</p>
 
@@ -254,7 +362,7 @@ const WeeklyReport = () => {
                 <div>
                   <p>Checked by:</p>
                   <h1 className="mt-1 -mb-1 text-[12px] font-semibold">
-                    {` ${studentInfo.trainer?.firstname}  ${studentInfo.trainer?.lastname}`}
+                    {` ${weeklyReport[0]?.students.trainer?.firstname}  ${weeklyReport[0]?.students.trainer?.lastname}`}
                   </h1>
                   <p>Trainer/Supervisor</p>
                 </div>
@@ -270,11 +378,11 @@ const WeeklyReport = () => {
           </div>
         </div>
 
-        <div className="my-5 w-full flex items-center justify-center">
+        <div className="my-5  flex items-center justify-center  mx-auto w-[40%]">
           <Button
             color="primary"
             size="lg"
-            className="w-full my-5"
+            className="w-[150px] my-5"
             onClick={handlePrint}
           >
             Print

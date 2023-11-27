@@ -68,6 +68,8 @@ import TeacherAnnouncement from "../pages/Teacher/Announcement";
 import TeacherNyProfile from "../pages/Teacher/MyProfile";
 import TeacherSettings from "../pages/Teacher/Settings";
 import TeacherOldStudent from "../pages/Teacher/OldStudent";
+import TeacherWeeklyReportList from "../pages/Teacher/WeeklyReportList";
+
 
 // Coordinator pages
 import CoordinatorDashboard from "../pages/Coordinator/Dashboard";
@@ -81,6 +83,7 @@ import CoordinatorAnnouncement from "../pages/Coordinator/Announcement";
 import CoordinatorMyProfile from "../pages/Coordinator/MyProfile";
 import CoordinatorSettings from "../pages/Coordinator/Settings";
 import CoordinatorOldStudent from "../pages/Coordinator/OldStudent";
+import CoordinatorWeeklyReportList from "../pages/Coordinator/WeeklyReportList";
 
 // Director pages
 import DirectorDashboard from "../pages/Director/Dashboard";
@@ -309,6 +312,11 @@ const PrivateRoutes = () => {
         path: "/old-students",
         element: <CoordinatorOldStudent />,
       },
+      {
+        path: "/weekly-report",
+        element: <CoordinatorWeeklyReportList />,
+      },
+      
     ],
 
     Teacher: [
@@ -379,6 +387,10 @@ const PrivateRoutes = () => {
       {
         path: "/old-students",
         element: <TeacherOldStudent />,
+      },
+      {
+        path: "/weekly-report",
+        element: <TeacherWeeklyReportList />,
       },
     ],
 

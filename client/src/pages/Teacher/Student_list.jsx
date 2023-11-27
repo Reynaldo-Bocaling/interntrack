@@ -49,11 +49,9 @@ const Student_list = () => {
     onClose: ImportStudentOnClose,
   } = ImportStudentDisclosure();
 
-  const {
-    isOpen: AddIsOpen,
-    onOpen: AddOnOpen,
-    onClose: AddOnClose,
-  } = AddStudentDisclosure();
+ 
+
+  const [isAddStudent, setIsAddStudent] = useState(false);
 
   //getCompany
   const {
@@ -316,6 +314,7 @@ const Student_list = () => {
       onSuccess: () => {
         Swal.fire("Success", "The Student has been added", "success");
         queryClient.invalidateQueries({ queryKey: ["getTeacher2"] });
+        setIsAddStudent(false)
       },
       onError: () => {
         Swal.fire(
@@ -431,7 +430,7 @@ const Student_list = () => {
             <span className="font-semibold tracking-wider">Import</span>
           </button>
           <button
-            onClick={AddOnOpen}
+            onClick={()=> setIsAddStudent(true)}
             className="flex items-center justify-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full  w-[45%] lg:w-auto"
           >
             <AiOutlineUserAdd size={16} />
@@ -516,9 +515,9 @@ const Student_list = () => {
 
       {/* Add Student modal */}
       <AddStudentModal
-        AddIsOpen={AddIsOpen}
-        AddOnOpen={AddOnOpen}
-        AddOnClose={AddOnClose}
+        AddIsOpen={isAddStudent}
+        AddOnOpen={isAddStudent}
+        AddOnClose={()=>setIsAddStudent(false)}
         handleAddStudent={handleAddStudent}
         isLoading={addStudentLoading}
       />

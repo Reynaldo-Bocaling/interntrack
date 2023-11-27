@@ -24,6 +24,8 @@ import List from "../../components/print-layout/List";
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchLength, setSearchLength] = useState(false);
+  const [isAddCoordinator, setIsAddCoordinator] = useState(false);
+
 
   const componentRef = useRef();
 
@@ -40,10 +42,7 @@ const Trainer_list = () => {
     onSuccess: (data) => {
       Swal.fire("Success", "The coordinator has been added", "success");
       queryClient.invalidateQueries({ queryKey: ["getCoordinatorList"] });
-      console.log("coordinator", {
-        username: data.username,
-        password: data.password,
-      });
+      setIsAddCoordinator(false)
     },
     onError: () => {
       Swal.fire(
@@ -315,7 +314,7 @@ const Trainer_list = () => {
           </div>
           <div className="flex items-center justify-end gap-3 w-full">
             <button
-              onClick={AddOnOpen}
+              onClick={()=> setIsAddCoordinator(true)}
               className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
             >
               <AiOutlineUserAdd size={16} />
@@ -340,8 +339,8 @@ const Trainer_list = () => {
       />
 
       <AddCoordinator
-        AddIsOpen={AddIsOpen}
-        AddOnClose={AddOnClose}
+        AddIsOpen={isAddCoordinator}
+        AddOnClose={()=>setIsAddCoordinator(false)}
         onSubmit={handleSubmit}
         isLoading={AddCoordinatorLoading}
       />

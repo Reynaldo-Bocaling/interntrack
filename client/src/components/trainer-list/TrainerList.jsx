@@ -30,16 +30,13 @@ const Trainer_list = () => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null); //right side popup
   const [searchLength, setSearchLength] = useState(false);
+  const [isAddTrainer, setIsAddTrainer] = useState(false);
   const componentRef = useRef();
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
-  const {
-    isOpen: AddIsOpen,
-    onOpen: AddOnOpen,
-    onClose: AddOnClose,
-  } = AddCoordinatorDisclosure();
+
 
   const queryClient = useQueryClient();
 
@@ -53,10 +50,7 @@ const Trainer_list = () => {
         "success"
       );
       queryClient.invalidateQueries({ queryKey: ["getTrainerList"] });
-      console.log("trainer", {
-        username: data.username,
-        password: data.password,
-      });
+      setIsAddTrainer(false)
     },
     onError: () => {
       Swal.fire(
@@ -328,7 +322,7 @@ const Trainer_list = () => {
           </div>
           <div className="flex items-center justify-end gap-3 w-full">
           <button
-            onClick={AddOnOpen}
+            onClick={()=> setIsAddTrainer(true)}
             className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
           >
             <AiOutlineUserAdd size={16} />
@@ -356,8 +350,8 @@ const Trainer_list = () => {
       <AddTrainer
         companies={company}
         onSubmit={handleFormSubmit}
-        AddIsOpen={AddIsOpen}
-        AddOnClose={AddOnClose}
+        AddIsOpen={isAddTrainer}
+        AddOnClose={()=> setIsAddTrainer(false)}
         isLoading={AddLoading}
       />
 

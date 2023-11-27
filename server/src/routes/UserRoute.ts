@@ -104,7 +104,13 @@ routes.put('/changeStudentPassword' ,verifyToken,UserController.changeStudentPas
 
 
 
+//submit report
+routes.put('/submitReport',UserController.submitReport);
+routes.put('/reportReport',UserController.reportReport);
 
+
+
+// 
 
 
 // update profile

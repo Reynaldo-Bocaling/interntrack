@@ -12,7 +12,7 @@ import { BsCalendarCheck } from "react-icons/bs";
 import { RxDashboard, RxCalendar } from "react-icons/rx";
 import { CgFileDocument } from "react-icons/cg";
 import { RiArrowDropDownLine } from "react-icons/ri";
-
+import { GoTasklist } from "react-icons/go";
 export const SidebarData = {
   Coordinator: [
     {
@@ -28,6 +28,7 @@ export const SidebarData = {
     { label: "Trainer", url: "/Trainer-list", icon: FiUsers, size: 16 },
 
     { label: "Student", url: "/Student-list", icon: TbUserSearch, size: 16 },
+    { label: "Weekly Report", url: "/weekly-report", icon: GoTasklist, size: 16 },
 
     {
       label: "Messages",
@@ -66,6 +67,7 @@ export const SidebarData = {
         { label: "Student list", url: "/student-list" },
         { label: "Timesheet", url: "/timeSheet" },
         { label: "Task uploads", url: "/StudentTask" },
+        { label: "Weekly Report", url: "/weekly-report" },
       ],
     },
     {

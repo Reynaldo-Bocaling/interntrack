@@ -6,7 +6,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
 import { Switch, Avatar } from "@nextui-org/react";
 import picture from "../../assets/images/emptyProfile.png";
-
+import { GoTasklist } from "react-icons/go";
 const Student_list = ({ data, isLoading, isError }) => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
@@ -98,7 +98,7 @@ const Student_list = ({ data, isLoading, isError }) => {
           {show === info.row.original.id && (
             <div
               onClick={() => setShow(!show)}
-              className="absolute top-3 right-7 py-4 w-[150px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
+              className="absolute top-3 right-7 py-4 w-[180px] flex flex-col justify-center pl-3 gap-2 z-20 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
                 to={`/view-student/${info.row.original.id}`}
@@ -106,6 +106,14 @@ const Student_list = ({ data, isLoading, isError }) => {
               >
                 <CgProfile size={17} />
                 Profile
+              </NavLink>
+
+              <NavLink
+                to={`/view-report/${info.row.original.id}`}
+                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
+              >
+                <GoTasklist size={17} />
+                 Weekly Report
               </NavLink>
             </div>
           )}

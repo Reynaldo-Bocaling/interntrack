@@ -140,6 +140,7 @@ model Student {
   timesheet             Timesheet[]
   task                  Task[]
   requirement           Requirement[]
+  weeklyReport          WeeklyReport[]
 }
 
 model Timesheet {
@@ -150,6 +151,9 @@ model Timesheet {
   date                  String
   week                  Int
   logStatus             Int
+  studentMark           Int?
+  teacherMark           Int?
+  dateSubmitted         String?
   student_id            Int
   student               Student  @relation(fields: [student_id], references: [id])
 }
@@ -260,3 +264,10 @@ model Notification {
   date                 String
 }
 
+
+model WeeklyReport {
+  id Int @id @default(autoincrement())
+  date                String
+  student_id          Int
+  student Student     @relation(fields: [student_id], references: [id])
+}

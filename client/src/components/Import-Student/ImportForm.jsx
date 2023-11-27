@@ -28,6 +28,7 @@ const ImportStudentModalUI = (props) => {
       onOpenChange={onClose}
       placement="top-center"
       className="h-[370px] max-w-[500px]"
+      isDismissable={false}
     >
       <ModalContent>
         {(onClose) => (

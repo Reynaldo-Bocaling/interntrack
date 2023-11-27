@@ -25,6 +25,7 @@ const Companies = () => {
   const columnHelper = createColumnHelper();
   const navigate = useNavigate();
   const [show, setShow] = useState(null);
+  const [isAddCompany, setIsAddCompany] = useState(false);
 
   const componentRef = useRef();
 
@@ -47,6 +48,7 @@ const Companies = () => {
       Swal.fire("Success", "The company has been added", "success");
       queryClient.invalidateQueries("getCompanyList");
       setAddCompanyModalIsOpen(false);
+      setIsAddCompany(false)
     },
     onError: () => {
       Swal.fire(
@@ -242,7 +244,7 @@ const Companies = () => {
           </div>
           <div className="flex items-center justify-end gap-3 w-full">
             <button
-              onClick={AddTeacherOnOpen}
+              onClick={()=> setIsAddCompany(true)}
               className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
             >
               <AiOutlineUserAdd size={16} />
@@ -267,9 +269,9 @@ const Companies = () => {
 
       {/* modal */}
       <AddCompanyComponents
-        AddIsOpen={AddIsOpen}
+        AddIsOpen={isAddCompany}
         AddOnOpen={AddTeacherOnOpen}
-        AddOnClose={AddTeacherOnClose}
+        AddOnClose={()=>setIsAddCompany(false)}
         isOpen={AddCompanyModalIsOpen}
         closeModal={() => setAddCompanyModalIsOpen(false)}
         onAddCompany={handleAddCompany}

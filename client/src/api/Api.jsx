@@ -729,6 +729,25 @@ export const updateDateRange = async(item) => {
 }
 
 
+// submit report
+export const submitReport = async(item) => {
+  try {
+    const response = await axios.put(`${url}submitReport`, item);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+export const reportReport = async(item) => {
+  try {
+    const response = await axios.put(`${url}reportReport`, item);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+
 
 
 //reset data

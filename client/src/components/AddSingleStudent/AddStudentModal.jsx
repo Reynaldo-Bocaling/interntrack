@@ -11,7 +11,7 @@ import {
   RadioGroup,
   Radio,
 } from "@nextui-org/react";
-import { getDateRange } from "../../api/Api";
+import { getDateRange, getStudentList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import WarningIcon from "../../assets/images/warning.png";
@@ -34,12 +34,17 @@ const AddSingStudent = ({
     gender: "",
   });
 
+  const [emailAlready, setEmailAlready] = useState(false)
+  const {data} = useQuery({
+    queryKey: 'getEmail',
+    queryFn: getStudentList
+  })
   const { data: dateRange } = useQuery({
     queryKey: "getDateRange",
     queryFn: getDateRange,
   });
 
-  console.log(dateRange, "dd");
+  const Emails = data?.map(({ email }) => email.toLowerCase());
 
   const [errors, setErrors] = useState({});
 
@@ -92,10 +97,16 @@ const AddSingStudent = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (isFormValid) {
+    if(Emails.includes(formData?.email)) {
+      setEmailAlready(true)
+    }
+    else if (isFormValid) {
       handleAddStudent(formData);
     }
   };
+
+
+ console.log(',',Emails);
 
   return (
     <>
@@ -104,6 +115,7 @@ const AddSingStudent = ({
         onOpenChange={AddOnClose}
         placement="top-center"
         className="max-w-[800px]"
+        isDismissable={false}
       >
         <ModalContent>
           {(onClose) => (
@@ -163,8 +175,9 @@ const AddSingStudent = ({
                         size="sm"
                         isRequired
                         className="w-[60%]"
-                        errorMessage={errors.email}
+                        errorMessage={errors.email ? errors.email : emailAlready ? 'Email is already exist':''}
                       />
+
                       <Input
                         type="number"
                         label="Contact no."

@@ -23,15 +23,11 @@ const DailyLogs = () => {
     queryFn: getStudentList,
   });
 
+  const dateNow = format(new Date(), 'eeee');
 
-  const dateNow = format(new Date(), 'eeee')
 
-  
-
-  const data =
-  student
+  const data = student
     ? student
-        .filter(()=> dateNow !== 'Saturday' || dateNow !== 'Sunday')
         .filter((item) => item.trainer_id == trainer?.id)
         .filter((item) => item.deletedStatus == 0)
         .map(({ id, firstname, lastname, timesheet, profile_url }) => ({
@@ -43,7 +39,7 @@ const DailyLogs = () => {
           timeOut: timesheet?.find(
             (item) => item.date === format(currentDate, "yyyy-MM-dd")
           )?.timeOut,
-          totalHours:timesheet?.find(
+          totalHours: timesheet?.find(
             (item) => item.date === format(currentDate, "yyyy-MM-dd")
           )?.totalHours,
           profile_url,
@@ -53,22 +49,27 @@ const DailyLogs = () => {
           id,
           name,
           timeIn:
-            timeIn !== "0:00" ? format(new Date(timeIn), "hh:mm a") : "--",
+            timeIn !== "0:00"
+              ? format(
+                  new Date(`${format(currentDate, "yyyy-MM-dd")} ${timeIn}`),
+                  "hh:mm a"
+                )
+              : "--",
           timeOut:
-            timeOut !== "0:00" ? format(new Date(timeOut), "hh:mm a") : "--",
-          totalHours: `${totalHours} hrs` ,
+            timeOut !== "0:00"
+              ? format(
+                  new Date(`${format(currentDate, "yyyy-MM-dd")} ${timeOut}`),
+                  "hh:mm a"
+                )
+              : "--",
+          totalHours: `${totalHours} hrs`,
           date: format(currentDate, "MMMM dd yyyy"),
           url: profile_url,
         }))
         .filter((item) =>
           item.name.toLowerCase().includes(searchInput.toLowerCase())
         )
-    : []
-
-  
-
-  // console.log(format(currentDate, 'yyyy-MM-dd'));
-  console.log(data, "s");
+    : [];
 
   const columns = [
     columnHelper.accessor("id", {
@@ -114,6 +115,7 @@ const DailyLogs = () => {
   ];
 
   if (studentLoading) return <center className="my-12">Loading</center>;
+
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-4">

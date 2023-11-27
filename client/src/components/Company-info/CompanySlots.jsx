@@ -80,10 +80,10 @@ const CompanySlots = ({ data }) => {
   const handleInputChange = (event, item) => {
     const inputValue = event.target.value;
     // Check if inputValue is null or less than 0 or less than totalStudent.
-    if (!inputValue || Number(inputValue) < 0 || Number(inputValue) < item.totalStudent) {
-      Swal.fire("Error", "Invalid slot value.", "error");
-      return;
-    }
+    // if (!inputValue || Number(inputValue) < 0 || Number(inputValue) < item.totalStudent) {
+    //   Swal.fire("Error", "Invalid slot value.", "error");
+    //   return;
+    // }
     setSlotValue(inputValue);
   };
 
@@ -91,12 +91,10 @@ const CompanySlots = ({ data }) => {
     <div className="py-2 px-5">
       <header className="flex items-center justify-between mb-5 px-2">
         <span className="text-xl text-gray-700 font-semibold tracking-wide">
-          Students
+          Slots
         </span>
 
-        <div className="bg-white p-1 px-3 py-1 flex items-center gap-2 rounded-full shadow-md shadow-slate-200 border border-gray-100">
-          <input type="text" placeholder="Search" />
-        </div>
+        
       </header>
 
       <div className="flex gap-5">

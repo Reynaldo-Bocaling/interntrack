@@ -95,6 +95,7 @@ const AddTrainer = ({
         onOpenChange={AddOnClose}
         placement="top-center"
         className="max-w-[800px]"
+        isDismissable={false}
       >
         <ModalContent>
           {(onClose) => (

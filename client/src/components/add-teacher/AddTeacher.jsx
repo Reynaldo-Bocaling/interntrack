@@ -131,6 +131,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
         onOpenChange={AddOnClose}
         placement="top-center"
         className="max-w-[800px]"
+        isDismissable={false}
       >
         <ModalContent>
           {(onClose) => (

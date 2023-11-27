@@ -3,44 +3,65 @@ import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
 import logo from "../../assets/images/neust_logo-1.png";
-import { getStudentInfo } from "../../api/Api";
-import { useQuery } from "@tanstack/react-query";
+import { getStudent, getTask, getTimesheet, submitReport } from "../../api/Api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
 import Report from "../../components/print-layout/WeeklyReport";
-import { useParams } from "react-router-dom";
-import { MdKeyboardArrowRight } from "react-icons/md";
+import Swal from "sweetalert2";
 
+import { MdKeyboardArrowRight } from "react-icons/md";
 const WeeklyReport = () => {
+  const queryClient = useQueryClient();
   const [opened, { open, close }] = useDisclosure();
   const [weeklyReport, setWeeklyReport] = useState([]);
+  const [submitReportValue, setSubmitReportValue] = useState({});
+  const calculateTotalHours = (timeSheet) => {
+    return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
+  };
 
-  const { id } = useParams();
+  // /timesheet
+  const currentDate = new Date();
 
-  const { data, isLoading: studentLoading } = useQuery({
-    queryKey: ["getStudentweeklyreport"],
-    queryFn: () => getStudentInfo(id),
+  const { data: timesheet, isLoading: timesheetLoading } = useQuery({
+    queryKey: ["getTimesheetStudent2"],
+    queryFn: getTimesheet,
   });
 
+  const { data: getTaskList, isLoading: taskLoading } = useQuery({
+    queryKey: ["getTaskStudent2"],
+    queryFn: getTask,
+  });
+
+  const { data, isLoading: studentLoading } = useQuery({
+    queryKey: ["getStudent2"],
+    queryFn: getStudent,
+  });
+
+  const studentTask = getTaskList ? getTaskList : [];
   const studentInfo = data ? data : [];
 
-  const timesheet = studentInfo?.timesheet ? studentInfo?.timesheet : [];
-  const studentTask = studentInfo?.task;
+  const getWeekNuber = timesheet
+    ? timesheet.find((item) => item.date === format(new Date(), "yyyy-MM-dd"))
+        ?.week
+    : [];
 
   const StudentTimesheet = timesheet
-    ?.filter((item) => item.studentMark === 1 && item.teacherMark === 1)
-    .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
-      id,
-      totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
-      date,
-      logStatus,
-      student_id,
-      week,
-      taskDescription:
-        logStatus !== 0
-          ? studentTask.find((item) => item.date === date)?.description
-          : "",
-    }));
+    ? timesheet
+        .filter((item) => new Date(item.week) <= getWeekNuber)
+        .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
+          id,
+          totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
+          date,
+          logStatus,
+          student_id,
+          week,
+          taskDescription:
+            logStatus !== 0
+              ? studentTask.find((item) => item.date === date)?.description
+              : "",
+        }))
+    : [];
 
   const groupedTimeSheet = [];
   for (let i = 0; i < StudentTimesheet.length; i += 5) {
@@ -55,8 +76,10 @@ const WeeklyReport = () => {
     ? weeklyReport.reduce((total, item) => total + item.totalHours, 0)
     : [];
 
-  // print
+  // Reference para sa pag-print
   const componentRef = useRef();
+
+  // React-to-Print function
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
@@ -65,19 +88,51 @@ const WeeklyReport = () => {
 
   const handleOpenWeeklyReport = (item) => {
     setWeeklyReport(item);
+    setSubmitReportValue({id: item?.id, week: item?.week})
     open();
   };
 
-  if (studentLoading) {
+  
+
+
+  const { mutate } = useMutation({
+    mutationFn: submitReport,
+    onSuccess: () => {
+      Swal.fire(
+        "Success",
+        "Your weekly report has been successfully submitted for review.",
+        "success"
+      );
+      queryClient.invalidateQueries({ queryKey: ["getStudentweeklyreport23"] });
+    },
+    onError: () => {
+      Swal.fire(
+        "Error",
+        "Oops! Something went wrong while processing your request to submit the weekly report.",
+        "error"
+      );
+    },
+  });
+
+
+  const handleSubmit = () => {
+    const id = weeklyReport[0]?.student_id;
+    const week = weeklyReport[0]?.week;
+  
+    if (id !== undefined && week !== undefined) {
+      mutate({ id, week });
+    } else {
+      console.error("Invalid id or week in weeklyReport:", weeklyReport);
+    }
+  };
+  
+  if (taskLoading || timesheetLoading || studentLoading) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
-
-    console.log(groupedTimeSheet,'s');
-
   return (
     <div>
       <Card className="flex flex-col gap-5">
-        <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
+      
         {groupedTimeSheet.map((group, groupIndex) => (
           <div
             key={groupIndex}
@@ -270,7 +325,7 @@ const WeeklyReport = () => {
           </div>
         </div>
 
-        <div className="my-5 w-full flex items-center justify-center">
+        <div className="my-5 w-full flex items-center justify-center gap-4">
           <Button
             color="primary"
             size="lg"
@@ -278,6 +333,13 @@ const WeeklyReport = () => {
             onClick={handlePrint}
           >
             Print
+          </Button>
+          <Button
+            size="lg"
+            className="w-full my-5 bg-green-500 text-white"
+            onClick={handleSubmit}
+          >
+            Submit
           </Button>
         </div>
       </Drawer>

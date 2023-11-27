@@ -21,7 +21,7 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
       const [Address, setAddress] = useState("");
       const [Email, setEmail] = useState("");
       const [Contact, setContact] = useState("");
-    
+
       const form = useForm({
         initialValues: {
           available_positions: [{ position: "", slot: "", key: randomId() }],
@@ -90,6 +90,7 @@ const CustomModal = ({onAddCompany , AddIsOpen, AddOnClose , isLoading  }) => {
         onOpenChange={AddOnClose}
         placement="top-center"
         className="max-w-[900px] h-[570px] overflow-y-auto"
+        isDismissable={false}
       >
         <ModalContent>
           {(onClose) => (

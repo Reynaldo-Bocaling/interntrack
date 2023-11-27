@@ -26,6 +26,7 @@ const TeacherList = () => {
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null);
   const [searchLength, setSearchLength] = useState(false);
+  const [isAddTeacher, setIsAddTeacher] = useState(false);
 
   const componentRef = useRef();
 
@@ -51,10 +52,7 @@ const TeacherList = () => {
         "success"
       );
       queryClient.invalidateQueries({ queryKey: ["getCoordinator"] });
-      console.log("teacher", {
-        username: data.username,
-        password: data.password,
-      });
+      setIsAddTeacher(false)
     },
     onError: () => {
       Swal.fire(
@@ -323,7 +321,7 @@ const TeacherList = () => {
           </div>
           <div className="flex items-center justify-end gap-3 w-full">
           <button
-            onClick={AddTeacherOnOpen}
+            onClick={()=> setIsAddTeacher(true)}
             className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
           >
             <AiOutlineUserAdd size={16} />
@@ -343,9 +341,9 @@ const TeacherList = () => {
       <TableFormat data={data} isLoading={isLoading} columns={columns} />
 
       <AddTeacherModal
-        AddIsOpen={AddIsOpen}
+        AddIsOpen={isAddTeacher}
         AddOnOpen={AddTeacherOnOpen}
-        AddOnClose={AddTeacherOnClose}
+        AddOnClose={()=>setIsAddTeacher(false)}
         onSubmit={handleSubmit}
         isLoading={AddTeacherLoading}
       />
