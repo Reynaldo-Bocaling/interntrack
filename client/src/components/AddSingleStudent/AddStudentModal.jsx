@@ -11,6 +11,10 @@ import {
   RadioGroup,
   Radio,
 } from "@nextui-org/react";
+import { getDateRange } from "../../api/Api";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+import WarningIcon from "../../assets/images/warning.png";
 
 const AddSingStudent = ({
   onSubmit,
@@ -30,12 +34,19 @@ const AddSingStudent = ({
     gender: "",
   });
 
+  const { data: dateRange } = useQuery({
+    queryKey: "getDateRange",
+    queryFn: getDateRange,
+  });
+
+  console.log(dateRange, "dd");
+
   const [errors, setErrors] = useState({});
 
   const firstnameRegex = /^[A-Za-z\s]+$/;
   const lastnameRegex = /^[A-Za-z\s]+$/;
   const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-  const mobileRegex = /^[0-9]/
+  const mobileRegex = /^[0-9]/;
   const addressRegex = /^[A-Za-z\s]+$/;
   const genderRegex = /^(male|female)$/i;
   const majorRegex = /^[A-Za-z\s]+$/;
@@ -101,124 +112,143 @@ const AddSingStudent = ({
                 Add Student Form
               </ModalHeader>
               <ModalBody>
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex flex-col gap-5 py-4 px-2"
-                >
-                  <div className="flex items-center gap-4">
+                {dateRange.length > 0 ? (
+                  <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col gap-5 py-4 px-2"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Input
+                        type="text"
+                        label="First Name"
+                        name="firstname"
+                        onChange={handleChange}
+                        size="sm"
+                        isRequired
+                        className="w-[40%]"
+                        errorMessage={errors.firstname}
+                      />
+
+                      <Input
+                        type="text"
+                        label="Last Name"
+                        name="lastname"
+                        onChange={handleChange}
+                        size="sm"
+                        isRequired
+                        className="w-[40%]"
+                        errorMessage={errors.lastname}
+                      />
+
+                      <Input
+                        type="text"
+                        label={
+                          <p>
+                            MI{" "}
+                            <span className="text-[#a8a9a9]">(Optional)</span>
+                          </p>
+                        }
+                        name="middlename"
+                        onChange={handleChange}
+                        size="sm"
+                        className="w-[20%]"
+                      />
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Input
+                        type="text"
+                        label="Email"
+                        name="email"
+                        onChange={handleChange}
+                        size="sm"
+                        isRequired
+                        className="w-[60%]"
+                        errorMessage={errors.email}
+                      />
+                      <Input
+                        type="number"
+                        label="Contact no."
+                        name="contact"
+                        onChange={handleChange}
+                        size="sm"
+                        isRequired
+                        className="w-[40%]"
+                        errorMessage={errors.contact}
+                      />
+                    </div>
+
+                    <div className="flex items-end gap-12">
+                      <Input
+                        type="text"
+                        label="Address"
+                        name="address"
+                        onChange={handleChange}
+                        size="sm"
+                        isRequired
+                        className="w-[60%]"
+                        errorMessage={errors.address}
+                      />
+
+                      <RadioGroup
+                        label="Sex"
+                        orientation="horizontal"
+                        name="gender"
+                        onChange={handleChange}
+                        value={formData.gender}
+                      >
+                        <Radio value="Male">Male</Radio>
+                        <Radio value="Female">Female</Radio>
+                      </RadioGroup>
+                    </div>
+
                     <Input
                       type="text"
-                      label="First Name"
-                      name="firstname"
+                      label="Major"
+                      name="major"
                       onChange={handleChange}
                       size="sm"
                       isRequired
                       className="w-[40%]"
-                      errorMessage={errors.firstname}
+                      errorMessage={errors.major}
                     />
 
-                    <Input
-                      type="text"
-                      label="Last Name"
-                      name="lastname"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[40%]"
-                      errorMessage={errors.lastname}
-                    />
-
-                    <Input
-                      type="text"
-                      label={
-                        <p>
-                          MI <span className="text-[#a8a9a9]">(Optional)</span>
-                        </p>
-                      }
-                      name="middlename"
-                      onChange={handleChange}
-                      size="sm"
-                      className="w-[20%]"
-                    />
+                    <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
+                      <Button
+                        color="danger"
+                        variant="flat"
+                        onPress={AddOnClose}
+                        className="font-medium tracking-wide px-2"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        isRequired
+                        color="primary"
+                        className="font-medium tracking-wide px-8"
+                        disabled={!isFormValid}
+                      >
+                        {isLoading ? "Loading..." : "Submit"}
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="h-full w-full flex flex-col justify-start items-center gap-5 pt-5 pb-10">
+                    <img src={WarningIcon} className="h-16 w-16" />
+                    <p className="text-gray-400 tracking-wider font-light text-sm">
+                      Before you can import or add students, please set up the
+                      date range. Click{" "}
+                      <Link
+                        to="/Settings"
+                        className="text-blue-500 underline mx-2"
+                      >
+                        'Go to Settings'
+                      </Link>{" "}
+                      and then 'Set Date Range' to specify the date range for
+                      generating student timesheets.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <Input
-                      type="text"
-                      label="Email"
-                      name="email"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[60%]"
-                      errorMessage={errors.email}
-                    />
-                    <Input
-                      type="number"
-                      label="Contact no."
-                      name="contact"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[40%]"
-                      errorMessage={errors.contact}
-                    />
-                  </div>
-
-                  <div className="flex items-end gap-12">
-                    <Input
-                      type="text"
-                      label="Address"
-                      name="address"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[60%]"
-                      errorMessage={errors.address}
-                    />
-
-                    <RadioGroup
-                      label="Sex"
-                      orientation="horizontal"
-                      name="gender"
-                      onChange={handleChange}
-                      value={formData.gender}
-                    >
-                      <Radio value="Male">Male</Radio>
-                      <Radio value="Female">Female</Radio>
-                    </RadioGroup>
-                  </div>
-
-                  <Input
-                    type="text"
-                    label="Major"
-                    name="major"
-                    onChange={handleChange}
-                    size="sm"
-                    isRequired
-                    className="w-[40%]"
-                    errorMessage={errors.major}
-                  />
-
-                  <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
-                    <Button
-                      color="danger"
-                      variant="flat"
-                      onPress={AddOnClose}
-                      className="font-medium tracking-wide px-2"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      isRequired
-                      color="primary"
-                      className="font-medium tracking-wide px-8"
-                      disabled={!isFormValid}
-                    >
-                      {isLoading ? "Loading..." : "Submit"}
-                    </Button>
-                  </div>
-                </form>
+                )}
               </ModalBody>
             </>
           )}

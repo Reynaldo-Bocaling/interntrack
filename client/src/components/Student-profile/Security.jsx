@@ -6,6 +6,7 @@ import { MdAlternateEmail } from "react-icons/md";
 import { FiLock } from "react-icons/fi";
 import { useMutation } from "@tanstack/react-query";
 import { changeStudentPassword } from "../../api/Api";
+import Swal from "sweetalert2";
 function Security({ data }) {
   const [opened, { open, close }] = useDisclosure(false); //MESSAGE
   const [password, setPassword] = useState("");
@@ -29,10 +30,18 @@ function Security({ data }) {
 
   const { mutate } = useMutation(changeStudentPassword, {
     onSuccess: () => {
-      alert("success");
+      Swal.fire(
+        "Success",
+        "Password updated.",
+        "success"
+      );
     },
     onError: () => {
-      alert("error");
+      Swal.fire(
+        "Error",
+        "Failed to update password \n Please try again later",
+        "error"
+      );
     },
   });
 

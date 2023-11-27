@@ -23,6 +23,7 @@ import List from "../../components/print-layout/List";
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
+  const [searchLength, setSearchLength] = useState(false);
 
   const componentRef = useRef();
 
@@ -280,20 +281,37 @@ const Trainer_list = () => {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
+      <div
+        className={`flex flex-col lg:flex-row items-center justify-between gap-5 px-2 mb-5`}
+      >
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Coordinator list
         </h1>
 
-        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-          <div className="h-10 w-full sm:w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
-            <BiSearch />
-            <input
-              type="text"
-              placeholder="Search.."
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="outline-none text-sm"
+        <div
+          className={`${
+            searchLength && "flex-col gap-5"
+          } flex sm:flex-row items-center gap-3 w-full sm:w-auto`}
+        >
+          <div
+            className={`${
+              searchLength ? "w-full" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          >
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
             />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
           </div>
           <div className="flex items-center justify-end gap-3 w-full">
             <button

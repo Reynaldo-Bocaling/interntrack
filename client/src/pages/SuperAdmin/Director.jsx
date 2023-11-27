@@ -64,6 +64,9 @@ const Director = () => {
                 <Button color="primary" className="w-[130px]">
                   Edit
                 </Button>
+                <Button color="danger" className="w-[130px]">
+                  Drop
+                </Button>
               </div>
             </div>
           </div>

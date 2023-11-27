@@ -21,11 +21,9 @@ import {
 import {
   editStudentProfile,
   getStudent,
-  updateStudentProfilePicture
+  updateStudentProfilePicture,
 } from "../../api/Api";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-
-
 
 const Profile = () => {
   const [File, setFile] = useState(null);
@@ -37,25 +35,23 @@ const Profile = () => {
   const [OpenEdit, setOpenEdit] = useState(false);
   const [OpenMessage, setOpenMessage] = useState(false);
 
-
   const loadingImage = (e) => {
     const image = e.target.files[0];
     setFile(image);
     setPreview(URL.createObjectURL(image));
   };
-  
 
-  const {data} = useQuery({
-    queryKey: ['getstudentInfo'],
-    queryFn: getStudent
-  })
+  const { data } = useQuery({
+    queryKey: ["getstudentInfo"],
+    queryFn: getStudent,
+  });
 
-  const {mutate: editInfoMutate} = useMutation(editStudentProfile, {
-    onSuccess: ()=> {
+  const { mutate: editInfoMutate } = useMutation(editStudentProfile, {
+    onSuccess: () => {
       Swal.fire("Success", "Update Successful", "success");
-      setOpenEdit(false)
-      queryClient.invalidateQueries('getstudentInfo')
-      setPreview('')
+      setOpenEdit(false);
+      queryClient.invalidateQueries("getstudentInfo");
+      setPreview("");
     },
     onError: () => {
       Swal.fire(
@@ -63,9 +59,9 @@ const Profile = () => {
         "Update Failed. Please check the information provided and try again.",
         "error"
       );
-    }
-  })
-  
+    },
+  });
+
   const { mutate: editProfile } = useMutation(updateStudentProfilePicture, {
     onSuccess: () => {
       Swal.fire("Success", "Update Successful", "success");
@@ -80,7 +76,6 @@ const Profile = () => {
     },
   });
 
-  
   const handleEditProfile = () => {
     const formData = new FormData();
     formData.append("image", File);
@@ -88,14 +83,9 @@ const Profile = () => {
   };
 
   const handleEditInfo = (item) => {
-   
+    editInfoMutate(item);
+  };
 
-    editInfoMutate(item)
-
-  }
-
-
-  
   const Info = [
     { id: 0, type: "text", name: "firstname", label: "Firstname" },
     { id: 1, type: "text", name: "lastname", label: "Lastname" },
@@ -103,9 +93,7 @@ const Profile = () => {
     { id: 3, type: "text", name: "email", label: "Email" },
     { id: 4, type: "number", name: "contact", label: "Contact" },
     { id: 5, type: "text", name: "gender", label: "Gender" },
-  
-  ]
-
+  ];
 
   return (
     <div className="flex flex-col">
@@ -116,21 +104,21 @@ const Profile = () => {
           <CgMenuMotion size={20} />
         </header>
         <div className="bg-blue-2 flex flex-col items-center">
-        <div className="relative">
-                <div className="ml-7  bg-white w-32 h-32 p-5 object-cover border-white right rounded-full shadow-md overflow-hidden">
-                  {data?.profile ? (
-                    <img src={data.profile_url} alt={data.profile_url} />
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <button
-                  onClick={onOpen}
-                  className="absolute -bottom-1 right-5 bg-gray-200 px-2 h-[32px] w-[32px] flex items-center justify-center rounded-full cursor-pointer"
-                >
-                  <BsCamera />
-                </button>
-              </div>
+          <div className="relative">
+            <div className="ml-7  bg-white w-32 h-32 p-5 object-cover border-white right rounded-full shadow-md overflow-hidden">
+              {data?.profile ? (
+                <img src={data.profile_url} alt={data.profile_url} />
+              ) : (
+                ""
+              )}
+            </div>
+            <button
+              onClick={onOpen}
+              className="absolute -bottom-1 right-5 bg-gray-200 px-2 h-[32px] w-[32px] flex items-center justify-center rounded-full cursor-pointer"
+            >
+              <BsCamera />
+            </button>
+          </div>
 
           <div className="mt-3 flex flex-col items-center">
             <div className="text-lg text-[#000] font-bold flex items-center justify-center gap-2">
@@ -148,19 +136,22 @@ const Profile = () => {
             Message
           </button> */}
           <button
-            onClick={()=>setOpenEdit(true)}
+            onClick={() => setOpenEdit(true)}
             className="font-semibold bg-slate-100 py-2 px-4 rounded-lg"
           >
             Edit Info
           </button>
-         
         </div>
 
         <ProfileInfo data={data} />
-        <Editinfo data={data} handleSubmit={handleEditInfo} info={Info} onClose={() => setOpenEdit(false)} opened={OpenEdit} />
+        <Editinfo
+          data={data}
+          handleSubmit={handleEditInfo}
+          info={Info}
+          onClose={() => setOpenEdit(false)}
+          opened={OpenEdit}
+        />
         <Message onClose={() => setOpenMessage(false)} opened={OpenMessage} />
-
-        
       </div>
 
       {/* modal */}
@@ -215,9 +206,8 @@ const Profile = () => {
           )}
         </ModalContent>
       </Modal>
-
     </div>
   );
-}
+};
 
 export default Profile;

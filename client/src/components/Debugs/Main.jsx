@@ -1,288 +1,313 @@
-import React, { useState } from "react";
-import { MdKeyboardArrowRight, MdMoreTime } from "react-icons/md";
-import { AiOutlineFieldTime } from "react-icons/ai";
-import { LuAlarmClockOff } from "react-icons/lu";
-import { Button } from "@nextui-org/react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getTimesheet, addTimeIn, addTimeOut } from "../../api/Api";
-import {
-  format,
-  parse,
-  differenceInMinutes,
-  addMinutes,
-  setMinutes,
-  getMinutes,
-  getHours,
-  setHours
-} from "date-fns";
-import { AiOutlineCheck } from "react-icons/ai";
+import React, { useRef, useState } from "react";
+import { BiSearch } from "react-icons/bi";
+import { HiOutlineDotsVertical, HiOutlineEye } from "react-icons/hi";
+import { IconTrash } from "@tabler/icons-react";
+import { BsPrinter } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineUserAdd } from "react-icons/ai";
+import AddCompanyComponents from "../../components/Add-companies/AddCompanies"; //
+import { getCompanyList, addCompany } from "../../api/Api";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import PulseLoader from "react-spinners/PulseLoader";
+import { useDisclosure as AddTeacherDisclosure } from "@nextui-org/react";
 import Swal from "sweetalert2";
+import { useReactToPrint } from "react-to-print";
+import List from "../../components/print-layout/List";
 
-const DailyLogs = () => {
+const Companies = () => {
+  const [searchInput, setSearchInput] = useState("");
+  const [AddCompanyModalIsOpen, setAddCompanyModalIsOpen] = useState(false);
+  const [OpenTableMenu, setOpenTableMenu] = useState(null);
+  const [searchLength, setSearchLength] = useState(false);
+
+  const navigate = useNavigate();
+
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const {
+    isOpen: AddIsOpen,
+    onOpen: AddTeacherOnOpen,
+    onClose: AddTeacherOnClose,
+  } = AddTeacherDisclosure();
+
   const queryClient = useQueryClient();
-  const timeOfDay = format(new Date(), "aa");
-  const formattedDate = format(new Date(), "yyyy-MM-dd");
-  const timeFormat = format(new Date(), "HH:mm");
-  const [totalHours, setTotalHours] = useState(0);
 
-  // timeIn
-  const { mutate: mutateTimeIn } = useMutation({
-    mutationFn: addTimeIn,
+  // add company
+  const { mutate, isLoading } = useMutation({
+    mutationFn: addCompany,
     onSuccess: () => {
-      Swal.fire(
-        "Success",
-        "You've successfully time in. \n Lets get to work!",
-        "success"
-      );
-      queryClient.invalidateQueries({ queryKey: ["getStudentDailyLog"] });
+      Swal.fire("Success", "The company has been added", "success");
+      queryClient.invalidateQueries("getCompanyList");
+      setAddCompanyModalIsOpen(false);
     },
-    onError: (error) => {
-      console.error(error.message);
+    onError: () => {
       Swal.fire(
         "Error",
-        "Time in failed. Something went wrong. \n Please retry",
+        "There was an issue adding the campany. \n Please check the information provided and try again.",
         "error"
       );
     },
   });
-
-  // timeOut
-  const { mutate: mutateTimeOut } = useMutation({
-    mutationFn: addTimeOut,
-    onSuccess: () => {
-      Swal.fire(
-        "Success",
-        "Time Out successfully. \n Thank you for your hard work today!",
-        "success"
-      );
-      queryClient.invalidateQueries({ queryKey: ["getStudentDailyLog"] });
-    },
-    onError: (error) => {
-      console.error(error.message);
-      Swal.fire(
-        "Error",
-        "Time out failed. Something went wrong. \n Please retry",
-        "error"
-      );
-    },
+  // getCompanies
+  const {
+    data: company,
+    isLoading: companyLoading,
+    isError: companyError,
+  } = useQuery({
+    queryKey: ["getCompanyList"],
+    queryFn: getCompanyList,
   });
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["getStudentDailyLog"],
-    queryFn: getTimesheet,
-  });
+  const handleAddCompany = async (formData) => {
+    mutate(formData);
+    console.log(formData);
+  };
 
-  if (isLoading) {
-    return <h1>Loading</h1>;
-  }
-
-  const getTime = data ? data.find((item) => item.date === formattedDate) : [];
-  const timeInDB = getTime?.timeIn;
-  const timeOutDB = getTime?.timeOut;
-  const totalHoursDB = getTime?.totalHours;
-  const timeId = getTime?.id;
-
-  const timeInDBFormat = new Date(timeInDB);
-  const timeOutDBFormat = new Date(timeOutDB);
-
-  // time now
-  const timeNow = parse(timeFormat, "HH:mm", new Date());
-
-  const getWeek = data
-    ? data
-        .filter((item) => item.week === getTime?.week)
-        .map(({ date }) => ({
-          date: format(new Date(date), "dd"),
-          day: format(new Date(date), "EEEE"),
-        }))
+  const filtered = company
+    ? company
+        .map(
+          ({ id, companyName, address, email, contact, areaOfAssignment }) => ({
+            id,
+            companyName,
+            address,
+            email,
+            contact,
+            slots: areaOfAssignment.reduce(
+              (total, item) => total + item.slot,
+              0
+            ),
+            totalStudent: areaOfAssignment
+              ?.flatMap(({ trainer }) =>
+                trainer?.flatMap(({ student }) => student)
+              )
+              .filter((item) => item.deletedStatus === 0).length,
+          })
+        )
+        .filter((item) =>
+          item.companyName.toLowerCase().includes(searchInput.toLowerCase())
+        )
     : [];
 
-
-
-  //addjust time
-  const adjustTime = (time) => {
-    const minutes = getMinutes(time);
-    const hours = getHours(time);
-    if (minutes >= 0 && minutes < 15) {
-      return setMinutes(setMinutes(time, 0), 0);
-    } else if (minutes >= 15 && minutes < 30) {
-      return setMinutes(setMinutes(time, 0), 15);
-    } else if (minutes >= 30 && minutes < 45) {
-      return setMinutes(setMinutes(time, 0), 30);
-    } else {
-      return setMinutes(setMinutes(time, 0), 45);
-    }
-  };
-
-  // adjust total hours
-  const adjustTotalHours = (hours) => {
-    const totalMinutes = hours * 60;
-    const adjustedMinutes = Math.floor(totalMinutes / 15) * 15;
-    return adjustedMinutes / 60;
-  };
-
-
-// timeIn Function
-const handleTimeIn = (e) => {
-  e.preventDefault();
-  const currentTime = new Date();
-  const adjustedTime = adjustTime(currentTime);
-
-  mutateTimeIn({
-    id: timeId,
-    timeIn: adjustedTime,
-  });
-};
-
-// timeOut Function
-const handleTimeOut = () => {
-  const currentTime = new Date();
-  const adjustedTime = adjustTime(currentTime);
-
-  if (timeInDB !== "0:00") {
-    const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
-    const hoursWorked = minutesWorked / 60;
-    const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
-
-    mutateTimeOut({
-      id: timeId,
-      timeOut: adjustedTime,
-      totalHours: parseFloat(newTotalHours.toFixed(2)),
-    });
+  const defaultData = [...filtered];
+  while (defaultData.length < 15) {
+    defaultData.push({ name: "", email: "", totalStudent: "" });
   }
-  
-};
 
-
-
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Company
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Address
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {defaultData.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.companyName}</td>
+              <td className=" border pl-4 text-[13px]">{item.address}</td>
+              <td className="text-left pl-4 border text-[13px]">
+                {item.email}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
 
   return (
-    <div className="mt-2 border-r">
-      <div className="flex items-center justify-between mb-8 px-3">
-        <h1 className="text-xl font-bold tracking-wider text-gray-700 ">
-          Daily logs
+    <div>
+      <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
+        <h1 className="text-xl font-bold tracking-wider text-gray-700">
+          Company list
         </h1>
-        <div className="text-gray-400 flex items-center gap-1">
-          Slide to History
-          <MdKeyboardArrowRight size={23} />
+
+        <div
+          className={`${
+            searchLength && "flex-col gap-5"
+          } flex sm:flex-row items-center gap-3 w-full sm:w-auto`}
+        >
+          <div
+            className={`${
+              searchLength ? "w-full" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300 transition-all`}
+          >
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
+            />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
+          </div>
+          <div className="flex items-center justify-end gap-3 w-full">
+            <button
+              onClick={AddTeacherOnOpen}
+              className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <AiOutlineUserAdd size={16} />
+              <span className="font-semibold tracking-wider">Add</span>
+            </button>
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <BsPrinter size={17} />
+              <span className="font-semibold tracking-wider">Print</span>
+            </button>
+          </div>
         </div>
       </div>
-      <header className="h-[80px] w-full">
-        <div className="grid grid-cols-5 gap-7  items-center justify-between px-3">
-          {getWeek.map((item, index) => (
-            <div
-              key={index}
-              className={`${
-                item.date === format(new Date(), "dd")
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              } h-[80px]  rounded-2xl flex flex-col justify-center items-center gap-2`}
-            >
-              <span className=" text-sm  ">{item.day[0]}</span>
-              <span className=" text-md font-semibold">{item.date}</span>
-            </div>
-          ))}
-        </div>
-      </header>
 
-      {getTime ? (
-        <main className="w-full flex flex-col items-center justify-center gap-7 mt-7">
-          <div className="relative h-[220px] w-[220px] rounded-full">
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 h-[95%] w-[95%] rounded-full bg-white flex flex-col justify-center items-center gap-3">
-              <span className="text-lg text-gray-500 tracking-wider">
-                Time Now
-              </span>
-              <h1 className="text-4xl tracking-wide font-semibold">
-                {format(timeNow, "hh:mm")} {/*time now */}
-                <small className="text-sm text-blue-500">{timeOfDay}</small>
-              </h1>
-            </div>
-
-            {/* design purposes */}
-            <div className="flex">
-              <div className="absolute top-0 left-0 h-[220px] w-[125px] z-0 rounded-l-full bg-orange-100"></div>
-              <div className="absolute top-0 right-0 h-[220px] w-[125px] rounded-r-full bg-blue-100"></div>
-              <div className="absolute top-3 left-4 h-[40px] w-[40px] rounded-full bg-white border-[4px] border-orange-100 z-20"></div>
-            </div>
-          </div>
-          <div className="w-full px-4">
-            <div className="w-full flex items-center justify-between my-3">
-              <div className="flex items-center gap-4">
-                <MdMoreTime size={25} className="text-blue-500" />
-                <span className="text-gray-700">Time in</span>
-              </div>
-              <span
-                className={`${
-                  timeInDB === "0:00" ? "text-red-500" : "font-semibold"
-                }  tracking-wide`}
-              >
-                {timeInDB === "0:00"
-                  ? "Not yet Time in"
-                  : `${format(timeInDBFormat, "h:mm a")}`}
-              </span>
-            </div>
-            <div className="w-full flex items-center justify-between my-3">
-              <div className="flex items-center gap-4">
-                <LuAlarmClockOff size={25} className="text-red-500" />
-                <span className="text-gray-700">Time out</span>
-              </div>
-              <span
-                className={`${
-                  timeOutDB === "0:00" ? "text-red-500" : "font-semibold"
-                }  tracking-wide`}
-              >
-                {timeOutDB === "0:00"
-                  ? "Not yet Time out"
-                  : `${format(timeOutDBFormat, "h:mm a")}`}
-                {/* {timeOutDB} */}
-              </span>
-            </div>
-            <div className="w-full flex items-center justify-between my-3">
-              <div className="flex items-center gap-4">
-                <AiOutlineFieldTime size={25} className="text-green-500" />
-                <span className="text-gray-700">Total hours</span>
-              </div>
-              <span className="font-semibold tracking-wide">
-                {timeInDB === "0:00" || timeOutDB === "0:00"
-                  ? 0
-                  : `${totalHoursDB} hrs`}
-              </span>
-            </div>
-          </div>
-
-          {timeInDB != "0:00" && timeOutDB != "0:00" ? (
-            <div className="my-3 text-xl tracking-wide text-green-500 flex items-center gap-2">
-              End Work <AiOutlineCheck />
-            </div>
-          ) : timeInDB === "0:00" ? (
-            <Button
-              onClick={handleTimeIn}
-              color="primary"
-              size="lg"
-              className="w-[150px] font-medium tracking-wide"
-              isDisabled={timeInDB !== "0:00" && timeOutDB !== "0:00"}
-            >
-              Time in{" "}
-            </Button>
-          ) : (
-            <Button
-              onClick={handleTimeOut}
-              color="primary"
-              size="lg"
-              className="w-[150px] font-medium tracking-wide"
-              isDisabled={timeInDB !== "0:00" && timeOutDB !== "0:00"}
-            >
-              Time Out{" "}
-            </Button>
-          )}
-        </main>
+      {companyError ? (
+        <h1 className="my-10 text-center py-5 border">
+          Server Failed. Please try again later
+        </h1>
       ) : (
-        <p className="text-center text-xl  text-gray-400">
-          Sorry, time-in is not allowed today.
-        </p>
+        <div className="min-w-screen p-2 border rounded-lg bg-white overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="h-14 border-b">
+                <th className="text-sm font-semibold tracking-wide ">No.</th>
+                <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                  Company Name
+                </th>
+                <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                  Address
+                </th>
+                <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                  Email
+                </th>
+                <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                  Total Students
+                </th>
+                <th className="text-sm text-left pl-5 font-bold tracking-wide ">
+                  Available
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {companyLoading ? (
+                <tr className="h-16">
+                  <td colSpan={8} className="text-center  h-12 w-full">
+                    <div className="mt-5">
+                      <PulseLoader
+                        color="#1892fc"
+                        margin={5}
+                        size={13}
+                        speedMultiplier={1}
+                        className="mx-auto"
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((item, index) => (
+                  <tr className="h-12" key={index}>
+                    <td className="text-sm text-left pl-5 tracking-wide ">
+                      {index + 1}
+                    </td>
+                    <td className="text-sm text-left pl-5 tracking-wide ">
+                      {item.companyName}
+                    </td>
+                    <td className="text-sm text-left pl-5 tracking-wide ">
+                      {item.address}
+                    </td>
+                    <td className="text-sm text-left pl-5 tracking-wide ">
+                      {item.email}
+                    </td>
+                    <td className="text-sm text-center font-semibold tracking-wide ">
+                      {item.totalStudent}
+                    </td>
+                    <td className="text-sm text-left pl-9 tracking-wide ">
+                      <div className="relative">
+                        <span className="pr-10">
+                          {item.slots - item.totalStudent}
+                        </span>
+                        <div>
+                          <button
+                            className=" absolute top-1/2 right-2 -translate-y-1/2 cursor-pointer hover:text-gray-700"
+                            onClick={() =>
+                              setOpenTableMenu((prev) =>
+                                prev === item.id ? null : item.id
+                              )
+                            }
+                          >
+                            <HiOutlineDotsVertical size={20} />
+                          </button>
+                          {OpenTableMenu === item.id && (
+                            <div
+                              className="absolute flex flex-col justify-center gap-4 top-[30%] right-7 p-5 bg-white z-50 rounded-l-lg rounded-br-lg h-[100px] w-[130px] shadow-lg border"
+                              onClick={() => setOpenTableMenu(null)}
+                            >
+                              <button
+                                onClick={() =>
+                                  navigate(
+                                    `/view-company/${item.id && item.id}`
+                                  )
+                                }
+                                className="flex items-center gap-1 text-gray-700 font-medium tracking-wide hover:underline"
+                              >
+                                <HiOutlineEye size={17} />
+                                View
+                              </button>
+                              <button className="flex items-center gap-1 text-red-500 font-medium tracking-wide hover:underline">
+                                <IconTrash size="1rem" />
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
+
+      {/* modal */}
+      <AddCompanyComponents
+        AddIsOpen={AddIsOpen}
+        AddOnOpen={AddTeacherOnOpen}
+        AddOnClose={AddTeacherOnClose}
+        isOpen={AddCompanyModalIsOpen}
+        closeModal={() => setAddCompanyModalIsOpen(false)}
+        onAddCompany={handleAddCompany}
+        isLoading={companyLoading}
+      />
+
+      <div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Companies`} ListTable={ListTable} />
+        </div>
+      </div>
     </div>
   );
 };
 
-export default DailyLogs;
+export default Companies;

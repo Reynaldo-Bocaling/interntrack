@@ -140,7 +140,7 @@ const Student_list = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+       <div className={`${searchLength && 'flex-col gap-3'} flex lg:flex-row items-center justify-between px-2 mb-5`}>
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Student list
         </h1>

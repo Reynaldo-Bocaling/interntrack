@@ -45,6 +45,7 @@ routes.put('/updateCampus' ,UserController.updateCampus);
 routes.put('/updateCollege' ,UserController.updateCollege);
 routes.put('/updateProgram' ,UserController.updateProgram);
 routes.put('/updateMajor' ,UserController.updateMajor);
+routes.put('/updateAreaSlot' ,UserController.updateAreaSlot);
 
 
 // date range routes

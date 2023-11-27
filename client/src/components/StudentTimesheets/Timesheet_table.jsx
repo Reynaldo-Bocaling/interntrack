@@ -73,7 +73,7 @@ const TimeSheetTable = ({ data }) => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex flex-col gap-5 lg:flex-row items-center justify-between mb-3">
         <h2 className="pl-1 text-xl font-semibold tracking-wider">Timesheet</h2>
         <div className="flex items-center gap-5">
           <div className="h-10 flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">

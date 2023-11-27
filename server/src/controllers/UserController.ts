@@ -10,7 +10,7 @@ import fs from "fs";
 const formattedDate = format(new Date(), "yyyy-MM-dd");
 const formattedTime = format(new Date(), "HH:mm");
 
-export class UserController {  
+export class UserController {
   // POST
   // add company
   static async addCompany(req: any, res: Response) {
@@ -93,7 +93,7 @@ export class UserController {
 
       const mailOptions = {
         from: "reynaldobocaling@gmail.com",
-        to:email,
+        to: email,
         subject: "IternTrack!",
         text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Coordinator`,
       };
@@ -133,7 +133,7 @@ export class UserController {
 
       const mailOptions = {
         from: "reynaldobocaling@gmail.com",
-        to:email,
+        to: email,
         subject: "IternTrack!",
         text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Trainer`,
       };
@@ -187,7 +187,7 @@ export class UserController {
 
       const mailOptions = {
         from: "reynaldobocaling@gmail.com",
-        to:email,
+        to: email,
         subject: "IternTrack!",
         text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Teacher`,
       };
@@ -223,7 +223,7 @@ export class UserController {
 
       if (!findTeacher) return res.status(404).json("teacher not found");
 
-       const dates = await prisma.dateRangeTimesheet.findFirst({
+      const dates = await prisma.dateRangeTimesheet.findFirst({
         where: { teacher_id },
       });
 
@@ -233,7 +233,6 @@ export class UserController {
 
       const startDate = dates?.start_date;
       const endDate = dates?.end_date;
-
 
       await prisma.user.create({
         data: {
@@ -264,28 +263,23 @@ export class UserController {
               },
             },
           },
-         
         },
       });
 
       const mailOptions = {
         from: "reynaldobocaling@gmail.com",
-        to:email,
+        to: email,
         subject: "IternTrack!",
         text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\nStudent`,
       };
 
       await transporter.sendMail(mailOptions);
 
-     
-
-      return res.status(200).json('success');
+      return res.status(200).json("success");
     } catch (error: any) {
       return res.status(500).json(error.message);
     }
   }
-
- 
 
   //newImport
   static async importStudent(req: any, res: Response) {
@@ -301,7 +295,6 @@ export class UserController {
 
       if (!findTeacher) return res.status(404).json("teacher not found");
 
-
       const dates = await prisma.dateRangeTimesheet.findFirst({
         where: { teacher_id },
       });
@@ -312,7 +305,6 @@ export class UserController {
 
       const startDate = dates?.start_date;
       const endDate = dates?.end_date;
-
 
       for (const data of ExcelData) {
         const createdUser = await prisma.user.create({
@@ -335,11 +327,12 @@ export class UserController {
             campus: findTeacher?.campus,
             college: findTeacher?.college,
             program: findTeacher?.program,
-            major:  data.major,
+            major: data.major,
             teacher_id: teacher_id,
             user_id: createdUser.id,
             accountStatus: 0,
             deletedStatus: 0,
+            createAt: formattedDate,
             timesheet: {
               createMany: {
                 data: generateTimeData(startDate, endDate),
@@ -357,9 +350,6 @@ export class UserController {
 
         await transporter.sendMail(mailOptions);
       }
-
-     
-
 
       return res.status(201).json("success");
     } catch (error) {
@@ -392,14 +382,13 @@ export class UserController {
       });
 
       const mailOptions = {
-          from: "reynaldobocaling@gmail.com",
-          to: email,
-          subject: "IternTrack!",
-          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n SuperAdmin`,
-        };
+        from: "reynaldobocaling@gmail.com",
+        to: email,
+        subject: "IternTrack!",
+        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n SuperAdmin`,
+      };
 
-        await transporter.sendMail(mailOptions);
-
+      await transporter.sendMail(mailOptions);
 
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error) {
@@ -588,6 +577,7 @@ export class UserController {
     }
   }
 
+
   //delete campuses
   static async deleteCampus(req: any, res: Response) {
     const { id } = req.params;
@@ -709,6 +699,35 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+
+
+  static async updateAreaSlot(req: any, res: Response) {
+    const { id, slot } = req.body;
+
+    try {
+      await prisma.areaOfAssignment.update({
+        where: {
+          id,
+        },
+        data: {
+          slot,
+        },
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+
+
+
+
+
+
+
+
+
+
 
   // time in
   static async timeIn(req: Request, res: Response) {
@@ -862,12 +881,12 @@ export class UserController {
         include: {
           coordinator: {
             include: {
-              teacher:{
+              teacher: {
                 include: {
-                  student:true
-                }
-              }
-            }
+                  student: true,
+                },
+              },
+            },
           },
           user: true,
           student: {
@@ -901,8 +920,8 @@ export class UserController {
           user: true,
           teacher: {
             include: {
-              coordinator:true
-            }
+              coordinator: true,
+            },
           },
           trainer: true,
           AreaOfAssignment: {
@@ -1072,7 +1091,7 @@ export class UserController {
     } catch (error) {
       return res.status(500).json(error);
     }
-  } 
+  }
 
   // get trainer list
   static async getTrainerList(req: any, res: Response) {
@@ -1161,8 +1180,6 @@ export class UserController {
     }
   }
 
-
-
   // update profile user
   // update coordinator
   static async EditCoordinatorProfile(req: any, res: Response) {
@@ -1191,7 +1208,6 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
-
 
   static async editSuperAdminProfile(req: any, res: Response) {
     const { item } = req.body;
@@ -1384,7 +1400,6 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
-
 
   //update teacher profile
   static async updateTeacherProfilePicture(req: any, res: Response) {
@@ -1603,7 +1618,7 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
- 
+
   // add date ranage
   static async addDateRange(req: any, res: Response) {
     const { start_date, end_date } = req.body;
@@ -1660,17 +1675,18 @@ export class UserController {
 
   // reset all data
   static async resetData(req: any, res: Response) {
-    const { id , password} = req.body;
+    const { id, password } = req.body;
     const passwordDb = req.user.password;
 
-
-    
     try {
-       const isValidPassword = await argon2.verify(passwordDb, password);
-    if (!isValidPassword) {
-      return res.status(500).json( "Incorrect password. Please ensure you've entered the correct password and try again.");
-    }
-
+      const isValidPassword = await argon2.verify(passwordDb, password);
+      if (!isValidPassword) {
+        return res
+          .status(500)
+          .json(
+            "Incorrect password. Please ensure you've entered the correct password and try again."
+          );
+      }
 
       await prisma.student.updateMany({
         where: {
@@ -1686,9 +1702,8 @@ export class UserController {
     }
   }
 
-
-  static async createAnnouncement(req:any, res:Response) {
-    const {title, description, to, createdBy, createdRole} = req.body;
+  static async createAnnouncement(req: any, res: Response) {
+    const { title, description, to, createdBy, createdRole } = req.body;
     try {
       const response = await prisma.announcement.create({
         data: {
@@ -1697,41 +1712,31 @@ export class UserController {
           to,
           date: formattedDate,
           createdBy,
-          createdRole
-        }
+          createdRole,
+        },
       });
       return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
 
-  static async addNotification(req:any, res:Response) {
-    const {description, role} = req.body;
+  static async addNotification(req: any, res: Response) {
+    const { description, role } = req.body;
     try {
       const response = await prisma.notification.create({
         data: {
           description,
           date: formattedDate,
           role,
-        }
+        },
       });
       return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error)
+      return res.status(500).json(error);
     }
   }
-
-
-
 }
-
-
-
-
-
-
-
 
 // timesheet
 // const generateTimeData = () => {
@@ -1762,8 +1767,7 @@ export class UserController {
 //   return timeData;
 // };
 
-const generateTimeData = (start:any,end:any) => {
- 
+const generateTimeData = (start: any, end: any) => {
   const startDate = new Date(start);
   const endDate = new Date(end);
   const timeData = [];

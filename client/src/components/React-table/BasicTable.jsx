@@ -26,7 +26,7 @@ const BasicTable = ({ data, columns }) => {
     <>
       {data.length > 0 ? (
         <>
-        <div className="bg-white border p-2 rounded-lg overflow-x-auto">
+        <div className="bg-white border p-2 rounded-lg overflow-x-auto lg:overflow-visible">
           <table className="w-full">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (

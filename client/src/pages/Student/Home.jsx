@@ -108,18 +108,16 @@ const Dashboard = () => {
         </small>
       </div>
 
-      <div className=" mt-5 w-full flex flex-col gap-5 mb-5">
+      <div className="w-[100%] flex flex-col lg:flex-row gap-14 bg-white2 rounded-lg relative mb-2">
         {/* count box */}
-        <div className="w-[100%] flex flex-col gap-[5x] bg-white2 rounded-lg relative">
-          <div className="h-[220px] max-w-[450px] w-full pt-7">
+        <div className="relative  max-w-[450px] w-full pt-7">
             <PieChart
               data={piechartData}
               colors={colors}
               labels={labels}
               title={"Total Hours"}
             />
-          </div>
-          <h1 className="absolute top-[12%] right-[2%] text-2xl">
+          <h1 className="absolute top-[12%] right-[2%] text-2xl font-semibold">
             {`${hoursTaken} / ${totalHours}`}{" "}
             <span className="text-xs text-blue-500">hrs</span>
           </h1>
@@ -160,6 +158,9 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
+
+
 
         {/* right side */}
         <div className="bg-white w-full border shadow-2xl shadow-red-50 border-slate-200 rounded-lg p-5">
@@ -212,6 +213,10 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+
+
+
 
       <div>
         {totalHoursDB > 0 ? (

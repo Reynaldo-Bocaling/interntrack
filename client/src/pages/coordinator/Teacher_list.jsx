@@ -291,16 +291,20 @@ const TeacherList = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+       <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Teacher list
         </h1>
 
-        <div className="flex items-center gap-3">
+        <div
+          className={`${
+            searchLength && "flex-col gap-5"
+          } flex sm:flex-row items-center gap-3 w-full sm:w-auto`}
+        >
           <div
             className={`${
-              searchLength ? "w-[250px]" : "w-[40px]"
-            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+              searchLength ? "w-full" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300 transition-all`}
           >
             <BiSearch
               onClick={() => setSearchLength(!searchLength)}
@@ -317,7 +321,7 @@ const TeacherList = () => {
               />
             )}
           </div>
-
+          <div className="flex items-center justify-end gap-3 w-full">
           <button
             onClick={AddTeacherOnOpen}
             className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
@@ -325,13 +329,14 @@ const TeacherList = () => {
             <AiOutlineUserAdd size={16} />
             <span className="font-semibold tracking-wider">Add</span>
           </button>
-          <button
-            onClick={handlePrint}
-            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-          >
-            <BsPrinter size={17} />
-            <span className="font-semibold tracking-wider">Print</span>
-          </button>
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <BsPrinter size={17} />
+              <span className="font-semibold tracking-wider">Print</span>
+            </button>
+          </div>
         </div>
       </div>
 

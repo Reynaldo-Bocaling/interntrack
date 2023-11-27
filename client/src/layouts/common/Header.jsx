@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import Empty from "../../assets/images/emptyProfile.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
-import {HiOutlineMenuAlt4 } from "react-icons/hi";
-import {  BiHelpCircle } from "react-icons/bi";
+import {
+  sidebarToggle,
+  notificationToggle,
+  profileToggle,
+} from "../../store/Store";
+import { HiOutlineMenuAlt4 } from "react-icons/hi";
+import { BiHelpCircle } from "react-icons/bi";
 import { LiaSignOutAltSolid } from "react-icons/lia";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { RiArrowRightSLine } from "react-icons/ri";
@@ -18,32 +22,19 @@ import { Drawer, Button, ScrollArea } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Avatar } from "@nextui-org/react";
 
-
-
 function Header(props) {
   const [opened, { open, close }] = useDisclosure(false);
-  const [dataValue, setDataValue] = useState(null)
+  const [dataValue, setDataValue] = useState(null);
 
- 
-const {data: getUserData} = useQuery({
-  queryKey: ['getUser'],
-  queryFn: getUser
-})
+  const { isOpenSidebar, setIsOpenSidebar } = sidebarToggle();
 
-
+  const { data: getUserData } = useQuery({
+    queryKey: ["getUser"],
+    queryFn: getUser,
+  });
 
   const navigate = useNavigate();
-  const {
-    toggleIsOpen,
-    toggleNotif,
-    isOpenNotif,
-    toggleProfile,
-    isOpenProfile,
-    role,
-  } = props;
-  
-  
-
+  const { toggleProfile, isOpenProfile, role } = props;
 
   const capitalizeFirstLetter = (string) => {
     if (string && string.length > 0) {
@@ -82,44 +73,40 @@ const {data: getUserData} = useQuery({
       .map((_, index) => <p key={index}>Drawer with scroll</p>);
   };
 
-
-
-  const data = getUserData ? getUserData : {}
+  const data = getUserData ? getUserData : {};
 
   useEffect(() => {
-    if(data?.role === 'Director'){
-      setDataValue(data.director)
-    }else if(data?.role === 'Coordinator'){
-      setDataValue(data?.coordinator)
-    }else if(data?.role === 'Teacher'){
-      setDataValue(data?.teacher)
-    }else if(data?.role === 'Trainer'){
-      setDataValue(data?.trainer)
-    }else if(data?.role === 'SuperAdmin'){
-      setDataValue(data?.superadmin)
+    if (data?.role === "Director") {
+      setDataValue(data.director);
+    } else if (data?.role === "Coordinator") {
+      setDataValue(data?.coordinator);
+    } else if (data?.role === "Teacher") {
+      setDataValue(data?.teacher);
+    } else if (data?.role === "Trainer") {
+      setDataValue(data?.trainer);
+    } else if (data?.role === "SuperAdmin") {
+      setDataValue(data?.superadmin);
     }
-  }, [data])
+  }, [data]);
 
-  const user = dataValue 
-  ? dataValue.map(({ id,firstname, lastname, profile_url }) => ({
-    id,
-    name: `${firstname} ${lastname}`,
-    url: profile_url
-  }))[0]
-  : []
+  const user = dataValue
+    ? dataValue.map(({ id, firstname, lastname, profile_url }) => ({
+        id,
+        name: `${firstname} ${lastname}`,
+        url: profile_url,
+      }))[0]
+    : [];
 
- console.log('d', data);
   return (
     <div
       className={`fixed top-0 left-0 h-[60px] max-w-full w-full duration-300 z-20 bg-white shadow-sm shadow-slate-100`}
     >
-      <div className="p-3 pt-3  flex items-center justify-between px-7 w-full md:pl-[17.5rem]">
-        
-        <button className="md:hidden"><HiOutlineMenuAlt4 size={27}/></button>
+      <div className="p-3 pt-3  flex items-center justify-between px-7 w-full lg:pl-[17.5rem]">
+        <button onClick={setIsOpenSidebar} className="lg:hidden">
+          <HiOutlineMenuAlt4 size={27} />
+        </button>
 
-
-
-        <div className="text-[1rem] font-normal hidden md:flex">
+        <div className="text-[1rem] font-normal hidden lg:flex">
           Welcome back,{" "}
           <span className="font-medium tracking-wide pl-2">
             {capitalizeFirstLetter(role)}
@@ -144,7 +131,10 @@ const {data: getUserData} = useQuery({
             className="relative h-fit w-fit rounded-full bg-white shadow-lg p- "
             onClick={toggleProfile}
           >
-            <Avatar src={user?.url ? user?.url : Empty} className="cursor-pointer w-8 h-8 shadow-md" />
+            <Avatar
+              src={user?.url ? user?.url : Empty}
+              className="cursor-pointer w-8 h-8 shadow-md"
+            />
             <RiArrowDropDownFill
               size={20}
               className="text-blue-500 absolute top-1/3 -right-4 -translate-y-1/2"
@@ -182,7 +172,10 @@ const {data: getUserData} = useQuery({
             {isOpenProfile && (
               <div className="absolute top-[50px] right-1 w-[270px] flex flex-col gap-2 rounded-l-xl rounded-br-xl bg-white shadow-lg py-5 px-5">
                 <div className="flex items-center gap-2 cursor-pointer mb-5 border-b pb-3">
-                  <Avatar src={user?.url ? user?.url : Empty} className="cursor-pointer w-8 h-8 shadow-md mr-2" />
+                  <Avatar
+                    src={user?.url ? user?.url : Empty}
+                    className="cursor-pointer w-8 h-8 shadow-md mr-2"
+                  />
                   <div className="flex flex-col">
                     <span className=" tracking-wider font-medium">
                       {user?.name}

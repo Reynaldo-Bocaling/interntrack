@@ -189,53 +189,6 @@ const Student_list = () => {
     },
   });
 
-  // import handle change
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0];
-
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = async (e) => {
-  //       const data = new Uint8Array(e.target.result);
-  //       const workbook = XLSX.read(data, { type: "array" });
-  //       const sheetName = workbook.SheetNames[0];
-  //       const worksheet = workbook.Sheets[sheetName];
-  //       const excelData = XLSX.utils.sheet_to_json(worksheet);
-
-  //       const isValid = validateData(excelData);
-
-  //       if (!isValid) {
-  //         setError("Invalid data in the excel file.");
-  //         setImportData(null);
-  //       } else {
-  //         setError(null);
-  //         setImportData(excelData);
-  //       }
-  //     };
-  //     reader.readAsArrayBuffer(file);
-  //   }
-  // };
-
-  // const handleImportExcel = () => {
-
-  //   mutate(ImportData);
-  // };
-
-  // // sanitation
-  // const validateData = (data) => {
-  //   const firstnameRegex = /^[A-Za-z\s]+$/;
-  //   const lastnameRegex = /^[A-Za-z\s]+$/;
-  //   const Regex = /^[A-Za-z\s]+$/;
-  //   const emailRegex = /^[A-Za-z\s]+$/;
-
-  //   for (const row of data) {
-  //     if (!row.firstname || !firstnameRegex.test(row.firstname)) {
-  //       return false;
-  //     }else if (!row.lastname || !lastnameRegex.test(row.lastname)) {
-  //       return false;
-  //     }
-  //   }
-  // };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -268,7 +221,13 @@ const Student_list = () => {
     }
   };
 
+
+  const lowerCaseDataEmails = data.map(({ email }) => email.toLowerCase());
+
+
   const validateData = (data) => {
+    const emailSet = new Set();
+
     const firstnameRegex = /^[A-Za-z\s]+$/;
     const lastnameRegex = /^[A-Za-z\s]+$/;
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
@@ -276,6 +235,10 @@ const Student_list = () => {
     const addressRegex =/^[A-Za-z\s]+$/;
     const genderRegex = /^(male|female)$/i;
     const majorRegex = /^[A-Za-z\s]+$/;
+
+
+    const duplicateEmails = new Set();
+
 
     for (const row of data) {
       if (!row.firstname) {
@@ -324,11 +287,29 @@ const Student_list = () => {
           `"${row.major}" is invalid for a Major. \nPlease enter a valid Major`
         );
       }
+      
+
+
+      else if (duplicateEmails.has(row.email.toLowerCase())) {
+        // This email is a duplicate
+        // You can throw an error or handle it in a way that suits your needs
+        throw new Error(`Duplicate record for email "${row.email}". Please ensure all records are unique.`);
+      }
+
+
+      
+     else if (lowerCaseDataEmails.includes(row.email.toLowerCase())) {
+      throw new Error(`Email "${row.email}" is already in use. Please enter a unique email.`);
+
+    }
+
     }
   };
 
   // Student data
 
+
+  
   const { mutate: addMutate, isLoading: addStudentLoading } = useMutation(
     addStudentAccount,
     {
@@ -358,6 +339,7 @@ const Student_list = () => {
 
 
 
+  
 
 
 
@@ -411,16 +393,19 @@ const Student_list = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+        <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Student list
         </h1>
 
-        <div className="flex items-center gap-3">
+        <div
+          className={`flex-col
+           flex sm:flex-row items-center gap-3 w-full sm:w-auto`}
+        >
           <div
             className={`${
-              searchLength ? "w-[250px]" : "w-[40px]"
-            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+              searchLength ? "w-full" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300 transition-all`}
           >
             <BiSearch
               onClick={() => setSearchLength(!searchLength)}
@@ -437,34 +422,36 @@ const Student_list = () => {
               />
             )}
           </div>
+          <div className="flex flex-wrap items-center justify-center lg:flex-nowrap lg:justify-end gap-3 w-full">
           <button
             onClick={ImportStudentOnOpen}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            className="flex items-center justify-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full  w-[45%] lg:w-auto"
           >
             <ImAttachment size={15} />
             <span className="font-semibold tracking-wider">Import</span>
           </button>
           <button
             onClick={AddOnOpen}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            className="flex items-center justify-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full  w-[45%] lg:w-auto"
           >
             <AiOutlineUserAdd size={16} />
             <span className="font-semibold tracking-wider">Add</span>
           </button>
           <button
             onClick={() => setAssignStudentModalIsOpen(true)}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            className="flex items-center justify-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full  w-[160px]"
           >
             <AiOutlineUsergroupAdd size={17} />
             <span className="font-semibold tracking-wider">Assign Student</span>
           </button>
           <button
             onClick={handlePrint}
-            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            className="flex items-center justify-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full  w-[45%] lg:w-auto"
           >
             <BsPrinter size={17} />
             <span className="font-semibold tracking-wider">Print</span>
           </button>
+          </div>
         </div>
       </div>
 

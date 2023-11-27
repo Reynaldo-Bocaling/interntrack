@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
@@ -21,13 +21,20 @@ import {
   useDisclosure as AddCoordinatorDisclosure,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
+import { BsPrinter } from "react-icons/bs";
+import List from "../print-layout/List";
+import { useReactToPrint } from "react-to-print";
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
   const columnHelper = createColumnHelper();
   const [show, setShow] = useState(null); //right side popup
   const [searchLength, setSearchLength] = useState(false);
+  const componentRef = useRef();
 
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
   const {
     isOpen: AddIsOpen,
     onOpen: AddOnOpen,
@@ -241,18 +248,68 @@ const Trainer_list = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
+
+
+  const ListTable = () => {
+    return (
+      <table className="border w-full mt-2">
+        <thead>
+          <tr className="h-11">
+            <th className="w-[10%] border font-semibold text-[13px]">No.</th>
+            
+            <th className="w-[20%] border font-semibold text-[13px] text-left pl-4">
+              Name
+            </th>
+            <th className="w-[30%] border font-semibold text-[13px] text-left pl-4">
+              Email
+            </th>
+            <th className="w-[10%] border font-semibold text-[13px] text-left pl-4">
+              Contact
+            </th>
+            <th className="w-[15%] border font-semibold text-[13px] text-left pl-4">
+              Company
+            </th>
+            <th className="w-[15%] border font-semibold text-[13px] text-left pl-4">
+              Area Assign
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={index} className="h-11">
+              <td className="text-center border text-[13px]">{index + 1}</td>
+              <td className=" border pl-4 text-[13px]">{item.name}</td>
+              <td className=" border pl-4 text-[13px]">{item.email}</td>
+              <td className="text-left pl-4 border text-[13px]">
+                {item.contact}
+              </td>
+              <td className=" border pl-4 text-[13px]">{item.companyName}</td>
+              <td className=" border pl-4 text-[13px]">{item.areaAssign}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+
+
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
+     <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Trainer list
         </h1>
 
-        <div className="flex items-center gap-3">
+        <div
+          className={`${
+            searchLength && "flex-col gap-5"
+          } flex sm:flex-row items-center gap-3 w-full sm:w-auto`}
+        >
           <div
             className={`${
-              searchLength ? "w-[250px]" : "w-[40px]"
-            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+              searchLength ? "w-full" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300 transition-all`}
           >
             <BiSearch
               onClick={() => setSearchLength(!searchLength)}
@@ -269,6 +326,7 @@ const Trainer_list = () => {
               />
             )}
           </div>
+          <div className="flex items-center justify-end gap-3 w-full">
           <button
             onClick={AddOnOpen}
             className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
@@ -276,8 +334,19 @@ const Trainer_list = () => {
             <AiOutlineUserAdd size={16} />
             <span className="font-semibold tracking-wider">Add</span>
           </button>
+
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <BsPrinter size={17} />
+              <span className="font-semibold tracking-wider">Print</span>
+            </button>
+          </div>
         </div>
       </div>
+
+      
 
       <TableFormat
         data={data}
@@ -291,6 +360,15 @@ const Trainer_list = () => {
         AddOnClose={AddOnClose}
         isLoading={AddLoading}
       />
+
+
+<div style={{ display: "none" }}>
+        <div ref={componentRef}>
+          <List title={`Trainer List`} ListTable={ListTable} />
+        </div>
+      </div>
+
+
     </div>
   );
 };

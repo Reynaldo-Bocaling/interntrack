@@ -213,6 +213,16 @@ export const updateMajor = async (data) => {
 };
 
 
+export const updateSlot = async (data) => {
+  try {
+    const response = await axios.put(`${url}updateAreaSlot`,data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+
 
 
 

@@ -38,7 +38,7 @@
 
 
 .link { 
-    @apply relative flex items-center gap-2 text-sm tracking-wide rounded-lg hover:bg-blue-50 md:cursor-pointer cursor-default ;
+    @apply relative flex items-center gap-2 text-sm tracking-wide rounded-lg  md:cursor-pointer cursor-default ;
 
 }
 
@@ -373,6 +373,29 @@ font-family: 'Patua One', serif;
     padding: 10px;
   }
 }
+
+
+
+
+
+
+
+
+
+.sidebar{
+  animation: scaleIn 0.7s;
+}
+
+@keyframes scaleIn {
+  0% {
+   opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
 
 /* Tablet Devices */
 @media only screen and (min-width: 768px) and (max-width: 1023px) {

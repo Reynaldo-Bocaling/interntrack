@@ -23,10 +23,17 @@ const DailyLogs = () => {
     queryFn: getStudentList,
   });
 
-  const data = student
+
+  const dateNow = format(new Date(), 'eeee')
+
+  
+
+  const data =
+  student
     ? student
-        .filter((item) => item.trainer_id === trainer?.id)
-        .filter((item) => item.deletedStatus === 0)
+        .filter(()=> dateNow !== 'Saturday' || dateNow !== 'Sunday')
+        .filter((item) => item.trainer_id == trainer?.id)
+        .filter((item) => item.deletedStatus == 0)
         .map(({ id, firstname, lastname, timesheet, profile_url }) => ({
           id,
           name: `${firstname}  ${lastname}`,
@@ -36,7 +43,9 @@ const DailyLogs = () => {
           timeOut: timesheet?.find(
             (item) => item.date === format(currentDate, "yyyy-MM-dd")
           )?.timeOut,
-          totalHours: timesheet?.filter((item) => item.logStatus === 1),
+          totalHours:timesheet?.find(
+            (item) => item.date === format(currentDate, "yyyy-MM-dd")
+          )?.totalHours,
           profile_url,
         }))
         .filter((item) => item.totalHours > 0 || item.timeIn !== "0:00")
@@ -47,14 +56,16 @@ const DailyLogs = () => {
             timeIn !== "0:00" ? format(new Date(timeIn), "hh:mm a") : "--",
           timeOut:
             timeOut !== "0:00" ? format(new Date(timeOut), "hh:mm a") : "--",
-          totalHours: totalHours > 0 ? `${totalHours} hrs` : "--",
+          totalHours: `${totalHours} hrs` ,
           date: format(currentDate, "MMMM dd yyyy"),
           url: profile_url,
         }))
         .filter((item) =>
           item.name.toLowerCase().includes(searchInput.toLowerCase())
         )
-    : [];
+    : []
+
+  
 
   // console.log(format(currentDate, 'yyyy-MM-dd'));
   console.log(data, "s");
