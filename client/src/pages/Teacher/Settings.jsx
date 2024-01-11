@@ -6,6 +6,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { getTeacher } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import ChangeRole from "../../components/user-Settings/ChangeRole";
 
 
 const Settings = () => {
@@ -55,6 +56,12 @@ const Settings = () => {
       value: 3,
       element: SetUpDate,
       extraText: "Date Range Setup",
+    },
+    {
+      id: 4,
+      label: "Change Role",
+      value: 4,
+      element: ChangeRole,
     },
   ];
 

@@ -47,11 +47,7 @@ const Dashboard = () => {
     queryFn: getCampus,
   });
 
-  if (
-    (programLoading || studentLoading || companyLoading, coordinatorLoading)
-  ) {
-    return <center className="my-5 text-lg">Computing..</center>;
-  }
+ 
 
   const getTeacher_id = data ? data.teacher?.map(({ id }) => id) : [];
 
@@ -108,22 +104,23 @@ const Dashboard = () => {
         }))
     : [];
 
-  const totalAllHoursStudent = filteredStudents
-    .map(
-      ({ program }) =>
-        programList.find((item) => item.program_description === program)
-          ?.trainingHours
+    const totalAllHoursStudent = filteredStudents
+    .map(({ program }) =>
+      programList.find((item) => item.program_description === program)?.trainingHours
     )
-    .reduce((total, item) => total + item, 0);
-
+    .filter((hours) => !isNaN(hours))
+    .reduce((total, hours) => total + hours, 0);
+  
   const totalHoursStudent = filteredStudents
     .flatMap(({ timesheet }) => timesheet)
     .filter((item) => item.logStatus === 1)
     .reduce((total, item) => total + item.totalHours, 0);
-
+  
+  // Check if totalAllHoursStudent is NaN or 0, then default to 0
   const percentage = Math.floor(
-    (Math.round(totalHoursStudent) / totalAllHoursStudent) * 100
+    (Math.round(totalHoursStudent) / (totalAllHoursStudent || 1)) * 100
   );
+  
 
   const totalSTudent = filteredStudents.length;
   const totalTeacher = data?.teacher.length;
@@ -200,6 +197,15 @@ const Dashboard = () => {
       fillColor: "rgba(255, 0, 0, 0.3)",
     },
   ];
+
+
+
+
+   if (
+    (programLoading || studentLoading || companyLoading, coordinatorLoading)
+  ) {
+    return <center className="my-5 text-lg">Computing..</center>;
+  }
   return (
     <div className="min-h-full w-full">
       <div className="m-1 ">

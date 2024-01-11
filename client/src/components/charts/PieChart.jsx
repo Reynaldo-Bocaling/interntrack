@@ -24,14 +24,14 @@ const CustomizedPieChart = ({ data, labels, colors, title }) => {
             },
             value: {
               show: true,
-              color: "#2ECC71", // Change label color here
+              color: "#2ECC71",
               fontSize: "22px",
               fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
-              offsetY: 5, // Add padding
+              offsetY: 5,
             },
             name: {
-              offsetY: -15, // Add padding
+              offsetY: -15, 
             },
           },
         },

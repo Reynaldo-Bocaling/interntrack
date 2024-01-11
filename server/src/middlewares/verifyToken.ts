@@ -12,11 +12,21 @@ const verifyToken = async (req: any, res: Response, next: NextFunction) => {
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
       include: {
-        student: true,
-        trainer: true,
-        teacher: true,
-        director: true,
-        coordinator: true,
+        student: {
+          include: {notification: true}
+        },
+        trainer: {
+          include: {notification: true}
+        },
+        teacher: {
+          include: {notification: true}
+        },
+        director: {
+          include: {notification: true}
+        },
+        coordinator: {
+          include: {notification: true}
+        },
         superadmin:true
       }
     });

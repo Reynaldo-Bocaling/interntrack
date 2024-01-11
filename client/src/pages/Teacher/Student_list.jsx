@@ -289,8 +289,6 @@ const Student_list = () => {
 
 
       else if (duplicateEmails.has(row.email.toLowerCase())) {
-        // This email is a duplicate
-        // You can throw an error or handle it in a way that suits your needs
         throw new Error(`Duplicate record for email "${row.email}". Please ensure all records are unique.`);
       }
 

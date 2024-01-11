@@ -45,14 +45,14 @@ const TeacherList = () => {
 
   const { mutate, isLoading: AddTeacherLoading } = useMutation({
     mutationFn: addTeacher,
-    onSuccess: (data) => {
+    onSuccess: () => {
       Swal.fire(
         "Success",
         "The teacher has been added to the system",
         "success"
       );
-      queryClient.invalidateQueries({ queryKey: ["getCoordinator"] });
-      setIsAddTeacher(false)
+      queryClient.invalidateQueries({ queryKey: ["coordinator_getTeacher"] });
+      setIsAddTeacher(false);
     },
     onError: () => {
       Swal.fire(
@@ -64,7 +64,7 @@ const TeacherList = () => {
   });
 
   //find coordinator id
-  const { data: coordinatorId, isLoading: coordinator_idLoading } = useQuery({
+  const { data: coordinatorId, isLoading: coordinator_loading } = useQuery({
     queryKey: ["getCoordinatorId"],
     queryFn: getCoordinator,
   });
@@ -74,7 +74,7 @@ const TeacherList = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["getCoordinator"],
+    queryKey: ["coordinator_getTeacher"],
     queryFn: getTeacherList,
   });
 
@@ -125,13 +125,7 @@ const TeacherList = () => {
     mutate(formData);
   };
 
-  if (isError) {
-    return (
-      <h1 className="text-center my-10">
-        Server Failed. Please Try Again Later
-      </h1>
-    );
-  }
+
 
   const columns = [
     columnHelper.accessor("id", {
@@ -289,7 +283,7 @@ const TeacherList = () => {
 
   return (
     <div>
-       <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
+      <div className="flex flex-col sm:flex-row  items-center justify-between gap-7 px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Teacher list
         </h1>
@@ -320,13 +314,13 @@ const TeacherList = () => {
             )}
           </div>
           <div className="flex items-center justify-end gap-3 w-full">
-          <button
-            onClick={()=> setIsAddTeacher(true)}
-            className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-          >
-            <AiOutlineUserAdd size={16} />
-            <span className="font-semibold tracking-wider">Add</span>
-          </button>
+            <button
+              onClick={() => setIsAddTeacher(true)}
+              className="flex items-center gap-1 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+            >
+              <AiOutlineUserAdd size={16} />
+              <span className="font-semibold tracking-wider">Add</span>
+            </button>
             <button
               onClick={handlePrint}
               className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
@@ -338,14 +332,16 @@ const TeacherList = () => {
         </div>
       </div>
 
-      <TableFormat data={data} isLoading={isLoading} columns={columns} />
+      <TableFormat data={data} isLoading={isLoading} isError={isError} columns={columns} />
 
       <AddTeacherModal
         AddIsOpen={isAddTeacher}
         AddOnOpen={AddTeacherOnOpen}
-        AddOnClose={()=>setIsAddTeacher(false)}
+        AddOnClose={() => setIsAddTeacher(false)}
         onSubmit={handleSubmit}
         isLoading={AddTeacherLoading}
+        info={coordinatorId}
+        teacherList={data}
       />
 
       <div style={{ display: "none" }}>

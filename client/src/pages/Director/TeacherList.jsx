@@ -2,17 +2,17 @@ import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getTeacherList } from "../../api/Api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { PromoteAsCoordinator, getTeacherList } from "../../api/Api";
 import picture from "../../assets/images/emptyProfile.png";
 import { Switch, Avatar } from "@nextui-org/react";
 import { useReactToPrint } from "react-to-print";
 import List from "../../components/print-layout/List";
+import { IoIosAdd } from "react-icons/io";
+import Swal from "sweetalert2";
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -31,7 +31,7 @@ const TeacherList = () => {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["getTeacherList"],
+    queryKey: ["director_getTeacherList"],
     queryFn: getTeacherList,
   });
 
@@ -52,11 +52,15 @@ const TeacherList = () => {
             accountStatus,
             student,
             profile_url,
+            user_id,
           }) => ({
             id,
             name: `${firstname} ${
               middlename ? middlename[0].toUpperCase() : ""
             } ${lastname}`,
+            firstname,
+            middlename,
+            lastname,
             email,
             contact,
             campus,
@@ -67,20 +71,13 @@ const TeacherList = () => {
             totalStudent: student.filter((item) => item.deletedStatus === 0)
               .length,
             url: profile_url,
+            user_id,
           })
         )
         .filter((item) =>
           item.name.toLowerCase().includes(searchInput.toLowerCase())
         )
     : [];
-
-  if (isError) {
-    return (
-      <h1 className="text-center my-10">
-        Server Failed. Please Try Again Later
-      </h1>
-    );
-  }
 
   const columns = [
     columnHelper.accessor("id", {
@@ -159,7 +156,7 @@ const TeacherList = () => {
           {show === info.row.original.id && (
             <div
               onClick={() => setShow(!show)}
-              className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
+              className="absolute top-3 right-7  w-[200px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
             >
               <NavLink
                 to={`/view-teacher/${info.row.original.id}`}
@@ -169,24 +166,12 @@ const TeacherList = () => {
                 Profile
               </NavLink>
 
-              <NavLink
-                to="/trainer-student-list"
-                state={{
-                  List: info.row.original.studentList,
-                  trainerName: info.row.original.firstname,
-                }}
-                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
+              <button
+                onClick={() => handlePromote(info.row.original)}
+                className="flex items-center gap-1 text-gray-700 tracking-wider hover:underline"
               >
-                <RiUserSearchLine size={17} />
-                Student list
-              </NavLink>
-
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink>
+                <IoIosAdd size={20} /> Add as Coordinator
+              </button>
             </div>
           )}
         </div>
@@ -204,6 +189,31 @@ const TeacherList = () => {
     defaultData.push({ name: "", email: "", totalStudent: "" });
   }
 
+  const { mutate } = useMutation(PromoteAsCoordinator, {
+    onSuccess: () => {
+      Swal.fire(
+        "Success",
+        "Successfully Promoted Teacher to Coordinator",
+        "success"
+      );
+    },
+    onError: () => {
+      Swal.fire("Failed", "Failed to Add Teacher as Coordinator", "failed");
+    },
+  });
+  const handlePromote = (item) => {
+    mutate({
+      firstname: item?.firstname,
+      middlename: item?.middlename,
+      lastname: item?.lastname,
+      email: item?.email,
+      contact: item?.contact,
+      campus: item?.campus,
+      college: item?.college,
+      program: item?.program,
+      user_id: item?.user_id,
+    });
+  };
   const ListTable = () => {
     return (
       <table className="border w-full mt-2">
@@ -239,7 +249,11 @@ const TeacherList = () => {
 
   return (
     <div>
-      <div className={`${searchLength && 'flex-col gap-3'} flex lg:flex-row items-center justify-between px-2 mb-5`}>
+      <div
+        className={`${
+          searchLength && "flex-col gap-3"
+        } flex lg:flex-row items-center justify-between px-2 mb-5`}
+      >
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Teacher list
         </h1>
@@ -276,7 +290,12 @@ const TeacherList = () => {
         </div>
       </div>
 
-      <TableFormat data={data} isLoading={isLoading} columns={columns} />
+      <TableFormat
+        data={data}
+        isError={isError}
+        isLoading={isLoading}
+        columns={columns}
+      />
 
       <div style={{ display: "none" }}>
         <div ref={componentRef}>

@@ -70,7 +70,7 @@ export class UserController {
       program,
     } = req.body;
     try {
-      await prisma.user.create({
+      const coordinatorAccount = await prisma.user.create({
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
@@ -89,7 +89,22 @@ export class UserController {
             },
           },
         },
+        include: {
+          coordinator: true
+        }
       });
+
+      if(!coordinatorAccount) return res.status(500).json('errror')
+
+      await prisma.notification.create({
+        data: {
+          title: 'Added Successfully',
+          description: ' We area pleased to inform you that you have been added to the InternTrack system as a Coordinator. Your role in overseeing OJT matters is now active.',
+          date: formattedDate,
+          coordinator_id: coordinatorAccount?.coordinator[0].id
+        }
+      })
+
 
       const mailOptions = {
         from: "reynaldobocaling@gmail.com",
@@ -100,7 +115,43 @@ export class UserController {
 
       await transporter.sendMail(mailOptions);
 
-      return res.status(200).json({ username: email, password: newPassowrd });
+      return res.status(200).json(coordinatorAccount);
+    } catch (error: any) {
+      return res.status(500).json(error.message);
+    }
+  }
+  // add coordinator
+  static async PromoteAsCoordinator(req: any, res: Response) {
+
+    const {
+      firstname,
+      middlename,
+      lastname,
+      email,
+      contact,
+      campus,
+      college,
+      program,
+      user_id
+    } = req.body;
+    try {
+      await prisma.coordinator.create({
+        data: {
+              firstname,
+              middlename,
+              lastname,
+              email,
+              contact: Number(contact),
+              campus,
+              college,
+              program,
+              accountStatus: 0,
+              user_id 
+        },
+      });
+
+
+      return res.status(200).json('success');
     } catch (error: any) {
       return res.status(500).json(error.message);
     }
@@ -109,46 +160,100 @@ export class UserController {
   // add trainer
   static async AddTrainer(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const { area_id, firstname, middlename, lastname, email, contact } =
+    const coordinator =  req.user.coordinator[0];
+    const teacher =  req.user.teacher[0];
+
+    const username = req.user.username?.toLowerCase();
+    
+    const { area_id, firstname, middlename, lastname, email, contact,isToggle } =
       req.body;
     try {
-      await prisma.user.create({
-        data: {
-          username: email,
-          password: await argon2.hash(newPassowrd),
-          role: "Trainer",
-          trainer: {
-            create: {
-              firstname,
-              middlename,
-              lastname,
-              email,
-              contact: Number(contact),
-              areaAssign_id: Number(area_id),
-              accountStatus: 0,
+      if(username.includes(email.toLowerCase()) && isToggle) {
+       const trainerAccount =  await prisma.trainer.create({
+          data: {
+            firstname: coordinator?.firstname ?? teacher?.firstname,
+            middlename: coordinator?.middlename ?? teacher?.middlename,
+            lastname: coordinator?.lastname ?? teacher?.lastname,
+            email: coordinator?.email ?? teacher?.email,
+            contact: coordinator?.contact ?? teacher?.contact,
+            areaAssign_id: Number(area_id),
+            accountStatus: 0,
+            user_id: req.user.id,
+            profile: coordinator?.profile ?? teacher?.profile,
+            profile_url: coordinator?.profile_url ?? teacher?.profile_url,
+          }
+        });
+
+        // if(!trainerAccount) return res.status(500).json('errror')
+
+        // await prisma.notification.create({
+        //   data: {
+        //     title: 'Added Successfully',
+        //     description: ' We area pleased to inform you that you have been added to the InternTrack system as a Trainer. Your role in overseeing OJT matters is now active.',
+        //     date: formattedDate,
+        //     teacher_id: trainerAccount?.id
+        //   }
+        // })
+        return res.status(200).json('success');
+
+      }else{
+        const trainerAccount = await prisma.user.create({
+          data: {
+            username: email,
+            password: await argon2.hash(newPassowrd),
+            role: "Trainer",
+            trainer: {
+              create: {
+                firstname,
+                middlename,
+                lastname,
+                email,
+                contact: Number(contact),
+                areaAssign_id: Number(area_id),
+                accountStatus: 0,
+              },
             },
           },
-        },
-      });
+          include: {
+            trainer: true
+          }
+        });
 
-      const mailOptions = {
-        from: "reynaldobocaling@gmail.com",
-        to: email,
-        subject: "IternTrack!",
-        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Trainer`,
-      };
 
-      await transporter.sendMail(mailOptions);
+        if(!trainerAccount) return res.status(500).json('errror')
 
-      return res.status(200).json({ username: email, password: newPassowrd });
+        await prisma.notification.create({
+          data: {
+            title: 'Added Successfully',
+            description: 'test',
+            date: formattedDate,
+            trainer_id: trainerAccount?.trainer[0].id
+          }
+        })
+
+
+        const mailOptions = {
+          from: "reynaldobocaling@gmail.com",
+          to: email,
+          subject: "IternTrack!",
+          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Trainer`,
+        };
+  
+        await transporter.sendMail(mailOptions);
+        return res.status(200).json('success');
+
+      }
+
+      
     } catch (error) {
-      return res.status(200).json(error);
+      return res.status(500).json(error);
     }
   }
 
   // add teacher
   static async AddTeacher(req: any, res: Response) {
     const coordinator_id = req.user.coordinator[0]?.id;
+    const coordinatorEmail = req.user.username?.toLowerCase();
     const newPassowrd = generateNewPassword();
     const {
       firstname,
@@ -160,39 +265,93 @@ export class UserController {
       college,
       program,
       major,
+      isToggle,
+      profile,
+      profile_url
     } = req.body;
+
     try {
-      await prisma.user.create({
-        data: {
-          username: email,
-          password: await argon2.hash(newPassowrd),
-          role: "Teacher",
-          teacher: {
-            create: {
-              firstname,
-              middlename,
-              lastname,
-              email,
-              contact: Number(contact),
-              campus,
-              college,
-              program,
-              major,
-              coordinator_id: coordinator_id,
-              accountStatus: 0,
+      if (coordinatorEmail.includes(email.toLowerCase()) && isToggle) {
+        const teacherAccount = await prisma.teacher.create({
+          data: {
+            firstname,
+            middlename,
+            lastname,
+            email,
+            contact: Number(contact),
+            campus,
+            college,
+            program,
+            major,
+            coordinator_id: coordinator_id,
+            accountStatus: 0,
+            user_id: req.user.id,
+            profile,
+            profile_url
+          },
+        });
+
+        if(!teacherAccount) return res.status(500).json('errror')
+
+        await prisma.notification.create({
+          data: {
+            title: 'Added Successfully',
+            description: ' We area pleased to inform you that you have been added to the InternTrack system as a Teacher. Your role in overseeing OJT matters is now active.',
+            date: formattedDate,
+            teacher_id: teacherAccount?.id
+          }
+        })
+
+      } else {
+       const teacherAccount =  await prisma.user.create({
+          data: {
+            username: email,
+            password: await argon2.hash(newPassowrd),
+            role: "Teacher",
+            teacher: {
+              create: {
+                firstname,
+                middlename,
+                lastname,
+                email,
+                contact: Number(contact),
+                campus,
+                college,
+                program,
+                major,
+                coordinator_id: coordinator_id,
+                accountStatus: 0,
+              },
             },
           },
-        },
-      });
+          include: {
+            teacher: true
+          }
+        });
 
-      const mailOptions = {
-        from: "reynaldobocaling@gmail.com",
-        to: email,
-        subject: "IternTrack!",
-        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Teacher`,
-      };
 
-      await transporter.sendMail(mailOptions);
+
+        if(!teacherAccount) return res.status(500).json('errror')
+
+        await prisma.notification.create({
+          data: {
+            title: 'Added Successfully',
+            description: 'test',
+            date: formattedDate,
+            teacher_id: teacherAccount?.teacher[0].id
+          }
+        })
+        
+
+        const mailOptions = {
+          from: "reynaldobocaling@gmail.com",
+          to: email,
+          subject: "IternTrack!",
+          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Teacher`,
+        };
+  
+        await transporter.sendMail(mailOptions);
+      }
 
       return res.status(200).json({ username: email, password: newPassowrd });
     } catch (error: any) {
@@ -234,7 +393,7 @@ export class UserController {
       const startDate = dates?.start_date;
       const endDate = dates?.end_date;
 
-      await prisma.user.create({
+     const studentAccount =  await prisma.user.create({
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
@@ -264,8 +423,24 @@ export class UserController {
             },
           },
         },
+        include: {
+          student: true
+        }
       });
 
+
+      if(!studentAccount) return res.status(500).json('errror')
+
+      await prisma.notification.create({
+        data: {
+          title: 'Added Successfully',
+          description: ' We area pleased to inform you that you have been added to the InternTrack system as a Student. Your role in overseeing OJT matters is now active.',
+          date: formattedDate,
+          student_id: studentAccount?.student[0].id
+        }
+      })
+
+      
       const mailOptions = {
         from: "reynaldobocaling@gmail.com",
         to: email,
@@ -315,7 +490,7 @@ export class UserController {
           },
         });
 
-        await prisma.student.create({
+        const studentAccount = await prisma.student.create({
           data: {
             firstname: data.firstname,
             middlename: data.middlename,
@@ -339,16 +514,30 @@ export class UserController {
               },
             },
           },
+         
         });
 
-        const mailOptions = {
-          from: "reynaldobocaling@gmail.com",
-          to: data.email,
-          subject: "IternTrack!",
-          text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
-        };
 
-        await transporter.sendMail(mailOptions);
+        if(!studentAccount) return res.status(500).json('errror')
+
+        await prisma.notification.create({
+          data: {
+            title: 'Added Successfully',
+            description: ' We area pleased to inform you that you have been added to the InternTrack system as a Student. Your role in overseeing OJT matters is now active.',
+            date: formattedDate,
+            student_id: studentAccount?.id
+          }
+        })
+
+
+        // const mailOptions = {
+        //   from: "reynaldobocaling@gmail.com",
+        //   to: data.email,
+        //   subject: "IternTrack!",
+        //   text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
+        // };
+
+        // await transporter.sendMail(mailOptions);
       }
 
       return res.status(201).json("success");
@@ -402,7 +591,7 @@ export class UserController {
     const { firstname, middlename, lastname, email, contact } = req.body;
 
     try {
-      await prisma.user.create({
+     const directorAccount =  await prisma.user.create({
         data: {
           username: email,
           password: await argon2.hash(newPassowrd),
@@ -418,7 +607,23 @@ export class UserController {
             },
           },
         },
+        include: {
+          director: true
+        }
       });
+
+       
+      if(!directorAccount) return res.status(500).json('errror')
+
+      await prisma.notification.create({
+        data: {
+          title: 'Added Successfully',
+          description: ' We area pleased to inform you that you have been added to the InternTrack system as a Director. Your role in overseeing OJT matters is now active.',
+          date: formattedDate,
+          director_id: directorAccount?.director[0].id
+        }
+      })
+
 
       const mailOptions = {
         from: "reynaldobocaling@gmail.com",
@@ -429,7 +634,7 @@ export class UserController {
 
       await transporter.sendMail(mailOptions);
 
-      return res.status(200).json({ username: email, password: newPassowrd });
+      return res.status(200).json('successs');
     } catch (error) {
       return res.status(500).json(error);
     }
@@ -798,6 +1003,7 @@ export class UserController {
         },
         include: {
           user: true,
+          notification: true
         },
       });
       return res.status(200).json(response);
@@ -816,6 +1022,7 @@ export class UserController {
         },
         include: {
           user: true,
+          notification: true,
           student: {
             include: {
               teacher: true,
@@ -845,6 +1052,7 @@ export class UserController {
         },
         include: {
           user: true,
+          notification: true,
           teacher: {
             include: {
               student: {
@@ -879,6 +1087,7 @@ export class UserController {
           id: teacher_id,
         },
         include: {
+          notification: true,
           coordinator: {
             include: {
               teacher: {
@@ -918,6 +1127,8 @@ export class UserController {
         },
         include: {
           user: true,
+          announcement: true,
+          notification: true,
           teacher: {
             include: {
               coordinator: true,
@@ -1751,32 +1962,67 @@ export class UserController {
     }
   }
 
+
+
+
   static async createAnnouncement(req: any, res: Response) {
-    const { title, description, to, createdBy, createdRole } = req.body;
+    const { id, title, description, student_ids,postedBy } = req.body;
+    const role = req.user.role;
+    
+  
     try {
-      const response = await prisma.announcement.create({
-        data: {
-          title,
-          description,
-          to,
-          date: formattedDate,
-          createdBy,
-          createdRole,
-        },
-      });
-      return res.status(200).json(response);
+      const announcements = await Promise.all(
+        student_ids.map(async (student_id: any) => {
+          let announcementData: any = {
+            title,
+            description,
+            date: formattedDate,
+            postedBy,
+            student_id
+          };
+  
+          switch (role) {
+            case 'Coordinator':
+              announcementData.coordinator_id = id;
+              break;
+            case 'Teacher':
+              announcementData.teacher_id = id;
+              break;
+            case 'Trainer':
+              announcementData.trainer_id = id;
+              break;
+            case 'Student':
+              announcementData.student_id = student_id;
+              break;
+            default:
+              break;
+          }
+  
+          const response = await prisma.announcement.create({
+            data: announcementData,
+          });
+          return response;
+        })
+      );
+  
+      return res.status(200).json("success");
     } catch (error) {
       return res.status(500).json(error);
+      
     }
   }
 
-  static async addNotification(req: any, res: Response) {
-    const { description, role } = req.body;
+  
+  
+
+
+
+  static async changeRole(req: any, res: Response) {
+    const { id, role } = req.body;
     try {
-      const response = await prisma.notification.create({
+      const response = await prisma.user.update({
+        where: {id},
         data: {
-          description,
-          date: formattedDate,
           role,
         },
       });
@@ -1785,6 +2031,18 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+ 
+
+  static async getNotfication(req: any, res: Response) {
+    try {
+      const response = await prisma.notification.findMany();
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    } 
+  }
+
+
 }
 
 // timesheet

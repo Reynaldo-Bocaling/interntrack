@@ -5,6 +5,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import { getTrainer } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import ChangeRole from "../../components/user-Settings/ChangeRole";
 
 const Settings = () => {
   const [valueEvent, setValueEvent] = useState(1);
@@ -47,6 +48,12 @@ const Settings = () => {
       id: 3,
       label: "Old students",
       url: "/old-students",
+    },
+    {
+      id: 4,
+      label: "Change Role",
+      value: 3,
+      element: ChangeRole,
     },
   ];
 

@@ -113,22 +113,25 @@ const Dashboard = () => {
         }))
     : [];
 
+
+
   const totalAllHoursStudent = filterStudentList
-    .map(
-      ({ program }) =>
-        programList.find((item) => item.program_description === program)
-          ?.trainingHours
-    )
-    .reduce((total, item) => total + item, 0);
+  .map(({ program }) =>
+    programList.find((item) => item.program_description === program)?.trainingHours
+  )
+  .filter((hours) => !isNaN(hours) && hours !== undefined)
+  .reduce((total, hours) => total + hours, 0);
 
-  const totalHoursStudent = filterStudentList
-    .flatMap(({ timesheet }) => timesheet)
-    .filter((item) => item.logStatus === 1)
-    .reduce((total, item) => total + item.totalHours, 0);
+const totalHoursStudent = filterStudentList
+  .flatMap(({ timesheet }) => timesheet)
+  .filter((item) => item.logStatus === 1)
+  .reduce((total, item) => total + item.totalHours, 0);
 
-  const percentage = Math.floor(
-    (Math.round(Math.round(totalHoursStudent)) / totalAllHoursStudent) * 100
-  );
+const percentage = Math.floor(
+  (Math.round(Math.round(totalHoursStudent)) / (totalAllHoursStudent || 1)) * 100
+);
+
+
 
   const studentRequest =
     filterStudentList && Array.isArray(filterStudentList)

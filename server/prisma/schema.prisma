@@ -51,7 +51,8 @@ model Director {
   accountStatus         Int
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
-  company               Company[]   
+  company               Company[]  
+  notification Notification[] 
 }
 
 model Coordinator {
@@ -70,6 +71,8 @@ model Coordinator {
   user_id               Int
   user                  User @relation(fields: [user_id], references: [id])
   teacher               Teacher[]
+  notification Notification[]
+  announcement    Announcement[]
 }
 
 model Teacher {
@@ -92,6 +95,8 @@ model Teacher {
   coordinator           Coordinator @relation(fields: [coordinator_id], references: [id])
   student               Student[]
   dateRangeTimesheet    DateRangeTimesheet[]
+  notification Notification[]
+  announcement    Announcement[]
 }
 
 model Trainer {
@@ -109,6 +114,8 @@ model Trainer {
   areaofAssignment      AreaOfAssignment @relation(fields: [areaAssign_id], references: [id])
   user                  User @relation(fields: [user_id], references: [id])
   student               Student[]
+  notification Notification[]
+  announcement    Announcement[]
 }
 
 model Student {
@@ -141,6 +148,8 @@ model Student {
   task                  Task[]
   requirement           Requirement[]
   weeklyReport          WeeklyReport[]
+  notification Notification[]
+  announcement Announcement[]
 }
 
 model Timesheet {
@@ -247,21 +256,18 @@ model Major {
 
 model Announcement {
   id Int @id @default(autoincrement())
-  title                String?
-  description          String?
-  to                   String
-  date                 String
-  createdBy            String
-  createdRole          String?
-
-}
-
-
-model Notification {
-  id Int @id @default(autoincrement())
+  title                String
   description          String
-  role                 String
+  postedBy             String
+  coordinator_id       Int?
+  teacher_id           Int?
+  trainer_id           Int?
   date                 String
+  student_id           Int
+  coordinator Coordinator? @relation(fields: [coordinator_id], references: [id])
+  teacher Teacher? @relation(fields: [teacher_id], references: [id])
+  trainer Trainer? @relation(fields: [trainer_id], references: [id])
+  student Student @relation(fields: [student_id], references: [id])
 }
 
 
@@ -270,4 +276,22 @@ model WeeklyReport {
   date                String
   student_id          Int
   student Student     @relation(fields: [student_id], references: [id])
+}
+
+
+model Notification {
+  id Int @id @default(autoincrement())
+  description String
+  title String?
+  date String
+  director_id Int?
+  coordinator_id Int?
+  teacher_id Int?
+  trainer_id Int?
+  student_id Int?
+  director Director ?@relation(fields: [director_id], references: [id])
+  coordinator Coordinator ?@relation(fields: [coordinator_id], references: [id])
+  teacher Teacher ?@relation(fields: [teacher_id], references: [id])
+  trainer Trainer ?@relation(fields: [trainer_id], references: [id])
+  student Student ?@relation(fields: [student_id], references: [id])
 }

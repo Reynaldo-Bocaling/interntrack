@@ -46,7 +46,7 @@ const Companies = () => {
     mutationFn: addCompany,
     onSuccess: () => {
       Swal.fire("Success", "The company has been added", "success");
-      queryClient.invalidateQueries("getCompanyList");
+      queryClient.invalidateQueries("director_getCompanyList");
       setAddCompanyModalIsOpen(false);
       setIsAddCompany(false)
     },
@@ -64,7 +64,7 @@ const Companies = () => {
     isLoading: companyLoading,
     isError: companyError,
   } = useQuery({
-    queryKey: ["getCompanyList"],
+    queryKey: ["director_getCompanyList"],
     queryFn: getCompanyList,
   });
 
@@ -264,6 +264,7 @@ const Companies = () => {
       <TableFormat
         data={filtered}
         isLoading={companyLoading}
+        isError={companyError}
         columns={columns}
       />
 
@@ -276,6 +277,7 @@ const Companies = () => {
         closeModal={() => setAddCompanyModalIsOpen(false)}
         onAddCompany={handleAddCompany}
         isLoading={companyLoading}
+        addLoading={isLoading}
       />
 
       <div style={{ display: "none" }}>

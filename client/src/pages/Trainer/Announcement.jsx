@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import React, { useState } from "react";
-import { MultiSelect, Tabs } from "@mantine/core";
+import { Tabs } from "@mantine/core";
 import { FaUsersRays } from "react-icons/fa6";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { createAnnouncement, getAnnouncement, getTrainer } from "../../api/Api";
@@ -24,13 +24,18 @@ const Announcement = () => {
       queryKey: ["getAnnouncement"],
       queryFn: getAnnouncement,
     });
-  const { data: getTrainerInfo, isLoading: trainerLaoding } = useQuery({
+  const { data: trainer, isLoading: trainerLoading } = useQuery({
     queryKey: ["trainer"],
     queryFn: getTrainer,
   });
 
   const announcementList = getAnnouncementList ? getAnnouncementList : [];
-  const trainerName = `${getTrainerInfo?.firstname} ${getTrainerInfo?.lastname}`;
+  const trainer_id = trainer?.id;
+
+  const student_ids = trainer
+    ? trainer.student
+        .map(({ id }) => id)
+    : "";
 
   // create
   const [values, setValues] = useState({
@@ -65,24 +70,17 @@ const Announcement = () => {
     event.preventDefault();
 
     mutate({
+      id: trainer_id,
       title: values.title,
       description: values.description,
-      to: values.selectedOptions.join(" , "),
-      createdBy: trainerName,
-      createdRole: getTrainerInfo?.user?.role,
+      student_ids,
+      postedBy: `${trainer?.firstname} ${trainer?.lastname} ( Trainer )`
     });
   };
 
-  const yourPost = announcementList.filter(
-    (item) =>
-      item.createdRole?.toLowerCase() === "trainer" &&
-      item.createdBy.toLowerCase().includes(trainerName.toLowerCase())
-  );
-  const otherPost = announcementList.filter(
-    (item) =>
-      item.createdBy.toLowerCase() !== trainerName.toLowerCase() &&
-      item.to.toLowerCase().includes("trainer")
-  );
+  const yourPost = announcementList
+  .filter(item => item.trainer_id === trainer_id)
+  .filter((item, index, self) =>  self.findIndex((el) => el.title === item.title && el.description === item.description) === index)
 
   // console.log(otherPost,'d');
   if (announcementLoading) return <center>Loading</center>;
@@ -118,17 +116,6 @@ const Announcement = () => {
             }}
           >
             Your post
-          </Tabs.Tab>
-          <Tabs.Tab
-            value="others"
-            sx={{
-              color: "#999",
-              fontSize: "17px",
-              marginTop: "10px",
-              letterSpacing: "0.9px",
-            }}
-          >
-            Others
           </Tabs.Tab>
         </Tabs.List>
 
@@ -168,59 +155,7 @@ const Announcement = () => {
 
                       <small className="flex items-center gap-3 text-[#828383]">
                         <FaUsersRays size={20} />
-                        {item.to}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <center>No Announcemnet</center>
-            )}
-          </div>
-        </Tabs.Panel>
-
-        <Tabs.Panel value="others">
-          <div className="flex flex-col gap-1 w-full">
-            <p className="px-7 py-1 text-xl text-gray-500">
-              Other Announcement
-            </p>
-            {otherPost.length > 0 ? (
-              otherPost.map((item, index) => (
-                <div key={index} className="p-7 flex gap-4 border-b ">
-                  <TfiAnnouncement size={25} className="text-gray-400" />
-                  <div className="w-full">
-                    <div className="flex items-center justify-between gap-2 mb-5 w-full">
-                      <div className="flex gap-2">
-                        <span className="font-semibold">{item.title}</span>
-                        <small className="text-xs  py-1 px-3 rounded-full bg-[#f28837] text-white">
-                          {format(new Date(), "MMMM dd, yyyy")}
-                        </small>
-                      </div>
-                      <div className="text-sm text-[#828383] flex flex-col items-end">
-                        <div className=" flex items-center gap-2">
-                          <small>Posted by</small>
-                          <span className="text-[#000] font-medium">
-                            {item.createdBy}
-                          </span>
-                        </div>
-                        <small className="text-blue-500 font-medium pr-4">
-                          {item.createdRole}
-                        </small>
-                      </div>
-                    </div>
-                    <p className="text-sm text-[#828383] text-justify">
-                      {item.description}
-                    </p>
-
-                    <div className="mt-7 flex items-center justify-between">
-                      <button className="text-blue-500 font-medium tracking-wide">
-                        View
-                      </button>
-
-                      <small className="flex items-center gap-3 text-[#828383]">
-                        <FaUsersRays size={20} />
-                        {item.to}
+                        {item.postedBy}
                       </small>
                     </div>
                   </div>
@@ -268,16 +203,7 @@ const Announcement = () => {
                         onChange={handleInputChange}
                       />
                     </div>
-                    <div>
-                      <MultiSelect
-                        size="lg"
-                        placeholder="Who can see your announcement"
-                        data={["Student", "Trainer", "director", "coordinator"]}
-                        hidePickedOptions
-                        value={values.selectedOptions}
-                        onChange={handleMultiSelectChange}
-                      />
-                    </div>
+
                     <Button
                       color="primary"
                       size="lg"

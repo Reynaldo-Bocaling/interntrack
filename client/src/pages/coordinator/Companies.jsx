@@ -28,7 +28,7 @@ const Companies = () => {
     isLoading: companyLoading,
     isError: companyError,
   } = useQuery({
-    queryKey: ["getCompanyList"],
+    queryKey: ["coordinator_getCompanyList"],
     queryFn: getCompanyList,
   });
 
@@ -216,6 +216,7 @@ const Companies = () => {
       <TableFormat
         data={filtered}
         isLoading={companyLoading}
+        isError={companyError}
         columns={columns}
       />
 

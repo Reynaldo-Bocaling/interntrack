@@ -5,6 +5,7 @@ import StudentHeader from "./common/StudentHeader";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
 import StudentNavigate from "./common/StudentNavigation";
+import Notification from "../components/notification/Notification";
 
 const Rootlayout = (props) => {
   const { role,data } = props;
@@ -52,6 +53,10 @@ const Rootlayout = (props) => {
               />
             </div>
           )}
+
+
+          <Notification />
+
 
           <div
             className={`${

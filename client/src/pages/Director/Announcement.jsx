@@ -82,7 +82,7 @@ const Announcement = () => {
       item.createdRole?.toLowerCase() === "director" &&
       item.createdBy.toLowerCase().includes(directorName.toLowerCase())
   );
-  const otherPost = announcementList.filter(
+  const otherPost = announcementList?.filter(
     (item) =>
       item.createdBy.toLowerCase() !== directorName.toLowerCase() &&
       item.to.toLowerCase().includes("director")

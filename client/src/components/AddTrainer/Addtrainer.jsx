@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Switch,
   Modal,
   ModalContent,
   ModalHeader,
@@ -9,6 +10,11 @@ import {
   Select,
   SelectItem,
 } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "../../api/Api";
+
+import ClipLoader from "react-spinners/ClipLoader";
+
 
 const AddTrainer = ({
   companies,
@@ -16,9 +22,11 @@ const AddTrainer = ({
   AddIsOpen,
   AddOnClose,
   isLoading,
+  trainerList,
 }) => {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
+  const [toggleAddSelf, setToggleAddSelf] = useState(false);
 
   const [formData, setFormData] = useState({
     area_id: selectedArea,
@@ -28,6 +36,15 @@ const AddTrainer = ({
     email: "",
     contact: "",
   });
+
+  const { data: user, isLoading: userLoading } = useQuery({
+    queryKey: ["getUserInfo"],
+    queryFn: getUser,
+  });
+
+  const data = user ?? [];
+  const coordinator = data?.coordinator?.[0] || {};
+  const teacher = data?.teacher?.[0] || {};
 
   const [errors, setErrors] = useState({});
 
@@ -44,7 +61,6 @@ const AddTrainer = ({
   };
 
   const validateField = (name, value) => {
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const contactRegex = /^\d+$/;
     const nameRegex = /^[A-Za-z\s]+$/;
 
@@ -53,8 +69,6 @@ const AddTrainer = ({
       case "lastname":
       case "middlename":
         return nameRegex.test(value) ? null : "Please enter a valid name";
-      case "email":
-        return emailRegex.test(value) ? null : "Please enter a valid email";
       case "contact":
         return contactRegex.test(value)
           ? null
@@ -67,10 +81,10 @@ const AddTrainer = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if there are any errors
     if (Object.values(errors).every((error) => error === null)) {
       const selectedAreaId = { area_id: selectedArea };
-      onSubmit({ ...formData, ...selectedAreaId });
+      const toggleButton = { isToggle: toggleAddSelf };
+      onSubmit({ ...formData, ...selectedAreaId, ...toggleButton });
     }
   };
 
@@ -88,95 +102,123 @@ const AddTrainer = ({
         ?.areaOfAssignment
     : [];
 
+  const handleTry = () => {
+    setToggleAddSelf(!toggleAddSelf);
+
+    if (toggleAddSelf) {
+      setFormData({
+        firstname: "",
+        middlename: "",
+        lastname: "",
+        email: "",
+        contact: "",
+      });
+    } else {
+      setFormData({
+        firstname: coordinator?.firstname ?? teacher?.firstname,
+        middlename: coordinator?.middlename ?? teacher?.middlename,
+        lastname: coordinator?.lastname ?? teacher?.lastname,
+        email: coordinator?.email ?? teacher?.email,
+        contact: coordinator?.contact ?? teacher?.contact,
+      });
+    }
+  };
+
   return (
-    <>
-      <Modal
-        isOpen={AddIsOpen}
-        onOpenChange={AddOnClose}
-        placement="top-center"
-        className="max-w-[800px]"
-        isDismissable={false}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="text-base font-semibold flex flex-col gap-1">
-                Add Trainer Form
-              </ModalHeader>
-              <ModalBody>
-                <form
-                  onSubmit={handleSubmit}
-                  className="flex flex-col gap-5 py-4 px-2"
-                >
-                  <div className="flex items-center gap-4">
-                    <Select
-                      items={companies ? companies : []}
-                      onChange={handleCompanyChange}
-                      label="Select Company"
-                      className="max-w-[280px]"
-                      size="sm"
-                      isRequired
-                    >
-                      {(companies) => (
-                        <SelectItem key={companies.id}>
-                          {`${companies.companyName} (${companies.address} )`}
-                        </SelectItem>
-                      )}
-                    </Select>
+    <Modal
+      isOpen={AddIsOpen}
+      onOpenChange={AddOnClose}
+      placement="top-center"
+      className="max-w-[800px]"
+      isDismissable={false}
+    >
+      <ModalContent>
+        {(onClose) => (
+          <>
+            <ModalHeader className="text-base font-semibold flex flex-col gap-1">
+              Add Trainer Form
+            </ModalHeader>
+            <ModalBody>
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-5 py-4 px-2"
+              >
+                <div className="flex items-center gap-4">
+                  <Select
+                    items={companies || []}
+                    onChange={handleCompanyChange}
+                    label="Select Company"
+                    className="max-w-[280px]"
+                    size="sm"
+                    isRequired
+                  >
+                    {(company) => (
+                      <SelectItem key={company.id}>
+                        {`${company.companyName} (${company.address})`}
+                      </SelectItem>
+                    )}
+                  </Select>
 
-                    <Select
-                      onChange={handleAreaAssignChange}
-                      items={findAreaList && findAreaList}
-                      name="area_id"
-                      label="Select Area"
-                      className="max-w-[280px]"
-                      size="sm"
-                      isRequired
-                      isDisabled={!selectedCompany}
-                    >
-                      {(item) => (
-                        <SelectItem key={item.id}>{item.areaName}</SelectItem>
-                      )}
-                    </Select>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Input
-                      type="text"
-                      label="First Name"
-                      name="firstname"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[40%]"
-                      errorMessage={errors.firstname}
-                    />
+                  <Select
+                    onChange={handleAreaAssignChange}
+                    items={findAreaList || []}
+                    name="area_id"
+                    label="Select Area"
+                    className="max-w-[280px]"
+                    size="sm"
+                    isRequired
+                    isDisabled={!selectedCompany}
+                  >
+                    {(item) => (
+                      <SelectItem key={item.id}>{item.areaName}</SelectItem>
+                    )}
+                  </Select>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Input
+                    type="text"
+                    label="First Name"
+                    name="firstname"
+                    onChange={handleChange}
+                    size="sm"
+                    isRequired
+                    className="w-[40%]"
+                    errorMessage={errors.firstname}
+                    value={formData.firstname}
+                    isDisabled={toggleAddSelf}
+                  />
 
-                    <Input
-                      type="text"
-                      label="Last Name"
-                      name="lastname"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[40%]"
-                      errorMessage={errors.lastname}
-                    />
+                  <Input
+                    type="text"
+                    label="Last Name"
+                    name="lastname"
+                    onChange={handleChange}
+                    size="sm"
+                    isRequired
+                    className="w-[40%]"
+                    errorMessage={errors.lastname}
+                    value={formData.lastname}
+                    isDisabled={toggleAddSelf}
+                  />
 
-                    <Input
-                      type="text"
-                      label={
-                        <p>
-                          MI <span className="text-[#a8a9a9]">(Optional)</span>
-                        </p>
-                      }
-                      name="middlename"
-                      onChange={handleChange}
-                      size="sm"
-                      className="w-[20%]"
-                      errorMessage={errors.middlename}
-                    />
-                  </div>
-                  <div className="flex items-center gap-4">
+                  <Input
+                    type="text"
+                    label={
+                      <p>
+                        MI <span className="text-[#a8a9a9]">(Optional)</span>
+                      </p>
+                    }
+                    name="middlename"
+                    onChange={handleChange}
+                    size="sm"
+                    className="w-[20%]"
+                    errorMessage={errors.middlename}
+                    value={formData.middlename}
+                    isDisabled={toggleAddSelf}
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="relative w-[60%]">
                     <Input
                       type="text"
                       label="Email"
@@ -184,22 +226,65 @@ const AddTrainer = ({
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[60%]"
+                      className="w-[100%]"
                       errorMessage={errors.email}
+                      value={formData.email}
+                      isDisabled={toggleAddSelf}
                     />
-                    <Input
-                      type="text"
-                      label="Contact no."
-                      name="contact"
-                      onChange={handleChange}
-                      size="sm"
-                      isRequired
-                      className="w-[40%]"
-                      errorMessage={errors.contact}
-                    />
+
+                    {trainerList.some(
+                      (item) => item.email === formData.email
+                    ) && (
+                      <small className="text-red-500 text-xs absolute -bottom-5">
+                        Sorry, that email address is already taken.
+                      </small>
+                    )}
                   </div>
 
-                  <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
+                  <Input
+                    type="text"
+                    label="Contact no."
+                    name="contact"
+                    onChange={handleChange}
+                    size="sm"
+                    isRequired
+                    className="w-[40%]"
+                    errorMessage={errors.contact}
+                    value={formData.contact}
+                    isDisabled={toggleAddSelf}
+                  />
+                </div>
+
+                <div className="mt-5 mb-2 flex items-center gap-3 justify-between">
+                  {userLoading ? (
+                    <small className="flex items-center gap-3 text-gray-400">
+                      Loading <ClipLoader color="#3683d6" size={19} />
+                    </small>
+                  ) : (
+                    <Switch
+                      isSelected={toggleAddSelf}
+                      onValueChange={handleTry}
+                      isDisabled={trainerList.some(
+                        (item) => item.email === data?.username
+                      )}
+                    >
+                      <div className="flex flex-col gap-0">
+                        <small className="text-gray-400 tracking-wide">
+                          Add me as Trainer
+                        </small>
+
+                        {trainerList.some(
+                          (item) => item.email === data?.username
+                        ) && (
+                          <small className="text-red-500 text-xs">
+                            You have already added this trainer
+                          </small>
+                        )}
+                      </div>
+                    </Switch>
+                  )}
+
+                  <div className="flex items-center gap-3">
                     <Button
                       color="danger"
                       variant="flat"
@@ -213,19 +298,24 @@ const AddTrainer = ({
                       color="primary"
                       className="font-medium tracking-wide px-8"
                       disabled={
-                        !Object.values(errors).every((error) => error === null)
+                        !Object.values(errors).every(
+                          (error) => error === null
+                        ) ||
+                        trainerList.some(
+                          (item) => item.email === formData.email
+                        )
                       }
                     >
                       {isLoading ? "Loading..." : "Submit"}
                     </Button>
                   </div>
-                </form>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+                </div>
+              </form>
+            </ModalBody>
+          </>
+        )}
+      </ModalContent>
+    </Modal>
   );
 };
 

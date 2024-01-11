@@ -252,7 +252,7 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       color="primary"
                       className="font-medium tracking-wide px-8"
                     >
-                      {isLoading ? "Loading..." : "Submit"}
+                      {isLoading ? "Processing..." : "Submit"}
                     </Button>
                   </div>
                 </form>

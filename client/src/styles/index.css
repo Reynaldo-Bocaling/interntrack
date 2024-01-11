@@ -229,7 +229,21 @@
   }
 }
 
-
+/* loading text animation */
+.textLoading{
+  animation: textLoadingAnimation 1.5s infinite;
+}
+@keyframes textLoadingAnimation {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
 
 .uploadMoa{
   border: 1px dashed #bdbfc0;
@@ -332,9 +346,6 @@ font-family: 'Patua One', serif;
 
 
 /* login responsive */
-
-
-
 /* Mobile Devices */
 @media only screen and (max-width: 767px) {
   .loginContainer {

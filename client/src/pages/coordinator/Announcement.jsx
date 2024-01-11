@@ -19,6 +19,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
+import Swal from "sweetalert2";
 
 const Announcement = () => {
   const queryClient = useQueryClient();
@@ -28,13 +29,21 @@ const Announcement = () => {
       queryKey: ["getAnnouncement"],
       queryFn: getAnnouncement,
     });
-  const { data: getCoordinatorInfo, isLoading: coordinatorLoading } = useQuery({
+  const { data: coordinator, isLoading: coordinatorLoading } = useQuery({
     queryKey: ["coordinator"],
     queryFn: getCoordinator,
   });
 
   const announcementList = getAnnouncementList ? getAnnouncementList : [];
-  const coordinatorName = `${getCoordinatorInfo?.firstname} ${getCoordinatorInfo?.lastname}`;
+  const coordinatorId = coordinator?.id;
+  
+  const student_ids = coordinator
+  ? coordinator.teacher.flatMap(({ student }) => student).map(({ id }) => id) : '';
+
+
+
+// console.log('id', postedBy);
+
 
   // create
   const [values, setValues] = useState({
@@ -51,44 +60,43 @@ const Announcement = () => {
     });
   };
 
-  const handleMultiSelectChange = (selected) => {
-    setValues({
-      ...values,
-      selectedOptions: selected,
-    });
-  };
 
   const { mutate } = useMutation(createAnnouncement, {
     onSuccess: () => {
-      alert("success"), queryClient.invalidateQueries("getAnnouncement");
+      Swal.fire(
+        "Success",
+        "Announcement Successfully uploaded!",
+        "success"
+      );
+      queryClient.invalidateQueries("getAnnouncement")
     },
-    onError: () => alert("Error"),
+    onError: () => {
+      Swal.fire(
+        "Error",
+        "Failed to upload \n Please try again",
+        "error"
+      );
+    },
   });
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     mutate({
+      id: coordinatorId,
       title: values.title,
       description: values.description,
-      to: values.selectedOptions.join(" , "),
-      createdBy: coordinatorName,
-      createdRole: getCoordinatorInfo?.user?.role,
+      student_ids,
+      postedBy: `${coordinator?.firstname} ${coordinator?.lastname} ( Coordinator )`
     });
   };
 
-  const yourPost = announcementList.filter(
-    (item) =>
-      item.createdRole?.toLowerCase() === "coordinator" &&
-      item.createdBy.toLowerCase().includes(coordinatorName.toLowerCase())
-  );
-  const otherPost = announcementList.filter(
-    (item) =>
-      item.createdBy.toLowerCase() !== coordinatorName.toLowerCase() &&
-      item.to.toLowerCase().includes("coordinator")
-  );
 
-  // console.log(otherPost,'d');
+  const yourPost = announcementList
+  .filter(item => item.coordinator_id === coordinatorId)
+  .filter((item, index, self) =>  self.findIndex((el) => el.title === item.title && el.description === item.description) === index)
+
+  // console.log(testt,'d');
   if (announcementLoading) return <center>Loading</center>;
   return (
     <div className="bg-white rounded-lg p-5 w-full">
@@ -123,17 +131,7 @@ const Announcement = () => {
           >
             Your post
           </Tabs.Tab>
-          <Tabs.Tab
-            value="others"
-            sx={{
-              color: "#999",
-              fontSize: "17px",
-              marginTop: "10px",
-              letterSpacing: "0.9px",
-            }}
-          >
-            Others
-          </Tabs.Tab>
+          
         </Tabs.List>
 
         <Tabs.Panel value="post">
@@ -172,7 +170,7 @@ const Announcement = () => {
 
                       <small className="flex items-center gap-3 text-[#828383]">
                         <FaUsersRays size={20} />
-                        {item.to}
+                        {item.postedBy}
                       </small>
                     </div>
                   </div>
@@ -184,57 +182,7 @@ const Announcement = () => {
           </div>
         </Tabs.Panel>
 
-        <Tabs.Panel value="others">
-          <div className="flex flex-col gap-1 w-full">
-            <p className="px-7 py-1 text-xl text-gray-500">
-              Other Announcement
-            </p>
-            {otherPost.length > 0 ? (
-              otherPost.map((item, index) => (
-                <div key={index} className="p-7 flex gap-4 border-b ">
-                  <TfiAnnouncement size={25} className="text-gray-400" />
-                  <div className="w-full">
-                    <div className="flex items-center justify-between gap-2 mb-5 w-full">
-                      <div className="flex gap-2">
-                        <span className="font-semibold">{item.title}</span>
-                        <small className="text-xs  py-1 px-3 rounded-full bg-[#f28837] text-white">
-                          {format(new Date(), "MMMM dd, yyyy")}
-                        </small>
-                      </div>
-                      <div className="text-sm text-[#828383] flex flex-col items-end">
-                        <div className=" flex items-center gap-2">
-                          <small>Posted by</small>
-                          <span className="text-[#000] font-medium">
-                            {item.createdBy}
-                          </span>
-                        </div>
-                        <small className="text-blue-500 font-medium pr-4">
-                          {item.createdRole}
-                        </small>
-                      </div>
-                    </div>
-                    <p className="text-sm text-[#828383] text-justify">
-                      {item.description}
-                    </p>
-
-                    <div className="mt-7 flex items-center justify-between">
-                      <button className="text-blue-500 font-medium tracking-wide">
-                        View
-                      </button>
-
-                      <small className="flex items-center gap-3 text-[#828383]">
-                        <FaUsersRays size={20} />
-                        {item.to}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <center>No Announcemnet</center>
-            )}
-          </div>
-        </Tabs.Panel>
+       
       </Tabs>
 
       <Modal
@@ -272,16 +220,7 @@ const Announcement = () => {
                         onChange={handleInputChange}
                       />
                     </div>
-                    <div>
-                      <MultiSelect
-                        size="lg"
-                        placeholder="Who can see your announcement"
-                        data={["Student", "Trainer", "Teacher", "Director"]}
-                        hidePickedOptions
-                        value={values.selectedOptions}
-                        onChange={handleMultiSelectChange}
-                      />
-                    </div>
+                   
                     <Button
                       color="primary"
                       size="lg"

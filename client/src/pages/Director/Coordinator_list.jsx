@@ -2,8 +2,6 @@ import React, { useState, useRef } from "react";
 import TableFormat from "../../components/ReusableTableFormat/TableFormat";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
@@ -14,7 +12,6 @@ import { AiOutlineUserAdd } from "react-icons/ai";
 import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
 import {
   Switch,
-  useDisclosure as AddCoordinatorDisclosure,
   Avatar,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
@@ -39,9 +36,9 @@ const Trainer_list = () => {
 
   const { mutate, isLoading: AddCoordinatorLoading } = useMutation({
     mutationFn: AddCoordinatorAccount,
-    onSuccess: (data) => {
+    onSuccess: () => {
       Swal.fire("Success", "The coordinator has been added", "success");
-      queryClient.invalidateQueries({ queryKey: ["getCoordinatorList"] });
+      queryClient.invalidateQueries({ queryKey: ["director_getCoordinatorList"] });
       setIsAddCoordinator(false)
     },
     onError: () => {
@@ -54,17 +51,11 @@ const Trainer_list = () => {
   });
 
   const {
-    isOpen: AddIsOpen,
-    onOpen: AddOnOpen,
-    onClose: AddOnClose,
-  } = AddCoordinatorDisclosure();
-
-  const {
     data: coordinatorList,
     isLoading: coordinatorLoading,
     isError: coordinatoryError,
   } = useQuery({
-    queryKey: ["getCoordinatorList"],
+    queryKey: ["director_getCoordinatorList"],
     queryFn: getCoordinatorList,
   });
 
@@ -201,25 +192,6 @@ const Trainer_list = () => {
                 <CgProfile size={17} />
                 Profile
               </NavLink>
-
-              <NavLink
-                to="/trainer-student-list"
-                state={{
-                  List: info.row.original.studentList,
-                  trainerName: info.row.original.firstname,
-                }}
-                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
-              >
-                <RiUserSearchLine size={17} />
-                Student list
-              </NavLink>
-
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink>
             </div>
           )}
         </div>
@@ -232,13 +204,7 @@ const Trainer_list = () => {
     setShow((prev) => (prev === id ? null : id));
   };
 
-  if (coordinatoryError) {
-    return (
-      <h1 className="text-center my-10">
-        Server Failed. Please Try Again Later
-      </h1>
-    );
-  }
+
 
   const defaultData = [...data];
   while (defaultData.length < 15) {
@@ -336,6 +302,7 @@ const Trainer_list = () => {
         data={data}
         columns={columns}
         isLoading={coordinatorLoading}
+        isError={coordinatoryError}
       />
 
       <AddCoordinator

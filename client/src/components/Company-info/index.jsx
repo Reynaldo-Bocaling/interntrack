@@ -12,7 +12,7 @@ import {
   MdOutlineFormatListNumbered,
 } from "react-icons/md";
 import { Tabs } from "@mantine/core";
-import pic from "../../assets/images/dp.png";
+import pic from "../../assets/images/companyPic.jpg";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi";
 import { BiInfoCircle } from "react-icons/bi";
 import { BsChatDots, BsFillTrash3Fill } from "react-icons/bs";

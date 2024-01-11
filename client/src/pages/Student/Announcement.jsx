@@ -1,24 +1,19 @@
 import { format } from "date-fns";
 import React from "react";
 import { TfiAnnouncement } from "react-icons/tfi";
-import { getAnnouncement } from "../../api/Api";
+import { getAnnouncement, getStudent } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
 const Announcement = () => {
-  const { data: getAnnouncementList, isLoading: announcementLoading } =
-    useQuery({
-      queryKey: ["getAnnouncement"],
-      queryFn: getAnnouncement,
-    });
+  const { data: getStudentInfo, isLoading: studentInfoLoading } =  useQuery({queryKey: ["getStudent22"],queryFn: getStudent, });
 
-  const announcementList = getAnnouncementList ? getAnnouncementList : [];
+    const studentInfo = getStudentInfo ?? [];
+    
 
-  const otherPost = announcementList
-    .filter((item) => item.to.toLowerCase().includes("student"))
-    .slice()
-    .sort((a, b) => b.id - a.id);
+  const otherPost = studentInfo?.announcement;
 
-  if (announcementLoading) return <center>Loading</center>;
+
+  if (studentInfoLoading) return <center>Loading</center>;
 
   return (
     <div className="bg-white rounded-lg p-5 w-full">
@@ -54,12 +49,9 @@ const Announcement = () => {
                     <div className="text-sm text-[#828383] flex flex-col items-end">
                       <div className=" flex items-center gap-2">
                         <small>Posted by</small>
-                        <span className="text-[#000] font-medium">
-                          {item.createdBy}
-                        </span>
                       </div>
                       <small className="text-blue-500 font-medium pr-4">
-                        {item.createdRole}
+                        {item.postedBy}
                       </small>
                     </div>
                   </small>

@@ -143,22 +143,32 @@ const Dashboard = () => {
     ({ student }) => student
   ).length;
 
+ 
+
+
   const totalStudent = filterStudentList.length;
 
-  const totalAssign = `${Math.round(
-    (data.filter(
-      (item) => item.trainer !== null && item.areaAssigned_id !== null
-    ).length /
-      totalStudent) *
-      100
-  )} %`;
-  const totalUnAssign = `${Math.round(
-    (data.filter(
-      (item) => item.trainer === null && item.areaAssigned_id === null
-    ).length /
-      totalStudent) *
-      100
-  )} %`;
+const totalAssign = totalStudent !== 0
+  ? `${Math.round(
+      (data.filter(
+        (item) => item.trainer !== null && item.areaAssigned_id !== null
+      ).length / totalStudent) * 100
+    )} %`
+  : '0 %';
+
+const totalUnAssign = totalStudent !== 0
+  ? `${Math.round(
+      (data.filter(
+        (item) => item.trainer === null && item.areaAssigned_id === null
+      ).length / totalStudent) * 100
+    )} %`
+  : '0 %';
+
+
+  
+
+
+
   // console.log('student',getWeeklyAttendance);
 
   const totalCountBox = [

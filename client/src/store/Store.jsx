@@ -14,7 +14,8 @@ export const profileToggle = create((set) => ({
 
 
 export const notificationToggle = create((set) => ({
-    isOpen: false,
-    setIsOpen: () => set((state) => ({isOpen: !state.isOpen}))
+    isOpenNotfication: false,
+    setIsOpenNotification: () =>  set({isOpenNotfication: true}),
+    setIsCloseNotification: () =>  set({isOpenNotfication: false})
 }));
 

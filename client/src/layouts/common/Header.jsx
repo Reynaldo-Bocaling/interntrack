@@ -25,7 +25,7 @@ import { Avatar } from "@nextui-org/react";
 function Header(props) {
   const [opened, { open, close }] = useDisclosure(false);
   const [dataValue, setDataValue] = useState(null);
-
+  const {setIsOpenNotification} = notificationToggle();
   const { isOpenSidebar, setIsOpenSidebar } = sidebarToggle();
 
   const { data: getUserData } = useQuery({
@@ -76,16 +76,26 @@ function Header(props) {
   const data = getUserData ? getUserData : {};
 
   useEffect(() => {
-    if (data?.role === "Director") {
-      setDataValue(data.director);
-    } else if (data?.role === "Coordinator") {
-      setDataValue(data?.coordinator);
-    } else if (data?.role === "Teacher") {
-      setDataValue(data?.teacher);
-    } else if (data?.role === "Trainer") {
-      setDataValue(data?.trainer);
-    } else if (data?.role === "SuperAdmin") {
-      setDataValue(data?.superadmin);
+    if (data) {
+      switch (data.role) {
+        case 'Director':
+          setDataValue(data.director);
+          break;
+        case 'Coordinator':
+          setDataValue(data.coordinator);
+          break;
+        case 'Teacher':
+          setDataValue(data.teacher);
+          break;
+        case 'Trainer':
+          setDataValue(data.trainer);
+          break;
+        case 'SuperAdmin':
+          setDataValue(data.superadmin);
+          break;
+        default:
+          break;
+      }
     }
   }, [data]);
 
@@ -96,6 +106,8 @@ function Header(props) {
         url: profile_url,
       }))[0]
     : [];
+
+
 
   return (
     <div
@@ -116,7 +128,7 @@ function Header(props) {
         <div className="flex items-center justify-center gap-3">
           <div
             className="relative flex items-center gap-4 cursor-pointer p-1"
-            onClick={open}
+            onClick={setIsOpenNotification}
           >
             <div>
               <IoNotificationsOutline size={20} className="text-blue-500" />
@@ -140,34 +152,7 @@ function Header(props) {
               className="text-blue-500 absolute top-1/3 -right-4 -translate-y-1/2"
             />
 
-            <Drawer
-              opened={opened}
-              onClose={close}
-              title={
-                <span className="text-lg font-semibold">Notifications</span>
-              }
-              scrollAreaComponent={ScrollArea.Autosize}
-              position="right"
-            >
-              <div className="flex flex-col gap-3">
-                <div className="bg-gray-50 p-3 rounded-lg border-b flex gap-3">
-                  <IoNotificationsOutline size={30} className="text-blue-500" />
-                  <div>
-                    <small className="text-xs text-gray-500 capitalize">
-                      Dear {role},
-                    </small>
-                    <div>
-                      <span className="font-semibold">Added Successfully</span>
-                      <p className="mt-2 text-sm text-gray-500 font-light tracking-wide">
-                        We area pleased to inform you that you have been added
-                        to the InternTrack system as a {role}. Your role in
-                        overseeing OJT matters is now active.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Drawer>
+           
 
             {isOpenProfile && (
               <div className="absolute top-[50px] right-1 w-[270px] flex flex-col gap-2 rounded-l-xl rounded-br-xl bg-white shadow-lg py-5 px-5">

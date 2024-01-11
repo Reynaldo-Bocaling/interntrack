@@ -7,18 +7,22 @@ import {
   Button,
   Input,
   Select,
+  Switch,
   SelectItem,
 } from "@nextui-org/react";
 
 import { getCampus } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
-const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
+const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacherList}) => {
   const [selectedCampus, setSelectedCampus] = useState(null);
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [selectedMajor, setSelectedMajor] = useState(null);
+  const [majorList, setMajorList] = useState(null);
+  const [togleAddSelf, setToggleAddSelf] = useState(false);
 
+  const data = info ? info : {};
   const [formData, setFormData] = useState({
     firstname: "",
     middlename: "",
@@ -34,19 +38,25 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
     queryFn: getCampus,
   });
 
-  const campus = CampusList;
+
+  console.log('info', info);
+  const campus = CampusList ? CampusList : [];
+
   const college = selectedCampus
-    ? campus.find((college) => college.id === parseInt(selectedCampus))
+    ? campus.find((item) => item.campus_Location == selectedCampus)
     : [];
+
   const program = selectedCollege
-    ? college.college.find(
-        (program) => program.id === parseInt(selectedCollege)
+    ? college?.college.find(
+        (item) => item.college_description == selectedCollege
       )
     : [];
-  const major = selectedCollege
+  const major = togleAddSelf
+    ? majorList
+    : selectedCollege
     ? program.program.find(
-        (major) => major.id === parseInt(selectedProgram)
-      )
+        (item) => item.program_description == selectedProgram
+      )?.major
     : [];
 
   const handleCampusChange = (e) => {
@@ -85,20 +95,21 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
 
   const validateField = (name, value) => {
     const nameRegex = /^[A-Za-z\s]+$/;
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    // const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const contactRegex = /^\d+$/;
 
+    
     switch (name) {
       case "firstname":
       case "lastname":
       case "middlename":
-        return nameRegex.test(value)
-          ? null
-          : "Please enter a valid name";
-      case "email":
-        return emailRegex.test(value)
-          ? null
-          : "Please enter a valid email";
+        return nameRegex.test(value) ? null : "Please enter a valid name";
+      // case "email":
+      //   if (!togleAddSelf && data?.email && data?.email.toLowerCase() === value.toLowerCase()) {
+      //     return "Email is already taken";
+      //   }else {
+      //     return emailRegex.test(value) ? null : "Please enter a valid email";
+      //   }
       case "contact":
         return contactRegex.test(value)
           ? null
@@ -111,16 +122,58 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if there are any errors
     if (Object.values(errors).every((error) => error === null)) {
       const campus = {
-        campus: college.campus_Location,
-        college: program.college_description,
-        program: major.program_description,
+        campus: togleAddSelf ? data?.campus : college?.campus_Location,
+        college: togleAddSelf ? data?.college : program?.college_description,
+        // program: 'togleAddSelf ? data?.program : major?.program_description',
+        program: 'BSIT',
         major: selectedMajor,
+        isToggle:  togleAddSelf
       };
 
-      onSubmit({ ...formData, ...campus });
+      const profileValue = {
+        profile :  togleAddSelf ? data?.profile : '',
+        profile_url :  togleAddSelf ? data?.profile_url : '',
+      }
+      onSubmit({ ...formData, ...campus,...profileValue });
+      // console.log({ ...formData, ...campus });
+    }
+  };
+
+  const handleTry = () => {
+    setToggleAddSelf(!togleAddSelf);
+    setErrors(false)
+    if (togleAddSelf) {
+      setSelectedCampus(null);
+      setSelectedCollege(null);
+      setSelectedProgram(null);
+      setSelectedMajor(null);
+      setMajorList(null);
+
+      setFormData({
+        firstname: "",
+        middlename: "",
+        lastname: "",
+        email: "",
+        contact: "",
+      });
+    } else {
+      setFormData({
+        firstname: data?.firstname,
+        middlename: data?.middlename,
+        lastname: data?.lastname,
+        email: data?.email,
+        contact: data?.contact,
+      });
+
+      setMajorList(
+        campus
+          .find((item) => item.campus_Location == data?.campus)
+          ?.college.find((item) => item.college_description == data?.college)
+          ?.program.find((item) => item.program_description == data?.program)
+          ?.major
+      );
     }
   };
 
@@ -154,6 +207,8 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       isRequired
                       className="w-[40%]"
                       errorMessage={errors.firstname}
+                      value={formData.firstname}
+                      isDisabled={togleAddSelf}
                     />
 
                     <Input
@@ -165,14 +220,15 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       isRequired
                       className="w-[40%]"
                       errorMessage={errors.lastname}
+                      value={formData.lastname}
+                      isDisabled={togleAddSelf}
                     />
 
                     <Input
                       type="text"
                       label={
                         <p>
-                          MI{" "}
-                          <span className="text-[#a8a9a9]">(Optional)</span>
+                          MI <span className="text-[#a8a9a9]">(Optional)</span>
                         </p>
                       }
                       name="middlename"
@@ -183,6 +239,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                     />
                   </div>
                   <div className="flex items-center gap-4">
+                  <div className="relative w-[60%]">
                     <Input
                       type="text"
                       label="Email"
@@ -190,9 +247,20 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[60%]"
+                      className="w-[100%]"
                       errorMessage={errors.email}
+                      value={formData.email}
+                      isDisabled={togleAddSelf}
                     />
+
+{
+                      teacherList.some(item => item.email === formData.email) && (
+                        <snall className="text-red-500 text-xs absolute -bottom-5">Sorry, that email address is already taken.</snall>
+                      )
+                    }
+                    
+                    </div>
+
                     <Input
                       type="text"
                       label="Contact no."
@@ -202,6 +270,8 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       isRequired
                       className="w-[40%]"
                       errorMessage={errors.contact}
+                      value={formData.contact}
+                      isDisabled={togleAddSelf}
                     />
                   </div>
 
@@ -210,12 +280,15 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       label="Campus"
                       className="max-w-xs"
                       size="sm"
-                      isRequired
+                      isRequired={!togleAddSelf}
                       onChange={handleCampusChange}
+                      isDisabled={togleAddSelf}
                     >
                       {campus &&
                         campus.map(({ id, campus_Location }) => (
-                          <SelectItem key={id}>{campus_Location}</SelectItem>
+                          <SelectItem key={campus_Location}>
+                            {campus_Location}
+                          </SelectItem>
                         ))}
                     </Select>
 
@@ -223,13 +296,13 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       label=" College"
                       className="max-w-xs"
                       size="sm"
-                      isRequired
+                      isRequired={!togleAddSelf}
                       onChange={handleCollegeChange}
                       isDisabled={!selectedCampus}
                     >
                       {selectedCampus &&
                         college.college.map(({ id, college_description }) => (
-                          <SelectItem key={id}>
+                          <SelectItem key={college_description}>
                             {college_description}
                           </SelectItem>
                         ))}
@@ -239,13 +312,13 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       label=" Program"
                       className="max-w-xs"
                       size="sm"
-                      isRequired
+                      isRequired={!togleAddSelf}
                       onChange={handleProgramChange}
-                      isDisabled={!selectedCollege}
+                      // isDisabled={!selectedCollege}
                     >
                       {selectedCollege &&
                         program.program.map(({ id, program_description }) => (
-                          <SelectItem key={id}>
+                          <SelectItem key={program_description}>
                             {program_description}
                           </SelectItem>
                         ))}
@@ -255,36 +328,57 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       label="Major"
                       className="max-w-xs"
                       size="sm"
-                      isRequired
+                      isRequired={!togleAddSelf}
                       onChange={handleMajorChange}
-                      isDisabled={!selectedCollege}
                     >
-                      {selectedProgram &&
-                        major.major.map(({ major_description }) => (
-                          <SelectItem key={major_description}>
-                            {major_description}
-                          </SelectItem>
-                        ))}
+                      {major?.map(({ major_description }) => (
+                        <SelectItem key={major_description}>
+                          {major_description}
+                        </SelectItem>
+                      ))}
                     </Select>
                   </div>
 
-                  <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
-                    <Button
-                      color="danger"
-                      variant="flat"
-                      onPress={AddOnClose}
-                      className="font-medium tracking-wide px-2"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      color="primary"
-                      className="font-medium tracking-wide px-8"
-                      disabled={!Object.values(errors).every((error) => error === null)}
-                    >
-                      {isLoading ? "Loading..." : "Submit"}
-                    </Button>
+                  <div className="mt-5 mb-2 flex items-center gap-3 justify-between">
+                    <Switch isSelected={togleAddSelf} onValueChange={handleTry} isDisabled={teacherList.some(item => item.email === info?.email)}>
+                    <div  className="flex flex-col gap-0">
+                     <small className="text-gray-400 tracking-wide">
+                        Add me as Trainer
+                      </small>
+
+                      {
+                      teacherList.some(item => item.email === info?.email) && (
+                        <snall className="text-red-500 text-xs">You have already added this teacher</snall>
+                      )
+                    }
+
+                     </div>
+                    </Switch>
+
+                    <div className=" flex items-center gap-3">
+                      <Button
+                        color="danger"
+                        variant="flat"
+                        onPress={AddOnClose}
+                        className="font-medium tracking-wide px-2"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        color="primary"
+                        className="font-medium tracking-wide px-8"
+                        disabled={
+                          !Object.values(errors).every(
+                            (error) => error === null
+                          ) ||  
+                          teacherList.some(item => item.email === formData.email)
+
+                        }
+                      >
+                        {isLoading ? "Loading..." : "Submit"}
+                      </Button>
+                    </div>
                   </div>
                 </form>
               </ModalBody>

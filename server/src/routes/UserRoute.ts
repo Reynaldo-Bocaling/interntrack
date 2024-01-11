@@ -23,8 +23,9 @@ routes.post('/addCompany', uploads.single('pdfFile') , verifyToken , UserControl
 routes.post('/addSuperAdmin' ,UserController.addSuperAdmin);
 routes.post('/addDirector' ,UserController.addDirector);
 routes.post('/AddCoordinator' ,verifyToken, UserController.AddCoordinator);
+routes.post('/PromoteAsCoordinator', UserController.PromoteAsCoordinator);
 routes.post('/addTeacher' ,verifyToken ,UserController.AddTeacher);
-routes.post('/addTrainer' ,UserController.AddTrainer);
+routes.post('/addTrainer' , verifyToken ,UserController.AddTrainer);
 routes.post('/addStudent' ,verifyToken,UserController.addSingleStudent);
 
 // campuses
@@ -120,6 +121,7 @@ routes.put('/updateCoordinatorProfilePicture' ,verifyToken, uploads.single('imag
 routes.put('/updateDirectorProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateDirectorProfilePicture);
 routes.put('/updateTrainerProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateTrainerProfilePicture);
 routes.put('/updateStudentProfilePicture' ,verifyToken, uploads.single('image'), UserController.updateStudentProfilePicture);
+routes.put('/changeRole' , UserController.changeRole);
 
 
 
@@ -144,11 +146,13 @@ routes.put('/resetData' ,verifyToken, UserController.resetData);
 
 
 // announcement
-routes.post('/createAnnouncement', UserController.createAnnouncement)
+routes.post('/createAnnouncement', verifyToken, UserController.createAnnouncement)
 
 
 // get user
 routes.get('/getUser', verifyToken, (req:any, res:Response) => {res.json(req.user)})
+
+routes.get('/getNotfication', UserController.getNotfication)
 
 
 // logout

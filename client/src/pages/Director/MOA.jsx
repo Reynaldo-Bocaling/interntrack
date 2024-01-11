@@ -4,6 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Document, Page } from "react-pdf";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
+import PulseLoader from "react-spinners/PulseLoader";
+import ErrorImage from '../../assets/images/errorServerIcon.jpg'
+import WarningIcon from '../../assets/images/warningicon.png'
 
 const LeaveRequest = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -11,7 +14,7 @@ const LeaveRequest = () => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [company, setCompany] = useState({});
-  const { data } = useQuery(["getCompanyList"], getCompanyList);
+  const { data, isLoading, isError } = useQuery(["director_getMoaList"], getCompanyList);
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
@@ -25,13 +28,39 @@ const LeaveRequest = () => {
     item.companyName.toLowerCase().includes(searchInput.toLowerCase())
   );
 
+  
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-center my-3 flex items-center gap-2">
+          Server Failed. Please Try Again Later
+          <img src={WarningIcon} alt="warning icon"  className="w-[50px]"/>
+        </h1>
+
+        <img src={ErrorImage} alt="Server Error Image" className="max-w-[450px] w-full" />
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex justify-between">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Memorandum Of Agreement
         </h1>
-
+        
+        {isLoading &&
+           <h1 className="textLoading text-base flex items-center justify-center gap-1 my-14 py-5 ">
+           Retrieving Data
+           <PulseLoader
+             color="#1892fc"
+             margin={3}
+             size={4}
+             speedMultiplier={1}
+             className=""
+           />
+         </h1>
+        }
         <div className=" h-10 w-[270px]  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300">
           <BiSearch />
           <input

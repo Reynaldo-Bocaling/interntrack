@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Information from "../../components/user-Settings/Information";
 import ChangePassword from "../../components/user-Settings/ChangePassword";
 import ResetData from "../../components/user-Settings/ResetData";
+import ChangeRole from "../../components/user-Settings/ChangeRole";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getCoordinator } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
@@ -52,8 +53,14 @@ const Settings = () => {
     },
     {
       id: 4,
-      label: "Reset all data",
+      label: "Change Role",
       value: 3,
+      element: ChangeRole,
+    },
+    {
+      id: 5,
+      label: "Reset all data",
+      value: 4,
       element: ResetData,
     },
   ];
