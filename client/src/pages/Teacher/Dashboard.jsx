@@ -222,14 +222,14 @@ const totalUnAssign = totalStudent !== 0
   return (
     <div className="min-h-full w-full">
       <div className="m-1 ">
-        <div className="flex gap-3 mt-1 min-h-[550px]">
+        <div className="flex flex-col md:flex-row gap-3 mt-1 min-h-[550px] ">
           {/* main dashboard content */}
-          <main className="flex flex-col w-[62%]  relative ">
+          <main className="flex flex-col md:w-[62%]  relative ">
             {/* title */}
 
             <div className="left-content flex  items-center justify-between">
               <div className="flex flex-col gap-2">
-                <h1 className="text-xl font-semibold tracking-wider text-gray-700">
+                <h1 className="text-base md:text-xl font-semibold tracking-wider text-gray-700">
                   Teacher overview
                 </h1>
                 <small className="text-blue-500 font-semibold tracking-wider">
@@ -243,7 +243,7 @@ const totalUnAssign = totalStudent !== 0
             </div>
 
             {/* total count */}
-            <div className="total-count flex justify-between gap-5 py-3 ">
+            <div className="total-count flex flex-col md:flex-row justify-between gap-5 py-3 ">
               <div className="felx flex-col gap-3 bg-white w-full h-full rounded-lg p-5 shadow-2xl border shadow-blue-50 border-slate-200">
                 <div className="text-gray-500 text-md font-medium tracking-wide mb-5">
                   Student Assignment Status
@@ -281,7 +281,7 @@ const totalUnAssign = totalStudent !== 0
                 {totalCountBox.map((totalItems, index) => (
                   <div
                     key={index}
-                    className={`${totalItems.shadow} relative h-24 w-[280px] flex items-center gap-5 bg-white rounded-lg p-5 py-7 shadow-2xl border border-slate-200`}
+                    className={`${totalItems.shadow} relative h-24 lg:w-[280px] flex items-center gap-5 bg-white rounded-lg p-5 py-7 shadow-2xl border border-slate-200`}
                   >
                     <div>
                       <p className="text-gray-500 text-md tracking-wider font-medium mb-2">
@@ -315,7 +315,7 @@ const totalUnAssign = totalStudent !== 0
           </main>
 
           {/* right side */}
-          <div className="right-side w-[37%] flex flex-col gap-3 ">
+          <div className="right-side lg:w-[37%] flex flex-col gap-3 ">
             <div className="relative  max-w-full flex  flex-col p-4 bg-white shadow-2xl shadow-orange-50 rounded-md border px-7 py-7 border-slate-200">
               <div className="flex items-center gap-5">
                   <Avatar src={teacher?.coordinator? teacher?.coordinator.profile_url : pic} alt="error" size="lg" className="shadow-md border"/>

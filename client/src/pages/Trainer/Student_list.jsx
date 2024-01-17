@@ -31,12 +31,12 @@ const Student_list = () => {
     isLoading: studentListLoading,
     isError,
   } = useQuery({
-    queryKey: ["getStudentTimesheet"],
+    queryKey: ["trainer_getStudentTimesheet"],
     queryFn: getStudentList,
   });
 
-  const { data: getTrainer_id } = useQuery({
-    queryKey: ["getTrainer_id"],
+  const { data: getTrainer_id, isLoading:trainer_idLoading } = useQuery({
+    queryKey: ["trainer_getTrainer_id"],
     queryFn: getTrainer,
   });
 
@@ -280,7 +280,7 @@ const Student_list = () => {
         isError={isError}
         data={data}
         columns={columns}
-        isLoading={studentListLoading}
+        isLoading={studentListLoading || trainer_idLoading}
       />
 
       <div style={{ display: "none" }}>

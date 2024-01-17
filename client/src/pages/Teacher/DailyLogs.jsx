@@ -101,6 +101,10 @@ const DailyLogs = () => {
     }),
   ];
 
+
+  if(teacherLoading|| studentLoading){
+    return <center className="py-7 text-lg font-medium text-gray-600">Checking..</center>
+  }
   return (
     <div>
       <div className="flex items-center justify-between px-2 mb-4">

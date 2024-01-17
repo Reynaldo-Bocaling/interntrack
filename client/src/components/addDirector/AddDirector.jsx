@@ -49,7 +49,7 @@ function AddDirector({ submit, AddIsOpen, AddOnClose }) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Modal Title
+                Add Director
               </ModalHeader>
 
               <ModalBody>

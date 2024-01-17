@@ -113,8 +113,8 @@ const TrainerViewInfo = () => {
                 )}
               </div>
 
-              <div className="left p-5 pl-5 w-full py-5">
-                <div className="flex flex-col gap-5">
+              <div className="left p-5 pl-5 w-full py-5 pb-10">
+                <div className="w-full flex items-center justify-between">
                   <div className="name ">
                     <h1 className="text-2xl font-semibold tracking-wide">
                       {`${info && info.firstname} ${info && info.lastname}`}
@@ -124,7 +124,12 @@ const TrainerViewInfo = () => {
                     </small>
                   </div>
 
-                  <div className="flex items-center gap-5 mb-3 font-semibold">
+                  <button className="w-[180px] font-medium flex items-center gap-1 text-red-500 text-sm bg-red-100 py-2 px-4 rounded-md">
+                      <BsFillTrash3Fill />
+                      Disable Account
+                    </button>
+
+                  {/* <div className="flex items-center gap-5 mb-3 font-semibold">
                     <NavLink className="flex items-center gap-1 text-blue-500 text-sm bg-blue-100 py-2 px-4 rounded-md">
                       <BsChatDots />
                       Send message
@@ -133,7 +138,7 @@ const TrainerViewInfo = () => {
                       <BsFillTrash3Fill />
                       Drop
                     </NavLink>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

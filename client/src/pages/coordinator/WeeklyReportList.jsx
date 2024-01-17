@@ -30,11 +30,11 @@ const WeeklyReport = () => {
     queryFn: getStudentList,
   });
   const { data: teacherList, isLoading: teacherLoading } = useQuery({
-    queryKey: ["teacherList22"],
+    queryKey: ["coordinator_teacherList2"],
     queryFn: getTeacherList,
   });
   const { data: coordinator, isLoading: coordinatorLoading } = useQuery({
-    queryKey: ["coordinatorList22"],
+    queryKey: ["coordinator_coordinatorList2"],
     queryFn: getCoordinator,
   });
   const studentInfo = data ? data : [];

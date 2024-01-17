@@ -20,7 +20,7 @@ import List from "../../components/print-layout/List";
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
-
+  const [searchLength, setSearchLength] = useState(false);
   const componentRef = useRef();
 
   const handlePrint = useReactToPrint({
@@ -251,32 +251,40 @@ const Trainer_list = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between px-2 mb-5">
-        <h1 className="text-xl font-bold tracking-wider text-gray-700">
+      <div className={`${searchLength ? 'flex-col':''} flex items-center justify-between px-2 mb-5`}>
+        <h1 className="text-base md:text-xl font-bold tracking-wider text-gray-700">
           Coordinator list
         </h1>
 
         <div className="flex items-center gap-3">
-          <div className="h-10 w-[230px] flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200">
-            <BiSearch />
-            <input
-              type="text"
-              placeholder="Search.."
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="outline-none text-sm"
+          <div
+            className={`${
+              searchLength ? "w-[250px]" : "w-[40px]"
+            } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+          >
+            <BiSearch
+              onClick={() => setSearchLength(!searchLength)}
+              className={`${
+                searchLength ? "text-blue-500" : "text-gray-600"
+              } cursor-pointer`}
             />
+            {searchLength && (
+              <input
+                type="text"
+                placeholder="Search.."
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="outline-none text-sm"
+              />
+            )}
           </div>
-          <div className="flex items-center gap-3">
-            
 
-            <button
-              onClick={handlePrint}
-              className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
-            >
-              <BsPrinter size={17} />
-              <span className="font-semibold tracking-wider">Print</span>
-            </button>
-          </div>
+          <button
+            onClick={handlePrint}
+            className="flex items-center gap-2 text-xs text-white  bg-blue-500 px-4 py-2 rounded-full"
+          >
+            <BsPrinter size={17} />
+            <span className="font-semibold tracking-wider">Print</span>
+          </button>
         </div>
       </div>
 

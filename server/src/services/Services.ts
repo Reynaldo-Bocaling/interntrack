@@ -25,3 +25,16 @@ export const transporter = nodemailer.createTransport({
       pass: "scgypyshxqwxdvls",
     },
   });
+
+  export const verificationCode = () => {
+    
+    const code = generatePassword.generate({
+      length: 4,
+      numbers: true,
+      uppercase: false,
+      lowercase: false,
+      symbols: false,
+    });
+  
+    return code;
+  };

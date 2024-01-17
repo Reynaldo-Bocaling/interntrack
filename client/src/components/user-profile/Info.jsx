@@ -46,7 +46,7 @@ const Info = ({ data, InputTypes, handleSubmit, Editable, setEditable }) => {
                   )}
                 </button>
               </div>
-              <div className=" w-full grid grid-cols-3 gap-7">
+              <div className=" w-full grid  md:grid-cols-3 gap-7">
                 {InputTypes?.map(({ id, type, name, label }) => (
                   <Input
                     key={id}

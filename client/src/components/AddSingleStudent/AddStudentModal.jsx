@@ -36,7 +36,7 @@ const AddSingStudent = ({
 
   const [emailAlready, setEmailAlready] = useState(false)
   const {data} = useQuery({
-    queryKey: 'getEmail',
+    queryKey: 'teacher_getStudentList',
     queryFn: getStudentList
   })
   const { data: dateRange } = useQuery({
@@ -129,7 +129,7 @@ const AddSingStudent = ({
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-5 py-4 px-2"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col md:flex-row items-center gap-4">
                       <Input
                         type="text"
                         label="First Name"
@@ -137,7 +137,7 @@ const AddSingStudent = ({
                         onChange={handleChange}
                         size="sm"
                         isRequired
-                        className="w-[40%]"
+                        className="w-full md:w-[40%]"
                         errorMessage={errors.firstname}
                       />
 
@@ -148,7 +148,7 @@ const AddSingStudent = ({
                         onChange={handleChange}
                         size="sm"
                         isRequired
-                        className="w-[40%]"
+                        className="w-full md:w-[40%]"
                         errorMessage={errors.lastname}
                       />
 
@@ -163,10 +163,10 @@ const AddSingStudent = ({
                         name="middlename"
                         onChange={handleChange}
                         size="sm"
-                        className="w-[20%]"
+                        className="w-full md:w-[20%]"
                       />
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col md:flex-row  items-center gap-4">
                       <Input
                         type="text"
                         label="Email"
@@ -174,7 +174,7 @@ const AddSingStudent = ({
                         onChange={handleChange}
                         size="sm"
                         isRequired
-                        className="w-[60%]"
+                        className="w-full md:w-[60%]"
                         errorMessage={errors.email ? errors.email : emailAlready ? 'Email is already exist':''}
                       />
 
@@ -185,12 +185,12 @@ const AddSingStudent = ({
                         onChange={handleChange}
                         size="sm"
                         isRequired
-                        className="w-[40%]"
+                        className="w-full md:w-[40%]"
                         errorMessage={errors.contact}
                       />
                     </div>
 
-                    <div className="flex items-end gap-12">
+                    <div className="flex flex-col md:flex-row md:items-end gap-12">
                       <Input
                         type="text"
                         label="Address"
@@ -198,7 +198,7 @@ const AddSingStudent = ({
                         onChange={handleChange}
                         size="sm"
                         isRequired
-                        className="w-[60%]"
+                        className="w-full md:w-[60%]"
                         errorMessage={errors.address}
                       />
 
@@ -221,7 +221,7 @@ const AddSingStudent = ({
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[40%]"
+                      className="w-full md:w-[40%]"
                       errorMessage={errors.major}
                     />
 

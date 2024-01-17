@@ -20,22 +20,17 @@ const StudentRequirements = ({ data }) => {
                       <img
                         src={list.imageUrl}
                         alt=""
-                        className="object-cover"
+                        className="object-cover h-[250px] w-[200px] border  rounded-lg "
                       />
                     </div>
-                    <span className="absolute bottom-12 text-lg uppercase font-semibold">
+                    <a  href={list.imageUrl} className="absolute bottom-12 text-lg uppercase font-semibold hover:underline">
                       {list.type}
-                    </span>
-                    <div className="absolute bottom-0 m-3 h-8 w-8 text-white bg-blue-500 rounded-full flex items-center justify-center z-10">
-                      <div>
-                        <CheckIcons />
-                      </div>
-                    </div>
+                    </a>
+                  
                   </div>
                 ))}
 
-              {/* underline */}
-              <div className="w-full h-1 absolute bottom-7 left-0 bg-blue-500 z-0 rounded-full"></div>
+              
             </div>
           </div>
         </div>

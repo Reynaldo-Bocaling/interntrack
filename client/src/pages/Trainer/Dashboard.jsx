@@ -255,9 +255,9 @@ const percentage = Math.floor(
   return (
     <div className="min-h-full w-full">
       <div className="m-1 ">
-        <div className="flex gap-4 mt-1 min-h-[550px]">
+        <div className="flex flex-col md:flex-row gap-4 mt-1 min-h-[550px]">
           {/* dashboard content */}
-          <main className="flex flex-col w-[62%] relative ">
+          <main className="flex flex-col w-full md:w-[62%] relative ">
             {/* title */}
             <div className="left-content flex flex-col gap-2">
               <h1 className="text-xl font-semibold tracking-wider text-gray-700">
@@ -269,11 +269,11 @@ const percentage = Math.floor(
             </div>
 
             {/* count */}
-            <div className="total-count h-32 flex items-center justify-between py-3">
+            <div className="total-count md:h-32 flex flex-col gap-2 md:flex-row md:items-center justify-between py-3">
               {totalCountBox.map((totalItems, index) => (
                 <div
                   key={index}
-                  className={`${totalItems.shadow} relative h-full w-[32%] flex items-center gap-5 bg-white rounded-lg p-5 shadow-2xl border border-slate-100`}
+                  className={`${totalItems.shadow} relative h-full w-full md:w-[32%] flex items-center gap-5 bg-white rounded-lg p-5 shadow-2xl border border-slate-100`}
                 >
                   <span
                     className={`${totalItems.bgColor} ${totalItems.textColor} h-9 w-9 flex items-center justify-center   rounded-md `}
@@ -368,7 +368,7 @@ const percentage = Math.floor(
           </main>
 
           {/* left content */}
-          <div className="right-side w-[37%] flex flex-col gap-3">
+          <div className="right-side w-full md:w-[37%] flex flex-col gap-3">
             <div className="max-w-full p-4 bg-white shadow-2xl shadow-sky-50 rounded-md border border-gray-100">
               <div className="text-sm font-medium tracking-wide mb-2 flex items-center gap-1">
                 {" "}

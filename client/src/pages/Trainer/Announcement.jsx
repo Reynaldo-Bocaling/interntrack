@@ -21,11 +21,11 @@ const Announcement = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { data: getAnnouncementList, isLoading: announcementLoading } =
     useQuery({
-      queryKey: ["getAnnouncement"],
+      queryKey: ["trainer_getAnnouncement"],
       queryFn: getAnnouncement,
     });
   const { data: trainer, isLoading: trainerLoading } = useQuery({
-    queryKey: ["trainer"],
+    queryKey: ["trainer_trainer"],
     queryFn: getTrainer,
   });
 
@@ -61,7 +61,7 @@ const Announcement = () => {
 
   const { mutate } = useMutation(createAnnouncement, {
     onSuccess: () => {
-      alert("success"), queryClient.invalidateQueries("getAnnouncement");
+      alert("success"), queryClient.invalidateQueries("trainer_getAnnouncement");
     },
     onError: () => alert("Error"),
   });

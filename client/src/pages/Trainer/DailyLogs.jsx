@@ -14,12 +14,12 @@ const DailyLogs = () => {
   const columnHelper = createColumnHelper();
 
   const { data: trainer, isLoading: trainerLoading } = useQuery({
-    queryKey: ["gettrainer2333"],
+    queryKey: ["trainer_gettrainer2"],
     queryFn: getTrainer,
   });
 
   const { data: student, isLoading: studentLoading } = useQuery({
-    queryKey: ["studentDailyLogs"],
+    queryKey: ["trainer_studentDailyLogs"],
     queryFn: getStudentList,
   });
 

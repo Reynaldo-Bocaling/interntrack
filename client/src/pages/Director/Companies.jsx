@@ -155,14 +155,14 @@ const Companies = () => {
             {show === info.row.original.id && (
               <div
                 onClick={() => setShow(!show)}
-                className="absolute top-3 right-7  w-[150px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
+                className="absolute top-3 right-7  w-[180px] flex flex-col justify-center pl-3 gap-3 z-20 py-5 bg-white shadow-lg border border-gray-200  rounded-br-xl rounded-l-xl "
               >
                 <NavLink
                   to={`/view-company/${info.row.original.id}`}
                   className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
                 >
                   <CgProfile size={17} />
-                  Profile
+                  View Company
                 </NavLink>
               </div>
             )}

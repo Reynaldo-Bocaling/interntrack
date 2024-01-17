@@ -211,27 +211,9 @@ const TeacherList = () => {
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
-                Profile
+                Visit profile
               </NavLink>
 
-              <NavLink
-                to="/trainer-student-list"
-                state={{
-                  List: info.row.original.studentList,
-                  trainerName: info.row.original.firstname,
-                }}
-                className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
-              >
-                <RiUserSearchLine size={17} />
-                Student list
-              </NavLink>
-
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink>
             </div>
           )}
         </div>

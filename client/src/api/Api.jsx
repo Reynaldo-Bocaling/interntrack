@@ -339,6 +339,14 @@ export const getCoordinatorList = async () => {
     throw new Error(error.message);
   }
 };
+export const getAdminList = async () => {
+  try {
+    const response = await axios.get(`${url}getAdminList`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 // info
 export const getSuperAdmin = async () => {
@@ -738,6 +746,15 @@ export const uploadRequirement = async (formData) => {
   }
 };
 
+export const deleteRequirement = async (id) => {
+  try {
+    const response = await axios.delete(`${url}deleteRequirement/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+}
+
 // add date range and get
 export const getDateRange = async () => {
   try {
@@ -813,6 +830,8 @@ export const resetData = async (item) => {
   }
 };
 
+
+
 //get user info role, director, coor, trainer et.c
 export const getUser = async () => {
   try {
@@ -848,3 +867,38 @@ export const logout = async () => {
     throw error;
   }
 };
+
+
+
+export const verifyEmail = async (email) => {
+  try {
+    const response = await axios.post(`${url}verifyEmail`, {email: email}, {withCredentials:true});
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const verifyPin = async (pin) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:3001/verifyPin",
+      {pin:pin},
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+export const forgotpassword = async ({ password, username }) => {
+  try {
+    const response = await axios.put(`${url}forgotPassword`, { password, username });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+

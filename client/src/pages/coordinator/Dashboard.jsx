@@ -212,7 +212,7 @@ const Dashboard = () => {
         <div className="w-full flex flex-col">
           <div className="left-content flex  items-center justify-between">
             <div className="flex flex-col gap-2">
-              <h1 className="text-xl font-semibold tracking-wider text-gray-700">
+              <h1 className=" text-base md:text-xl font-semibold tracking-wider text-gray-700">
                 Coordinator overview
               </h1>
               <small className="text-blue-500 font-semibold tracking-wider">
@@ -225,7 +225,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <section className="grid grid-cols-6 py-5 gap-4">
+          <section className="grid grid-cols-1 md:grid-cols-6 py-5 gap-4">
             <div className="col-span-3 grid grid-cols-2 gap-3">
               {countBox.map((item, index) => (
                 <div

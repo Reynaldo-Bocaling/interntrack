@@ -36,12 +36,12 @@ const MyProfile = () => {
   };
 
   const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useQuery(["getTrainer"], getTrainer);
+  const { data, isLoading, isError } = useQuery(["trainer_getTrainer"], getTrainer);
 
   const { mutate: editText } = useMutation(editTrainerProfile, {
     onSuccess: () => {
       Swal.fire("Success", "Update Successful", "success");
-      queryClient.invalidateQueries("getTrainer");
+      queryClient.invalidateQueries("trainer_getTrainer");
       setEditable(false);
     },
     onError: () => {
@@ -56,7 +56,7 @@ const MyProfile = () => {
   const { mutate: editProfile } = useMutation(updateTrainerProfilePicture, {
     onSuccess: () => {
       Swal.fire("Success", "Update Successful", "success");
-      queryClient.invalidateQueries("getTrainer");
+      queryClient.invalidateQueries("trainer_getTrainer");
       setEditable(false);
     },
     onError: () => {

@@ -197,7 +197,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
                   onSubmit={handleSubmit}
                   className="flex flex-col gap-5 py-4 px-2"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
                     <Input
                       type="text"
                       label="First Name"
@@ -205,7 +205,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[40%]"
+                      className="w-full md:w-[40%]"
                       errorMessage={errors.firstname}
                       value={formData.firstname}
                       isDisabled={togleAddSelf}
@@ -218,7 +218,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[40%]"
+                      className="w-full md:w-[40%]"
                       errorMessage={errors.lastname}
                       value={formData.lastname}
                       isDisabled={togleAddSelf}
@@ -235,11 +235,11 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
                       onChange={handleChange}
                       size="sm"
                       errorMessage={errors.middlename}
-                      className="w-[20%]"
+                      className="w-full md:w-[20%]"
                     />
                   </div>
-                  <div className="flex items-center gap-4">
-                  <div className="relative w-[60%]">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
+                  <div className="relative w-full md:w-[60%]">
                     <Input
                       type="text"
                       label="Email"
@@ -247,10 +247,11 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[100%]"
+                      className="w-full"
                       errorMessage={errors.email}
                       value={formData.email}
                       isDisabled={togleAddSelf}
+                      isInvalid={teacherList.some(item => item.email === formData.email)}
                     />
 
 {
@@ -268,17 +269,17 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[40%]"
+                      className="w-full md:w-[40%]"
                       errorMessage={errors.contact}
                       value={formData.contact}
                       isDisabled={togleAddSelf}
                     />
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col md:flex-row items-center gap-3">
                     <Select
                       label="Campus"
-                      className="max-w-xs"
+                      className="w-full md:max-w-xs"
                       size="sm"
                       isRequired={!togleAddSelf}
                       onChange={handleCampusChange}
@@ -294,7 +295,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
 
                     <Select
                       label=" College"
-                      className="max-w-xs"
+                      className="w-full md:max-w-xs"
                       size="sm"
                       isRequired={!togleAddSelf}
                       onChange={handleCollegeChange}
@@ -310,7 +311,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
 
                     <Select
                       label=" Program"
-                      className="max-w-xs"
+                      className="w-full md:max-w-xs"
                       size="sm"
                       isRequired={!togleAddSelf}
                       onChange={handleProgramChange}
@@ -326,7 +327,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
 
                     <Select
                       label="Major"
-                      className="max-w-xs"
+                      className="w-full md:max-w-xs"
                       size="sm"
                       isRequired={!togleAddSelf}
                       onChange={handleMajorChange}
@@ -373,7 +374,7 @@ const AddTeacher = ({ onSubmit, AddIsOpen, AddOnClose, isLoading, info , teacher
                             (error) => error === null
                           ) ||  
                           teacherList.some(item => item.email === formData.email)
-
+                            || isLoading
                         }
                       >
                         {isLoading ? "Loading..." : "Submit"}

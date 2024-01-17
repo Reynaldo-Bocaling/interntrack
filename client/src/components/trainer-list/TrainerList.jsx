@@ -67,7 +67,7 @@ const TrainerList = () => {
 
   const data = trainerList
     ? trainerList.map(({ id, firstname, middlename, lastname, email, contact, profile, accountStatus, areaofAssignment, student, deletedStatus, profile_url }, index) => ({
-        id: index + 1,
+        id,
         firstname,
         name: `${firstname} ${lastname}`,
         email,
@@ -123,18 +123,9 @@ const TrainerList = () => {
             >
               <NavLink to={`/view-trainer/${info.row.original.id}`} className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
                 <CgProfile size={17} />
-                Profile
+                Visit profile
               </NavLink>
-              <NavLink to="/trainer-student-list" state={{ List: info.row.original.studentList, trainerName: info.row.original.firstname }} className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiUserSearchLine size={17} />
-                Student list
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <FiEdit3 /> Update
-              </NavLink>
-              <NavLink className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline">
-                <RiDeleteBinLine /> Delete
-              </NavLink>
+             
             </div>
           )}
         </div>

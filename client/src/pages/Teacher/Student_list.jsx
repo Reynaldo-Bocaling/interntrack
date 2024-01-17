@@ -59,7 +59,7 @@ const Student_list = () => {
     isLoading: companyLoading,
     isError,
   } = useQuery({
-    queryKey: ["getCompany"],
+    queryKey: ["teacher_getCompany"],
     queryFn: getCompanyList,
   });
 
@@ -69,7 +69,7 @@ const Student_list = () => {
     isLoading: StudentListLoading,
     isError: StudentListError,
   } = useQuery({
-    queryKey: ["getTeacher2"],
+    queryKey: ["teacher_getTeacher2"],
     queryFn: getTeacher,
   });
 

@@ -11,13 +11,13 @@ const AttendanceRequest = () => {
 
   // get trainer id
   const { data: getTrainer_id } = useQuery({
-    queryKey: ["getTrainer_id"],
+    queryKey: ["trainer_getTrainer_id"],
     queryFn: getTrainer,
   });
 
   // get student list
   const { data: StudentItem, isLoading } = useQuery({
-    queryKey: ["getTimesheet"],
+    queryKey: ["trainer_getTimesheet"],
     queryFn: getStudentList,
   });
 

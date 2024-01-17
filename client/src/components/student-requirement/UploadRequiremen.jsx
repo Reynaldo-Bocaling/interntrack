@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Drawer } from "@mantine/core";
-import { Button, Tooltip, Textarea, image } from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-
+import { Input } from "@nextui-org/react";
 const BrgyCertificate = (props) => {
   const { opened, onClose, handleSubmit, data } = props;
   const [File, setFile] = useState(null);
+  const [requirementType, setRequirementType] = useState(null);
   const [Preview, setPreview] = useState(null);
 
   const loadingImage = (e) => {
@@ -16,7 +17,7 @@ const BrgyCertificate = (props) => {
 
   const handleClick = () => {
     const formData = new FormData();
-    formData.append("type", "brgy");
+    formData.append("type", requirementType);
     formData.append("image", File);
     handleSubmit(formData);
   };
@@ -38,12 +39,17 @@ const BrgyCertificate = (props) => {
           <img src={data.imageUrl} alt="" className="max-w-full my-7 mx-auto" />
         ) : (
           <>
+            <Input
+              label="Enter your email address"
+              className="text-sm"
+              onChange={(e) => setRequirementType(e.target.value)}
+            />
             <div className="mt-10">
               {!Preview ? (
                 <Tooltip content="Browse Image" closeDelay={0}>
                   <button className=" uploadMoa h-[200px]  relative overflow-hidden text-sm  w-full flex flex-col items-center justify-center gap-2">
                     <AiOutlineCloudUpload size={30} className="text-blue-500" />
-                    <span className="text-base "> Upload Image</span>
+                    <span className="text-base "> Select File</span>
                     <input
                       type="file"
                       onChange={loadingImage}

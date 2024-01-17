@@ -13,11 +13,11 @@ const StudentTask = () => {
   const [searchInput, setSearchInput] = useState("");
 
   const { data: studentTask, isLoading } = useQuery({
-    queryKey: ["getStudentList2"],
+    queryKey: ["teacher_getStudentList2"],
     queryFn: getStudentList,
   });
   const { data: teacher_id, isLoading: teacher_idLoading } = useQuery({
-    queryKey: ["getTeacherID"],
+    queryKey: ["teacher_getTeacherID"],
     queryFn: getTeacher,
   });
 

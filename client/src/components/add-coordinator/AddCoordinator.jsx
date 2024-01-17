@@ -10,7 +10,7 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 
-import { getCampus } from "../../api/Api";
+import { getCampus, getCoordinatorList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
 const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
@@ -96,6 +96,20 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
     }
   };
 
+  const {
+    data: coordinatorList,
+    isLoading: coordinatorLoading,
+    isError: coordinatoryError,
+  } = useQuery({
+    queryKey: ["director_getCoordinatorList"],
+    queryFn: getCoordinatorList,
+  });
+
+
+
+
+  console.log('coor', coordinatorList);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -130,7 +144,7 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                   onSubmit={handleSubmit}
                   className="flex flex-col gap-5 py-4 px-2"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
                     <Input
                       type="text"
                       label="First Name"
@@ -138,7 +152,7 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[40%]"
+                      className="w-full md:w-[40%]"
                       errorMessage={errors.firstname}
                     />
 
@@ -149,7 +163,7 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[40%]"
+                      className="w-full md:w-[40%]"
                       errorMessage={errors.lastname}
                     />
 
@@ -157,18 +171,17 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       type="text"
                       label={
                         <p>
-                          MI{" "}
-                          <span className="text-[#a8a9a9]">(Optional)</span>
+                          MI <span className="text-[#a8a9a9]">(Optional)</span>
                         </p>
                       }
                       name="middlename"
                       onChange={handleChange}
                       size="sm"
                       errorMessage={errors.middlename}
-                      className="w-[20%]"
+                      className="w-full md:w-[20%]"
                     />
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col md:flex-row items-center gap-4">
                     <Input
                       type="text"
                       label="Email"
@@ -176,8 +189,9 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[60%]"
+                      className="w-full md:w-[60%]"
                       errorMessage={errors.email}
+                      isInvalid={errors.email || coordinatorList?.some((item) => item.email === formData.email)}
                     />
                     <Input
                       type="number"
@@ -186,15 +200,15 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                       onChange={handleChange}
                       size="sm"
                       isRequired
-                      className="w-[40%]"
+                      className="w-full md:w-[40%]"
                       errorMessage={errors.contact}
                     />
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col  md:flex-row items-center gap-3">
                     <Select
                       label="Campus"
-                      className="max-w-xs"
+                      className="w-full md:max-w-xs"
                       size="sm"
                       isRequired
                       onChange={handleCampusChange}
@@ -207,7 +221,7 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
 
                     <Select
                       label=" College"
-                      className="max-w-xs"
+                      className="w-full md:max-w-xs"
                       size="sm"
                       isRequired
                       onChange={handleCollegeChange}
@@ -223,7 +237,7 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
 
                     <Select
                       label=" Program"
-                      className="max-w-xs"
+                      className="w-full md:max-w-xs"
                       size="sm"
                       isRequired
                       onChange={handleProgramChange}
@@ -238,22 +252,33 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
                     </Select>
                   </div>
 
-                  <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
-                    <Button
-                      color="danger"
-                      variant="flat"
-                      onPress={AddOnClose}
-                      className="font-medium tracking-wide px-2"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      color="primary"
-                      className="font-medium tracking-wide px-8"
-                    >
-                      {isLoading ? "Processing..." : "Submit"}
-                    </Button>
+                  <div className=" flex items-center justify-between">
+                    {coordinatorList?.some(
+                      (item) => item.email === formData.email
+                    ) ? (
+                      <small className="text-red-500 text-xs ">
+                        Sorry, that email address is already taken.
+                      </small>
+                    ): <div> </div>}
+
+                    <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
+                      <Button
+                        color="danger"
+                        variant="flat"
+                        onPress={AddOnClose}
+                        className="font-medium tracking-wide px-2"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        color="primary"
+                        className="font-medium tracking-wide px-8"
+                        isDisabled={isLoading ||coordinatorList?.some((item) => item.email === formData.email)}
+                      >
+                        {isLoading ? "Processing..." : "Submit"}
+                      </Button>
+                    </div>
                   </div>
                 </form>
               </ModalBody>

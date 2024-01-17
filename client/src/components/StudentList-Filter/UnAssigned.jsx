@@ -86,7 +86,7 @@ const Student_list = ({data, isLoading, isError}) => {
                 className="flex items-center gap-2 text-gray-700 tracking-wider hover:underline"
               >
                 <CgProfile size={17} />
-                Profile
+                Visit profile
               </NavLink>
             </div>
           )}

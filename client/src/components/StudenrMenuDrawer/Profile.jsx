@@ -11,17 +11,27 @@ import { TfiAnnouncement } from "react-icons/tfi";
 import { NavLink } from "react-router-dom";
 import { logout } from "../../api/Api";
 import Swal from "sweetalert2";
+import{useNavigate} from 'react-router-dom'
 
 const Profile = ({ opened, close }) => {
+  const navigate = useNavigate();
   // logout
   const { mutate } = useMutation({
     mutationFn: logout,
-    onSuccess: () => {
-      navigate("/");
+    onSuccess: async () => {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Logout Successful!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate('/');
       window.location.reload();
     },
     onError: () => {},
   });
+  
+  
 
   const handleLogout = () => {
     Swal.fire({

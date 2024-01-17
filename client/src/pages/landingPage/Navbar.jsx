@@ -17,8 +17,8 @@ function Navbar() {
         <ul className="flex items-center gap-4 text-gary-800">
           <li>Home</li>
           <li>About</li>
-          <li>Services</li>
           <li>Features</li>
+          <li>Services</li>
           <li>Contact</li>
         </ul>
 

@@ -2,6 +2,8 @@ import { Request, Response, Router } from "express";
 import { UserController } from "../controllers/UserController";
 import multer from "multer";
 import verifyToken from "../middlewares/verifyToken";
+import verifyCode from "../middlewares/verifyCode";
+
 import path from "path";
 const routes = Router();
 const uploadMoa = multer({storage:multer.memoryStorage()}).single('pdfFile');
@@ -27,6 +29,7 @@ routes.post('/PromoteAsCoordinator', UserController.PromoteAsCoordinator);
 routes.post('/addTeacher' ,verifyToken ,UserController.AddTeacher);
 routes.post('/addTrainer' , verifyToken ,UserController.AddTrainer);
 routes.post('/addStudent' ,verifyToken,UserController.addSingleStudent);
+routes.post('/verifyEmail' ,UserController.verifyEmail);
 
 // campuses
 routes.post('/addCampus' ,UserController.addCampus);
@@ -39,6 +42,7 @@ routes.delete('/deleteCampus/:id' ,UserController.deleteCampus);
 routes.delete('/deleteCollege/:id' ,UserController.deleteCollege);
 routes.delete('/deleteProgram/:id' ,UserController.deleteProgram);
 routes.delete('/deleteMajor/:id' ,UserController.deleteMajor);
+routes.delete('/deleteRequirement/:id' ,UserController.deleteRequirement);
 
 
 //update campuses
@@ -75,6 +79,7 @@ routes.get('/getTeacher' ,verifyToken ,UserController.getTeacher);
 routes.get('/getCoordinator' ,verifyToken, UserController.getCoordinator);
 routes.get('/getTrainer' ,verifyToken, UserController.getTrainer);
 routes.get('/getStudentList',UserController.getStudentList);
+routes.get('/getAdminList',UserController.getAdminList);
 routes.get('/getStudent' ,verifyToken, UserController.getStudent);
 routes.get('/getStudentInfo/:id' ,UserController.getStudentInfo);
 routes.get('/getCampus' ,UserController.getCampus);
@@ -153,6 +158,12 @@ routes.post('/createAnnouncement', verifyToken, UserController.createAnnouncemen
 routes.get('/getUser', verifyToken, (req:any, res:Response) => {res.json(req.user)})
 
 routes.get('/getNotfication', UserController.getNotfication)
+
+
+// FORGOT PASSWORD
+
+routes.post('/verifyPin', UserController.verifyPin)
+routes.put('/forgotPassword', UserController.forgotPassword)
 
 
 // logout

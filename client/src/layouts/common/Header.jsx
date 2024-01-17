@@ -47,8 +47,14 @@ function Header(props) {
   // logout
   const { mutate } = useMutation({
     mutationFn: logout,
-    onSuccess: () => {
-      navigate("/");
+    onSuccess: async () => {
+      await Swal.fire({
+        icon: 'success',
+        title: 'Logout Successful!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      navigate('/');
       window.location.reload();
     },
     onError: () => {},

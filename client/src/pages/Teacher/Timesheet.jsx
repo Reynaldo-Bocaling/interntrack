@@ -6,17 +6,17 @@ import { getStudentList, getTeacher, getCampus } from "../../api/Api";
 const Timesheet = () => {
 
   const { data: StudentTimesheet, isLoading: timesheetLoading } = useQuery({
-    queryKey: ["getTimesheet"],
+    queryKey: ["teacher_getTimesheet"],
     queryFn: getStudentList,
   });
 
   const { data: getTeacher_id, isLoading: teacher_idLoading } = useQuery({
-    queryKey: ["getStudent"],
+    queryKey: ["teacher_getStudent"],
     queryFn: getTeacher,
   });
 
   const { data: getProgram, isLoading: programLoading } = useQuery({
-    queryKey: ["getProgram"],
+    queryKey: ["teacher_getProgram"],
     queryFn: getCampus,
   });
 

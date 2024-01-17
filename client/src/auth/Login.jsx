@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Img from "../assets/icons/logo.png";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { LiaTimesSolid } from "react-icons/lia";
-import { BiSolidKey } from "react-icons/bi";
 import model from "../assets/images/homeModel.png";
 import unlockIcon from "../assets/images/unlock-vector-icon.jpg";
 import { Link } from "react-router-dom";
@@ -15,23 +14,18 @@ import wow from "../assets/images/wow2.png";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { auth } from "../api/Api";
 import { IconInfoCircle } from "@tabler/icons-react";
-import Swal from "sweetalert2";
-import { PinInput, Alert } from "@mantine/core";
+import {Alert } from "@mantine/core";
 
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Button,
-  Input,
-} from "@nextui-org/react";
-import AddAdmin from "../components/addAdmin/AddSuperAdmin";
+import { Button, Input } from "@nextui-org/react";
+
+import AddSuperAdmin from "../components/addAdmin/AddAdminModal";
+import ForgotPassword from './ForgotPassword';
+
 
 const Login = () => {
-  const [key, setKey] = useState(0);
   const [pinError, setPinError] = useState(false);
-  const [operSuperAdmin, setOpenSuperAdmin] = useState(false);
+  const [openSuperAdmin, setOpenSuperAdmin] = useState(false);
+  const [openForgotPassword, setOpenForgetPassword] = useState(false);
   const icon = <IconInfoCircle />;
 
   const [isVisible, setIsVisible] = useState(false);
@@ -47,6 +41,9 @@ const Login = () => {
         setError(data);
       }
     },
+    onError:()=>{
+      alert('error');
+    }
   });
 
   const [form, setForm] = useState({
@@ -154,8 +151,7 @@ const Login = () => {
           </div>
 
           <div className=" absolute top-[30%] left-1/2 -translate-x-1/2 z-1 h-[300px] w-[250px] md:w-[300px] bg-blue-500 shadow-2xl shadow-blue-300 rounded-[40px] rotate-45 "></div>
-         
-         
+
           <div className="extraTool1 absolute left-32 top-32 z-1 h-[40px] -rotate-45 w-[100px] bg-yellow-500  shadow-2xl shadow-yellow-300 rounded-full "></div>
         </div>
 
@@ -168,7 +164,7 @@ const Login = () => {
               Begin Enhancing Your OJT Experience Efficiently
             </small>
 
-            {error && (
+            {error  && (
               <Alert
                 variant="light"
                 radius="md"
@@ -218,9 +214,12 @@ const Login = () => {
               />
 
               <div className="flex justify-end">
-                <Link className="text-sm text-blue-500 font-semibold">
+                <button
+                  onClick={() => setOpenForgetPassword(true)}
+                  className="text-sm text-blue-500 font-semibold"
+                >
                   Forgot password
-                </Link>
+                </button>
               </div>
               <Button
                 onClick={handleLogin}
@@ -234,7 +233,6 @@ const Login = () => {
               <small className="text-center">Or</small>
               <Button
                 onClick={() => setOpenSuperAdmin(true)}
-                // color="primary"
                 size="lg"
                 className="font-medium tracking-wide bg-blue-100 text-blue-500"
               >
@@ -258,34 +256,17 @@ const Login = () => {
         </div>
       </div>
 
-      <Modal
-        isOpen={operSuperAdmin}
-        onOpenChange={() => setOpenSuperAdmin(false)}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1 text-base font-medium">
-                Super admin Sign in Form
-              </ModalHeader>
-              <ModalBody>
-                <div className="w-full pt-2 pb-7 flex items-center justify-center">
-                  {!pinError ? (
-                    <div className="flex flex-col items-center gap-5">
-                      <h1 className="flex items-center gap-2">
-                        Secret Key <BiSolidKey className="text-yellow-500" />
-                      </h1>
-                      <PinInput size="lg" onChange={handlePinChange} />
-                    </div>
-                  ) : (
-                    <AddAdmin />
-                  )}
-                </div>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <AddSuperAdmin
+        openSuperAdmin={openSuperAdmin}
+        onOpenChangeEvent={() => setOpenSuperAdmin(false)}
+        handlePinChange={handlePinChange}
+        pinError={pinError}
+      />
+
+      <ForgotPassword 
+      openForgotPassword={openForgotPassword}
+      onOpenChangeEvent={()=>setOpenForgetPassword(false)}
+      />
     </div>
   );
 };

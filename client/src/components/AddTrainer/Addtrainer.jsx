@@ -143,12 +143,12 @@ const AddTrainer = ({
                 onSubmit={handleSubmit}
                 className="flex flex-col gap-5 py-4 px-2"
               >
-                <div className="flex items-center gap-4">
+                <div className="flex  flex-col md:flex-row items-center gap-4">
                   <Select
                     items={companies || []}
                     onChange={handleCompanyChange}
                     label="Select Company"
-                    className="max-w-[280px]"
+                    className="w-full md:max-w-[280px]"
                     size="sm"
                     isRequired
                   >
@@ -164,7 +164,7 @@ const AddTrainer = ({
                     items={findAreaList || []}
                     name="area_id"
                     label="Select Area"
-                    className="max-w-[280px]"
+                    className="w-full md:max-w-[280px]"
                     size="sm"
                     isRequired
                     isDisabled={!selectedCompany}
@@ -174,7 +174,7 @@ const AddTrainer = ({
                     )}
                   </Select>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex  flex-col md:flex-row items-center gap-4">
                   <Input
                     type="text"
                     label="First Name"
@@ -182,7 +182,7 @@ const AddTrainer = ({
                     onChange={handleChange}
                     size="sm"
                     isRequired
-                    className="w-[40%]"
+                    className="w-full md:w-[40%]"
                     errorMessage={errors.firstname}
                     value={formData.firstname}
                     isDisabled={toggleAddSelf}
@@ -195,7 +195,7 @@ const AddTrainer = ({
                     onChange={handleChange}
                     size="sm"
                     isRequired
-                    className="w-[40%]"
+                    className="w-full md:w-[40%]"
                     errorMessage={errors.lastname}
                     value={formData.lastname}
                     isDisabled={toggleAddSelf}
@@ -211,14 +211,14 @@ const AddTrainer = ({
                     name="middlename"
                     onChange={handleChange}
                     size="sm"
-                    className="w-[20%]"
+                    className="w-full md:w-[20%]"
                     errorMessage={errors.middlename}
                     value={formData.middlename}
                     isDisabled={toggleAddSelf}
                   />
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="relative w-[60%]">
+                <div className="flex  flex-col md:flex-row items-center gap-4">
+                  <div className="relative w-full md:w-[60%]">
                     <Input
                       type="text"
                       label="Email"
@@ -230,6 +230,7 @@ const AddTrainer = ({
                       errorMessage={errors.email}
                       value={formData.email}
                       isDisabled={toggleAddSelf}
+                      isInvalid={trainerList.some((item) => item.email === formData.email)}
                     />
 
                     {trainerList.some(
@@ -248,7 +249,7 @@ const AddTrainer = ({
                     onChange={handleChange}
                     size="sm"
                     isRequired
-                    className="w-[40%]"
+                    className="w-full md:w-[40%]"
                     errorMessage={errors.contact}
                     value={formData.contact}
                     isDisabled={toggleAddSelf}
@@ -301,9 +302,8 @@ const AddTrainer = ({
                         !Object.values(errors).every(
                           (error) => error === null
                         ) ||
-                        trainerList.some(
-                          (item) => item.email === formData.email
-                        )
+                        trainerList.some((item) => item.email === formData.email)
+                        || isLoading
                       }
                     >
                       {isLoading ? "Loading..." : "Submit"}

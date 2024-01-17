@@ -27,7 +27,7 @@ const Student_list = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["getStudentList"],
+    queryKey: ["coordinator_getStudentList"],
     queryFn: getCoordinator,
   });
 

@@ -159,8 +159,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <section className="grid grid-cols-4 grid-rows-5 gap-3">
-            <div className="col-span-2 h-[160px] row-span-2 grid grid-cols-3 gap-[1.2px] bg-violet-100 rounded-lg shadow-xl overflow-hidden shadow-[#f4f2f2] border border-[#ecf0f1]">
+          <section className="flex flex-col md:grid  grid-cols-2 md:grid-cols-4 grid-rows-5 gap-3">
+            <div className="col-span-2 h-[160px] row-span-2 grid grid-cols-2 md:grid-cols-3 gap-[1.2px] bg-violet-100 rounded-lg shadow-xl overflow-hidden shadow-[#f4f2f2] border border-[#ecf0f1]">
               {countBox.map((item, i) => (
                 <div
                   key={i}

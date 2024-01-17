@@ -281,6 +281,32 @@
     background: radial-gradient(ellipse at center, hsla(109, 100%, 83%, 0.2), 
     transparent 60%);
 }
+.about-shadow-effect::after
+{
+    content: '';
+    position: absolute;
+    top: -300px;
+    left: -200px;
+    width: 700px;
+    height:600px ;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, hsla(202, 79%, 70%, 0.2), 
+    transparent 64%);
+    z-index: .9;
+}
+.about-shadow-effect::before
+{
+    content: '';
+    position: absolute;
+    top: 50px;
+    left: -250px;
+    width: 600px;
+    height:600px ;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, hsla(109, 82%, 83%, 0.2), 
+    transparent 60%);
+}
+
 .form-shadow-effect{
   position: relative;
   z-index: 2;

@@ -22,7 +22,7 @@ function AddAdmin() {
     contact: null,
   });
 
-  const { mutate } = useMutation(addAdminAccount, {
+  const { mutate, isLoading } = useMutation(addAdminAccount, {
     onSuccess: () => {
       Swal.fire("Success", "The Super admin has been added", "success");
     },
@@ -111,8 +111,12 @@ function AddAdmin() {
         className="w-full"
         errorMessage={errors.contact}
       />
-      <Button color="primary" onClick={handleSubmit}>
-        Submit
+      <Button 
+      color="primary"  
+      isDisabled={isLoading}
+      onClick={handleSubmit}
+      >
+        {isLoading ? "Processing..." : "Submit"}
       </Button>
     </div>
   );

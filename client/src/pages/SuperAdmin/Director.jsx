@@ -42,12 +42,12 @@ const Director = () => {
   return (
     <div>
       {data.length > 0 ? (
-        <div className="max-w-[900px] mx-auto py-12 flex items-center justify-center gap-7">
+        <div className="max-w-[900px] mx-auto py-12 flex flex-col md:flex-row items-center justify-center gap-7">
           <Avatar src={data[0].profile_url?data[0].profile_url : picture} className="bg-blue-500 w-[300px] h-[300px]" />
 
           <div className="max-w-[420px] w-full grid gap-7">
             <div>
-              <h1 className="text-[2.2rem] font-bold mb-3 flex items-center gap-3">
+              <h1 className="text-[2.2rem] font-bold mb-3 flex items-center justify-center md:justify-start gap-3">
                 <span className="capitalize">{data[0].firstname}</span>
                 <span className="capitalize">{data[0].lastname}</span>
               </h1>

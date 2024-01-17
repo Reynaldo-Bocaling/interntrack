@@ -119,7 +119,7 @@ const CoordinatorInfo = () => {
               <div className="left p-5 pl-5 w-full py-5">
                 <div className="flex flex-col gap-5">
                   <div className="name">
-                    <h1 className="text-2xl font-semibold tracking-wide">
+                    <h1 className="text-lg md:text-2xl font-semibold tracking-wide">
                       {`${data && data.firstname} ${data && data.lastname}`}
                     </h1>
                     <small className="text-blue-500 font-semibold tracking-wider">
