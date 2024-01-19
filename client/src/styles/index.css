@@ -35,6 +35,10 @@
   }
 
 
+  html{
+    scroll-behavior: smooth;
+    scroll-padding-top: 3.2rem;
+  }
 
 
 .link { 
@@ -413,8 +417,26 @@ font-family: 'Patua One', serif;
 
 
 
+.scrollUpButton{
+  animation: scrollUpButton 0.9s linear infinite;
+}
 
-
+@keyframes scrollUpButton {
+  0%{
+    transform: translateY(-1px);
+  }
+  25%{
+    transform: translateY(-2px);
+  }
+  50%{
+    opacity: 0.8;
+    transform: translateY(-4px);
+  }
+  75%{
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+}
 
 
 
@@ -435,9 +457,15 @@ font-family: 'Patua One', serif;
 
 
 /* Tablet Devices */
-@media only screen and (min-width: 768px) and (max-width: 1023px) {
+@media only screen and (max-width: 767px) {
+  html{
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
 }
 
 /* Desktop Devices */
 @media only screen and (min-width: 1024px) {
 }
+
+

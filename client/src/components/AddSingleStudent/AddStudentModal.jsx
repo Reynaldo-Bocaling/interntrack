@@ -239,7 +239,7 @@ const AddSingStudent = ({
                         isRequired
                         color="primary"
                         className="font-medium tracking-wide px-8"
-                        disabled={!isFormValid}
+                        isDisabled={!isFormValid || isLoading}
                       >
                         {isLoading ? "Loading..." : "Submit"}
                       </Button>

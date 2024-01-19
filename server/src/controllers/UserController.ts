@@ -110,7 +110,14 @@ export class UserController {
         from: "reynaldobocaling@gmail.com",
         to: email,
         subject: "IternTrack!",
-        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Coordinator`,
+        html: `
+        <p style="color: blue;">Welcome, ${firstname}!</p>
+        <p>You have been successfully added to the InternTrack system as a Coordinator.</p>
+        <p>Your username is: ${email}</p>
+        <p>Your password is: ${newPassowrd}</p>
+        <p>You can now log in to the InternTrack system to manage and coordinate activities within your assigned area.</p>
+          <p>Thank you,</p>
+      `,
       };
 
       await transporter.sendMail(mailOptions);
@@ -238,7 +245,14 @@ export class UserController {
           from: "reynaldobocaling@gmail.com",
           to: email,
           subject: "IternTrack!",
-          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Trainer`,
+          html: `
+          <p style="color: blue;">Welcome, ${firstname}!</p>
+          <p>You have been successfully added to the InternTrack system as a Trainer.</p>
+          <p>Your username is: ${email}</p>
+          <p>Your password is: ${newPassowrd}</p>
+          <p>You can now log in to the InternTrack system to manage and guide your assigned students.</p>
+          <p>Thank you!</p>
+        `,
         };
 
         await transporter.sendMail(mailOptions);
@@ -343,7 +357,14 @@ export class UserController {
           from: "reynaldobocaling@gmail.com",
           to: email,
           subject: "IternTrack!",
-          text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Teacher`,
+          html: `
+          <p style="color: blue;">Welcome, ${firstname}!</p>
+          <p>You have been successfully added to the InternTrack system as a Teacher.</p>
+          <p>Your username is: ${email}</p>
+          <p>Your password is: ${newPassowrd}</p>
+          <p>You can now log in to the InternTrack system to manage and guide your assigned students.</p>
+          <p>Thank you!</p>
+        `,
         };
 
         await transporter.sendMail(mailOptions);
@@ -440,7 +461,14 @@ export class UserController {
         from: "reynaldobocaling@gmail.com",
         to: email,
         subject: "IternTrack!",
-        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\nStudent`,
+        html: `
+          <p style="color: blue;">Congratulations, ${firstname}!</p>
+          <p>You have been successfully added to the InternTrack system. You are now part of our program, and we are in the process of assigning you to a company.</p>
+          <p>Your username is: ${email}</p>
+          <p>Your password is: ${newPassowrd}</p>
+          <p>Please note that you are not yet allowed to log in and start your time logs. Kindly wait until you receive further instructions on your company assignment.</p>
+          <p>Goodluck!</p>
+        `,
       };
 
       await transporter.sendMail(mailOptions);
@@ -523,6 +551,22 @@ export class UserController {
           },
         });
 
+
+        const mailOptions = {
+          from: "reynaldobocaling@gmail.com",
+          to: data.email,
+          subject: "IternTrack!",
+          html: `
+            <p style="color: blue;">Congratulations, ${data.firstname}!</p>
+            <p>You have been successfully added to the InternTrack system. You are now part of our program, and we are in the process of assigning you to a company.</p>
+            <p>Your username is: ${data.email}</p>
+            <p>Your password is: ${newPassowrd}</p>
+            <p>Please note that you are not yet allowed to log in and start your time logs. Kindly wait until you receive further instructions on your company assignment.</p>
+            <p>Goodluck!</p>
+          `,
+        };
+        await transporter.sendMail(mailOptions);
+
         // const mailOptions = {
         //   from: "reynaldobocaling@gmail.com",
         //   to: data.email,
@@ -530,7 +574,7 @@ export class UserController {
         //   text: `Hello ${data.firstname},\n\nWelcome to InternTrack! Your username is: ${data.email}\nYour password is: ${newPassowrd}\n\nBest regards,\Coordinator`,
         // };
 
-        // await transporter.sendMail(mailOptions);
+       
       }
 
       return res.status(201).json("success");
@@ -567,7 +611,15 @@ export class UserController {
         from: "reynaldobocaling@gmail.com",
         to: email,
         subject: "IternTrack!",
-        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n SuperAdmin`,
+        html: `
+        <p style="color: blue;">Congratulations, ${firstname}!</p>
+        <p>You have been successfully added to the InternTrack system as a Super admin.</p>
+        <p>Your username is: ${email}</p>
+        <p>Your password is: ${newPassowrd}</p>
+        <p>You can now log in to the InternTrack system to manage and oversee the entire platform.</p>
+        <p>Thank you for your contributions!</p>
+        <p>Best regards,</p>
+      `,
       };
 
       await transporter.sendMail(mailOptions);
@@ -621,7 +673,14 @@ export class UserController {
         from: "reynaldobocaling@gmail.com",
         to: email,
         subject: "IternTrack!",
-        text: `Hello ${firstname},\n\nWelcome to InternTrack! Your username is: ${email}\nYour password is: ${newPassowrd}\n\nBest regards,\n Director`,
+        html: `
+        <p style="color: blue;">Welcome, ${firstname}!</p>
+        <p>You have been successfully added to the InternTrack system as a Director.</p>
+        <p>Your username is: ${email}</p>
+        <p>Your password is: ${newPassowrd}</p>
+        <p>You can now log in to the InternTrack system to oversee and manage the entire program.</p>
+        <p>Thank you for your leadership!</p>
+      `,
       };
 
       await transporter.sendMail(mailOptions);
@@ -632,10 +691,12 @@ export class UserController {
     }
   }
 
+
+
   // assign Students
   static async assignStudent(req: any, res: Response) {
-    const { studentId, trainer_id, areaAssigned_id } = req.body;
-
+    const { studentId, trainer_id, areaAssigned_id, companyName,trainerName, area } = req.body;
+  
     try {
       const response = await prisma.student.updateMany({
         where: {
@@ -646,12 +707,40 @@ export class UserController {
           areaAssigned_id: Number(areaAssigned_id),
         },
       });
-
+  
+      // Send email to each student
+      const students = await prisma.student.findMany({
+        where: {
+          id: { in: studentId },
+        },
+      });
+  
+      for (const student of students) {
+        const { email, firstname } = student; 
+        const mailOptions = {
+          from: 'reynaldobocaling@gmail.com',
+          to: email,
+          subject: 'IternTrack - Successful Assignment',
+          html: `
+          <p style="font-size: 1.2rem; color: #2193EE;">Hello <strong>${firstname}</strong>,</p>
+          <p>Congratulations! You have been successfully assigned to <span style="color: #2193EE;">${companyName}</span> in the <span style="color: #2193EE;">${area}</span> area under the guidance of Trainer <span style="color: #2193EE;">${trainerName}</span>.</p>
+          
+          <p>To begin your exciting journey, please log in to the <span style="color: #2193EE;">InternTrack</span> system and start your time logs.</p>
+          <p>Goodluck.</p>
+        `,}
+  
+        await transporter.sendMail(mailOptions);
+      }
+  
       return res.status(200).json(response);
     } catch (error) {
-      return res.status(500).json(error);
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+  
+  
+
 
   // attendance request
   static async attendanceRequest(req: Request, res: Response) {

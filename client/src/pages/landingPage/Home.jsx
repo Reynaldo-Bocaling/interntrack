@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import homeModel from "../../assets/images/homeImage.png";
-import homeModelRight from "../../assets/images/homeModelRight.png";
 import { Button } from "@nextui-org/react";
 import { BsPlayFill } from "react-icons/bs";
 import { GrMail } from "react-icons/gr";
@@ -9,17 +8,22 @@ import { BiSolidCheckShield } from "react-icons/bi";
 import tool1 from "../../assets/images/tool1.png";
 import heart from "../../assets/images/heart.png";
 import like from "../../assets/images/like.png";
+import {motion} from 'framer-motion'
 function Home() {
   return (
     <div>
-      <div className="flex items-center justify-between gap-2 px-4">
-        <div className="left max-w-[550px] relative z-20">
+      <motion.div
+      initial={{y: -15, opacity: 0}}
+      animate={{y: 0, opacity: 1}}
+      transition={{duration: 1.3, delay: 0.5}}
+       className="grid grid-cols-1 md:grid-cols-2 items-center justify-between gap-2 px-7 pt-28 md:pt-1">
+        <div className="left w-full mx:max-w-[550px] relative z-20">
           <div className="top flex flex-col items-start">
-            <small className="text-blue-500 font-medium">
+            <small className="text-blue-500 font-medium mb-3">
               {" "}
               OJT Management{" "}
             </small>
-            <h1 className="homeTitle text-[2.9rem] text-gray-800 leading-[3.8rem] mb-3">
+            <h1 className="homeTitle text-[2.2rem] md:text-[2.9rem] text-gray-800 leading-[3rem] md:leading-[3.8rem] mb-3">
               Manage Your OJT <br />
               Program <span className="text-green-500">
                 Effectively
@@ -34,7 +38,11 @@ function Home() {
               trainers.
             </p>
 
-            <div className="flex items-center gap-4 mt-7">
+            <motion.div
+            initial={{x: -20, opacity: 0}}
+            animate={{x: 0, opacity: 1}}
+            transition={{duration: 2}}
+            className="flex items-center gap-4 mt-7">
               <Button
                 color="primary"
                 size="lg"
@@ -49,14 +57,18 @@ function Home() {
                 </div>
                 <small className="text-gray-500">Play Introduction</small>
               </div>
-            </div>
+            </motion.div>
           </div>
-          <div className="mt-14 py-2 flex items-center gap-7 font-medium">
-            <span className="border-r pr-4">User-friendly</span>
-            <span className="border-r pr-4">Accessible</span>
-            <span className="border-r pr-4">Reliable</span>
+          <motion.div
+          initial={{y: 20, opacity: 0}}
+          animate={{y: 0, opacity: 1}}
+          transition={{duration: 1.5, delay: 0.5}}
+          className="mt-14 py-2 mb-12 md:mb-2 grid grid-cols-2 md:grid-cols-4 items-center justify-center w-full gap-7 font-medium">
+            <span className="border-r pr-4 ">User-friendly</span>
+            <span className="border-r pr-4 ">Accessible</span>
+            <span className="border-r pr-4 ">Reliable</span>
             <span>Convenient</span>
-          </div>
+          </motion.div>
         </div>
 
         {/* right */}
@@ -64,7 +76,7 @@ function Home() {
           <img
             src={homeModel}
             alt=""
-            className="relative max-w-[500px] w-full z-10"
+            className="relative max-w-[420px] -ml-2 md:ml-0 md:max-w-[500px] w-full z-10"
           />
 
           <div className=" absolute right-1 bottom-3 py-3 px-5 rounded-xl flex items-center justify-center gap-3 z-20 bg-[rgba(250,250,250,0.87)] shadow-lg">
@@ -116,7 +128,7 @@ function Home() {
             className="absolute -right-3 top-52 translate-y-1/2 w-10"
           />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

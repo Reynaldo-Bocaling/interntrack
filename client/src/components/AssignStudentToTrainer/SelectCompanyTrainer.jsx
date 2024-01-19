@@ -13,7 +13,7 @@ const SelectCompanyTrainer = (props) => {
     setSelectedAreaOfAssignment,
     onCLickAssign,
     companies,
-    sList,
+    isLoading,
     selectedStudent,
   } = props;
 
@@ -117,10 +117,13 @@ const SelectCompanyTrainer = (props) => {
             selectedStudent == [] ||
             selectedTrainer === null ||
             selectedAreaOfAssignment === null ||
-            selectedStudent.length > totalAvailable
+            selectedStudent.length > totalAvailable ||
+            isLoading
           }
         >
-          Assign
+          {
+            isLoading ? 'Assigning..':'Assign'
+          }
         </Button>
       </div>
     </div>

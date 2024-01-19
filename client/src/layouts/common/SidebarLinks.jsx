@@ -136,12 +136,12 @@ export const SidebarData = {
       space: true,
       extraText: "MESSAGES",
     },
-    {
-      label: "Announcements",
-      url: "/announcement",
-      icon: CgFileDocument,
-      size: 17,
-    },
+    // {
+    //   label: "Announcements",
+    //   url: "/announcement",
+    //   icon: CgFileDocument,
+    //   size: 17,
+    // },
   ],
 
   Trainer: [

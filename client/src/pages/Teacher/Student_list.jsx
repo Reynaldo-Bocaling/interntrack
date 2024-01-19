@@ -176,7 +176,7 @@ const Student_list = () => {
       );
       setImportData(null);
       setError(null);
-      queryClient.invalidateQueries({ queryKey: ["getTeacher2"] });
+      queryClient.invalidateQueries({ queryKey: ["teacher_getTeacher2"] });
     },
     onError: () => {
       Swal.fire(
@@ -311,7 +311,7 @@ const Student_list = () => {
     {
       onSuccess: () => {
         Swal.fire("Success", "The Student has been added", "success");
-        queryClient.invalidateQueries({ queryKey: ["getTeacher2"] });
+        queryClient.invalidateQueries({ queryKey: ["teacher_getTeacher2"] });
         setIsAddStudent(false)
       },
       onError: () => {

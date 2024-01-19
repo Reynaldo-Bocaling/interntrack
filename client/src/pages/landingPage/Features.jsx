@@ -15,7 +15,7 @@ import tool1 from '../../assets/images/heart.png'
 import tool2 from '../../assets/images/check.png'
 import tool3 from '../../assets/images/like.png'
 import { Carousel } from "@mantine/carousel";
-
+import {motion} from 'framer-motion'
 
 function Features() {
   const featuresList = [
@@ -75,15 +75,20 @@ function Features() {
     },
   ];
   return (
-    <div className="relative mb-20   before:min-h-[550px] before:w-full before:bg-gray-100 before:absolute before:rounded-lg before:-top-7">
-            <h1 className="relative mb-12 text-3xl font-bold text-center ">Features</h1>
+    <div id="features" className="relative mb-20   before:min-h-[550px] before:w-full before:bg-gray-100 before:absolute before:rounded-lg before:-top-7">
+            <h1
+            className="relative mb-12 text-3xl font-bold text-center ">Features</h1>
 
       <div className="flex items-center justify-center">
-        <img src={featureLeft} alt="" className="max-w-[150px] -rotate-12 translate-x-9" />
-        <img src={featureMain} alt="" className="relative z-10 max-w-[150px]" />
-        <img src={featureRight} alt="" className="max-w-[150px] rotate-12 -translate-x-9" />
+        <img src={featureLeft} alt="" className="max-w-[120px] md:max-w-[150px] -rotate-12 translate-x-9" />
+        <img src={featureMain} alt="" className="relative z-10 max-w-[120px] md:max-w-[150px]" />
+        <img src={featureRight} alt="" className="max-w-[120px] md:max-w-[150px] rotate-12 -translate-x-9" />
       </div>
-      <div className="max-w-[1000px] mx-auto mt-12">
+      <motion.div
+      initial={{x:0, opacity:0}}
+      whileInView={{x:[-100, 0], opacity: 1}}
+      transition={{duration: 1}}
+      className="max-w-[1000px] mx-auto mt-12 px-3">
         <Carousel
           withIndicators
           height={200}
@@ -106,11 +111,11 @@ function Features() {
             </Carousel.Slide>
           ))}
         </Carousel>
-      </div>
+      </motion.div>
 
-     <img src={tool1} alt="" className="absolute top-1/3 right-28 z-0 max-w-[60px] -rotate-45" />
-     <img src={tool2} alt="" className="absolute top-1/3 right-1/4 translate-y-14 z-0 max-w-[60px] " />
-     <img src={tool3} alt="" className="absolute top-1/3  left-32 z-0 max-w-[60px] rotate-45" />
+     <img src={tool1} alt="" className="absolute top-1/3 right-3 md:right-28 z-0 max-w-[40px] md:max-w-[60px] -rotate-45" />
+     <img src={tool2} alt="" className="absolute top-1/3 right-8 md:right-1/4 translate-y-14 z-0 max-w-[40px] md:max-w-[60px] " />
+     <img src={tool3} alt="" className="absolute top-1/3 left-3 md:left-32 z-0 max-w-[40px] md:max-w-[60px] rotate-45" />
       <div className="absolute top-24 right-5 flex items-center gap-5 justify-center">
             <div className="bg-yellow-500 w-3 h-3 rounded-full -mt-2 -mr-2"></div>
             <div className="bg-blue-500 w-5 h-5 rounded-full mt-5 mr-2"></div>

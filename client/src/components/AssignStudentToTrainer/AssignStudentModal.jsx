@@ -22,27 +22,36 @@ const AssignStudentModal = (props) => {
   const selectStudent =  selectedItems ? selectedItems.map(({id})=> (id)) : []
   const trainer_id = selectedTrainer ? selectedTrainer.id: 0;
   const areaAssigned = selectedAreaOfAssignment ? selectedAreaOfAssignment.id : 0;
+  const companyName = selectedCompany?.companyName;
+  const trainerName = selectedTrainer?.firstname;
+  const area = selectedAreaOfAssignment?.areaName;
+
+
+  
+
+
 
 
   // get student list 
   const {data} = useQuery({
-    queryKey: ['getStudent'],
+    queryKey: ['teacher_getStudent3'],
     queryFn: getTeacher
   });
 
   
   // assign student query function
-  const { mutate} = useMutation({
+  const { mutate,isLoading } = useMutation({
     mutationFn: assignStudent,
     onSuccess: ()=> {
-      Swal.fire("Success", "Congratulations! \n The student has been successfully assigned to the OJT program.", "success");
-      queryClient.invalidateQueries({queryKey: ['getStudent']})
+      Swal.fire("Success", "Congratulations! \n The student has been successfully assigned to the OJT program.", "success").then(()=> {
+        window.location.reload()
+      });
+      queryClient.invalidateQueries({queryKey: ['teacher_getStudent3']})
       setSelectedItems([])
       setSelectedTrainer(null)
       setSelectedAreaOfAssignment(null)
       setSelectedCompany(null)
       closeModal();
-      window.location.reload()
     },
     onError: ()=> {
       Swal.fire("Error", "Opps!\n An error occured while asigning the student \n Please try again or contact support for assistance.", "error");
@@ -88,11 +97,17 @@ const AssignStudentModal = (props) => {
     mutate({
       studentId: selectStudent, 
       trainer_id,
-      areaAssigned_id: areaAssigned
+      areaAssigned_id: areaAssigned,
+      companyName,
+      trainerName,
+      area
     });
     
 
   };
+
+
+  console.log('selectedCompany',area);
 
   return (
     <>
@@ -113,6 +128,7 @@ const AssignStudentModal = (props) => {
                 companies={companies}
                 onCLickAssign={handleTryCLick}
                 selectedStudent={selectedItems}
+                isLoading={isLoading}
               />
               <SelectStudent
                 selectedItems={selectedItems}

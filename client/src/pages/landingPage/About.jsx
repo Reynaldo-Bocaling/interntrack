@@ -4,11 +4,15 @@ import aboutLeft from "../../assets/images/about-right.png";
 import aboutRight from "../../assets/images/about-left.png";
 import aboutCase from "../../assets/images/about-case.png";
 import { Button } from "@nextui-org/react";
+import {motion} from 'framer-motion'
+
+
 function About() {
   return (
     <>
-      <div className="about-shadow-effect relative mt-24 mb-24 w-full bg-white flex flex-col items-center justify-center gap-5  lg:gap-24 lg:flex-row">
-        <div className="relative max-w-[400px] w-full min-h-[550px] bg-red-5t00">
+      <div id="about" className="about-shadow-effect relative mt-24 mb-24 w-full bg-white flex flex-col items-center justify-center gap-5  lg:gap-24 lg:flex-row px-7 md:px-0">
+        <div 
+        className="relative max-w-[400px] w-full min-h-[550px] -ml-7 md:ml-0">
           <img
             src={aboutCase}
             alt="About Main picture"
@@ -43,20 +47,27 @@ function About() {
           </div>
         </div>
 
-        <div className="max-w-[500px] w-full mt-12">
-          <h1 className=" mb-5 text-3xl font-bold">About Us</h1>
-          <div className="text-lg font-semibold mb-5">
+        <div
+        
+        className="max-w-[500px] w-full mt-12">
+          <h1 
+          className=" mb-5 text-3xl font-bold">About Us</h1>
+          <div
+          className="text-xl font-semibold mb-5">
             Empowering Growth Through Innovative OJT Management Solutions –
             Welcome to InternTrack
           </div>
 
-          <p className="text-gray-500 ">
+          <p
+          className="text-gray-500 ">
             Where seamless OJT management meets innovation. We're dedicated to
             revolutionizing internship experiences through efficient task
             tracking, transparent progress monitoring, and collaborative
             communication. Empower your team and elevate intern development with
             InternTrack – your partner in shaping the future workforce.
           </p>
+          <div
+          >
           <Button
             color="primary"
             size="lg"
@@ -64,6 +75,7 @@ function About() {
           >
             Rate Us
           </Button>
+          </div>
         </div>
       </div>
     </>
