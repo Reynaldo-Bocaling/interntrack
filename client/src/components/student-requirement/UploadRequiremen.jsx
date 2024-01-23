@@ -31,7 +31,7 @@ const BrgyCertificate = (props) => {
         onClose={onClose}
         title={
           <header className="mt-2">
-            <span className="text-xl font-semibold">BRGY Certificate</span>
+            <span className="text-xl font-semibold">Upload Requirements</span>
           </header>
         }
       >
@@ -40,7 +40,7 @@ const BrgyCertificate = (props) => {
         ) : (
           <>
             <Input
-              label="Enter your email address"
+              label="Requirement title"
               className="text-sm"
               onChange={(e) => setRequirementType(e.target.value)}
             />

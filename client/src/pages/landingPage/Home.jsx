@@ -77,6 +77,7 @@ function Home() {
             src={homeModel}
             alt=""
             className="relative max-w-[420px] -ml-2 md:ml-0 md:max-w-[500px] w-full z-10"
+            loading="lazy"
           />
 
           <div className=" absolute right-1 bottom-3 py-3 px-5 rounded-xl flex items-center justify-center gap-3 z-20 bg-[rgba(250,250,250,0.87)] shadow-lg">

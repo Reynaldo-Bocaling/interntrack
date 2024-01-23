@@ -89,7 +89,7 @@ const Login = () => {
           <span className="text-xl font-semibold">InternTrack</span>
         </Link>
         <div className="relative w-[55%] flex items-center justify-center mr-0 lg:mr-10">
-          <img src={model} alt="" className="max-w-[380px] z-20" />
+          <img src={model} alt="" className="max-w-[380px] z-20" loading="lazy" />
 
           {/* total box */}
           <div className="totalStundetBox absolute -bottom-7 left-16 max-w-[160px] w-full bg-white rounded-lg flex flex-col items-center gap-3 shadow-md py-4 px-2 z-20 shadow-slate-200 border border-slate-200">
