@@ -21,8 +21,8 @@ export const generateNewPassword = () => {
 export const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "reynaldobocaling@gmail.com",
-      pass: "scgypyshxqwxdvls",
+      user: "interntracksystem@gmail.com",
+      pass: "ixqy gxwb jdpr ewfo",
     },
   });
 
