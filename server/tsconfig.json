@@ -12,6 +12,6 @@
     "resolveJsonModule": true,                        /* Enable importing .json files. */
   },
   "include": [
-    "./src/index.ts"
+    "./src/app.ts"
   ]
 }
