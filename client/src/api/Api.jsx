@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://interntracker-api.aleczr.link/";
+const url = "https://interntrack-api.aleczr.link/";
 
 // POST Request
 
