@@ -19,6 +19,12 @@ const storage = multer.diskStorage({
 
 const uploads = multer({storage: storage})
 
+
+// try
+routes.get("/", (req:Request, res: Response) => {
+    res.send("test")
+})
+
 // post
 routes.post('/importStudent' ,verifyToken, UserController.importStudent);
 routes.post('/addCompany', uploads.single('pdfFile') , verifyToken , UserController.addCompany);
