@@ -6,7 +6,7 @@
   
 
   "scripts": {
-    "start": "ts-node-dev --respawn --transpile-only  --exit-child src/index.ts",
+    "start": "ts-node-dev --respawn --transpile-only  --exit-child api/index.ts",
     "build": "tsc",
     "postinstall": "prisma generate"
   },
