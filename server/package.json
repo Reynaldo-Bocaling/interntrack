@@ -8,7 +8,7 @@
   "scripts": {
     "start": "ts-node-dev --respawn --transpile-only  --exit-child src/index.ts",
     "build": "tsc",
-    "postinstall": "prisma generate &&"
+    "postinstall": "prisma generate && prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
