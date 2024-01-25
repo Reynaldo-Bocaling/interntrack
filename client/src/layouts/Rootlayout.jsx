@@ -26,7 +26,7 @@ const Rootlayout = (props) => {
   };
 
   return (
-    <div className="overflow-x-hidden">
+    <div>
       {role !== "Unauthorized" && (
         <div>
           {role === "Student" ? (
