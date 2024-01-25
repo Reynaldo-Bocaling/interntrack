@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import React, { useState, useRef, lazy } from "react";
+const TableFormat  = lazy(()=> import("../../components/ReusableTableFormat/TableFormat"));
 import picture from "../../assets/images/dp.png";
 import { BsPrinter } from "react-icons/bs";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getTrainer, getStudentList } from "../../api/Api";
 import { Avatar, Switch } from "@nextui-org/react";
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+const List  = lazy(()=> import("../../components/print-layout/List"));
 
 const Student_list = () => {
   const [searchLength, setSearchLength] = useState(false);

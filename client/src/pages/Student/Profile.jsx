@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import { CgMenuMotion } from "react-icons/cg";
 import { MdKeyboardArrowLeft } from "react-icons/md";
-import ProfileInfo from "../../components/Student-profile/index";
-import Editinfo from "../../components/Student-profile/Editinfo";
-import Message from "../../components/Student-profile/Message";
+const ProfileInfo = lazy(()=> import("../../components/Student-profile/index"));
+const Editinfo = lazy(()=> import("../../components/Student-profile/Editinfo"));
+const Message = lazy(()=> import("../../components/Student-profile/Message"));
 import { BsCamera } from "react-icons/bs";
 import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
 import { AiOutlineCloudUpload } from "react-icons/ai";

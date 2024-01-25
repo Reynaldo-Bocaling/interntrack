@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import Information from "../../components/user-Settings/Information";
-import ChangePassword from "../../components/user-Settings/ChangePassword";
+import React, { lazy, useState } from "react";
+const Information = lazy(()=> import("../../components/user-Settings/Information"));
+const ChangePassword = lazy(()=> import("../../components/user-Settings/ChangePassword"));
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getSuperAdmin } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";

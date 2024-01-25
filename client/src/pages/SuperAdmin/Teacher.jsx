@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import React, { useState, useRef, lazy } from "react";
+ const TableFormat  = lazy(()=> import("../../components/ReusableTableFormat/TableFormat"));
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { FiEdit3 } from "react-icons/fi";
@@ -12,7 +12,7 @@ import { getTeacherList } from "../../api/Api";
 import picture from "../../assets/images/emptyProfile.png";
 import { Switch, Avatar } from "@nextui-org/react";
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+ const List  = lazy(()=> import("../../components/print-layout/List"));
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");

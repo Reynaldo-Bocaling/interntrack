@@ -1,103 +1,104 @@
-import React from "react";
+import React , {lazy} from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { verifyToken } from "../api/Api";
+import {  verifyUser } from "../api/Api";
 import PulseLoader from "react-spinners/PulseLoader";
 
-import Rootlayout from "../layouts/Rootlayout";
-import Login from "./Login";
+const Rootlayout = lazy(()=> import("../layouts/Rootlayout"));
+const Login = lazy(()=> import("./Login"));
 
-import ViewUploadTask from "../components/Student-Task/ViewUploadTask";
+const ViewUploadTask = lazy(()=> import("../components/Student-Task/ViewUploadTask"));
 
 // view Attendance Request Reuasable
-import ViewAttendanceRequest from "../components/attendance-request/ViewAttendance";
+const ViewAttendanceRequest = lazy(()=> import("../components/attendance-request/ViewAttendance"))
 
 // view timesheets
-import ViewTimesheets from "../components/StudentTimesheets/ViewTimesheets";
+const ViewTimesheets = lazy(()=> import("../components/StudentTimesheets/ViewTimesheets"));
 
 // view user resubale
-import TrainerInfoView from "../components/Trainer-Info/index";
-import StudentInfoView from "../components/Student-Info/index";
-import CoordinatorInfoView from "../components/Coordinator-Info/index";
-import TeacherInfoView from "../components/Teacher-Info/index";
+const TrainerInfoView = lazy(()=> import("../components/Trainer-Info/index"));
+const StudentInfoView = lazy(()=> import("../components/Student-Info/index"));
+const CoordinatorInfoView = lazy(()=> import("../components/Coordinator-Info/index"));
+const TeacherInfoView = lazy(()=> import("../components/Teacher-Info/index"));
 
 // student
-import Attendance from "../pages/Student/Attendance";
-import Home from "../pages/Student/Home";
-import Profile from "../pages/Student/Profile";
-import Records from "../pages/Student/Records";
+const Attendance = lazy(()=> import("../pages/Student/Attendance"));
+const Home = lazy(()=> import("../pages/Student/Home"));
+const Profile = lazy(()=> import("../pages/Student/Profile"))
+const Records = lazy(()=> import("../pages/Student/Records"));
 
-import Announcement from "../pages/Student/Announcement";
+const Announcement = lazy(()=> import("../pages/Student/Announcement"));
 
 // SuperAdmin pages
-import SuperAdminDashboard from "../pages/SuperAdmin/Dashboard";
-import SuperAdmin_Trainer_list from "../pages/SuperAdmin/Trainer";
-import SuperAdmin_Student_list from "../pages/SuperAdmin/Student";
-import SuperAdmin_StudentInfoView from "../pages/SuperAdmin/StudentViewInfo";
-import SuperAdmin_Coordinator_list from "../pages/SuperAdmin/Coordinator";
-import SuperAdmin_Teacher_list from "../pages/SuperAdmin/Teacher";
-import SuperAdmin_Company from "../pages/SuperAdmin/Companies";
-import SuperAdmin_DirectorInfo from "../pages/SuperAdmin/Director";
-import SuperAdmin_MyProfile from "../pages/SuperAdmin/MyProfile";
-import SuperAdmin_Settings from "../pages/SuperAdmin/Settings";
+const SuperAdminDashboard = lazy(()=> import("../pages/SuperAdmin/Dashboard"))
+const SuperAdmin_Trainer_list  = lazy(()=> import("../pages/SuperAdmin/Trainer"));
+const SuperAdmin_Student_list = lazy(()=> import("../pages/SuperAdmin/Student"));
+const SuperAdmin_StudentInfoView = lazy(()=> import("../pages/SuperAdmin/StudentViewInfo"))
+const SuperAdmin_Coordinator_list  = lazy(()=> import("../pages/SuperAdmin/Coordinator"));
+const SuperAdmin_Teacher_list = lazy(()=>import("../pages/SuperAdmin/Teacher"));
+const SuperAdmin_Company = lazy(()=>import("../pages/SuperAdmin/Companies"));
+const SuperAdmin_DirectorInfo = lazy(()=>import("../pages/SuperAdmin/Director"));
+const SuperAdmin_MyProfile = lazy(()=>import("../pages/SuperAdmin/MyProfile"));
+const SuperAdmin_Settings = lazy(()=>import("../pages/SuperAdmin/Settings"));
 
 // Trainer pages
-import TrainerDashboard from "../pages/Trainer/Dashboard";
-import Trainer_Student_list from "../pages/Trainer/Student_list";
-import Trainer_StudentTimesheets from "../pages/Trainer/Timesheet";
-import Trainer_studentDailylog from "../pages/Trainer/DailyLogs";
-import Trainer_StudentTask from "../pages/Trainer/StudentTask";
-import Trainer_StudentAttendanceRequest from "../pages/Trainer/AttendanceRequest";
-import TrainerMessage from "../pages/Trainer/Message";
-import TrainerAnnouncement from "../pages/Trainer/Announcement";
-import TrainerMyProfile from "../pages/Trainer/MyProfile";
-import TrainerSettings from "../pages/Trainer/Settings";
-import TrainerOldStudent from "../pages/Trainer/OldStudent";
+const TrainerDashboard  = lazy(()=> import("../pages/Trainer/Dashboard"));
+const Trainer_Student_list = lazy(()=> import("../pages/Trainer/Student_list"));
+const Trainer_StudentTimesheets = lazy(()=> import("../pages/Trainer/Timesheet"));
+const Trainer_studentDailylog = lazy(()=> import("../pages/Trainer/DailyLogs"));
+const Trainer_StudentTask = lazy(()=> import("../pages/Trainer/StudentTask"));
+const Trainer_StudentAttendanceRequest = lazy(()=> import("../pages/Trainer/AttendanceRequest"));
+const TrainerMessage = lazy(()=> import("../pages/Trainer/Message"));
+const TrainerAnnouncement = lazy(()=> import("../pages/Trainer/Announcement"));
+const TrainerMyProfile = lazy(()=> import("../pages/Trainer/MyProfile"));
+const TrainerSettings = lazy(()=> import("../pages/Trainer/Settings"));
+const TrainerOldStudent = lazy(()=> import("../pages/Trainer/OldStudent"));
 
 // Teacher pages
-import TeacherDashboard from "../pages/Teacher/Dashboard";
-import TeacherrCompanies from "../pages/Teacher/Companies";
-import TeacherViewCompany from "../pages/Teacher/ViewCompany";
-import Teacher_Trainer_list from "../pages/Teacher/Trainer_list";
-import Teacher_Student_list from "../pages/Teacher/Student_list";
-import Teacher_StudentTimesheets from "../pages/Teacher/Timesheet";
-import Teacher_studentDailylog from "../pages/Teacher/DailyLogs";
-import Teacher_StudentTask from "../pages/Teacher/StudentTask";
-import TeacherMessage from "../pages/Teacher/Message";
-import TeacherAnnouncement from "../pages/Teacher/Announcement";
-import TeacherNyProfile from "../pages/Teacher/MyProfile";
-import TeacherSettings from "../pages/Teacher/Settings";
-import TeacherOldStudent from "../pages/Teacher/OldStudent";
-import TeacherWeeklyReportList from "../pages/Teacher/WeeklyReportList";
+const TeacherDashboard =  lazy(()=>import ("../pages/Teacher/Dashboard"));
+const TeacherrCompanies = lazy(()=> import("../pages/Teacher/Companies"));
+const TeacherViewCompany = lazy(()=> import("../pages/Teacher/ViewCompany"));
+const Teacher_Trainer_list = lazy(()=> import("../pages/Teacher/Trainer_list"));
+const Teacher_Student_list = lazy(()=> import("../pages/Teacher/Student_list"));
+const Teacher_StudentTimesheets = lazy(()=> import("../pages/Teacher/Timesheet"));
+const Teacher_studentDailylog = lazy(()=> import("../pages/Teacher/DailyLogs"));
+const Teacher_StudentTask = lazy(()=> import("../pages/Teacher/StudentTask"));
+const TeacherMessage = lazy(()=> import("../pages/Teacher/Message"))
+const TeacherAnnouncement = lazy(()=> import("../pages/Teacher/Announcement"));
+const TeacherNyProfile = lazy(()=> import("../pages/Teacher/MyProfile"));
+const TeacherSettings = lazy(()=> import("../pages/Teacher/Settings"));
+const TeacherOldStudent = lazy(()=> import("../pages/Teacher/OldStudent"));
+const TeacherWeeklyReportList = lazy(()=> import("../pages/Teacher/WeeklyReportList"));
 
 
 // Coordinator pages
-import CoordinatorDashboard from "../pages/Coordinator/Dashboard";
-import CoordinatorCompanies from "../pages/Coordinator/Companies";
-import CoordinatorViewCompany from "../pages/Coordinator/ViewCompany";
-import Coordinator_Trainer_list from "../pages/Coordinator/Trainer_list";
-import Coordinator_Student_list from "../pages/Coordinator/Student_list";
-import Coordinator_Teacher_list from "../pages/Coordinator/Teacher_list";
-import CoordinatorMessage from "../pages/Coordinator/Message";
-import CoordinatorAnnouncement from "../pages/Coordinator/Announcement";
-import CoordinatorMyProfile from "../pages/Coordinator/MyProfile";
-import CoordinatorSettings from "../pages/Coordinator/Settings";
-import CoordinatorOldStudent from "../pages/Coordinator/OldStudent";
-import CoordinatorWeeklyReportList from "../pages/Coordinator/WeeklyReportList";
+const CoordinatorDashboard = lazy(()=> import("../pages/Coordinator/Dashboard"));
+const CoordinatorCompanies = lazy(()=> import("../pages/Coordinator/Companies"));
+const CoordinatorViewCompany = lazy(()=> import("../pages/Coordinator/ViewCompany"));
+const Coordinator_Trainer_list = lazy(()=> import("../pages/Coordinator/Trainer_list"));
+const Coordinator_Student_list = lazy(()=> import("../pages/Coordinator/Student_list"));
+const Coordinator_Teacher_list = lazy(()=> import("../pages/Coordinator/Teacher_list"));
+const CoordinatorMessage = lazy(()=> import("../pages/Coordinator/Message"));
+const CoordinatorAnnouncement = lazy(()=> import("../pages/Coordinator/Announcement"));
+const CoordinatorMyProfile = lazy(()=> import("../pages/Coordinator/MyProfile"));
+const CoordinatorSettings = lazy(()=> import("../pages/Coordinator/Settings"));
+const CoordinatorOldStudent = lazy(()=> import("../pages/Coordinator/OldStudent"));
+const CoordinatorWeeklyReportList = lazy(()=> import("../pages/Coordinator/WeeklyReportList"));
 
 // Director pages
-import DirectorDashboard from "../pages/Director/Dashboard";
-import DirectorCompanies from "../pages/Director/Companies";
-import DirectorStudentList from "../pages/Director/Student_list";
-import DirectorMoa from "../pages/Director/MOA";
-import DirectorViewCompany from "../pages/Director/ViewCompany";
-import DirectorMessage from "../pages/Director/Message";
-import DirectorAnnouncement from "../pages/Director/Announcement";
-import Director_Coordinator_list from "../pages/Director/Coordinator_list";
-import Director_Teacher_list from "../pages/Director/TeacherList";
-import DirectorMyProfile from "../pages/Director/MyProfile";
-import DirectorSettings from "../pages/Director/Settings";
-import DirectorOldStudent from "../pages/Director/OldStudent";
+const DirectorDashboard = lazy(()=> import("../pages/Director/Dashboard"));
+const DirectorCompanies = lazy(()=> import("../pages/Director/Companies"));
+const DirectorStudentList = lazy(()=> import("../pages/Director/Student_list"));
+const DirectorMoa = lazy(()=> import("../pages/Director/MOA"));
+const DirectorViewCompany = lazy(()=> import("../pages/Director/ViewCompany"));
+const DirectorMessage = lazy(()=> import("../pages/Director/Message"));
+const DirectorAnnouncement = lazy(()=> import("../pages/Director/Announcement"));
+const Director_Coordinator_list = lazy(()=> import("../pages/Director/Coordinator_list"));
+const Director_Teacher_list = lazy(()=> import("../pages/Director/TeacherList"));
+const DirectorMyProfile = lazy(()=> import("../pages/Director/MyProfile"));
+const DirectorSettings = lazy(()=> import("../pages/Director/Settings"));
+const DirectorOldStudent = lazy(()=> import("../pages/Director/OldStudent"));
+
 
 const PrivateRoutes = () => {
   const {
@@ -106,7 +107,7 @@ const PrivateRoutes = () => {
     isError,
   } = useQuery({
     queryKey: ["getRole"],
-    queryFn: verifyToken,
+    queryFn: verifyUser,
   });
 
   const isLogged = !(isRole === "Unauthorized" || isError);
@@ -153,10 +154,6 @@ const PrivateRoutes = () => {
       },
       {
         path: "/Coordinator-list",
-        element: <SuperAdmin_Coordinator_list />,
-      },
-      {
-        path: "/Teacher-list",
         element: <SuperAdmin_Coordinator_list />,
       },
       {

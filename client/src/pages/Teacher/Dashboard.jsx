@@ -1,10 +1,10 @@
-import React from "react";
+import React, { lazy } from "react";
 import { FcCalendar } from "react-icons/fc";
 import { LiaUsersSolid } from "react-icons/lia";
-import LineChart from "../../components/charts/LineChart";
+const LineChart  = lazy(()=> import("../../components/charts/LineChart"));
 import pic from "../../assets/images/emptyProfile.png";
 import { Link } from "react-router-dom";
-import DateNow from "../../components/Dates/DateNow";
+const DateNow  = lazy(()=> import("../../components/Dates/DateNow"));
 import { useQuery } from "@tanstack/react-query";
 import {
   getCampus,

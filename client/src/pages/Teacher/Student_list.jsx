@@ -1,10 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, lazy } from "react";
 import { BiSearch } from "react-icons/bi";
 import { AiOutlineUsergroupAdd, AiOutlineUserAdd } from "react-icons/ai";
 import { ImAttachment } from "react-icons/im";
 import { BsPrinter } from "react-icons/bs";
-import AssignStudentModal from "../../components/AssignStudentToTrainer/AssignStudentModal";
-import AddStudentModal from "../../components/AddSingleStudent/AddStudentModal";
+const AssignStudentModal = lazy(()=> import("../../components/AssignStudentToTrainer/AssignStudentModal"));
+const AddStudentModal = lazy(()=> import("../../components/AddSingleStudent/AddStudentModal"));
 import * as XLSX from "xlsx";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -18,15 +18,15 @@ import {
   getTeacher,
   importStudent,
 } from "../../api/Api";
-import ImportStudentModalUI from "../../components/Import-Student/ImportForm";
+const ImportStudentModalUI = lazy(()=> import("../../components/Import-Student/ImportForm"));
 import { Tabs } from "@mantine/core";
-import AllStudent from "../../components/StudentList-Filter/All";
-import AssignedStudent from "../../components/StudentList-Filter/Assigned";
-import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
+const AllStudent = lazy(()=> import("../../components/StudentList-Filter/All"));
+const AssignedStudent = lazy(()=> import("../../components/StudentList-Filter/Assigned"));
+const UnassignedStudent = lazy(()=> import("../../components/StudentList-Filter/UnAssigned"));
 import picture from "../../assets/images/dp.png";
 import Swal from "sweetalert2";
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+const List = lazy(()=> import("../../components/print-layout/List"));
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");

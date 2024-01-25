@@ -1,5 +1,5 @@
 import React from "react";
-import StudentInfo from "../../components/Company-info/index";
+const StudentInfo = lazy(()=> import("../../components/Company-info/index"));
 import { useQuery } from "@tanstack/react-query";
 import { getCompanyList } from "../../api/Api";
 import { useParams } from "react-router-dom";

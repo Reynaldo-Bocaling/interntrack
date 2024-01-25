@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { lazy, useRef, useState } from "react";
 import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
@@ -12,7 +12,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Button, Avatar } from "@nextui-org/react";
 import { format } from "date-fns";
-import Report from "../../components/print-layout/ViewWeeklyReport";
+const Report = lazy(() => import("../../components/print-layout/ViewWeeklyReport"));
 import { Link, NavLink, useParams } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import pic from "../../assets/images/emptyProfile.png";

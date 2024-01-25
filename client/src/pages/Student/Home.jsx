@@ -1,8 +1,8 @@
-import React from "react";
+import React, { lazy } from "react";
 import taskUploadModel from "../../assets/images/studentTaskModel.png";
 import { AiOutlineCheck } from "react-icons/ai";
 import { LiaTimesSolid } from "react-icons/lia";
-import PieChart from "../../components/charts/PieChart";
+const PieChart = lazy(()=> import("../../components/charts/PieChart"));
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTask, getTimesheet } from "../../api/Api";

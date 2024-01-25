@@ -1,9 +1,7 @@
-import React, { useState, useRef } from "react";
-import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import React, {lazy, useState, useRef } from "react";
+const TableFormat = lazy(()=> import("../../components/ReusableTableFormat/TableFormat"));
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-import { FiEdit3 } from "react-icons/fi";
-import { RiDeleteBinLine, RiUserSearchLine } from "react-icons/ri";
 import { BsPrinter } from "react-icons/bs";
 import { createColumnHelper } from "@tanstack/react-table";
 import { NavLink } from "react-router-dom";
@@ -16,10 +14,10 @@ import {
   Avatar,
   useDisclosure as AddTeacherDisclosure,
 } from "@nextui-org/react";
-import AddTeacherModal from "../../components/add-teacher/AddTeacher";
+const AddTeacherModal = lazy(()=> import("../../components/add-teacher/AddTeacher"));
 import Swal from "sweetalert2";
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+const List = lazy(()=> import("../../components/print-layout/List"));
 
 const TeacherList = () => {
   const [searchInput, setSearchInput] = useState("");

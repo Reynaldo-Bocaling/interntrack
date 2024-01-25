@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import TimeSheet from "./TimeSheet";
-import WeeklyReport from "./WeeklyReport";
-import Activities from "./Activities";
-import Requirement from "./Requirement";
+const TimeSheet  = lazy(()=> import("./TimeSheet"));
+const WeeklyReport  = lazy(()=> import("./WeeklyReport"));
+const Activities  = lazy(()=> import("./Activities"));
+const Requirement  = lazy(()=> import("./Requirement"));
 
 const Logs = () => {
   const [value, setValue] = useState(0);

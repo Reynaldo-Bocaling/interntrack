@@ -1,9 +1,4 @@
 import React from "react";
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdMoreTime,
-} from "react-icons/md";
 import { getTimesheet } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -17,7 +12,6 @@ const Attendance_request = () => {
   const filterData = data?.filter(
     (item) => item.totalHours != 0 && item.logStatus == 0
   );
-  console.log("data", filterData);
 
   return (
     <div>

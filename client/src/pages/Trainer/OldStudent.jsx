@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import React, { lazy, useState } from "react";
+const TableFormat = lazy(()=> import("../../components/ReusableTableFormat/TableFormat"));
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { createColumnHelper } from "@tanstack/react-table";

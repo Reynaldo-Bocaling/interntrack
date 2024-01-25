@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import Information from "../../components/user-Settings/Information";
-import ChangePassword from "../../components/user-Settings/ChangePassword";
-import SetUpDate from "../../components/user-Settings/SetupDates";
+import React, { lazy, useState } from "react";
+const Information = lazy(()=> import("../../components/user-Settings/Information"));
+const ChangePassword = lazy(()=> import("../../components/user-Settings/ChangePassword"));
+const SetUpDate = lazy(()=> import("../../components/user-Settings/SetupDates"));
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getTeacher } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import ChangeRole from "../../components/user-Settings/ChangeRole";
+const ChangeRole = lazy(()=> import("../../components/user-Settings/ChangeRole"));
 
 
 const Settings = () => {

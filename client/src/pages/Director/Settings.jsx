@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import Information from "../../components/user-Settings/Information";
-import ChangePassword from "../../components/user-Settings/ChangePassword";
-import Campus from "../../components/user-Settings/Campus";
-import College from "../../components/user-Settings/College";
-import Program from "../../components/user-Settings/Program";
-import Major from "../../components/user-Settings/Major";
+import React, { lazy, useState } from "react";
+const Information = lazy(()=> import("../../components/user-Settings/Information"));
+const ChangePassword = lazy(()=> import("../../components/user-Settings/ChangePassword"));
+const Campus = lazy(()=> import("../../components/user-Settings/Campus"));
+const College = lazy(()=> import("../../components/user-Settings/College"));
+const Program = lazy(()=> import("../../components/user-Settings/Program"));
+const Major = lazy(()=> import("../../components/user-Settings/Major"));
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getDirector } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";

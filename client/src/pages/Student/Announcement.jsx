@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import React from "react";
 import { TfiAnnouncement } from "react-icons/tfi";
-import { getAnnouncement, getStudent } from "../../api/Api";
+import {  getStudent } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 
 const Announcement = () => {

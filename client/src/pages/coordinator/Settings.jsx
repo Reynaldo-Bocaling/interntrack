@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import Information from "../../components/user-Settings/Information";
-import ChangePassword from "../../components/user-Settings/ChangePassword";
-import ResetData from "../../components/user-Settings/ResetData";
-import ChangeRole from "../../components/user-Settings/ChangeRole";
+import React, {lazy, useState } from "react";
+const Information = lazy(()=> import("../../components/user-Settings/Information"));
+const ChangePassword = lazy(()=> import("../../components/user-Settings/ChangePassword"));
+const ResetData = lazy(()=> import("../../components/user-Settings/ResetData"));
+const ChangeRole = lazy(()=> import("../../components/user-Settings/ChangeRole"));
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { getCoordinator } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";

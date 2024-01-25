@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
-import { AiOutlineCloudUpload } from "react-icons/ai";
-import FilterTask from "../../components/StudentTaskStyle/FilterTask";
-import { Button, Tooltip, Textarea, image } from "@nextui-org/react";
+const FilterTask = lazy(()=> import("../../components/StudentTaskStyle/FilterTask"));
+import { Button } from "@nextui-org/react";
 import { Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { uploadTask, getTask } from "../../api/Api";

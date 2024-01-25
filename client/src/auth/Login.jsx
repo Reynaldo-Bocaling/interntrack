@@ -75,7 +75,7 @@ const Login = () => {
   };
 
   return (
-    <div className="shadow-effect w-screen h-screen bg-white overflow-hidden2">
+    <div className="shadow-effect relative w-screen h-screen bg-white overflow-x-hidden">
       <motion.div
       initial={{y: -15, opacity: 0}}
       animate={{y: 0, opacity: 1}}
@@ -89,7 +89,7 @@ const Login = () => {
           <span className="text-xl font-semibold">InternTrack</span>
         </Link>
         <div className="relative w-[55%] flex items-center justify-center mr-0 lg:mr-10">
-          <img src={model} alt="" className="max-w-[380px] z-20" loading="lazy" />
+          <img src={model} alt="" className="max-w-[350px] md:max-w-[380px]  z-20" loading="lazy" />
 
           {/* total box */}
           <div className="totalStundetBox absolute -bottom-7 left-16 max-w-[160px] w-full bg-white rounded-lg flex flex-col items-center gap-3 shadow-md py-4 px-2 z-20 shadow-slate-200 border border-slate-200">
@@ -151,7 +151,7 @@ const Login = () => {
           {/* bottom */}
           <div className="extraTool2 absolute -bottom-7 right-16   bg-white rounded-lg shadow-lg shadow-slate-200 border border-slate-200 pr-5 pl-2 py-3 z-20 flex items-center gap-2">
             <img src={unlockIcon} alt="" className="w-[40px]" />
-            <span className="font-semibold">Unlock Opportunities</span>
+            <span className="text-xs md:text-base font-semibold">Unlock Opportunities</span>
           </div>
 
           <div className=" absolute top-[30%] left-1/2 -translate-x-1/2 z-1 h-[300px] w-[250px] md:w-[300px] bg-blue-500 shadow-2xl shadow-blue-300 rounded-[40px] rotate-45 "></div>

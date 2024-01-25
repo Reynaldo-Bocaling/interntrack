@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { BsChatDots, BsCamera, BsFillTrash3Fill } from "react-icons/bs";
 import { AiOutlineCloudUpload, AiOutlineUser } from "react-icons/ai";
@@ -10,7 +10,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import PulseLoader from "react-spinners/PulseLoader";
 import Swal from "sweetalert2";
-import Info from "../../components/user-profile/Info";
+const Info = lazy(()=> import("../../components/user-profile/Info"));
 import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
 import {
   Modal,

@@ -36,7 +36,7 @@ function index() {
   };
 
   return (
-    <div className="shadow-effect relative w-screen min-h-screen bg-white">
+    <div className="shadow-effect relative w-screen min-h-screen bg-white overflow-x-hidden">
       <div className="max-w-[1124px] mx-auto ">
         <Navbar />
         <Home />

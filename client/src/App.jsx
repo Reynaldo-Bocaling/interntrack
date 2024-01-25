@@ -1,22 +1,18 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import PulseLoader from "react-spinners/PulseLoader";
-import  TrainerList  from "./components/trainer-list/TrainerList";
-import Test from "./components/Debugs/Test";
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
 const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
 
-
-import { pdfjs } from 'react-pdf';
+import { pdfjs } from "react-pdf";
 import List from "./components/print-layout/List";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
 ).toString();
 
-
-const  App = () => {
+const App = () => {
   return (
     <Suspense
       fallback={
@@ -39,11 +35,10 @@ const  App = () => {
       <Routes>
         <Route path="/welcome-to-InternTrack" element={<LandingPage />} />
         <Route path="/*" element={<PrivateRoutes />} />
-        <Route path="/test" element={<Test />} />
         <Route path="/weekly" element={<List />} />
       </Routes>
     </Suspense>
   );
-}
+};
 
 export default App;

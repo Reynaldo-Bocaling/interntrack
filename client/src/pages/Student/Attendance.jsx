@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import AttendanceRequest from "./Attendance_request";
-import DailyLogs from "./DailyLogs";
+const AttendanceRequest = lazy(()=> import("./Attendance_request"));
+const DailyLogs = lazy(()=> import("./DailyLogs"));
 import {useQuery} from '@tanstack/react-query'
 import { getStudent } from "../../api/Api";
 

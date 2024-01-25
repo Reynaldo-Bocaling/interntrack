@@ -455,6 +455,14 @@ export const verifyToken = async () => {
     throw new Error(error.message);
   }
 };
+export const verifyUser = async () => {
+  try {
+    const response = await axios.get(`${url}verify`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 // get student records timesheet/task
 export const getTimesheet = async () => {

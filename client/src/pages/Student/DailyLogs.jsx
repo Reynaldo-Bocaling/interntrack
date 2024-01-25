@@ -1,12 +1,12 @@
-import React from "react";
+import React, { lazy } from "react";
 import { Carousel } from "@mantine/carousel";
 import {
   MdKeyboardArrowLeft,
   MdKeyboardArrowRight,
   MdMoreTime,
 } from "react-icons/md";
-import Logs from "../../components/student-dailyLogs/DailyLogs";
-import LogsHistory from "../../components/student-dailyLogs/DailyLogsHistory";
+const Logs = lazy(()=> import("../../components/student-dailyLogs/DailyLogs"));
+const LogsHistory = lazy(()=> import("../../components/student-dailyLogs/DailyLogsHistory"));
 
 const DailyLogs = () => {
   return (

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, useEffect, useState } from "react";
 
 import { FcCalendar } from "react-icons/fc";
 import { FaClipboardList } from "react-icons/fa";
 import { BsCalendar2CheckFill, BsCalendarMinusFill } from "react-icons/bs";
-import LineChart from "../../components/charts/LineChart";
-import Calendar from "../../components/calendar/Calendar";
+const LineChart = lazy(()=> import("../../components/charts/LineChart"));
+const Calendar = lazy(()=> import("../../components/calendar/Calendar"));
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudentList, getTrainer } from "../../api/Api";

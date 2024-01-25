@@ -1,14 +1,14 @@
-import React, { useState,useRef } from "react";
+import React, { useState,useRef, lazy } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
 import { getStudentList } from "../../api/Api";
 import picture from "../../assets/images/dp.png";
 import { Tabs } from "@mantine/core";
-import LatestStudent from "../../components/StudentList-Filter/Latest";
-import OldStudent from "../../components/StudentList-Filter/Old";
+const LatestStudent  = lazy(()=> import("../../components/StudentList-Filter/Latest"));
+const OldStudent  = lazy(()=> import("../../components/StudentList-Filter/Old"));
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+const List  = lazy(()=> import("../../components/print-layout/List"));
 
 
 const Student_list = () => {

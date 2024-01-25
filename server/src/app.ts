@@ -5,6 +5,8 @@ import UserRoutes from './routes/UserRoute'
 import verifyToken from './middlewares/verifyToken';
 import  Login  from './utils/auth';
 import path from 'path';
+import verifyUser from './middlewares/verifyUser';
+
 class App {
     public server;
 
@@ -23,6 +25,9 @@ class App {
         }));
         this.server.use(cookieParser());
         this.server.get('/verify', verifyToken, (req:any, res:Response) => {
+            res.json(req.user.role)
+        });
+        this.server.get('/verifyUser', verifyUser, (req:any, res:Response) => {
             res.json(req.user.role)
         });
        this.server.use("/images", express.static(path.join(__dirname, "../public/images")))

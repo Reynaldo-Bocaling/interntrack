@@ -1,9 +1,9 @@
-import React from "react";
+import React, { lazy } from "react";
 import { FiUsers } from "react-icons/fi";
 import { FcCalendar } from "react-icons/fc";
 import { PiBuildingsBold, PiUsersThree } from "react-icons/pi";
-import DateNow from "../../components/Dates/DateNow";
-import LineChart from "../../components/charts/SuperAdminLineChart";
+const DateNow = lazy(()=> import("../../components/Dates/DateNow"));
+const LineChart = lazy(()=> import("../../components/charts/SuperAdminLineChart"));
 import {
   getCompanyList,
   getCoordinatorList,

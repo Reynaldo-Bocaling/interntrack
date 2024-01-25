@@ -1,9 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { lazy, useRef, useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import ReportList from '../../components/StudentWeeklyReport/WeeklyReport'
-import SubmitWeeklyReport from '../../components/StudentWeeklyReport/SubmitWeeklyReport'
+const ReportList = lazy(()=> import('../../components/StudentWeeklyReport/WeeklyReport'))
+const SubmitWeeklyReport = lazy(()=> import('../../components/StudentWeeklyReport/SubmitWeeklyReport'))
 
 const WeeklyReport = () => {
   const [value, setValue] = useState(0);

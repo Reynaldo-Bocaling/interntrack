@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTimesheet } from "../../api/Api";
 import { format } from "date-fns";
 import { Button } from "@nextui-org/react";
-import PieChart from "../../components/charts/PieChart";
+const PieChart = lazy(()=> import("../../components/charts/PieChart"));
 
 const TimeSheet = () => {
   const [showAllTables, setShowAllTables] = useState(false);

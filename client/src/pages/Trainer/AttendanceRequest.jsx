@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import AttendanceRequestItem from "../../components/attendance-request/AttendanceRequestItem";
+import React, { lazy, useState } from "react";
+const AttendanceRequestItem = lazy(()=> import("../../components/attendance-request/AttendanceRequestItem"));
 import { BiSearch } from "react-icons/bi";
 import { getTrainer, getStudentList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";

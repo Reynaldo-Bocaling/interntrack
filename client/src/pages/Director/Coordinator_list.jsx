@@ -1,5 +1,5 @@
-import React, { useState, useRef } from "react";
-import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+import React, { useState, useRef, lazy } from "react";
+const TableFormat = lazy(()=> import("../../components/ReusableTableFormat/TableFormat"));
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { BsPrinter } from "react-icons/bs";
@@ -9,14 +9,14 @@ import picture from "../../assets/images/emptyProfile.png";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AddCoordinatorAccount, getCoordinatorList } from "../../api/Api";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddCoordinator from "../../components/add-coordinator/AddCoordinator";
+const AddCoordinator = lazy(()=> import("../../components/add-coordinator/AddCoordinator"));
 import {
   Switch,
   Avatar,
 } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+const List = lazy(()=> import("../../components/print-layout/List"));
 
 const Trainer_list = () => {
   const [searchInput, setSearchInput] = useState("");
@@ -104,7 +104,7 @@ const Trainer_list = () => {
     : [];
 
   const handleSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
     mutate(data);
   };
 

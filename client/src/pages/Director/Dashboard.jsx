@@ -1,11 +1,11 @@
-import React from "react";
+import React, { lazy } from "react";
 import { FiUsers } from "react-icons/fi";
 import { FcCalendar } from "react-icons/fc";
 import { PiBuildingsBold } from "react-icons/pi";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { CircularProgressbar } from "react-circular-progressbar";
-import DateNow from "../../components/Dates/DateNow";
-import LineChart from "../../components/charts/LineChart";
+const DateNow = lazy(()=> import("../../components/Dates/DateNow"));
+const LineChart = lazy(()=> import("../../components/charts/LineChart"));
 import coverDirector from "../../assets/images/DirectorCover.png";
 import { getCampus, getCompanyList, getCoordinatorList, getDirector, getStudentList, getTeacherList } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";

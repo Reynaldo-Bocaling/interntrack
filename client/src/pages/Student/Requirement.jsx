@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import UploadRequirement from "../../components/student-requirement/UploadRequiremen";
-import OpenRequirement from "../../components/student-requirement/OpenRequirement";
+const UploadRequirement = lazy(()=> import("../../components/student-requirement/UploadRequiremen"));
+const OpenRequirement = lazy(()=> import("../../components/student-requirement/OpenRequirement"));
 import { deleteRequirement, getRequirement, uploadRequirement } from "../../api/Api";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";

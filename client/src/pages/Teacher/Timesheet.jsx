@@ -1,5 +1,5 @@
-import React from "react";
-import TimesheetTable from "../../components/StudentTimesheets/Timesheet_table";
+import React, { lazy } from "react";
+const TimesheetTable = lazy(()=> import("../../components/StudentTimesheets/Timesheet_table"));
 import { useQuery } from "@tanstack/react-query";
 import { getStudentList, getTeacher, getCampus } from "../../api/Api";
 

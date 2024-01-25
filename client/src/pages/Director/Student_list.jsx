@@ -1,15 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, lazy } from "react";
 import { BiSearch } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { useQuery } from "@tanstack/react-query";
 import { getStudentList } from "../../api/Api";
 import picture from "../../assets/images/dp.png";
 import { Tabs } from "@mantine/core";
-import AllStudent from "../../components/StudentList-Filter/All";
-import AssignedStudent from "../../components/StudentList-Filter/Assigned";
-import UnassignedStudent from "../../components/StudentList-Filter/UnAssigned";
+const AllStudent = lazy(()=> import("../../components/StudentList-Filter/All"));
+const AssignedStudent = lazy(()=> import("../../components/StudentList-Filter/Assigned"));
+const UnassignedStudent = lazy(()=> import("../../components/StudentList-Filter/UnAssigned"));
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+const List = lazy(()=> import("../../components/print-layout/List"));
 
 const Student_list = () => {
   const [searchInput, setSearchInput] = useState("");

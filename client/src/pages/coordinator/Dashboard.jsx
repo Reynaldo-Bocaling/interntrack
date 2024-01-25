@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy,useEffect, useState } from "react";
 import { FiUsers } from "react-icons/fi";
 import { FcCalendar } from "react-icons/fc";
 import { PiBuildingsBold } from "react-icons/pi";
@@ -6,7 +6,7 @@ import { HiOutlineBookOpen } from "react-icons/hi";
 import { CircularProgressbar } from "react-circular-progressbar";
 import pic from "../../assets/images/dp.png";
 import { Link } from "react-router-dom";
-import DateNow from "../../components/Dates/DateNow";
+const DateNow = lazy(()=> import("../../components/Dates/DateNow"));
 import Avatar from "@mui/material/Avatar";
 import LineChart from "../../components/charts/LineChart";
 import {

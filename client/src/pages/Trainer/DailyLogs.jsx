@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DailyLogItem from "../../components/DailyLogs/DailyLogsItems";
+const DailyLogItem = lazy(()=> import("../../components/DailyLogs/DailyLogsItems"));
 import { BiSearch } from "react-icons/bi";
 import { createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";

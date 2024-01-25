@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import Task from "../../components/Student-Task/Task";
-import Table from "../../components/Student-Task/Table";
+const Task = lazy(()=> import("../../components/Student-Task/Task"));
+const Table = lazy(()=> import("../../components/Student-Task/Table"));
 import { useQuery } from "@tanstack/react-query";
 import { getStudentList, getTrainer } from "../../api/Api";
 import pic from "../../assets/images/dp.png";

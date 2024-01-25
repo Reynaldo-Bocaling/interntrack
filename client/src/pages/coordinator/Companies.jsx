@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { lazy,useRef, useState } from "react";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
 import { BsPrinter } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useReactToPrint } from "react-to-print";
 import List from "../../components/print-layout/List";
 import { createColumnHelper } from "@tanstack/react-table";
-import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+const TableFormat = lazy(()=> import("../../components/ReusableTableFormat/TableFormat"));
 import { CgProfile } from "react-icons/cg";
 
 const Companies = () => {

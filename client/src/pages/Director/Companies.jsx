@@ -1,20 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { lazy, useRef, useState } from "react";
 import { BiSearch, BiDotsVerticalRounded } from "react-icons/bi";
-import { HiOutlineDotsVertical, HiOutlineEye } from "react-icons/hi";
-import { IconTrash } from "@tabler/icons-react";
 import { BsPrinter } from "react-icons/bs";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AiOutlineUserAdd } from "react-icons/ai";
-import AddCompanyComponents from "../../components/Add-companies/AddCompanies"; //
+const  AddCompanyComponents = lazy(() => import("../../components/Add-companies/AddCompanies")); //
 import { getCompanyList, addCompany } from "../../api/Api";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
-import PulseLoader from "react-spinners/PulseLoader";
 import { useDisclosure as AddTeacherDisclosure } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { useReactToPrint } from "react-to-print";
-import List from "../../components/print-layout/List";
+const  List = lazy(()=> import("../../components/print-layout/List"));
 import { createColumnHelper } from "@tanstack/react-table";
-import TableFormat from "../../components/ReusableTableFormat/TableFormat";
+const  TableFormat = lazy(()=> import("../../components/ReusableTableFormat/TableFormat"));
 import { CgProfile } from "react-icons/cg";
 
 const Companies = () => {

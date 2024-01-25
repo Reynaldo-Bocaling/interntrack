@@ -1,8 +1,8 @@
-import React from "react";
+import React, { lazy } from "react";
 import picture from "../../assets/images/dp.png";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AddDirectorAccount, getDirectorList } from "../../api/Api";
-import AddDirector from "../../components/addDirector/AddDirector";
+const AddDirector = lazy(()=> import("../../components/addDirector/AddDirector"));
 import { Avatar, Button, useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 
