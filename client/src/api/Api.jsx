@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "https://server.interntrack.link";
+const url = "https://server.interntrack.link/";
 
 // POST Request
 
