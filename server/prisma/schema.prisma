@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://internTrackDBUser:InternTrackAccess@localhost:3306/internTrackDBUser?allowPublicKeyRetrieval=true"
+  url      = "mysql://internTrackUser:internTrackAccessDB01@51.161.200.56:3306/InternTrackDB?allowPublicKeyRetrieval=true"
 }
 
 

@@ -1,17 +1,19 @@
 import React from "react";
 import { User } from "@nextui-org/react";
 import { Drawer } from "@mantine/core";
-import pic from "../../assets/images/dp.png";
+// import pic from "../../assets/images/dp.png";
 import { LiaSignOutAltSolid } from "react-icons/lia";
 import { RiArrowRightSLine } from "react-icons/ri";
 import { FiSettings } from "react-icons/fi";
 import { BiHelpCircle } from "react-icons/bi";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { TfiAnnouncement } from "react-icons/tfi";
 import { NavLink } from "react-router-dom";
-import { logout } from "../../api/Api";
+import { getStudent, logout } from "../../api/Api";
 import Swal from "sweetalert2";
 import{useNavigate} from 'react-router-dom'
+// import {Avatar} from "@nextui-org/react";
+
 
 const Profile = ({ opened, close }) => {
   const navigate = useNavigate();
@@ -31,8 +33,13 @@ const Profile = ({ opened, close }) => {
     onError: () => {},
   });
   
-  
+  const { data } = useQuery({
+    queryKey: ["getstudentInfo"],
+    queryFn: getStudent,
+  });
 
+
+  console.log('s', data);
   const handleLogout = () => {
     Swal.fire({
       title: "Are you sure you want to logout?",
@@ -64,14 +71,14 @@ const Profile = ({ opened, close }) => {
         <div className="my-4 px-1">
           <User
             name={
-              <p className="text-[1.1rem] font-medium tracking-wide mb-2">
-                Reynaldo Bocaling
+              <p className="text-[1.1rem] font-medium tracking-wide mb-2 capitalize">
+                {`${data?.firstname} ${data?.lastname}`}
               </p>
             }
             description="Student"
             avatarProps={{
-              src: pic,
-              size: "lg",
+              src: data?.profile_url,
+              size: "md",
             }}
           />
 

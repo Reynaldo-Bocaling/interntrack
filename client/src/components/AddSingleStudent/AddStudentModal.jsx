@@ -106,8 +106,6 @@ const AddSingStudent = ({
   };
 
 
- console.log(',',Emails);
-
   return (
     <>
       <Modal
