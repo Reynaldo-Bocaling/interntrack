@@ -18,13 +18,13 @@ import {Alert } from "@mantine/core";
 import {motion} from 'framer-motion'
 import { Button, Input } from "@nextui-org/react";
 
-import AddSuperAdmin from "../components/addAdmin/AddAdminModal";
+// import AddSuperAdmin from "../components/addAdmin/AddAdminModal";
 import ForgotPassword from './ForgotPassword';
 
 
 const Login = () => {
-  const [pinError, setPinError] = useState(false);
-  const [openSuperAdmin, setOpenSuperAdmin] = useState(false);
+  // const [pinError, setPinError] = useState(false);
+  // const [openSuperAdmin, setOpenSuperAdmin] = useState(false);
   const [openForgotPassword, setOpenForgetPassword] = useState(false);
   const icon = <IconInfoCircle />;
 
@@ -66,13 +66,13 @@ const Login = () => {
     mutate(form);
   };
 
-  const handlePinChange = (newValue) => {
-    if (Number(newValue) == 1234) {
-      setPinError(true);
-    } else {
-      setPinError(false);
-    }
-  };
+  // const handlePinChange = (newValue) => {
+  //   if (Number(newValue) == 1234) {
+  //     setPinError(true);
+  //   } else {
+  //     setPinError(false);
+  //   }
+  // };
 
   return (
     <div className="shadow-effect relative w-screen h-screen bg-white overflow-x-hidden">
@@ -234,14 +234,14 @@ const Login = () => {
                 {isLoading ? "Loading..." : "Sign in"}
               </Button>
 
-              <small className="text-center">Or</small>
+              {/* <small className="text-center">Or</small>
               <Button
                 onClick={() => setOpenSuperAdmin(true)}
                 size="lg"
                 className="font-medium tracking-wide bg-blue-100 text-blue-500"
               >
                 Sign up as Super admin
-              </Button>
+              </Button> */}
             </div>
 
             <footer className="absolute bottom-5 right-15">
@@ -260,12 +260,12 @@ const Login = () => {
         </div>
       </motion.div>
 
-      <AddSuperAdmin
+      {/* <AddSuperAdmin
         openSuperAdmin={openSuperAdmin}
         onOpenChangeEvent={() => setOpenSuperAdmin(false)}
         handlePinChange={handlePinChange}
         pinError={pinError}
-      />
+      /> */}
 
       <ForgotPassword 
       openForgotPassword={openForgotPassword}
