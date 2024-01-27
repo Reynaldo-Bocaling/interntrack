@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import Img from "../assets/icons/logo.png";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -19,7 +19,7 @@ import {motion} from 'framer-motion'
 import { Button, Input } from "@nextui-org/react";
 
 // import AddSuperAdmin from "../components/addAdmin/AddAdminModal";
-import ForgotPassword from './ForgotPassword';
+const ForgotPassword = lazy(()=> import('./ForgotPassword'));
 
 
 const Login = () => {
