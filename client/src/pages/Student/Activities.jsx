@@ -6,7 +6,7 @@ import { Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { uploadTask, getTask } from "../../api/Api";
 import Swal from "sweetalert2";
-import { IoWarning } from "react-icons/io5";
+// import { IoWarning } from "react-icons/io5";
 import { AiOutlineCloudUpload  } from "react-icons/ai";
 const groupTasksByMonth = (tasks) => {
   const groupedTasks = {};
@@ -128,7 +128,7 @@ const Activities = () => {
             <Tooltip content="Browse Image" closeDelay={0}>
               <button className=" uploadMoa h-[200pxa]  relative overflow-hidden text-sm  w-full flex flex-col items-center justify-center gap-2">
                 <AiOutlineCloudUpload size={30} className="text-blue-500" />
-                <span className="text-base "> Upload Moa</span>
+                <span className="text-base "> Upload Task</span>
                 <input
                   type="file"
                   onChange={loadingImage}

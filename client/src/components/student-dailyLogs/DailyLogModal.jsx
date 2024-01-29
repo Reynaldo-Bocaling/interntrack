@@ -15,7 +15,7 @@ const handleSubmit = ()=> {
     handleCustom(customtTime)
     Swal.fire(
         "Success",
-        "successfully CHange time \n Lets start to time log!",
+        "successfully Change time \n Lets start to time log!",
         "success"
       ).then(()=> onClose());
 

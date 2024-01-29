@@ -34,7 +34,7 @@ const App = () => {
     >
       <Routes>
         <Route path="/welcome-to-InternTrack" element={<LandingPage />} />
-        <Route path="/*" element={<PrivateRoutes />} />
+        <Route path="/" element={<PrivateRoutes />} />
         <Route path="/weekly" element={<List />} />
       </Routes>
     </Suspense>
