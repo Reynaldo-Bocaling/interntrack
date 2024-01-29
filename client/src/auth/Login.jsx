@@ -17,6 +17,10 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import {Alert } from "@mantine/core";
 import { Button, Input } from "@nextui-org/react";
 
+import reyn from '../assets/images/reynaldo.png'
+import kian from '../assets/images/kian.png'
+import alaine from '../assets/images/alaine.png'
+import neil from '../assets/images/neil.png'
 // import AddSuperAdmin from "../components/addAdmin/AddAdminModal";
 const ForgotPassword = lazy(()=> import('./ForgotPassword'));
 
@@ -98,24 +102,21 @@ const Login = () => {
               <AvatarGroup isBordered max={3} total={10}>
                 <Avatar
                   size="sm"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+                  src={reyn}
                 />
                 <Avatar
                   size="sm"
-                  src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
+                  src={kian}
                 />
                 <Avatar
                   size="sm"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                  src={alaine}
                 />
                 <Avatar
                   size="sm"
-                  src="https://i.pravatar.cc/150?u=a04258114e29026302d"
+                  src={neil}
                 />
-                <Avatar
-                  size="sm"
-                  src="https://i.pravatar.cc/150?u=a04258114e29026702d"
-                />
+                
               </AvatarGroup>
             </div>
           </div>
