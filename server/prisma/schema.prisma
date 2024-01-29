@@ -1,10 +1,11 @@
 generator client {
   provider = "prisma-client-js"
 }
+  // url      = "mysql://internTrackUser:internTrackAccessDB01@51.161.200.56:3306/InternTrackDB?allowPublicKeyRetrieval=true"
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://internTrackUser:internTrackAccessDB01@51.161.200.56:3306/InternTrackDB?allowPublicKeyRetrieval=true"
+  url      = "mysql://root:admin071720@localhost:3306/interntrack"
 }
 
 

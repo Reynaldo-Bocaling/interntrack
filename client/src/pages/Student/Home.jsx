@@ -108,7 +108,7 @@ const Dashboard = () => {
         </small>
       </div>
 
-      <div className="w-[100%] flex flex-col lg:flex-row gap-14 bg-white2 rounded-lg relative mb-2">
+      <div className="w-[100%] flex flex-col lg:flex-row gap-2 bg-white2 rounded-lg relative mb-2">
         {/* count box */}
         <div className="relative  max-w-[450px] w-full pt-7">
             <PieChart

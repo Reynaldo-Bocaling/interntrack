@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// const url = "http://localhost:3001/";
 const url = "https://server.interntrack.link/";
 
 // POST Request
@@ -732,9 +733,9 @@ export const updateStudentProfilePicture = async (formData) => {
 };
 
 // upload task
-export const uploadTask = async (formData) => {
+export const uploadTask = async ({description, date}) => {
   try {
-    const response = await axios.post(`${url}uploadTask`, formData, {
+    const response = await axios.post(`${url}uploadTask`, {description, date}, {
       withCredentials: true,
       headers: {
         "Content-Type": "multipart/form-data",

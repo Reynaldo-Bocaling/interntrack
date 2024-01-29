@@ -1860,23 +1860,23 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
-
+ 
   // upload task
   static async uploadTask(req: any, res: Response) {
     const id = req.user.student[0]?.id;
     const { description, date } = req.body;
-    const tasImageUrl = `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`;
-    const taskImage = req.file.filename;
+    // const tasImageUrl = `${req.protocol}://${req.get("host")}/images/${
+    //   req.file.filename
+    // }`;
+    // const taskImage = req.file.filename;
 
     try {
       const response = await prisma.task.create({
         data: {
           description,
           date,
-          taskImage,
-          tasImageUrl,
+          // taskImage,
+          // tasImageUrl,
           student_id: id,
         },
       });

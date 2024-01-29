@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 import { MdKeyboardArrowRight, MdMoreTime } from "react-icons/md";
 import { AiOutlineFieldTime } from "react-icons/ai";
 import { LuAlarmClockOff } from "react-icons/lu";
@@ -9,12 +9,14 @@ import {
   format,
   parse,
   setMinutes,
-  getMinutes,
-  getHours,
   setHours,
 } from "date-fns";
 import { AiOutlineCheck } from "react-icons/ai";
 import Swal from "sweetalert2";
+import { adjustTime } from "./AddjustTime";
+const CustmTimeModal = lazy(() => import("./DailyLogModal"));
+
+// adjustTim
 
 const DailyLogs = () => {
   const queryClient = useQueryClient();
@@ -23,9 +25,12 @@ const DailyLogs = () => {
   const timeFormat = format(new Date(), "HH:mm");
   const [totalHours, setTotalHours] = useState(0);
   const getTimeNow = new Date().getHours();
+  // const currentTime = new Date();
+  const [isOpen, setIopen] = useState(false);
 
+  const [currentTime, setCurrrentTime] = useState(new Date());
   // timeIn
-  const { mutate: mutateTimeIn } = useMutation({
+  const { mutate: mutateTimeIn, isLoading: timelogLoading } = useMutation({
     mutationFn: addTimeIn,
     onSuccess: () => {
       Swal.fire(
@@ -71,10 +76,6 @@ const DailyLogs = () => {
     queryFn: getTimesheet,
   });
 
-  if (isLoading) {
-    return <h1>Loading</h1>;
-  }
-
   const getTime = data ? data.find((item) => item.date === formattedDate) : [];
   const timeInDB = getTime?.timeIn;
   const timeOutDB = getTime?.timeOut;
@@ -96,20 +97,20 @@ const DailyLogs = () => {
         }))
     : [];
 
-  //addjust time
-  const adjustTime = (time) => {
-    const minutes = getMinutes(time);
-    const hours = getHours(time);
-    if (minutes >= 0 && minutes < 15) {
-      return setMinutes(setMinutes(time, 0), 0);
-    } else if (minutes >= 15 && minutes < 30) {
-      return setMinutes(setMinutes(time, 0), 15);
-    } else if (minutes >= 30 && minutes < 45) {
-      return setMinutes(setMinutes(time, 0), 30);
-    } else {
-      return setMinutes(setMinutes(time, 0), 45);
-    }
-  };
+  // //addjust time
+  // const adjustTime = (time) => {
+  //   const minutes = getMinutes(time);
+  //   const hours = getHours(time);
+  //   if (minutes >= 0 && minutes < 15) {
+  //     return setMinutes(setMinutes(time, 0), 0);
+  //   } else if (minutes >= 15 && minutes < 30) {
+  //     return setMinutes(setMinutes(time, 0), 15);
+  //   } else if (minutes >= 30 && minutes < 45) {
+  //     return setMinutes(setMinutes(time, 0), 30);
+  //   } else {
+  //     return setMinutes(setMinutes(time, 0), 45);
+  //   }
+  // };
 
   // adjust total hours
   const adjustTotalHours = (hours) => {
@@ -121,7 +122,7 @@ const DailyLogs = () => {
   // timeIn Function
   const handleTimeIn = (e) => {
     e.preventDefault();
-    const currentTime = new Date();
+
     const adjustedTime = adjustTime(currentTime);
 
     mutateTimeIn({
@@ -132,7 +133,6 @@ const DailyLogs = () => {
 
   // timeOut Function
   const handleTimeOut = () => {
-    const currentTime = new Date();
     const adjustedTime = adjustTime(currentTime);
 
     //third
@@ -157,6 +157,14 @@ const DailyLogs = () => {
       });
     }
   };
+
+  const handleCustomDate = (time) => {
+    setCurrrentTime(time);
+  };
+
+  if (isLoading) {
+    return <h1>Loading</h1>;
+  }
 
   return (
     <div className="mt-2 border-r">
@@ -254,39 +262,79 @@ const DailyLogs = () => {
             </div>
           </div>
 
-          {timeInDB != "0:00" && timeOutDB != "0:00" ? (
-            <div className="my-3 text-xl tracking-wide text-green-500 flex items-center gap-2">
-              End Work <AiOutlineCheck />
-            </div>
-          ) : timeInDB === "0:00" ? (
-            <Button
-              onClick={handleTimeIn}
-              color="primary"
-              size="lg"
-              className="w-[150px] font-medium tracking-wide"
-              isDisabled={
-                (timeInDB !== "0:00" && timeOutDB !== "0:00") || getTimeNow < 8
-              }
-            >
-              Time in{" "}
-            </Button>
-          ) : (
-            <Button
-              onClick={handleTimeOut}
-              color="primary"
-              size="lg"
-              className="w-[150px] font-medium tracking-wide"
-              isDisabled={timeInDB !== "0:00" && timeOutDB !== "0:00"}
-            >
-              Time Out{" "}
-            </Button>
-          )}
+          <div className="flex items-center justify-center gap-2">
+            {timeInDB != "0:00" && timeOutDB != "0:00" ? (
+              <div className="my-3 text-xl tracking-wide text-green-500 flex items-center gap-2">
+                End Work <AiOutlineCheck />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-5 pb-5">
+                <div className="flex items-center justify-center flex-col">
+                  <p className="text-lg font-bold tracking-wider">
+                    {format(adjustTime(currentTime), "hh:mm aa")}
+                  </p>
+                  <small>{"( Time Adjust )"}</small>
+                </div>
+
+                <div className="flex items-center justify-center gap-3">
+                  {timeInDB === "0:00" ? (
+                    <Button
+                      onClick={handleTimeIn}
+                      color="primary"
+                      size="lg"
+                      className="w-[150px] font-medium tracking-wide"
+                      isDisabled={
+                        (timeInDB !== "0:00" && timeOutDB !== "0:00") ||
+                        getTimeNow < 7 ||
+                        timelogLoading
+                      }
+                    >
+                      {timelogLoading ? "Submitting.." : " Time in"}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleTimeOut}
+                      color="primary"
+                      size="lg"
+                      className="w-[150px] font-medium tracking-wide"
+                      isDisabled={
+                        (timeInDB !== "0:00" && timeOutDB !== "0:00") ||
+                        timelogLoading
+                      }
+                    >
+                      {timelogLoading ? "Submitting.." : " Time Out"}
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => setIopen(true)}
+                    size="lg"
+                    className="w-[150px] font-medium tracking-wide text-sm bg-white border border-blue-500"
+                    isDisabled={
+                      (timeInDB !== "0:00" && timeOutDB !== "0:00") ||
+                      getTimeNow < 7 ||
+                      timelogLoading
+                    }
+                  >
+                    Customize Time
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
         </main>
       ) : (
         <p className="text-center text-xl  text-gray-400">
           Sorry, time-in is not allowed today.
         </p>
       )}
+
+      <CustmTimeModal
+        isOpen={isOpen}
+        onClose={() => setIopen(false)}
+        handleCustom={handleCustomDate}
+        currentTime={currentTime}
+        time={format(adjustTime(currentTime), "hh:mm")}
+      />
     </div>
   );
 };

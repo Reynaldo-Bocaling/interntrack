@@ -15,7 +15,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { auth } from "../api/Api";
 import { IconInfoCircle } from "@tabler/icons-react";
 import {Alert } from "@mantine/core";
-import {motion} from 'framer-motion'
 import { Button, Input } from "@nextui-org/react";
 
 // import AddSuperAdmin from "../components/addAdmin/AddAdminModal";
@@ -76,10 +75,7 @@ const Login = () => {
 
   return (
     <div className="shadow-effect relative w-screen h-screen bg-white overflow-x-hidden">
-      <motion.div
-      initial={{y: -15, opacity: 0}}
-      animate={{y: 0, opacity: 1}}
-      transition={{duration: 1, delay: 0.3}}
+      <div
       className="loginContainer relative max-w-[1224px] mx-auto min-h-screen flex items-center">
         <Link
           to="/welcome-to-InternTrack"
@@ -258,7 +254,7 @@ const Login = () => {
             </footer>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* <AddSuperAdmin
         openSuperAdmin={openSuperAdmin}

@@ -1,12 +1,13 @@
 import React, { lazy, useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
 const FilterTask = lazy(()=> import("../../components/StudentTaskStyle/FilterTask"));
-import { Button } from "@nextui-org/react";
+import { Button, Tooltip,Textarea  } from "@nextui-org/react";
 import { Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { uploadTask, getTask } from "../../api/Api";
 import Swal from "sweetalert2";
 import { IoWarning } from "react-icons/io5";
+import { AiOutlineCloudUpload  } from "react-icons/ai";
 const groupTasksByMonth = (tasks) => {
   const groupedTasks = {};
   tasks.forEach((task) => {
@@ -73,12 +74,13 @@ const Activities = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { desc, date } = values;
-    const formData = new FormData();
-    formData.append("image", File);
-    formData.append("description", desc);
-    formData.append("date", date);
+    // const formData = new FormData();
+    // formData.append("image", File);
+    // formData.append("description", desc);
+    // formData.append("date", date);
 
-    mutate(formData);
+      mutate({description: desc, date})
+    // mutate(formData);
   };
 
   const taskList = data ? data : [];
@@ -114,14 +116,14 @@ const Activities = () => {
         position="bottom"
         size="85%"
       >
-        <div className="text-red-500 flex flex-col items-center gap-4">
+        {/* <div className="text-red-500 flex flex-col items-center gap-4">
         <IoWarning size={50} />
           <p className="text-lg text-center tracking-wider">
             <b>Apologies</b>, the upload feature is temporarily unavailable. We are
             working to resolve the issue and appreciate your patience.
           </p>{" "}
-        </div>
-        {/* <div className="w-full h-full py-10 px-4">
+        </div> */}
+        <div className="w-full h-full py-10 px-4">
           {!Preview ? (
             <Tooltip content="Browse Image" closeDelay={0}>
               <button className=" uploadMoa h-[200pxa]  relative overflow-hidden text-sm  w-full flex flex-col items-center justify-center gap-2">
@@ -172,7 +174,7 @@ const Activities = () => {
           >
             Upload Task
           </Button>
-        </div> */}
+        </div>
       </Drawer>
     </div>
   );

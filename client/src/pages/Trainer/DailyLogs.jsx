@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { lazy, useState } from "react";
 const DailyLogItem = lazy(()=> import("../../components/DailyLogs/DailyLogsItems"));
 import { BiSearch } from "react-icons/bi";
 import { createColumnHelper } from "@tanstack/react-table";
