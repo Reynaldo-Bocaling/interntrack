@@ -3,11 +3,10 @@ import { Input, Button } from "@nextui-org/react";
 import { addAdminAccount } from "../../api/Api";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-
 function AddAdmin() {
   const [formData, setFormatData] = useState({
     firstname: "",
-    middlename: "",
+    // middlename: "",
     lastname: "",
     email: "",
     contact: "",
@@ -16,7 +15,7 @@ function AddAdmin() {
   // State to store validation errors
   const [errors, setErrors] = useState({
     firstname: null,
-    middlename: null,
+    // middlename: null,
     lastname: null,
     email: null,
     contact: null,
@@ -80,7 +79,7 @@ function AddAdmin() {
         errorMessage={errors.firstname}
         isRequired
       />
-      <Input
+      {/* <Input
         type="text"
         label="Middlename"
         name="middlename"
@@ -88,7 +87,7 @@ function AddAdmin() {
         className="w-full"
         errorMessage={errors.middlename}
         required
-      />
+      /> */}
       <Input
         type="text"
         label="Lastname"

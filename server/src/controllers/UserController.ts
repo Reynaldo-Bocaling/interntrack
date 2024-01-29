@@ -586,7 +586,7 @@ export class UserController {
   // add super Admin
   static async addSuperAdmin(req: any, res: Response) {
     const newPassowrd = generateNewPassword();
-    const { firstname, middlename, lastname, email, contact } = req.body;
+    const { firstname, lastname, email, contact } = req.body;
 
     try {
       await prisma.user.create({
@@ -597,7 +597,6 @@ export class UserController {
           superadmin: {
             create: {
               firstname,
-              middlename,
               lastname,
               email,
               contact: Number(contact),
