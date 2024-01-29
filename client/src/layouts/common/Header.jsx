@@ -54,10 +54,17 @@ function Header(props) {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate('/');
+      navigate('https://interntrack.link//');
       window.location.reload();
     },
-    onError: () => {},
+    onError: () => {
+      Swal.fire({
+        icon: 'error',
+        title: 'failed!',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    },
   });
 
   const handleLogout = () => {
