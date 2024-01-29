@@ -54,7 +54,7 @@ function Header(props) {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate('https://interntrack.link//');
+      navigate('/');
       window.location.reload();
     },
     onError: () => {
