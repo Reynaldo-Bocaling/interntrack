@@ -102,7 +102,7 @@ const Login = () => {
               <AvatarGroup isBordered max={3} total={10}>
                 <Avatar
                   size="sm"
-                  src={reyn}
+                  src={alaine}
                 />
                 <Avatar
                   size="sm"
@@ -110,7 +110,7 @@ const Login = () => {
                 />
                 <Avatar
                   size="sm"
-                  src={alaine}
+                  src={reyn}
                 />
                 <Avatar
                   size="sm"
