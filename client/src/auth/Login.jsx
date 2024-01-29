@@ -17,7 +17,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import {Alert } from "@mantine/core";
 import { Button, Input } from "@nextui-org/react";
 
-import reyn from '../assets/images/reynaldo.png'
+import reyn from '../assets/images/reyn.png'
 import kian from '../assets/images/kian.png'
 import alaine from '../assets/images/alaine.png'
 import neil from '../assets/images/neil.png'
