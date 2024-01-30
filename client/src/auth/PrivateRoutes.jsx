@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { verifyUser } from "../api/Api";
-// import PulseLoader from "react-spinners/PulseLoader";
+import PulseLoader from "react-spinners/PulseLoader";
 import { Spinner } from "../components/spinners-loading/Spinner";
 
 const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
@@ -181,7 +181,19 @@ const PrivateRoutes = () => {
 
   if (isLoading) {
     return (
-        <Spinner />
+      <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
+        <div className="flex flex-col gap-4">
+          <PulseLoader
+            color="#03A8F5"
+            margin={8}
+            size={15}
+            speedMultiplier={1}
+          />
+          <span className="text-gray-400 text-2xl tracking-wider font-medium">
+            Loading..
+          </span>
+        </div>
+      </div>
     );
   }
 
@@ -539,27 +551,37 @@ const PrivateRoutes = () => {
   return (
     <div>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Suspense fallback={<Spinner />}>
-              {!isLogged ? <Login /> : <Rootlayout role={isRole} />}
-            </Suspense>
-          }
-        >
-          {userRoutes.map((route, index) => (
-            <Route key={index} path={route.path} element={route.element}>
-              {route.children &&
-                route.children.map((childRoute, childIndex) => (
-                  <Route
-                    key={childIndex}
-                    path={childRoute.path}
-                    element={childRoute.element}
-                  />
-                ))}
-            </Route>
-          ))}
-        </Route>
+        {!isLogged ? (
+          
+            <Route path="/" element={<Suspense fallback={<Spinner />}> <Login /></Suspense>} />
+          
+        ) : (
+          
+          
+          <Route
+            path="/"
+            element={
+              <Suspense fallback={<Spinner />}>
+                {<Rootlayout role={isRole} />}
+              </Suspense>
+            }
+          >
+            {userRoutes.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element}>
+                {route.children &&
+                  route.children.map((childRoute, childIndex) => (
+                    <Route
+                      key={childIndex}
+                      path={childRoute.path}
+                      element={childRoute.element}
+                    />
+                  ))}
+              </Route>
+            ))}
+          </Route>
+        )
+        
+        }
       </Routes>
       <div>
         <Outlet />
