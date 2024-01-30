@@ -1,8 +1,9 @@
-import React , {lazy} from "react";
+import React , {Suspense, lazy} from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {  verifyUser } from "../api/Api";
 import PulseLoader from "react-spinners/PulseLoader";
+import { Spinner } from "../components/spinners-loading/Spinner";
 
 const Rootlayout = lazy(()=> import("../layouts/Rootlayout"));
 const Login = lazy(()=> import("./Login"));
@@ -487,7 +488,12 @@ const PrivateRoutes = () => {
       <Routes>
         <Route
           path="/"
-          element={!isLogged ? <Login /> : <Rootlayout role={isRole} />}
+          element={
+            <Suspense fallback={<Spinner/>}>
+{!isLogged ? <Login /> : <Rootlayout role={isRole} />}
+            </Suspense>
+            
+          }
         >
           {userRoutes.map((route, index) => (
             <Route key={index} path={route.path} element={route.element}>

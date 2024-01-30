@@ -1,8 +1,8 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/landingPage/index";
-const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
-
+// const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
+import PrivateRoutes from "./auth/PrivateRoutes";
 import { pdfjs } from "react-pdf";
 import AddAdminModal from "./components/addAdmin/AddAdminModal";
 import List from "./components/print-layout/List";
@@ -19,15 +19,9 @@ const App = () => {
       <Route
         path="/*"
         element={
-          <Suspense
-            fallback={
-              <Spinner/>
-              
-
-            }
-          >
+         
             <PrivateRoutes />
-          </Suspense>
+       
         }
       />
       <Route path="/welcome-to-InternTrack" element={<LandingPage />} />
