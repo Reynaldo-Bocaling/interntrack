@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { verifyUser } from "../api/Api";
-import PulseLoader from "react-spinners/PulseLoader";
+// import PulseLoader from "react-spinners/PulseLoader";
 import { Spinner } from "../components/spinners-loading/Spinner";
 
 const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
