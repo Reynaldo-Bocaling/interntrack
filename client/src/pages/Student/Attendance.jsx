@@ -19,6 +19,8 @@ const Logs = () => {
     queryFn: getStudent,
   });
 
+
+  if(isLoading) return <center className="text-[5rem] font-bold">Loading</center>
   return (
     <>
       {isLoading ? (

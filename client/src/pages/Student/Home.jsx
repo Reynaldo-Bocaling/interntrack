@@ -30,7 +30,9 @@ const Dashboard = () => {
     queryFn: getTimesheet,
   });
 
-  
+  if (programLoading || taskLoading || studentLoading || timesheetLoading) {
+    return <center className="my-5 text-lg">Computing..</center>;
+  }
 
   const programList = getProgram
     ? getProgram
@@ -95,13 +97,6 @@ const Dashboard = () => {
 
   const progressRate = (attendanceRequest.length / totalRequest.length) * 100;
 
-
-  if (programLoading || taskLoading || studentLoading || timesheetLoading) {
-    return <center className="my-5 text-lg">Computing..</center>;
-  }
-
-
-  
   return (
     <div>
       <div className="flex flex-col gap-2">
