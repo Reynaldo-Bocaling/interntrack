@@ -14,7 +14,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const App = () => {
   return (
     <>
-      <Suspense
+      {/* <Suspense
         fallback={
           <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
             <div className="flex flex-col gap-4">
@@ -31,11 +31,11 @@ const App = () => {
             </div>
           </div>
         }
-      >
+      > */}
         <Routes>
           <Route path="/*" element={<PrivateRoutes />} />
         </Routes>
-      </Suspense>
+      {/* </Suspense> */}
       <Suspense
         fallback={
           <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
