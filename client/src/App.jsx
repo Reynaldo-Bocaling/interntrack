@@ -20,7 +20,7 @@ const App = () => {
         <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center">
           <div className="flex flex-col gap-4">
             <PulseLoader
-              color="#03A8F5"
+              color="red"
               margin={8}
               size={15}
               speedMultiplier={1}
