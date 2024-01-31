@@ -551,9 +551,10 @@ const PrivateRoutes = () => {
             element={
               <Suspense fallback={<Spinner />}>
                 {<Rootlayout role={isRole} />}
-              </Suspense>
+              </Suspense> 
             }
           >
+            
             {userRoutes.map((route, index) => (
               <Route key={index} path={route.path} element={route.element}>
                 {route.children &&

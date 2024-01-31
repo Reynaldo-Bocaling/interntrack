@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy } from "react";
 const StudentInfo = lazy(()=> import("../../components/Company-info/index"));
 import { useQuery } from "@tanstack/react-query";
 import { getCompanyList } from "../../api/Api";

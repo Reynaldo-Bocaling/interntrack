@@ -64,6 +64,7 @@ const Rootlayout = (props) => {
               setIsOpenNotif(false), setIsOpenProfile(false);
             }}
           >
+            
             <Outlet />
             <Footer />
           </div>

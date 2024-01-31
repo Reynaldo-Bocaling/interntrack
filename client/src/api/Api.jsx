@@ -873,7 +873,7 @@ export const getNotfication = async () => {
 export const logout = async () => {
   try {
     const response = await axios.post(
-      "http://localhost:3001/logout",
+      `${url}logout`,
       {},
       { withCredentials: true }
     );
@@ -897,7 +897,7 @@ export const verifyEmail = async (email) => {
 export const verifyPin = async (pin) => {
   try {
     const response = await axios.post(
-      "http://localhost:3001/verifyPin",
+      `${url}/verifyPin`,
       {pin:pin},
       { withCredentials: true }
     );
