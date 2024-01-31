@@ -26,7 +26,7 @@ const Rootlayout = (props) => {
   };
 
   return (
-    <div>
+    <>
       {role !== "Unauthorized" && (
         <div>
           {role === "Student" ? (
@@ -70,7 +70,7 @@ const Rootlayout = (props) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

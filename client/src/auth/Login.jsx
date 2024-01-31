@@ -1,4 +1,4 @@
-import React, { lazy, useState } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import Img from "../assets/icons/logo.png";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
@@ -11,23 +11,20 @@ import CheckIcon from "../assets/images/check.png";
 import heart from "../assets/images/heart.png";
 import like from "../assets/images/like.png";
 import wow from "../assets/images/wow2.png";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { auth } from "../api/Api";
 import { IconInfoCircle } from "@tabler/icons-react";
-import {Alert } from "@mantine/core";
+import { Alert } from "@mantine/core";
 import { Button, Input } from "@nextui-org/react";
 
-import reyn from '../assets/images/reyn.png'
-import kian from '../assets/images/kian.png'
-import alaine from '../assets/images/alaine.png'
-import neil from '../assets/images/neil.png'
-// import AddSuperAdmin from "../components/addAdmin/AddAdminModal";
-const ForgotPassword = lazy(()=> import('./ForgotPassword'));
+import reyn from "../assets/images/reyn.png";
+import kian from "../assets/images/kian.png";
+import alaine from "../assets/images/alaine.png";
+import neil from "../assets/images/neil.png";
+const ForgotPassword = lazy(() => import("./ForgotPassword"));
 
 
 const Login = () => {
-  // const [pinError, setPinError] = useState(false);
-  // const [openSuperAdmin, setOpenSuperAdmin] = useState(false);
   const [openForgotPassword, setOpenForgetPassword] = useState(false);
   const icon = <IconInfoCircle />;
 
@@ -44,9 +41,9 @@ const Login = () => {
         setError(data);
       }
     },
-    onError:()=>{
-      alert('error');
-    }
+    onError: () => {
+      alert("error");
+    },
   });
 
   const [form, setForm] = useState({
@@ -69,18 +66,10 @@ const Login = () => {
     mutate(form);
   };
 
-  // const handlePinChange = (newValue) => {
-  //   if (Number(newValue) == 1234) {
-  //     setPinError(true);
-  //   } else {
-  //     setPinError(false);
-  //   }
-  // };
-
   return (
+    <>
     <div className="shadow-effect relative w-screen h-screen bg-white overflow-x-hidden">
-      <div
-      className="loginContainer relative max-w-[1224px] mx-auto min-h-screen flex items-center">
+      <div className="loginContainer relative max-w-[1224px] mx-auto min-h-screen flex items-center">
         <Link
           to="/welcome-to-InternTrack"
           className="absolute top-7 left-7 z-30 flex items-center gap-2"
@@ -89,7 +78,12 @@ const Login = () => {
           <span className="text-xl font-semibold">InternTrack</span>
         </Link>
         <div className="relative w-[55%] flex items-center justify-center mr-0 lg:mr-10">
-          <img src={model} alt="" className="max-w-[350px] md:max-w-[380px]  z-20" loading="lazy" />
+          <img
+            src={model}
+            alt=""
+            className="max-w-[350px] md:max-w-[380px]  z-20"
+            loading="lazy"
+          />
 
           {/* total box */}
           <div className="totalStundetBox absolute -bottom-7 left-16 max-w-[160px] w-full bg-white rounded-lg flex flex-col items-center gap-3 shadow-md py-4 px-2 z-20 shadow-slate-200 border border-slate-200">
@@ -100,23 +94,10 @@ const Login = () => {
               <small>STUDENTS</small>
               <h1 className="font-semibold">10+</h1>
               <AvatarGroup isBordered max={3} total={10}>
-                <Avatar
-                  size="sm"
-                  src={alaine}
-                />
-                <Avatar
-                  size="sm"
-                  src={kian}
-                />
-                <Avatar
-                  size="sm"
-                  src={reyn}
-                />
-                <Avatar
-                  size="sm"
-                  src={neil}
-                />
-                
+                <Avatar size="sm" src={alaine} />
+                <Avatar size="sm" src={kian} />
+                <Avatar size="sm" src={reyn} />
+                <Avatar size="sm" src={neil} />
               </AvatarGroup>
             </div>
           </div>
@@ -148,7 +129,9 @@ const Login = () => {
           {/* bottom */}
           <div className="extraTool2 absolute -bottom-7 right-16   bg-white rounded-lg shadow-lg shadow-slate-200 border border-slate-200 pr-5 pl-2 py-3 z-20 flex items-center gap-2">
             <img src={unlockIcon} alt="" className="w-[40px]" />
-            <span className="text-xs md:text-base font-semibold">Unlock Opportunities</span>
+            <span className="text-xs md:text-base font-semibold">
+              Unlock Opportunities
+            </span>
           </div>
 
           <div className=" absolute top-[30%] left-1/2 -translate-x-1/2 z-1 h-[300px] w-[250px] md:w-[300px] bg-blue-500 shadow-2xl shadow-blue-300 rounded-[40px] rotate-45 "></div>
@@ -165,7 +148,7 @@ const Login = () => {
               Begin Enhancing Your OJT Experience Efficiently
             </small>
 
-            {error  && (
+            {error && (
               <Alert
                 variant="light"
                 radius="md"
@@ -230,15 +213,6 @@ const Login = () => {
               >
                 {isLoading ? "Loading..." : "Sign in"}
               </Button>
-
-              {/* <small className="text-center">Or</small>
-              <Button
-                onClick={() => setOpenSuperAdmin(true)}
-                size="lg"
-                className="font-medium tracking-wide bg-blue-100 text-blue-500"
-              >
-                Sign up as Super admin
-              </Button> */}
             </div>
 
             <footer className="absolute bottom-5 right-15">
@@ -257,18 +231,16 @@ const Login = () => {
         </div>
       </div>
 
-      {/* <AddSuperAdmin
-        openSuperAdmin={openSuperAdmin}
-        onOpenChangeEvent={() => setOpenSuperAdmin(false)}
-        handlePinChange={handlePinChange}
-        pinError={pinError}
-      /> */}
-
-      <ForgotPassword 
-      openForgotPassword={openForgotPassword}
-      onOpenChangeEvent={()=>setOpenForgetPassword(false)}
-      />
+      {openForgotPassword && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <ForgotPassword
+            openForgotPassword={openForgotPassword}
+            onOpenChangeEvent={() => setOpenForgetPassword(false)}
+          />
+        </Suspense>
+      )}
     </div>
+    </>
   );
 };
 
