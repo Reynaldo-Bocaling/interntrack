@@ -6,18 +6,18 @@ const verifyUser = async (req: any, res: Response, next: NextFunction) => {
   const token = req.cookies.token;
   const secret_key = process.env.JWT_SECRET_KEY!;
   try {
-    if (!token) return res.status(500).json( "Unauthorized" );
+    if (!token) return res.status(200).json( "Unauthorized" );
 
     const decoded:any = jwt.verify(token, secret_key);
     const user = await prisma.user.findUnique({
       where: { id: decoded.id },
     });
 
-    if (!user) return res.status(500).json("Unauthorized" );
+    if (!user) return res.status(200).json("Unauthorized" );
     req.user = user;
     next();
   } catch (error) {
-    return res.status(500).json("Unauthorized");
+    return res.status(200).json("Unauthorized");
   }
 };
 
