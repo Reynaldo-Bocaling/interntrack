@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
-const PrivateRoutes =  lazy(()=> import("./auth/PrivateRoutes"));
+import PrivateRoutes from "./auth/PrivateRoutes";
 import { pdfjs } from "react-pdf";
 const AddAdminModal = lazy(() => import("./components/addAdmin/AddAdminModal"));
 const List = lazy(() => import("./components/print-layout/List"));
