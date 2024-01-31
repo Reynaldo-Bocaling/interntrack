@@ -47,24 +47,18 @@ function StudentHeader() {
       </div>
 
       {openProfile && (
-        <Suspense fallback={<DotLoading />}>
           <Profile opened={openProfile} close={() => setOpenProfile(false)} />
-        </Suspense>
       )}
 
       {openNotification && (
-        <Suspense fallback={<DotLoading />}>
           <Notification
             opened={openNotification}
             onClose={() => setOpenNotification(false)}
           />
-        </Suspense>
       )}
 
       {openMessage && (
-        <Suspense fallback={<DotLoading />}>
           <Message opened={openMessage} onClose={() => setOpenMessage(false)} />
-        </Suspense>
       )}
     </>
   );

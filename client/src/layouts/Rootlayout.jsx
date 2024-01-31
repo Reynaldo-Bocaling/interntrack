@@ -29,61 +29,48 @@ const Rootlayout = (props) => {
 
   return (
     <div className="overflow-hidden">
-      {role !== "Unauthorized" && (
-        <div>
-          {role === "Student" ? (
-            <>
-              <LazyStudentHeader />
-              
-              <LazyStudentNavigate />
-            </>
-            
-            
-          ) : (
-            <>
-             <LazyHeader
-                toggleIsOpen={isOpen}
-                toggleNotif={toggleNotif}
-                toggleProfile={toggleProfile}
-                isOpenNotif={isOpenNotif}
-                isOpenProfile={isOpenProfile}
-                role={role}
-                data={data}
-              />
+      <div>
+        {role === "Student" ? (
+          <>
+            <LazyStudentHeader />
 
-              <LazySidebar
-                toggleIsOpen={isOpen}
-                toggleSetIsOpen={toggleIsOpen}
-                role={role}
-              />
-            </>
-             
-            // </Suspense>
-          )}
+            <LazyStudentNavigate />
+          </>
+        ) : (
+          <>
+            <LazyHeader
+              toggleIsOpen={isOpen}
+              toggleNotif={toggleNotif}
+              toggleProfile={toggleProfile}
+              isOpenNotif={isOpenNotif}
+              isOpenProfile={isOpenProfile}
+              role={role}
+              data={data}
+            />
 
-          {/* <Suspense fallback={<center className="text-xs py-5">Load Notifications</center>}>
-            <LazyNotification />
-          </Suspense> */}
+            <LazySidebar
+              toggleIsOpen={isOpen}
+              toggleSetIsOpen={toggleIsOpen}
+              role={role}
+            />
+          </>
+        )}
 
-          <div
-            className={`${
-              role !== "Student" ? "lg:ml-[16rem]" : "lg:pl-[120px]"
-            } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50 `}
-            onClick={() => {
-              setIsOpenNotif(false), setIsOpenProfile(false);
-            }}
-          >
+        <div
+          className={`${
+            role !== "Student" ? "lg:ml-[16rem]" : "lg:pl-[120px]"
+          } min-h-screen px-4  pt-20 pb-6 duration-300 bg-slate-50 `}
+          onClick={() => {
+            setIsOpenNotif(false), setIsOpenProfile(false);
+          }}
+        >
+          <Suspense fallback={<DotLoading />}>
+            <Outlet />
+          </Suspense>
 
-<Suspense fallback={<DotLoading />}>
-<Outlet />
-</Suspense>
-           
-            {/* <Suspense fallback={<div>Load Footer</div>}> */}
-              <LazyFooter />
-            {/* </Suspense> */}
-          </div>
+          <LazyFooter />
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import FilterTask from "../../components/StudentTaskStyle/FilterTask";
-import { Button, Tooltip, Textarea } from "@nextui-org/react";
+import { Button, Tooltip, Textarea, image } from "@nextui-org/react";
 import { Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { uploadTask, getTask } from "../../api/Api";
 import Swal from "sweetalert2";
-import { IoWarning } from "react-icons/io5";
+
 const groupTasksByMonth = (tasks) => {
   const groupedTasks = {};
   tasks.forEach((task) => {
@@ -44,7 +44,7 @@ const Activities = () => {
     queryFn: getTask,
   });
 
-  const { mutate } = useMutation(uploadTask, {
+  const { mutate, isLoading } = useMutation(uploadTask, {
     onSuccess: (dt) => {
       console.log(dt);
       Swal.fire(
@@ -115,13 +115,6 @@ const Activities = () => {
         position="bottom"
         size="85%"
       >
-        {/* <div className="text-red-500 flex flex-col items-center gap-4">
-        <IoWarning size={50} />
-          <p className="text-lg text-center tracking-wider">
-            <b>Apologies</b>, the upload feature is temporarily unavailable. We are
-            working to resolve the issue and appreciate your patience.
-          </p>{" "}
-        </div> */}
         <div className="w-full h-full py-10 px-4">
           {!Preview ? (
             <Tooltip content="Browse Image" closeDelay={0}>
@@ -170,7 +163,11 @@ const Activities = () => {
             color="primary"
             className="rounded-full w-full mt-7 py-5"
             size="lg"
+            isDisabled={isLoading}
           >
+            {
+              isLoading ? "Uploading..":"Upload Task"
+            }
             Upload Task
           </Button>
         </div>
