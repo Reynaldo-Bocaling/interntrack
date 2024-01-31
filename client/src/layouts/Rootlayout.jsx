@@ -1,11 +1,13 @@
-import React, { lazy, useState } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import { Outlet } from "react-router-dom";
-const Sidebar = lazy(()=> import("./common/Sidebar"));
-const StudentHeader = lazy(()=> import("./common/StudentHeader"));
-const Header = lazy(()=> import("./common/Header"));
-const Footer = lazy(()=> import("./common/Footer"));
-const StudentNavigate = lazy(()=> import("./common/StudentNavigation"));
-const Notification = lazy(()=> import("../components/notification/Notification"));
+const Sidebar = lazy(() => import("./common/Sidebar"));
+const StudentHeader = lazy(() => import("./common/StudentHeader"));
+const Header = lazy(() => import("./common/Header"));
+const Footer = lazy(() => import("./common/Footer"));
+const StudentNavigate = lazy(() => import("./common/StudentNavigation"));
+const Notification = lazy(() =>
+  import("../components/notification/Notification")
+);
 
 const Rootlayout = (props) => {
   const { role, data } = props;
@@ -31,30 +33,36 @@ const Rootlayout = (props) => {
         <div>
           {role === "Student" ? (
             <div>
-              <StudentHeader />
-              <StudentNavigate />
+              <Suspense fallback="Load Contact..">
+                <StudentHeader />
+                <StudentNavigate />
+              </Suspense>
             </div>
           ) : (
             <div>
-              <Header
-                toggleIsOpen={isOpen}
-                toggleNotif={toggleNotif}
-                toggleProfile={toggleProfile}
-                isOpenNotif={isOpenNotif}
-                isOpenProfile={isOpenProfile}
-                role={role}
-                data={data}
-              />
+              <Suspense fallback="Load Contact..">
+                <Header
+                  toggleIsOpen={isOpen}
+                  toggleNotif={toggleNotif}
+                  toggleProfile={toggleProfile}
+                  isOpenNotif={isOpenNotif}
+                  isOpenProfile={isOpenProfile}
+                  role={role}
+                  data={data}
+                />
 
-              <Sidebar
-                toggleIsOpen={isOpen}
-                toggleSetIsOpen={toggleIsOpen}
-                role={role}
-              />
+                <Sidebar
+                  toggleIsOpen={isOpen}
+                  toggleSetIsOpen={toggleIsOpen}
+                  role={role}
+                />
+              </Suspense>
             </div>
           )}
 
-          <Notification />
+          <Suspense fallback="Load Contact..">
+            <Notification />
+          </Suspense>
 
           <div
             className={`${
@@ -64,9 +72,11 @@ const Rootlayout = (props) => {
               setIsOpenNotif(false), setIsOpenProfile(false);
             }}
           >
-            
-            <Outlet />
-            <Footer />
+            <Suspense fallback="Load Contact..">
+              <Outlet />
+
+              <Footer />
+            </Suspense>
           </div>
         </div>
       )}
