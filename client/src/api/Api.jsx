@@ -897,7 +897,7 @@ export const verifyEmail = async (email) => {
 export const verifyPin = async (pin) => {
   try {
     const response = await axios.post(
-      `${url}/verifyPin`,
+      `${url}verifyPin`,
       {pin:pin},
       { withCredentials: true }
     );
