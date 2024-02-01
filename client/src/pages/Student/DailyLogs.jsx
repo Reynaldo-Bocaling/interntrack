@@ -5,8 +5,10 @@ import {
   MdKeyboardArrowRight,
   MdMoreTime,
 } from "react-icons/md";
-const Logs = lazy(()=> import("../../components/student-dailyLogs/DailyLogs"));
-const LogsHistory = lazy(()=> import("../../components/student-dailyLogs/DailyLogsHistory"));
+const Logs = lazy(() => import("../../components/student-dailyLogs/DailyLogs"));
+const LogsHistory = lazy(() =>
+  import("../../components/student-dailyLogs/DailyLogsHistory")
+);
 
 const DailyLogs = () => {
   return (
@@ -20,7 +22,9 @@ const DailyLogs = () => {
           <Logs />
         </Carousel.Slide>
         <Carousel.Slide>
-          <LogsHistory />
+          <Suspense fallback={<BarLoading />}>
+            <LogsHistory />
+          </Suspense>
         </Carousel.Slide>
       </Carousel>
 
