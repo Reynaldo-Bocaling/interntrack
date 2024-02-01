@@ -1,24 +1,19 @@
-import React, { useRef, useState } from "react";
-import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
+import React, { useRef, useState, useMemo } from "react";
+import { Card, Button, Group, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
+import { useReactToPrint } from "react-to-print";
 import logo from "../../assets/images/neust_logo-1.png";
 import { getStudent, getTask, getTimesheet } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
 import Report from "../../components/print-layout/WeeklyReport";
-
 import { MdKeyboardArrowRight } from "react-icons/md";
+
 const WeeklyReport = () => {
   const [opened, { open, close }] = useDisclosure();
   const [weeklyReport, setWeeklyReport] = useState([]);
-  const calculateTotalHours = (timeSheet) => {
-    return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
-  };
 
-  // /timesheet
-  const currentDate = new Date();
+  const currentDate = useMemo(() => new Date(), []);
 
   const { data: timesheet, isLoading: timesheetLoading } = useQuery({
     queryKey: ["getTimesheetStudent2"],
@@ -35,28 +30,19 @@ const WeeklyReport = () => {
     queryFn: getStudent,
   });
 
-  const studentTask = getTaskList ? getTaskList : [];
-  const studentInfo = data ? data : [];
+  const studentTask = getTaskList || [];
+  const studentInfo = data || {};
 
-  const getWeekNuber = timesheet
-    ? timesheet.find((item) => item.date === format(new Date(), "yyyy-MM-dd"))
-        ?.week
-    : [];
+  const getWeekNumber = useMemo(() => {
+    return timesheet ? timesheet.find((item) => item.date === format(currentDate, "yyyy-MM-dd"))?.week : [];
+  }, [timesheet, currentDate]);
 
-  const StudentTimesheet = timesheet
-    ? timesheet
-        .filter((item) => item.studentMark === 1)
-        .filter((item) => new Date(item.week) <= getWeekNuber)
-        .map(
-          ({
-            id,
-            totalHours,
-            date,
-            logStatus,
-            student_id,
-            week,
-            dateSubmitted,
-          }) => ({
+  const StudentTimesheet = useMemo(() => {
+    return timesheet
+      ? timesheet
+          .filter((item) => item.studentMark === 1)
+          .filter((item) => new Date(item.week) <= getWeekNumber)
+          .map(({ id, totalHours, date, logStatus, student_id, week, dateSubmitted }) => ({
             id,
             totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
             date,
@@ -64,38 +50,30 @@ const WeeklyReport = () => {
             student_id,
             week,
             dateSubmitted,
-            taskDescription:
-              logStatus !== 0
-                ? studentTask.find((item) => item.date === date)?.description
-                : "",
-          })
-        )
-    : [];
+            taskDescription: logStatus !== 0 ? studentTask.find((item) => item.date === date)?.description : "",
+          }))
+      : [];
+  }, [timesheet, getWeekNumber, studentTask]);
 
-  const groupedTimeSheet = [];
-  for (let i = 0; i < StudentTimesheet.length; i += 5) {
-    groupedTimeSheet.push(StudentTimesheet.slice(i, i + 5));
-  }
+  const groupedTimeSheet = useMemo(() => {
+    const result = [];
+    for (let i = 0; i < StudentTimesheet.length; i += 5) {
+      result.push(StudentTimesheet.slice(i, i + 5));
+    }
+    return result.sort((a, b) => new Date(b[0].date) - new Date(a[0].date));
+  }, [StudentTimesheet]);
 
-  groupedTimeSheet.sort((a, b) => {
-    return new Date(b[0].date) - new Date(a[0].date);
-  });
+  const totalHours = useMemo(() => {
+    return weeklyReport ? weeklyReport.reduce((total, item) => total + item.totalHours, 0) : 0;
+  }, [weeklyReport]);
 
-  const totalHours = weeklyReport
-    ? weeklyReport.reduce((total, item) => total + item.totalHours, 0)
-    : [];
-
-  // Reference para sa pag-print
   const componentRef = useRef();
-
-  // React-to-Print function
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-  
   const handleOpenWeeklyReport = (item) => {
     setWeeklyReport(item);
     open();
@@ -105,7 +83,8 @@ const WeeklyReport = () => {
     return <center className="my-5 text-lg">Computing..</center>;
   }
 
-  console.log(getWeekNuber);
+
+
 
   return (
     <div>

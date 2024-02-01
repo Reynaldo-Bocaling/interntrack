@@ -1,99 +1,106 @@
-import React, { useRef, useState } from "react";
-import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
+import React, { useRef, useState, useMemo, useCallback } from "react";
+import { Card, Drawer, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
-import logo from "../../assets/images/neust_logo-1.png";
-import { getStudent, getTask, getTimesheet, submitReport } from "../../api/Api";
+import { useReactToPrint } from "react-to-print";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
 import Report from "../../components/print-layout/WeeklyReport";
 import Swal from "sweetalert2";
-
 import { MdKeyboardArrowRight } from "react-icons/md";
+import logo from "../../assets/images/neust_logo-1.png";
+import {
+  getStudent,
+  getTask,
+  getTimesheet,
+  submitReport,
+} from "../../api/Api";
+
 const WeeklyReport = () => {
   const queryClient = useQueryClient();
   const [opened, { open, close }] = useDisclosure();
   const [weeklyReport, setWeeklyReport] = useState([]);
   const [submitReportValue, setSubmitReportValue] = useState({});
-  const calculateTotalHours = (timeSheet) => {
-    return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
-  };
-
-  // /timesheet
-  const currentDate = new Date();
-
-  const { data: timesheet, isLoading: timesheetLoading } = useQuery({
+  
+  const timesheetQuery = useQuery({
     queryKey: ["getTimesheetStudent2"],
     queryFn: getTimesheet,
   });
 
-  const { data: getTaskList, isLoading: taskLoading } = useQuery({
+  const taskQuery = useQuery({
     queryKey: ["getTaskStudent2"],
     queryFn: getTask,
   });
 
-  const { data, isLoading: studentLoading } = useQuery({
+  const studentQuery = useQuery({
     queryKey: ["getStudent2"],
     queryFn: getStudent,
   });
 
-  const studentTask = getTaskList ? getTaskList : [];
-  const studentInfo = data ? data : [];
+  const timesheet = timesheetQuery.data;
+  const taskList = taskQuery.data;
+  const studentInfo = studentQuery.data;
 
-  const getWeekNuber = timesheet
-    ? timesheet.find((item) => item.date === format(new Date(), "yyyy-MM-dd"))
-        ?.week
-    : [];
+  const getWeekNumber = useMemo(() => {
+    return timesheet?.find(
+      (item) => item.date === format(new Date(), "yyyy-MM-dd")
+    )?.week;
+  }, [timesheet]);
 
-  const StudentTimesheet = timesheet
-    ? timesheet
-        .filter((item) => new Date(item.week) <= getWeekNuber)
-        .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
-          id,
-          totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
-          date,
-          logStatus,
-          student_id,
-          week,
-          taskDescription:
-            logStatus !== 0
-              ? studentTask.find((item) => item.date === date)?.description
-              : "",
-        }))
-    : [];
+  const studentTimesheet = useMemo(() => {
+    return timesheet
+      ? timesheet
+          .filter((item) => new Date(item.week) <= getWeekNumber)
+          .map(({ id, totalHours, date, logStatus, student_id, week }) => ({
+            id,
+            totalHours: logStatus !== 0 ? Math.round(totalHours) : "",
+            date,
+            logStatus,
+            student_id,
+            week,
+            taskDescription:
+              logStatus !== 0
+                ? taskList.find((item) => item.date === date)?.description
+                : "",
+          }))
+      : [];
+  }, [timesheet, taskList, getWeekNumber]);
 
-  const groupedTimeSheet = [];
-  for (let i = 0; i < StudentTimesheet.length; i += 5) {
-    groupedTimeSheet.push(StudentTimesheet.slice(i, i + 5));
-  }
+  const groupedTimeSheet = useMemo(() => {
+    const result = [];
+    for (let i = 0; i < studentTimesheet.length; i += 5) {
+      result.push(studentTimesheet.slice(i, i + 5));
+    }
+    return result.sort(
+      (a, b) => new Date(b[0].date) - new Date(a[0].date)
+    );
+  }, [studentTimesheet]);
 
-  groupedTimeSheet.sort((a, b) => {
-    return new Date(b[0].date) - new Date(a[0].date);
-  });
+  const totalHours = useMemo(() => {
+    return weeklyReport.reduce(
+      (total, item) => total + item.totalHours,
+      0
+    );
+  }, [weeklyReport]);
 
-  const totalHours = weeklyReport
-    ? weeklyReport.reduce((total, item) => total + item.totalHours, 0)
-    : [];
-
-  // Reference para sa pag-print
   const componentRef = useRef();
 
-  // React-to-Print function
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
-  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const daysOfWeek = useMemo(
+    () => ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    []
+  );
 
-  const handleOpenWeeklyReport = (item) => {
-    setWeeklyReport(item);
-    setSubmitReportValue({id: item?.id, week: item?.week})
-    open();
-  };
-
-  
-
+  const handleOpenWeeklyReport = useCallback(
+    (item) => {
+      setWeeklyReport(item);
+      setSubmitReportValue({ id: item?.id, week: item?.week });
+      open();
+    },
+    [open]
+  );
 
   const { mutate } = useMutation({
     mutationFn: submitReport,
@@ -114,22 +121,28 @@ const WeeklyReport = () => {
     },
   });
 
-
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const id = weeklyReport[0]?.student_id;
     const week = weeklyReport[0]?.week;
-  
+
     if (id !== undefined && week !== undefined) {
       mutate({ id, week });
     } else {
       console.error("Invalid id or week in weeklyReport:", weeklyReport);
     }
-  };
-  
-  if (taskLoading || timesheetLoading || studentLoading) {
+  }, [weeklyReport, mutate]);
+
+  if (
+    timesheetQuery.isLoading ||
+    taskQuery.isLoading ||
+    studentQuery.isLoading
+  ) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
-  return (
+
+  
+
+   return (
     <div>
       <Card className="flex flex-col gap-5">
       

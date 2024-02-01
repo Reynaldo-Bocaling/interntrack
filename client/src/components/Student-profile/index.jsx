@@ -5,18 +5,11 @@ import Tab from "@mui/material/Tab";
 const Information = lazy(() => import("./Information"));
 const Requirements = lazy(() => import("./Requirements"));
 const Security = lazy(() => import("./Security"));
-import Swal from "sweetalert2";
 import { MdAlternateEmail } from "react-icons/md";
-import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
 import {
-  BsChatDots,
-  BsCamera,
-  BsFillTrash3Fill,
   BsFillTelephoneFill,
 } from "react-icons/bs";
 import {
-  AiOutlineCloudUpload,
-  AiOutlineUser,
   AiOutlineUserSwitch,
 } from "react-icons/ai";
 import { LiaUserEditSolid } from "react-icons/lia";

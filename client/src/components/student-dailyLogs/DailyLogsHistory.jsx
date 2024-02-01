@@ -11,7 +11,8 @@ const DailyLogsHistory = () => {
   });
 
   const filterData = data?.filter((item) => item.totalHours != 0);
-  console.log("data", filterData);
+
+
   return (
     <div>
       <div className="my-4">

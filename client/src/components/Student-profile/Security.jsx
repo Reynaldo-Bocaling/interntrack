@@ -45,6 +45,7 @@ function Security({ data }) {
     },
   });
 
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({ oldPassword: password, newPassword: newPassword });

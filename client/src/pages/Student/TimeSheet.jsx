@@ -1,14 +1,15 @@
-import React, { lazy, useState } from "react";
+import React, { lazy, useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTimesheet } from "../../api/Api";
 import { format } from "date-fns";
 import { Button } from "@nextui-org/react";
-const PieChart = lazy(()=> import("../../components/charts/PieChart"));
+const PieChart = lazy(() => import("../../components/charts/PieChart"));
 
 const TimeSheet = () => {
   const [showAllTables, setShowAllTables] = useState(false);
 
-  const currentDate = new Date();
+  const currentDate = useMemo(() => new Date(), []);
+
   const { data: timesheet, isLoading: timesheetLoading } = useQuery({
     queryKey: ["getStudentDailyLog"],
     queryFn: getTimesheet,
@@ -24,74 +25,81 @@ const TimeSheet = () => {
     queryFn: getCampus,
   });
 
+  
+
+  const programList = useMemo(() => {
+    return getProgram
+      ? getProgram
+          .flatMap(({ college }) => college?.flatMap(({ program }) => program))
+          .map(({ trainingHours, program_description }) => ({
+            trainingHours,
+            program_description,
+          }))
+      : [];
+  }, [getProgram]);
+
+  const StudentTimesheet = useMemo(() => {
+    return timesheet
+      ?.filter((item) => new Date(item.date) <= currentDate)
+      .map(
+        ({
+          id,
+          timeIn,
+          timeOut,
+          totalHours,
+          date,
+          logStatus,
+          student_id,
+          week,
+        }) => ({
+          id,
+          timeIn: logStatus !== 0 ? timeIn : "0:00",
+          timeOut: logStatus !== 0 ? timeOut : "0:00",
+          totalHours: logStatus !== 0 ? totalHours : 0,
+          date,
+          logStatus,
+          student_id,
+          week,
+        })
+      );
+  }, [timesheet, currentDate]);
+
+  const groupedTimeSheet = useMemo(() => {
+    const groups = [];
+    for (let i = 0; i < StudentTimesheet?.length; i += 5) {
+      groups.push(StudentTimesheet.slice(i, i + 5));
+    }
+    return groups.sort((a, b) => new Date(b[0].date) - new Date(a[0].date));
+  }, [StudentTimesheet]);
+
+  const visibleGroups = useMemo(() => (showAllTables ? groupedTimeSheet : groupedTimeSheet.slice(0, 1)), [showAllTables, groupedTimeSheet]);
+
+  const calculateTotalHours = useMemo(() => {
+    return (timeSheet) => timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
+  }, []);
+
+  const hoursTaken = useMemo(() => {
+    return Math.round(StudentTimesheet?.reduce((total, item) => total + item.totalHours, 0));
+  }, [StudentTimesheet]);
+
+  const totalHours = useMemo(() => {
+    return programList.find((item) => item.program_description === getStudentInfo?.program)?.trainingHours;
+  }, [programList, getStudentInfo]);
+
+  const hoursRemaining = useMemo(() => {
+    return Number(totalHours - hoursTaken);
+  }, [totalHours, hoursTaken]);
+
+  const piechartData = useMemo(() => [hoursTaken, hoursRemaining], [hoursTaken, hoursRemaining]);
+  const colors = ["#2ECC71", "#FF5733"];
+  const labels = ["Hours Taken", "Hours Remaining"];
+
+
   if (programLoading || studentLoading || timesheetLoading) {
     return <center className="my-7 text-sm">Computing..</center>;
   }
 
-  const programList = getProgram
-    ? getProgram
-        .flatMap(({ college }) => college?.flatMap(({ program }) => program))
-        .map(({ trainingHours, program_description }) => ({
-          trainingHours,
-          program_description,
-        }))
-    : [];
-
-  const StudentTimesheet = timesheet
-    ?.filter((item) => new Date(item.date) <= currentDate)
-    .map(
-      ({
-        id,
-        timeIn,
-        timeOut,
-        totalHours,
-        date,
-        logStatus,
-        student_id,
-        week,
-      }) => ({
-        id,
-        timeIn: logStatus !== 0 ? timeIn : "0:00",
-        timeOut: logStatus !== 0 ? timeOut : "0:00",
-        totalHours: logStatus !== 0 ? totalHours : 0,
-        date,
-        logStatus,
-        student_id,
-        week,
-      })
-    );
-
-  const groupedTimeSheet = [];
-  for (let i = 0; i < StudentTimesheet.length; i += 5) {
-    groupedTimeSheet.push(StudentTimesheet.slice(i, i + 5));
-  }
-
-  groupedTimeSheet.sort((a, b) => {
-    return new Date(b[0].date) - new Date(a[0].date);
-  });
-
-  const visibleGroups = showAllTables
-    ? groupedTimeSheet
-    : groupedTimeSheet.slice(0, 1);
-
-  // console.log('d',data);
-
-  const calculateTotalHours = (timeSheet) => {
-    return timeSheet.reduce((sum, entry) => sum + entry.totalHours, 0);
-  };
-
-  const hoursTaken = Math.round(
-    StudentTimesheet?.reduce((total, item) => total + item.totalHours, 0)
-  );
-  const totalHours = programList.find(
-    (item) => item.program_description === getStudentInfo?.program
-  )?.trainingHours;
-  const hoursRemaining = Number(totalHours - hoursTaken);
-
-  const piechartData = [hoursTaken, hoursRemaining];
-  const colors = ["#2ECC71", "#FF5733"];
-  const labels = ["Hours Taken", "Hours Remaining"];
-
+  
   return (
     <div className="p-1">
       <div className="text-xl text-gray-700 font-semibold tracking-wide mb-5">

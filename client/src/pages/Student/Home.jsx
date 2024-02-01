@@ -1,8 +1,8 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useMemo } from "react";
 import taskUploadModel from "../../assets/images/studentTaskModel.png";
 import { AiOutlineCheck } from "react-icons/ai";
 import { LiaTimesSolid } from "react-icons/lia";
-const PieChart = lazy(()=> import("../../components/charts/PieChart"));
+const PieChart = lazy(() => import("../../components/charts/PieChart"));
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTask, getTimesheet } from "../../api/Api";
@@ -10,10 +10,10 @@ import { format } from "date-fns";
 import { DotLoading } from "../../components/spinners-loading/Spinner";
 
 const Dashboard = () => {
-  const formattedDate = format(new Date(), "yyyy-MM-dd");
-  const currentDate = new Date();
-  // piechart info
+  const formattedDate = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const currentDate = useMemo(() => new Date(), []);
 
+  // Query data
   const { data: getProgram, isLoading: programLoading } = useQuery({
     queryKey: ["getProgram2"],
     queryFn: getCampus,
@@ -31,72 +31,120 @@ const Dashboard = () => {
     queryFn: getTimesheet,
   });
 
-  if (programLoading || taskLoading || studentLoading || timesheetLoading) {
-    return <DotLoading/>;
-  }
-
-  const programList = getProgram
-    ? getProgram
-        .flatMap(({ college }) => college?.flatMap(({ program }) => program))
-        .map(({ trainingHours, program_description }) => ({
-          trainingHours,
-          program_description,
-        }))
-    : [];
-
-  const timesheetFilter = getStudentTimesheet
-    ?.filter((item) => new Date(item.date) <= currentDate)
-    .map(
-      ({
-        id,
-        timeIn,
-        timeOut,
-        totalHours,
-        date,
-        logStatus,
-        student_id,
-        week,
-      }) => ({
-        id,
-        timeIn: logStatus !== 0 ? timeIn : "0:00",
-        timeOut: logStatus !== 0 ? timeOut : "0:00",
-        totalHours: logStatus !== 0 ? totalHours : 0,
-        date,
-        logStatus,
-        student_id,
-        week,
-      })
-    );
-  const hoursTaken = Math.round(
-    timesheetFilter?.reduce((total, item) => total + item.totalHours, 0)
+  // Memoized values
+  const programList = useMemo(
+    () =>
+      getProgram
+        ? getProgram
+            .flatMap(({ college }) => college?.flatMap(({ program }) => program))
+            .map(({ trainingHours, program_description }) => ({
+              trainingHours,
+              program_description,
+            }))
+        : [],
+    [getProgram]
   );
-  const totalHours = programList.find(
-    (item) => item.program_description === getStudentInfo?.program
-  )?.trainingHours;
-  const hoursRemaining = totalHours - hoursTaken;
 
-  const piechartData = [hoursTaken, hoursRemaining];
+  const timesheetFilter = useMemo(
+    () =>
+      getStudentTimesheet
+        ?.filter((item) => new Date(item.date) <= currentDate)
+        .map(
+          ({
+            id,
+            timeIn,
+            timeOut,
+            totalHours,
+            date,
+            logStatus,
+            student_id,
+            week,
+          }) => ({
+            id,
+            timeIn: logStatus !== 0 ? timeIn : "0:00",
+            timeOut: logStatus !== 0 ? timeOut : "0:00",
+            totalHours: logStatus !== 0 ? totalHours : 0,
+            date,
+            logStatus,
+            student_id,
+            week,
+          })
+        ),
+    [getStudentTimesheet, currentDate]
+  );
+
+  const hoursTaken = useMemo(
+    () =>
+      Math.round(
+        timesheetFilter?.reduce((total, item) => total + item.totalHours, 0) ||
+          0
+      ),
+    [timesheetFilter]
+  );
+
+  const totalHours = useMemo(
+    () =>
+      programList.find(
+        (item) => item.program_description === getStudentInfo?.program
+      )?.trainingHours || 0,
+    [programList, getStudentInfo]
+  );
+
+  const hoursRemaining = useMemo(() => totalHours - hoursTaken, [
+    totalHours,
+    hoursTaken,
+  ]);
+
+  const piechartData = useMemo(() => [hoursTaken, hoursRemaining], [
+    hoursTaken,
+    hoursRemaining,
+  ]);
   const colors = ["#2ECC71", "#FF5733"];
   const labels = ["Hours Taken", "Hours Remaining"];
 
-  const getTime = getStudentTimesheet
-    ? getStudentTimesheet.find((item) => item.date === formattedDate)
-    : [];
-  const timeInDB = getTime ? getTime.timeIn : "";
-  const timeOutDB = getTime?.timeOut;
-  const totalHoursDB = getTime?.totalHours;
-  const timeId = getTime?.id;
-  const recentLogs = getStudentTimesheet
-    ?.filter((item) => new Date(item.date) <= currentDate)
-    .slice(timesheetFilter.length - 5, timesheetFilter.length + 1);
-  const attendanceRequest = getStudentTimesheet?.filter(
-    (item) => item.totalHours != 0 && item.logStatus == 0
-  );
-  const totalRequest = getStudentTimesheet?.filter(
-    (item) => item.totalHours != 0
+  const getTime = useMemo(
+    () =>
+      getStudentTimesheet
+        ? getStudentTimesheet.find((item) => item.date === formattedDate)
+        : [],
+    [getStudentTimesheet, formattedDate]
   );
 
-  const progressRate = (attendanceRequest.length / totalRequest.length) * 100;
+  const timeInDB = useMemo(() => (getTime ? getTime.timeIn : ""), [getTime]);
+  const timeOutDB = useMemo(() => getTime?.timeOut, [getTime]);
+  const totalHoursDB = useMemo(() => getTime?.totalHours, [getTime]);
+  const timeId = useMemo(() => getTime?.id, [getTime]);
+
+  const recentLogs = useMemo(
+    () =>
+      getStudentTimesheet
+        ?.filter((item) => new Date(item.date) <= currentDate)
+        .slice(timesheetFilter.length - 5, timesheetFilter.length + 1),
+    [getStudentTimesheet, currentDate, timesheetFilter]
+  );
+
+  const attendanceRequest = useMemo(
+    () =>
+      getStudentTimesheet?.filter(
+        (item) => item.totalHours != 0 && item.logStatus == 0
+      ),
+    [getStudentTimesheet]
+  );
+
+  const totalRequest = useMemo(
+    () => getStudentTimesheet?.filter((item) => item.totalHours != 0),
+    [getStudentTimesheet]
+  );
+
+  const progressRate = useMemo(
+    () =>
+      (attendanceRequest?.length / totalRequest?.length) * 100 || 0,
+    [attendanceRequest, totalRequest]
+  );
+
+  if (programLoading || taskLoading || studentLoading || timesheetLoading) {
+    return <DotLoading />;
+  }
 
   return (
     <>

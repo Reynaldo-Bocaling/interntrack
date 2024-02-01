@@ -1,4 +1,4 @@
-import React, { lazy, useState } from "react";
+import React, { lazy, useState, useMemo, useCallback } from "react";
 import { MdKeyboardArrowRight, MdMoreTime } from "react-icons/md";
 import { AiOutlineFieldTime } from "react-icons/ai";
 import { LuAlarmClockOff } from "react-icons/lu";
@@ -16,20 +16,17 @@ import Swal from "sweetalert2";
 import { adjustTime } from "./AddjustTime";
 const CustmTimeModal = lazy(() => import("./DailyLogModal"));
 
-// adjustTim
-
 const DailyLogs = () => {
   const queryClient = useQueryClient();
-  const timeOfDay = format(new Date(), "aa");
-  const formattedDate = format(new Date(), "yyyy-MM-dd");
-  const timeFormat = format(new Date(), "HH:mm");
+  const timeOfDay = useMemo(() => format(new Date(), "aa"), []);
+  const formattedDate = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const timeFormat = useMemo(() => format(new Date(), "HH:mm"), []);
   const [totalHours, setTotalHours] = useState(0);
-  const getTimeNow = new Date().getHours();
-  // const currentTime = new Date();
-  const [isOpen, setIopen] = useState(false);
+  const getTimeNow = useMemo(() => new Date().getHours(), []);
 
   const [currentTime, setCurrrentTime] = useState(new Date());
-  // timeIn
+  const [isOpen, setIopen] = useState(false);
+
   const { mutate: mutateTimeIn, isLoading: timelogLoading } = useMutation({
     mutationFn: addTimeIn,
     onSuccess: () => {
@@ -50,7 +47,6 @@ const DailyLogs = () => {
     },
   });
 
-  // timeOut
   const { mutate: mutateTimeOut } = useMutation({
     mutationFn: addTimeOut,
     onSuccess: () => {
@@ -76,96 +72,74 @@ const DailyLogs = () => {
     queryFn: getTimesheet,
   });
 
-  const getTime = data ? data.find((item) => item.date === formattedDate) : [];
-  const timeInDB = getTime?.timeIn;
-  const timeOutDB = getTime?.timeOut;
-  const totalHoursDB = getTime?.totalHours;
-  const timeId = getTime?.id;
+  const getTime = useMemo(() => (data ? data.find((item) => item.date === formattedDate) : []), [data, formattedDate]);
+  const timeInDB = useMemo(() => getTime?.timeIn, [getTime]);
+  const timeOutDB = useMemo(() => getTime?.timeOut, [getTime]);
+  const totalHoursDB = useMemo(() => getTime?.totalHours, [getTime]);
+  const timeId = useMemo(() => getTime?.id, [getTime]);
 
-  const timeInDBFormat = new Date(timeInDB);
-  const timeOutDBFormat = new Date(timeOutDB);
+  const timeInDBFormat = useMemo(() => new Date(timeInDB), [timeInDB]);
+  const timeOutDBFormat = useMemo(() => new Date(timeOutDB), [timeOutDB]);
 
-  // time now
-  const timeNow = parse(timeFormat, "HH:mm", new Date());
+  const timeNow = useMemo(() => parse(timeFormat, "HH:mm", new Date()), [timeFormat]);
 
-  const getWeek = data
-    ? data
-        .filter((item) => item.week === getTime?.week)
-        .map(({ date }) => ({
-          date: format(new Date(date), "dd"),
-          day: format(new Date(date), "EEEE"),
-        }))
-    : [];
+  const getWeek = useMemo(() => 
+    data
+      ? data
+          .filter((item) => item.week === getTime?.week)
+          .map(({ date }) => ({
+            date: format(new Date(date), "dd"),
+            day: format(new Date(date), "EEEE"),
+          }))
+      : [], [data, getTime]);
 
-  // //addjust time
-  // const adjustTime = (time) => {
-  //   const minutes = getMinutes(time);
-  //   const hours = getHours(time);
-  //   if (minutes >= 0 && minutes < 15) {
-  //     return setMinutes(setMinutes(time, 0), 0);
-  //   } else if (minutes >= 15 && minutes < 30) {
-  //     return setMinutes(setMinutes(time, 0), 15);
-  //   } else if (minutes >= 30 && minutes < 45) {
-  //     return setMinutes(setMinutes(time, 0), 30);
-  //   } else {
-  //     return setMinutes(setMinutes(time, 0), 45);
-  //   }
-  // };
-
-  // adjust total hours
-  const adjustTotalHours = (hours) => {
+  const adjustTotalHours = useCallback((hours) => {
     const totalMinutes = hours * 60;
     const adjustedMinutes = Math.floor(totalMinutes / 15) * 15;
     return adjustedMinutes / 60;
-  };
+  }, []);
 
-  // timeIn Function
-  const handleTimeIn = (e) => {
+  const handleTimeIn = useCallback((e) => {
     e.preventDefault();
-
     const adjustedTime = adjustTime(currentTime);
-
     mutateTimeIn({
       id: timeId,
       timeIn: adjustedTime,
     });
-  };
+  }, [mutateTimeIn, timeId, adjustTime, currentTime]);
 
-  // timeOut Function
-  const handleTimeOut = () => {
+  const handleTimeOut = useCallback(() => {
     const adjustedTime = adjustTime(currentTime);
-
-    //third
     if (timeInDB !== "0:00") {
       const lunchBreakStart = setHours(setMinutes(new Date(), 0), 12);
-
       const minutesWorked = Math.ceil((adjustedTime - timeInDBFormat) / 60000);
       const hoursWorked = minutesWorked / 60;
       const newTotalHours = adjustTotalHours(totalHours + hoursWorked);
-
       let adjustedTotalHours = newTotalHours;
-
       if (timeInDBFormat < lunchBreakStart) {
         const lunchBreakHours = 1.0;
         adjustedTotalHours -= lunchBreakHours;
       }
-
       mutateTimeOut({
         id: timeId,
         timeOut: adjustedTime,
         totalHours: parseFloat(adjustedTotalHours.toFixed(2)),
       });
     }
-  };
+  }, [mutateTimeOut, timeId, adjustTime, currentTime, timeInDB, timeInDBFormat, totalHours, adjustTotalHours]);
 
-  const handleCustomDate = (time) => {
+  const handleCustomDate = useCallback((time) => {
     setCurrrentTime(time);
-  };
+  }, []);
 
   if (isLoading) {
     return <h1>Loading</h1>;
   }
 
+
+
+
+  
   return (
     <div className="mt-2 border-r">
       <div className="flex items-center justify-between mb-8 px-3">
