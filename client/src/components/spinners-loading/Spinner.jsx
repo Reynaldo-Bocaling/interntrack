@@ -1,6 +1,9 @@
 import BarLoader from "react-spinners/BarLoader";
+import DotLoader from "react-spinners/DotLoader";
+
 import Logo from "../../assets/icons/logo.png";
-export const Spinner = () => {
+
+export const BarLoading = () => {
   return (
     <div className="fixed top-0 l-20 h-screen w-full bg-white flex mt-32 justify-center items-start">
       <div className="flex flex-col gap-4 items-center justify-center">
@@ -12,6 +15,19 @@ export const Spinner = () => {
           </span>
         </div>
       </div>
+    </div>
+  );
+};
+
+export const DotLoading = () => {
+  return (
+    <div className=" w-full flex items-start justify-center py-5">
+      <DotLoader
+        color="#0078fa"
+        cssOverride={{}}
+        size={40}
+        speedMultiplier={1}
+      />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import PrivateRoutes from "./auth/PrivateRoutes";
 import { pdfjs } from "react-pdf";
 const AddAdminModal = lazy(() => import("./components/addAdmin/AddAdminModal"));
 const List = lazy(() => import("./components/print-layout/List"));
-import { Spinner } from "./components/spinners-loading/Spinner";
+import { BarLoading } from "./components/spinners-loading/Spinner";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -19,7 +19,7 @@ const App = () => {
       <Route
         path="/welcome-to-InternTrack"
         element={
-          <Suspense fallback={<Spinner/>}>
+          <Suspense fallback={<BarLoading/>}>
             <LandingPage />
           </Suspense>
         }
@@ -27,7 +27,7 @@ const App = () => {
       <Route
         path="/weekly"
         element={
-          <Suspense fallback={<Spinner/>}>
+          <Suspense fallback={<BarLoading/>}>
             <List />
           </Suspense>
         }
@@ -35,7 +35,7 @@ const App = () => {
       <Route
         path="/@super-admin"
         element={
-          <Suspense fallback={<Spinner/>}>
+          <Suspense fallback={<BarLoading/>}>
             <AddAdminModal />
           </Suspense>
         }

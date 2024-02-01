@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import taskUploadModel from "../../assets/images/studentTaskModel.png";
 import { AiOutlineCheck } from "react-icons/ai";
 import { LiaTimesSolid } from "react-icons/lia";
@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTask, getTimesheet } from "../../api/Api";
 import { format } from "date-fns";
+import { DotLoading } from "../../components/spinners-loading/Spinner";
 
 const Dashboard = () => {
   const formattedDate = format(new Date(), "yyyy-MM-dd");
@@ -31,7 +32,7 @@ const Dashboard = () => {
   });
 
   if (programLoading || taskLoading || studentLoading || timesheetLoading) {
-    return <center className="my-5 text-lg">Computing..</center>;
+    return <DotLoading/>;
   }
 
   const programList = getProgram
@@ -111,12 +112,14 @@ const Dashboard = () => {
       <div className="w-[100%] flex flex-col lg:flex-row gap-2 bg-white2 rounded-lg relative mb-2">
         {/* count box */}
         <div className="relative  max-w-[450px] w-full pt-7">
-            <PieChart
+        <Suspense fallback={<DotLoading />}>
+        <PieChart
               data={piechartData}
               colors={colors}
               labels={labels}
               title={"Total Hours"}
             />
+        </Suspense>
           <h1 className="absolute top-[12%] right-[2%] text-2xl font-semibold">
             {`${hoursTaken} / ${totalHours}`}{" "}
             <span className="text-xs text-blue-500">hrs</span>

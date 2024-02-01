@@ -2,8 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { verifyUser } from "../api/Api";
-import PulseLoader from "react-spinners/PulseLoader";
-import { Spinner } from "../components/spinners-loading/Spinner";
+import { BarLoading } from "../components/spinners-loading/Spinner";
 
 const Rootlayout = lazy(() => import("../layouts/Rootlayout"));
 const Login = lazy(() => import("./Login"));
@@ -181,7 +180,7 @@ const PrivateRoutes = () => {
 
   if (isLoading) {
     return (
-      <Spinner />
+      <BarLoading />
     );
   }
 
@@ -541,7 +540,7 @@ const PrivateRoutes = () => {
       <Routes>
         {!isLogged ? (
           
-            <Route path="/" element={<Suspense fallback={<Spinner />}> <Login /></Suspense>} />
+            <Route path="/" element={<Suspense fallback={<BarLoading />}> <Login /></Suspense>} />
           
         ) : (
           
@@ -549,7 +548,7 @@ const PrivateRoutes = () => {
           <Route
             path="/"
             element={
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={<BarLoading />}>
                 {<Rootlayout role={isRole} />}
               </Suspense> 
             }

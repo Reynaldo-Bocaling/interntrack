@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { DotLoading } from "../components/spinners-loading/Spinner";
 
 const LazySidebar = lazy(() => import("./common/Sidebar"));
 const LazyStudentHeader = lazy(() => import("./common/StudentHeader"));
@@ -32,18 +33,13 @@ const Rootlayout = (props) => {
         <div>
           {role === "Student" ? (
             <>
-            {/* <Suspense fallback={<div>Load Header</div>}> */}
               <LazyStudentHeader />
-              {/* </Suspense> */}
               
-              {/* <Suspense fallback={<div>Load Navigation</div>}> */}
               <LazyStudentNavigate />
-              {/* </Suspense> */}
             </>
             
             
           ) : (
-            // <Suspense fallback={<div>Load Header</div>}>
             <>
              <LazyHeader
                 toggleIsOpen={isOpen}
@@ -65,7 +61,7 @@ const Rootlayout = (props) => {
             // </Suspense>
           )}
 
-          <Suspense fallback={<div>Load Notifications</div>}>
+          <Suspense fallback={<center className="text-xs py-5">Load Notifications</center>}>
             <LazyNotification />
           </Suspense>
 
@@ -78,7 +74,7 @@ const Rootlayout = (props) => {
             }}
           >
 
-<Suspense fallback={<div>Load Content, Please wait</div>}>
+<Suspense fallback={<DotLoading />}>
 <Outlet />
 </Suspense>
            
