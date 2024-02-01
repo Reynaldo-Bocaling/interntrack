@@ -14,9 +14,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const App = () => {
   return (
     <Routes>
-      <Suspense fallback={<BarLoading/>}>
-      <Route path="/*" element={<PrivateRoutes />} />
-      </Suspense>
+      
+      <Route path="/*" element={<Suspense fallback={<BarLoading/>}> <PrivateRoutes /></Suspense>} />
+      
       
 
       <Route
