@@ -59,7 +59,7 @@ const WeeklyReport = () => {
             week,
             taskDescription:
               logStatus !== 0
-                ? taskList.find((item) => item.date === date)?.description
+                ? taskList?.find((item) => item.date === date)?.description
                 : "",
           }))
       : [];
@@ -67,8 +67,8 @@ const WeeklyReport = () => {
 
   const groupedTimeSheet = useMemo(() => {
     const result = [];
-    for (let i = 0; i < studentTimesheet.length; i += 5) {
-      result.push(studentTimesheet.slice(i, i + 5));
+    for (let i = 0; i < studentTimesheet?.length; i += 5) {
+      result.push(studentTimesheet?.slice(i, i + 5));
     }
     return result.sort(
       (a, b) => new Date(b[0].date) - new Date(a[0].date)
