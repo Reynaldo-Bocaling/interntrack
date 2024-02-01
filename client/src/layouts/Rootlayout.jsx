@@ -31,13 +31,21 @@ const Rootlayout = (props) => {
       {role !== "Unauthorized" && (
         <div>
           {role === "Student" ? (
-            <Suspense fallback={<div>Load Content</div>}>
+            <>
+            {/* <Suspense fallback={<div>Load Header</div>}> */}
               <LazyStudentHeader />
+              {/* </Suspense> */}
+              
+              {/* <Suspense fallback={<div>Load Navigation</div>}> */}
               <LazyStudentNavigate />
-            </Suspense>
+              {/* </Suspense> */}
+            </>
+            
+            
           ) : (
-            <Suspense fallback={<div>Load Header</div>}>
-              <LazyHeader
+            // <Suspense fallback={<div>Load Header</div>}>
+            <>
+             <LazyHeader
                 toggleIsOpen={isOpen}
                 toggleNotif={toggleNotif}
                 toggleProfile={toggleProfile}
@@ -52,7 +60,9 @@ const Rootlayout = (props) => {
                 toggleSetIsOpen={toggleIsOpen}
                 role={role}
               />
-            </Suspense>
+            </>
+             
+            // </Suspense>
           )}
 
           <Suspense fallback={<div>Load Notifications</div>}>
@@ -67,10 +77,14 @@ const Rootlayout = (props) => {
               setIsOpenNotif(false), setIsOpenProfile(false);
             }}
           >
-            <Outlet />
-            <Suspense fallback={<div>Load Footer</div>}>
+
+<Suspense fallback={<div>Load Footer</div>}>
+<Outlet />
+</Suspense>
+           
+            {/* <Suspense fallback={<div>Load Footer</div>}> */}
               <LazyFooter />
-            </Suspense>
+            {/* </Suspense> */}
           </div>
         </div>
       )}

@@ -1,13 +1,13 @@
-import React, { lazy, useState } from "react";
+import React, { useState } from "react";
 import { MdOutlineAdd } from "react-icons/md";
-const FilterTask = lazy(()=> import("../../components/StudentTaskStyle/FilterTask"));
-import { Button, Tooltip,Textarea  } from "@nextui-org/react";
+import { AiOutlineCloudUpload } from "react-icons/ai";
+import FilterTask from "../../components/StudentTaskStyle/FilterTask";
+import { Button, Tooltip, Textarea, image } from "@nextui-org/react";
 import { Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { uploadTask, getTask } from "../../api/Api";
 import Swal from "sweetalert2";
-// import { IoWarning } from "react-icons/io5";
-import { AiOutlineCloudUpload  } from "react-icons/ai";
+import { IoWarning } from "react-icons/io5";
 const groupTasksByMonth = (tasks) => {
   const groupedTasks = {};
   tasks.forEach((task) => {
@@ -74,13 +74,12 @@ const Activities = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { desc, date } = values;
-    // const formData = new FormData();
-    // formData.append("image", File);
-    // formData.append("description", desc);
-    // formData.append("date", date);
+    const formData = new FormData();
+    formData.append("image", File);
+    formData.append("description", desc);
+    formData.append("date", date);
 
-      mutate({description: desc, date})
-    // mutate(formData);
+    mutate(formData);
   };
 
   const taskList = data ? data : [];
@@ -128,7 +127,7 @@ const Activities = () => {
             <Tooltip content="Browse Image" closeDelay={0}>
               <button className=" uploadMoa h-[200pxa]  relative overflow-hidden text-sm  w-full flex flex-col items-center justify-center gap-2">
                 <AiOutlineCloudUpload size={30} className="text-blue-500" />
-                <span className="text-base "> Upload Task</span>
+                <span className="text-base "> Upload Moa</span>
                 <input
                   type="file"
                   onChange={loadingImage}
