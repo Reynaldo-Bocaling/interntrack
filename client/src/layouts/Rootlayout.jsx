@@ -7,7 +7,7 @@ const LazyStudentHeader = lazy(() => import("./common/StudentHeader"));
 const LazyHeader = lazy(() => import("./common/Header"));
 const LazyFooter = lazy(() => import("./common/Footer"));
 const LazyStudentNavigate = lazy(() => import("./common/StudentNavigation"));
-const LazyNotification = lazy(() => import("../components/notification/Notification"));
+// const LazyNotification = lazy(() => import("../components/notification/Notification"));
 
 const Rootlayout = (props) => {
   const { role, data } = props;
@@ -61,9 +61,9 @@ const Rootlayout = (props) => {
             // </Suspense>
           )}
 
-          <Suspense fallback={<center className="text-xs py-5">Load Notifications</center>}>
+          {/* <Suspense fallback={<center className="text-xs py-5">Load Notifications</center>}>
             <LazyNotification />
-          </Suspense>
+          </Suspense> */}
 
           <div
             className={`${
