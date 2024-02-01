@@ -78,7 +78,7 @@ const Rootlayout = (props) => {
             }}
           >
 
-<Suspense fallback={<div>Load Footer</div>}>
+<Suspense fallback={<div>Load Content, Please wait</div>}>
 <Outlet />
 </Suspense>
            
