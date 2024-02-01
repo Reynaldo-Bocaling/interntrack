@@ -1,10 +1,10 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import LandingPage  from "./pages/landingPage/index";
-import PrivateRoutes from "./auth/PrivateRoutes";
+const LandingPage = lazy(() => import("./pages/landingPage/index"));
+import PrivateRoutes from"./auth/PrivateRoutes"));
 import { pdfjs } from "react-pdf";
 const AddAdminModal = lazy(() => import("./components/addAdmin/AddAdminModal"));
-const List = lazy(()=> import("./components/print-layout/List"));
+const List = lazy(() => import("./components/print-layout/List"));
 import { BarLoading } from "./components/spinners-loading/Spinner";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -19,7 +19,9 @@ const App = () => {
       <Route
         path="/welcome-to-InternTrack"
         element={
+          <Suspense fallback={<BarLoading/>}>
             <LandingPage />
+          </Suspense>
         }
       />
       <Route
