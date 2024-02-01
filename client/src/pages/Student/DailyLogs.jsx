@@ -13,7 +13,7 @@ const LogsHistory = lazy(() =>
 
 const DailyLogs = () => {
   return (
-    <div>
+    <>
       <Carousel
         className=" max-w-[full] z-0"
         nextControlIcon={<MdKeyboardArrowRight size={16} />}
@@ -30,7 +30,7 @@ const DailyLogs = () => {
       </Carousel>
 
       <div></div>
-    </div>
+    </>
   );
 };
 

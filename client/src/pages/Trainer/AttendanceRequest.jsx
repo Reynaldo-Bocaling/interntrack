@@ -64,7 +64,7 @@ const AttendanceRequest = () => {
       : [];
 
   return (
-    <div>
+    <>
       <div className="pb-4 pl-2 flex items-center justify-between">
         <span className=" text-xl tracking-wide font-semibold">
           Attendance Request
@@ -82,7 +82,7 @@ const AttendanceRequest = () => {
       </div>
 
       <AttendanceRequestItem data={studentRequest} isLoading={isLoading} />
-    </div>
+    </>
   );
 };
 

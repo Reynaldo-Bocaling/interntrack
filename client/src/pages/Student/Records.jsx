@@ -17,7 +17,7 @@ const Logs = () => {
 
 
   return (
-    <div>
+    <>
       <Box
         sx={{
           width: "100%",
@@ -77,7 +77,7 @@ const Logs = () => {
           <Requirement />
          </Suspense>
       )}
-    </div>
+    </>
   );
 };
 

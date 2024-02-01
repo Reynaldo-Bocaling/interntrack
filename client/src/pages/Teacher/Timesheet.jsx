@@ -65,9 +65,9 @@ const Timesheet = () => {
 
   console.log("g", data);
   return (
-    <div>
+    <>
       <TimesheetTable data={data} />
-    </div>
+    </>
   );
 };
 

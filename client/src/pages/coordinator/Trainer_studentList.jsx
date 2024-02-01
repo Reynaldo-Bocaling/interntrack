@@ -126,7 +126,7 @@ const Trainer_studentList = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="flex items-center justify-between px-2 mb-5">
         <div className="flex flex-col gap-3 items-start">
           <NavLink
@@ -160,7 +160,7 @@ const Trainer_studentList = () => {
       </div>
 
       <StudentItem data={data} columns={columns} />
-    </div>
+    </>
   );
 };
 

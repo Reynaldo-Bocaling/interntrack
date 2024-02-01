@@ -99,7 +99,7 @@ const Dashboard = () => {
   const progressRate = (attendanceRequest.length / totalRequest.length) * 100;
 
   return (
-    <div>
+    <>
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl mt-2 font-bold tracking-wide text-gray-70 ">
           Welcome back!
@@ -293,7 +293,7 @@ const Dashboard = () => {
           </table>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -117,7 +117,7 @@ const DailyLogs = () => {
   if (studentLoading) return <center className="my-12">Loading</center>;
 
   return (
-    <div>
+    <>
       <div className="flex items-center justify-between px-2 mb-4">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Daily Logs
@@ -137,7 +137,7 @@ const DailyLogs = () => {
       </div>
 
       <DailyLogItem data={data} columns={columns} />
-    </div>
+    </>
   );
 };
 

@@ -14,7 +14,7 @@ const Attendance_request = () => {
   );
 
   return (
-    <div>
+    <>
       <div className=" rounded-lg">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold tracking-wider text-gray-700 mb-3 ml-3 mt-3">
@@ -76,7 +76,7 @@ const Attendance_request = () => {
           </table>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

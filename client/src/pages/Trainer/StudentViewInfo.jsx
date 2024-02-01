@@ -5,9 +5,9 @@ const StudentViewInfo = () => {
 
   
   return (
-    <div>
+    <>
       <StudentInfo />
-    </div>
+    </>
   )
 }
 

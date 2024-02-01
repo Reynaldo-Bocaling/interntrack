@@ -188,7 +188,7 @@ const TeacherList = () => {
   };
 
   return (
-    <div>
+    <>
       <div className="flex items-center justify-between px-2 mb-5">
         <h1 className="text-xl font-bold tracking-wider text-gray-700">
           Old Student
@@ -218,7 +218,7 @@ const TeacherList = () => {
     
      
 
-    </div>
+    </>
   );
 };
 

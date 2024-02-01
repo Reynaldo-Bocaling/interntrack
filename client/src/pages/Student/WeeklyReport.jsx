@@ -15,7 +15,7 @@ const WeeklyReport = () => {
   
 
   return (
-    <div>
+    <>
         <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
       
         <Box
@@ -47,7 +47,7 @@ const WeeklyReport = () => {
         
       {value === 0 && <ReportList />}
       {value === 1 && <SubmitWeeklyReport />}
-    </div>
+    </>
   );
 };
 

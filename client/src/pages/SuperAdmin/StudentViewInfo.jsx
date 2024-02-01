@@ -4,9 +4,9 @@ function StudentViewInfo() {
 
   
   return (
-    <div>
+    <>
       <StudentInfo />
-    </div>
+    </>
   )
 }
 

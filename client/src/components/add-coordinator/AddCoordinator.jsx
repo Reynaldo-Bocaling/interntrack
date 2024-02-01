@@ -107,9 +107,6 @@ const AddCoordinator = ({ onSubmit, AddIsOpen, AddOnClose, isLoading }) => {
 
 
 
-
-  console.log('coor', coordinatorList);
-
   const handleSubmit = (e) => {
     e.preventDefault();
 

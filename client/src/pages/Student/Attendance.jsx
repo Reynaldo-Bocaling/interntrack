@@ -21,7 +21,7 @@ const Logs = () => {
   });
 
   return (
-    <div>
+    <>
       {data?.deleteStatus === 1 ||
       data?.areaAssigned_id == null ||
       data?.trainer_id == null ? (
@@ -54,7 +54,7 @@ const Logs = () => {
           )}
         </>
       )}
-    </div>
+    </>
   );
 };
 

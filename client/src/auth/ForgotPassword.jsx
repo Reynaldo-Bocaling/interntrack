@@ -72,7 +72,7 @@ function ForgotPassword({ openForgotPassword, onOpenChangeEvent }) {
   }
 
   return (
-    <div>
+    <>
       <Modal isOpen={openForgotPassword} onOpenChange={onOpenChangeEvent}>
         <ModalContent>
           {() => (
@@ -160,7 +160,7 @@ function ForgotPassword({ openForgotPassword, onOpenChangeEvent }) {
           )}
         </ModalContent>
       </Modal>
-    </div>
+    </>
   );
 }
 

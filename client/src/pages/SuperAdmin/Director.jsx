@@ -40,7 +40,7 @@ const Director = () => {
   }
 
   return (
-    <div>
+    <>
       {data.length > 0 ? (
         <div className="max-w-[900px] mx-auto py-12 flex flex-col md:flex-row items-center justify-center gap-7">
           <Avatar src={data[0].profile_url?data[0].profile_url : picture} className="bg-blue-500 w-[300px] h-[300px]" />
@@ -88,7 +88,7 @@ const Director = () => {
           />
         </div>
       )}
-    </div>
+    </>
   );
 };
 

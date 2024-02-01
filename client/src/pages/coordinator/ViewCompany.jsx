@@ -14,14 +14,14 @@ const ViewCompany = () => {
   const companyInfo = data ? data.find((item) => item.id == parseInt(id)) : [];
 
   return (
-    <div>
+    <>
       <StudentInfo
         data={companyInfo}
         editable={true}
         isLoading={isLoading}
         isError={isError}
       />
-    </div>
+    </>
   );
 };
 

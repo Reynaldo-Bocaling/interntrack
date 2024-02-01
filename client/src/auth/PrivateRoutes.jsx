@@ -536,7 +536,7 @@ const PrivateRoutes = () => {
   const userRoutes = roleRoutes[isRole] || [];
 
   return (
-    <div>
+    <>
       <Routes>
         {!isLogged ? (
           
@@ -574,7 +574,7 @@ const PrivateRoutes = () => {
       <div>
         <Outlet />
       </div>
-    </div>
+    </>
   );
 };
 export default PrivateRoutes;

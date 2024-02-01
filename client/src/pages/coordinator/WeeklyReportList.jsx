@@ -128,7 +128,7 @@ const WeeklyReport = () => {
 
   // console.log(groupedTimeSheet);
   return (
-    <div>
+    <>
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between w-full pr-5">
           <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
@@ -389,7 +389,7 @@ const WeeklyReport = () => {
           </Button>
         </div>
       </Drawer>
-    </div>
+    </>
   );
 };
 

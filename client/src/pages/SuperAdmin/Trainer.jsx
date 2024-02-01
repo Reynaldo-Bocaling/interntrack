@@ -3,9 +3,9 @@ const TrainerList = lazy(()=> import('../../components/trainer-list/TrainerList'
 
 const Trainer_list = () => {
   return (
-    <div>
+    <>
       <TrainerList />
-    </div>
+    </>
   )
 }
 
