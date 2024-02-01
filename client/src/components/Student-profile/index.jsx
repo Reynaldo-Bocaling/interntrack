@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Information from "./Information";
-import Requirements from "./Requirements";
-import Security from "./Security";
+const Information = lazy(() => import("./Information"));
+const Requirements = lazy(() => import("./Requirements"));
+const Security = lazy(() => import("./Security"));
 import Swal from "sweetalert2";
 import { MdAlternateEmail } from "react-icons/md";
 import EmptyProfileIcon from "../../assets/images/emptyProfile.png";
@@ -23,11 +23,10 @@ import { LiaUserEditSolid } from "react-icons/lia";
 import { PiGenderMaleBold } from "react-icons/pi";
 import { BiBookOpen, BiUserVoice } from "react-icons/bi";
 import { FaRegBuilding } from "react-icons/fa";
+import { DotLoading } from "../spinners-loading/Spinner";
 
 function index({ data }) {
   const [value, setValue] = useState(0);
-
-
 
   const dataInfo = [
     {
@@ -101,9 +100,6 @@ function index({ data }) {
     },
   ];
 
-
-
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -125,8 +121,16 @@ function index({ data }) {
       </Box>
 
       {value === 0 && <Information dataInfo={dataInfo} />}
-      {value === 1 && <Security data={data} />}
-      {value === 2 && <Requirements />}
+      {value === 1 && (
+        <Suspense fallback={<DotLoading />}>
+          <Security data={data} />
+        </Suspense>
+      )}
+      {value === 2 && (
+        <Suspense fallback={<DotLoading />}>
+          <Requirements />y
+        </Suspense>
+      )}
     </div>
   );
 }

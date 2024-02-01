@@ -25,7 +25,7 @@ const TimeSheet = () => {
   });
 
   if (programLoading || studentLoading || timesheetLoading) {
-    return <center className="my-5 text-lg">Computing..</center>;
+    return <center className="my-7 text-sm">Computing..</center>;
   }
 
   const programList = getProgram

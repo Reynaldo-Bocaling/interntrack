@@ -3,6 +3,7 @@ import React from "react";
 import { TfiAnnouncement } from "react-icons/tfi";
 import {  getStudent } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
+import { DotLoading } from "../../components/spinners-loading/Spinner";
 
 const Announcement = () => {
   const { data: getStudentInfo, isLoading: studentInfoLoading } =  useQuery({queryKey: ["getStudent22"],queryFn: getStudent, });
@@ -13,7 +14,7 @@ const Announcement = () => {
   const otherPost = studentInfo?.announcement;
 
 
-  if (studentInfoLoading) return <center>Loading</center>;
+  if (studentInfoLoading) return <DotLoading />;
 
   return (
     <div className="bg-white rounded-lg p-5 w-full">
