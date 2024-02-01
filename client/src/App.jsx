@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-const LandingPage = lazy(() => import("./pages/landingPage/index"));
-const PrivateRoutes = lazy(() => import("./auth/PrivateRoutes"));
+import LandingPage from "./pages/landingPage/index";
+import PrivateRoutes from "./auth/PrivateRoutes";
 import { pdfjs } from "react-pdf";
 const AddAdminModal = lazy(() => import("./components/addAdmin/AddAdminModal"));
 const List = lazy(() => import("./components/print-layout/List"));
@@ -26,9 +26,7 @@ const App = () => {
       <Route
         path="/welcome-to-InternTrack"
         element={
-          <Suspense fallback={<BarLoading />}>
             <LandingPage />
-          </Suspense>
         }
       />
       <Route
@@ -36,7 +34,7 @@ const App = () => {
         element={
           <Suspense fallback={<BarLoading />}>
             <List />
-          </Suspense>
+          // </Suspense>
         }
       />
       <Route
