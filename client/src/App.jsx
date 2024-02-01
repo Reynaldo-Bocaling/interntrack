@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 const LandingPage = lazy(() => import("./pages/landingPage/index"));
-import PrivateRoutes from"./auth/PrivateRoutes";
+const PrivateRoutes = lazy(()=> import("./auth/PrivateRoutes"));
 import { pdfjs } from "react-pdf";
 const AddAdminModal = lazy(() => import("./components/addAdmin/AddAdminModal"));
 const List = lazy(() => import("./components/print-layout/List"));
@@ -14,7 +14,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const App = () => {
   return (
     <Routes>
+      <Suspense fallback={<BarLoading/>}>
       <Route path="/*" element={<PrivateRoutes />} />
+      </Suspense>
+      
 
       <Route
         path="/welcome-to-InternTrack"
