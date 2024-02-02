@@ -733,7 +733,7 @@ export const updateStudentProfilePicture = async (formData) => {
 };
 
 // upload task
-export const uploadTask = async ({description, date}) => {
+export const uploadTask = async ({description, date, image}) => {
   try {
     const response = await axios.post(`${url}uploadTask`, {description, date, image}, {
       withCredentials: true,
