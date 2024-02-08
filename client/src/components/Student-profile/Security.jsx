@@ -28,7 +28,7 @@ function Security({ data }) {
     }
   };
 
-  const { mutate } = useMutation(changeStudentPassword, {
+  const { mutate, isLoading } = useMutation(changeStudentPassword, {
     onSuccess: () => {
       Swal.fire(
         "Success",
@@ -104,7 +104,7 @@ function Security({ data }) {
                 errorMsg || !reEnterNewPassword || !newPassword || !password
               }
             >
-              Change password
+              {isLoading ? <small>Updating..</small>:<small>Change Password</small>}
             </Button>
             <button
               onClick={open}

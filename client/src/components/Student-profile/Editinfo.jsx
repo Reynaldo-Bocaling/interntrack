@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Drawer } from "@mantine/core";
 import { Input,Button } from "@nextui-org/react";
 
-function Editinfo({ opened, onClose, info, handleSubmit,data }) {
+function Editinfo({ opened, onClose, info, handleSubmit,data , isLoading}) {
   const [formValues, setFormValues] = useState(data);
 
   const handleChange = (e) => {
@@ -49,7 +49,11 @@ function Editinfo({ opened, onClose, info, handleSubmit,data }) {
             />
           ))}
 
-          <Button onClick={handleClick} color="primary" className="mt-4 font-medium rounded-full" size="lg">Save changes</Button>
+          <Button onClick={handleClick} color="primary" isDisabled={isLoading} className="mt-4 font-medium rounded-full" size="lg">
+            {
+              isLoading ? <small>Editing..</small>: <small>Save changes</small>
+            }
+            </Button>
           <Button onClose={onClose} className="font-medium bg-[rgba(250,0,0,0.1)] text-red-500 mt-1 rounded-full" size="lg">Cancel</Button>
         </form>
       </Drawer>

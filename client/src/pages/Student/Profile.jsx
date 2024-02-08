@@ -44,7 +44,7 @@ const Profile = () => {
     queryFn: getStudent,
   });
 
-  const { mutate: editInfoMutate } = useMutation(editStudentProfile, {
+  const { mutate: editInfoMutate, isLoading:isLoadingEditInfo } = useMutation(editStudentProfile, {
     onSuccess: () => {
       Swal.fire("Success", "Update Successful", "success");
       setOpenEdit(false);
@@ -144,6 +144,7 @@ const Profile = () => {
             info={Info}
             onClose={() => setOpenEdit(false)}
             opened={OpenEdit}
+            isLoading={isLoadingEditInfo}
           />
         )}
       </div>
