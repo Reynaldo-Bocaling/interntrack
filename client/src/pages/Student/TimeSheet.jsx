@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCampus, getStudent, getTimesheet } from "../../api/Api";
 import { format } from "date-fns";
 import { Button } from "@nextui-org/react";
+import { DotLoading } from "../../components/spinners-loading/Spinner";
 const PieChart = lazy(() => import("../../components/charts/PieChart"));
 
 const TimeSheet = () => {
@@ -96,7 +97,7 @@ const TimeSheet = () => {
 
 
   if (programLoading || studentLoading || timesheetLoading) {
-    return <center className="my-7 text-sm">Computing..</center>;
+    return <DotLoading/>;
   }
 
   
@@ -115,7 +116,7 @@ const TimeSheet = () => {
             title={"Total Hours"}
           />
 
-          <h1 className="absolute top-[12%] right-[2%] text-2xl font-semibold">
+          <h1 className="absolute top-[12%] right-12 text-xl font-semibold">
             {`${hoursTaken} / ${totalHours}`}{" "}
             <span className="text-xs text-blue-500">hrs</span>
           </h1>

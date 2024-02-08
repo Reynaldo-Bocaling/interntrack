@@ -1,64 +1,37 @@
-import React, { Suspense, lazy, useState } from "react";
-import logo from "../../assets/icons/logo.png";
-import { GoBell } from "react-icons/go";
-import { TbMessageCircle2 } from "react-icons/tb";
-import { HiOutlineMenuAlt4 } from "react-icons/hi";
-const Profile = lazy(() =>
-  import("../../components/StudenrMenuDrawer/Profile")
-);
-const Notification = lazy(() =>
-  import("../../components/StudenrMenuDrawer/Notification")
-);
-import { useDisclosure } from "@mantine/hooks";
-import { DotLoading } from "../../components/spinners-loading/Spinner";
-const Message = lazy(() =>
-  import("../../components/StudenrMenuDrawer/Message")
-);
+import React, { useState } from "react";
+import { Avatar } from "@nextui-org/react";
+import Notification from "../../components/StudenrMenuDrawer/Notification";
+import { BiBell } from "react-icons/bi";
+import {Link} from 'react-router-dom'
+import dp from '../../assets/images/reyn.png'
+
 
 function StudentHeader() {
-  const [openProfile, setOpenProfile] = useState(false);
   const [openNotification, setOpenNotification] = useState(false);
-  const [openMessage, setOpenMessage] = useState(false);
 
   return (
     <>
       <div
-        className={`w-full fixed -top-1 left-0 h-[70px] pt-2 flex items-center justify-between duration-300 bg-white shadow-xl shadow-slate-100 px-5 z-20`}
+        className={`w-full fixed -top-1 left-0 h-[70px] pt-4 pb-2 flex items-center justify-between duration-300 bg-white px-7 z-20`}
       >
-        <div className="flex items-center gap-2">
-          <img src={logo} alt="" className="w-[32px]" />
-          <h1 className="text-[#000] font-semibold">InternTrack</h1>
-        </div>
+        <Link to="/Profile">
+          <Avatar
+          src={dp}
+          size=""
+        /></Link>
+        
 
-        <div className=" flex items-center gap-4">
-          <button onClick={() => setOpenMessage(true)}>
-            <TbMessageCircle2 size={20} className="text-gray-900" />
-          </button>
-          <button onClick={() => setOpenNotification(true)}>
-            <GoBell size={20} className="text-gray-900" />
-          </button>
-          <button
-            onClick={() => setOpenProfile(true)}
-            className=" ml-3 p-2 bg-white rounded-full shadow-lg shadow-slate-300"
-          >
-            <HiOutlineMenuAlt4 size={25} className="text-gray-900" />
-          </button>
-        </div>
+        <button onClick={() => setOpenNotification(true)} className="relative">
+          <BiBell size={27} className="text-gray-600" />
+          <div className="absolute top-1 right-1 h-[8px] w-[8px] rounded-full bg-[#FC6736]"></div>
+        </button>
       </div>
 
-      {openProfile && (
-          <Profile opened={openProfile} close={() => setOpenProfile(false)} />
-      )}
-
       {openNotification && (
-          <Notification
-            opened={openNotification}
-            onClose={() => setOpenNotification(false)}
-          />
-      )}
-
-      {openMessage && (
-          <Message opened={openMessage} onClose={() => setOpenMessage(false)} />
+        <Notification
+          opened={openNotification}
+          onClose={() => setOpenNotification(false)}
+        />
       )}
     </>
   );

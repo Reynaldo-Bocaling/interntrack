@@ -39,7 +39,7 @@ const CustomizedPieChart = ({ data, labels, colors, title }) => {
     },
     legend: {
       position: "right",
-      offsetY: 70,
+      offsetY: 50,
       offsetX: 0,
     },
   };

@@ -107,9 +107,9 @@ function index({ data }) {
         }}
       >
         <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Info" />
-          <Tab label="Security" />
-          <Tab label="Requirements" />
+          <Tab label="Info" sx={{fontSize:'10px'}} />
+          <Tab label="Security" sx={{fontSize:'10px'}} />
+          <Tab label="Requirements" sx={{fontSize:'10px'}} />
         </Tabs>
       </Box>
 

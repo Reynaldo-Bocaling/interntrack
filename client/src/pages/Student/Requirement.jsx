@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { Button } from "@nextui-org/react";
 import { IoIosAdd } from "react-icons/io";
+import { DotLoading } from "../../components/spinners-loading/Spinner";
 
 const Requirements = () => {
   const queryClient = useQueryClient();
@@ -14,7 +15,7 @@ const Requirements = () => {
   const [isAddRequirement, setIsAddRequirement] = useState(false);
   const [selectItem, setSelectItem] = useState({})
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getStudenRequirement"],
     queryFn: getRequirement,
   });
@@ -74,6 +75,10 @@ const Requirements = () => {
     setSelectItem(item)
   }
 
+
+  if(isLoading){
+    return <DotLoading/>
+  }
   return (
     <div className="mt-3 mb-8">
       <div className="flex items-center justify-between">

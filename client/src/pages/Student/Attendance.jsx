@@ -1,9 +1,9 @@
-import React, { Suspense, lazy, useState } from "react";
+import React, { lazy, useState } from "react";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-const AttendanceRequest = lazy(() => import("./Attendance_request"));
-const DailyLogs = lazy(() => import("./DailyLogs"));
+import AttendanceRequest from "./Attendance_request";
+import DailyLogs from "./DailyLogs";
 import { useQuery } from "@tanstack/react-query";
 import { getStudent } from "../../api/Api";
 import { DotLoading } from "../../components/spinners-loading/Spinner";
@@ -20,12 +20,15 @@ const Logs = () => {
     queryFn: getStudent,
   });
 
+  if(isLoading){
+    return <DotLoading/>
+  }
   return (
     <>
       {data?.deleteStatus === 1 ||
       data?.areaAssigned_id == null ||
       data?.trainer_id == null ? (
-        <center>
+        <center className="text-[5rem]">
           Not available for time logs. You are not assigned to any company yet.
         </center>
       ) : (
@@ -38,20 +41,12 @@ const Logs = () => {
             }}
           >
             <Tabs value={value} onChange={handleChange} centered>
-              <Tab label="Daily logs" />
-              <Tab label="Attendance Request" />
+              <Tab label="Daily logs" sx={{fontSize: '12px'}} />
+              <Tab label="Attendance Request" sx={{fontSize: '12px'}} />
             </Tabs>
           </Box>
 
-          {value === 0 ? (
-            <Suspense fallback={<DotLoading />}>
-              <DailyLogs />
-            </Suspense>
-          ) : (
-            <Suspense fallback={<DotLoading />}>
-              <AttendanceRequest />
-            </Suspense>
-          )}
+          <div>{value === 0 ? <DailyLogs /> : <AttendanceRequest />}</div>
         </>
       )}
     </>

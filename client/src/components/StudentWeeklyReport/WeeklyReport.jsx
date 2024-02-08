@@ -4,6 +4,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useReactToPrint } from "react-to-print";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
+
 import Report from "../../components/print-layout/WeeklyReport";
 import Swal from "sweetalert2";
 import { MdKeyboardArrowRight } from "react-icons/md";
@@ -14,6 +15,7 @@ import {
   getTimesheet,
   submitReport,
 } from "../../api/Api";
+
 
 const WeeklyReport = () => {
   const queryClient = useQueryClient();
@@ -137,7 +139,7 @@ const WeeklyReport = () => {
     taskQuery.isLoading ||
     studentQuery.isLoading
   ) {
-    return <center className="my-5 text-lg">Computing..</center>;
+    return <center>Computing..</center>;
   }
 
   

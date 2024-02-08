@@ -84,6 +84,8 @@ const Dashboard = () => {
         }, {})
     : {};
 
+
+    console.log('debug', Object.values(getWeek));
   const getTeacherList = data
     ? data.teacher.map(
         ({ firstname, lastname, contact, program, student }) => ({

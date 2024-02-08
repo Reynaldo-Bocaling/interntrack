@@ -138,14 +138,22 @@ html {
 
 
 
-
-
-.student-link.active {
-  @apply text-blue-500 font-medium
+.student-link{
+  @apply text-gray-400
 }
 
+.student-link.active {
+  @apply text-[#40A2E3] font-medium
+}
 
-
+.student-link.active::after{
+  content: '';
+  height: 2px;
+  width: 23px; 
+  background: #40A2E3;
+  position: absolute; top: 7px
+  
+}
 
 
 

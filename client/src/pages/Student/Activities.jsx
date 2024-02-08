@@ -7,6 +7,7 @@ import { Drawer } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { uploadTask, getTask } from "../../api/Api";
 import Swal from "sweetalert2";
+import { DotLoading } from "../../components/spinners-loading/Spinner";
 
 const groupTasksByMonth = (tasks) => {
   const groupedTasks = {};
@@ -39,7 +40,7 @@ const Activities = () => {
     }));
   };
 
-  const { data } = useQuery({
+  const { data, isLoading:taskLoading } = useQuery({
     queryKey: ["getTask"],
     queryFn: getTask,
   });
@@ -86,6 +87,9 @@ const Activities = () => {
 
   const groupedTasks = groupTasksByMonth(taskList && taskList);
 
+  if(taskLoading){
+    return <DotLoading/>
+  }
   return (
     <div className="p-3">
       <div className="flex items-center justify-between">

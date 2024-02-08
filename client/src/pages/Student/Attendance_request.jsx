@@ -2,9 +2,10 @@ import React from "react";
 import { getTimesheet } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { DotLoading } from "../../components/spinners-loading/Spinner";
 
 const Attendance_request = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getStudentDailyLog"],
     queryFn: getTimesheet,
   });
@@ -12,6 +13,10 @@ const Attendance_request = () => {
   const filterData = data?.filter(
     (item) => item.totalHours != 0 && item.logStatus == 0
   );
+
+  if(isLoading){
+    return <DotLoading/>
+  }
 
   return (
     <>
