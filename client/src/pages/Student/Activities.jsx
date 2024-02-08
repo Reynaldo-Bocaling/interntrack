@@ -170,7 +170,7 @@ const Activities = () => {
             isDisabled={isLoading}
           >
             {
-              isLoading ? "Uploading..":"Upload Task"
+              isLoading ? <small>Uploading..</small>:<small>Upload Task</small>
             }
             Upload Task
           </Button>

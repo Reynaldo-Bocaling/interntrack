@@ -4,7 +4,7 @@ import { Button, Tooltip } from "@nextui-org/react";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { Input } from "@nextui-org/react";
 const BrgyCertificate = (props) => {
-  const { opened, onClose, handleSubmit, data } = props;
+  const { opened, onClose, handleSubmit, data, isLoading } = props;
   const [File, setFile] = useState(null);
   const [requirementType, setRequirementType] = useState(null);
   const [Preview, setPreview] = useState(null);
@@ -75,7 +75,9 @@ const BrgyCertificate = (props) => {
               className="rounded-full w-full mt-7 py-5"
               size="lg"
             >
-              Upload Brgy Certificate
+              {
+                isLoading ? <small>Uploading</small>:<small>Upload Brgy Certificate</small>
+              }
             </Button>
           </>
         )}

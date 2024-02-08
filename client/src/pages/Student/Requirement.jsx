@@ -20,7 +20,7 @@ const Requirements = () => {
     queryFn: getRequirement,
   });
 
-  const { mutate } = useMutation(uploadRequirement, {
+  const { mutate, isLoading:isLoadingUploadTask } = useMutation(uploadRequirement, {
     onSuccess: () => {
       Swal.fire(
         "Success",
@@ -114,6 +114,7 @@ const Requirements = () => {
         opened={isAddRequirement}
         handleSubmit={handleAddCertificate}
         onClose={() => setIsAddRequirement(false)}
+        isLoading={isLoadingUploadTask}
       />
 
 
