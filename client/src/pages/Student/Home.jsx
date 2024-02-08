@@ -90,7 +90,7 @@ const Dashboard = () => {
   const hoursRemaining = totalHours - hoursTaken;
 
   const piechartData = [hoursTaken, hoursRemaining];
-  const colors = ["#2ECC71", "#FC6736"];
+  const colors = ["#40A2E3", "#FC6736"];
   const labels = ["Hours Taken", "Hours Remaining"];
 
   const getWeekNumber = getStudentTimesheet
