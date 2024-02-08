@@ -121,7 +121,7 @@ function index({ data }) {
       )}
       {value === 2 && (
         <Suspense fallback={<DotLoading />}>
-          <Requirements />y
+          <Requirements />
         </Suspense>
       )}
     </div>

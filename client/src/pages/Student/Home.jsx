@@ -1,4 +1,4 @@
-import React, { useMemo} from "react";
+import React, { useMemo } from "react";
 import taskUploadModel from "../../assets/images/studentTaskModel.png";
 import PieChart from "../../components/charts/PieChart";
 import LineChart from "../../components/charts/LineChart";
@@ -42,33 +42,29 @@ const Dashboard = () => {
         }))
     : [];
 
-  const timesheetFilter = useMemo(
-    () =>
-      getStudentTimesheet
-        ?.filter((item) => new Date(item.date) <= currentDate)
-        .map(
-          ({
-            id,
-            timeIn,
-            timeOut,
-            totalHours,
-            date,
-            logStatus,
-            student_id,
-            week,
-          }) => ({
-            id,
-            timeIn: logStatus !== 0 ? timeIn : "0:00",
-            timeOut: logStatus !== 0 ? timeOut : "0:00",
-            totalHours: logStatus !== 0 ? totalHours : 0,
-            date,
-            logStatus,
-            student_id,
-            week,
-          })
-        ),
-    [getStudentTimesheet, currentDate]
-  );
+  const timesheetFilter = getStudentTimesheet
+    ?.filter((item) => new Date(item.date) <= currentDate)
+    .map(
+      ({
+        id,
+        timeIn,
+        timeOut,
+        totalHours,
+        date,
+        logStatus,
+        student_id,
+        week,
+      }) => ({
+        id,
+        timeIn: logStatus !== 0 ? timeIn : "0:00",
+        timeOut: logStatus !== 0 ? timeOut : "0:00",
+        totalHours: logStatus !== 0 ? totalHours : 0,
+        date,
+        logStatus,
+        student_id,
+        week,
+      })
+    );
 
   const hoursTaken = useMemo(
     () =>
@@ -129,20 +125,25 @@ const Dashboard = () => {
 
   const lineGraphData = getStudentTimesheet
     ?.filter((item) => item.week == getWeekNumber)
-    ?.map(({ totalHours }) => (
-      totalHours
-    ));
+    ?.map(({ totalHours }) => totalHours);
 
   const graphData = [
     {
       name: "Hours",
-      data: [8,6,7,8,5],
-      color: "#40A2E3",
+      data: [8, 6, 7, 8, 5],
+      color: "#ff7547",
       fillColor: "rgba(255, 0, 0, 0.3)",
     },
   ];
 
+  const totalHoursTaken = getStudentTimesheet
+    ?.filter((item) => item.week === getWeekNumber)
+    .reduce((acc, item) => acc + item.totalHours, 0);
 
+  const totalHoursTakenFormula = (totalHoursTaken / 40) * 100;
+  const totalHoursTakenPercentage =
+    Math.round(totalHoursTakenFormula / 10) * 10 + "%";
+  console.log(totalHoursTakenPercentage);
   return (
     <div className="">
       <h1 className="text-xl mt-1 font-bold tracking-tight capitalize">
@@ -150,11 +151,27 @@ const Dashboard = () => {
       </h1>
 
       <div className="flex flex-col gap-1">
+        <div className="mt-5">
+          <small className="font-extrabold px-3">
+            Estimated Hours for a weeks
+            <span className=" font-normal">{" (40hrs)"}</span>
+          </small>
+
+          {/* progress bar */}
+          <div className="mt-3 w-full bg-red-50 rounded-full overflow-hidden p-1 ">
+            <div
+              className={`bg-[#ff7547] rounded-full w-[${totalHoursTakenPercentage}] px-1 h-full text-center text-white text-xs py-1`}
+            >
+              {totalHoursTakenFormula.toFixed()}%
+            </div>
+          </div>
+        </div>
+
         <div className="p- bg-red-5002 mt-5 -mx-3 bg-white shadow-lg shadow-orange-50 rounded-lg p-2">
           <small className="font-extrabold px-4"> Your weekly Hours</small>
           <LineChart data={graphData} sizeHeight={250} />
         </div>
-        <div className="w-[100%] flex flex-col lg:flex-row gap-1  py-2 relative mb-2">
+        <div className="w-[100%] flex flex-col lg:flex-row gap-1  p-2 relative mb-2">
           {/* count box */}
           <div className="relative  max-w-[450px] w-full pt-7 bg-white shadow-lg shadow-orange-50 rounded-lg">
             <PieChart

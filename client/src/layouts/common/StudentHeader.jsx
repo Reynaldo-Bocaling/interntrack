@@ -17,13 +17,13 @@ function StudentHeader() {
         <Link to="/Profile">
           <Avatar
           src={dp}
-          size=""
+          size="sm"
         /></Link>
         
 
         <button onClick={() => setOpenNotification(true)} className="relative">
-          <BiBell size={27} className="text-gray-600" />
-          <div className="absolute top-1 right-1 h-[8px] w-[8px] rounded-full bg-[#FC6736]"></div>
+          <BiBell size={24} className="text-gray-600" />
+          <div className="absolute top-1 right-1 h-[7px] w-[7px] rounded-full bg-[#FC6736]"></div>
         </button>
       </div>
 

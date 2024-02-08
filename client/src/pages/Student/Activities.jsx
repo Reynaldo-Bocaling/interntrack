@@ -100,7 +100,6 @@ const Activities = () => {
           className="flex items-center gap-1 text-xs px-5 rounded-full"
         >
           <MdOutlineAdd size={18} />
-          Add Task
         </Button>
       </div>
 

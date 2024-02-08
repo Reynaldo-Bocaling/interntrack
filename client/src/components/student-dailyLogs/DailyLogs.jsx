@@ -143,7 +143,10 @@ const DailyLogs = () => {
     return <DotLoading/>;
   }
 
-  const timeLogs = [
+  if(timeInDB === undefined) {
+    return <center className="py-7">Not available</center>
+  }
+  const timeLogs = [ 
     {
       label: "Time in",
       contentValue: (
@@ -197,7 +200,7 @@ const DailyLogs = () => {
               key={index}
               className={`${
                 item.date === format(new Date(), "dd")
-                  ? "bg-[#40A2E3] text-white"
+                  ? "bg-[#fd6f40] text-white"
                   : "bg-white"
               } py-4 px-2 rounded-full flex flex-col justify-center items-center gap-2`}
             >
@@ -214,9 +217,9 @@ const DailyLogs = () => {
         </div>
       </header>
 
-      {getTime ? (
+      
         <main className="w-full flex flex-col items-center justify-center gap-7 mt-7">
-          <div className="relative  h-[180px] w-[180px] rounded-full border-[5px] border-[#40A2E3] flex flex-col items-center justify-center">
+          <div className="relative  h-[180px] w-[180px] rounded-full border-[5px] border-[#f98e6a] flex flex-col items-center justify-center">
               <span className="text-lg text-gray-500 tracking-wider">
                 Time Now
               </span>
@@ -252,7 +255,7 @@ const DailyLogs = () => {
                       onClick={handleTimeIn}
                      
                       size="lg"
-                      className="w-[150px] bg-[rgba(103,129,255,0.2)] text-[#40A2E3] font-medium tracking-wide"
+                      className="w-[150px] bg-[rgba(218,126,76,0.2)] text-[#fd6f40] font-medium tracking-wide"
                       isDisabled={
                         timeInDB !== "0:00" && timeOutDB !== "0:00" ||
                         getTimeNow < 7 ||
@@ -266,7 +269,7 @@ const DailyLogs = () => {
                       onClick={handleTimeOut}
                      
                       size="lg"
-                      className="w-[150px] bg-[rgba(76,126,218,0.2)] text-[#40A2E3] font-medium tracking-wide"
+                      className="w-[150px] bg-[rgba(218,126,76,0.2)] text-[#fd6f40] font-medium tracking-wide"
                       isDisabled={
                         timeInDB !== "0:00" && timeOutDB !== "0:00" ||
                         timelogLoading
@@ -279,18 +282,14 @@ const DailyLogs = () => {
                     onClick={() => setIopen(true)}
                     className=""
                   >
-                    <TbPencil size={25} className="text-[#40A2E3] w-[50px]" />
+                    <TbPencil size={25} className="text-[#fd6f40] w-[50px]" />
                   </button>
                 </div>
               </div>
             )}
           </div>
         </main>
-      ) : (
-        <p className="text-center text-xl  text-gray-400">
-          Sorry, time-in is not allowed today.
-        </p>
-      )}
+     
 
       <CustmTimeModal
         isOpen={isOpen}

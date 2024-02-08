@@ -143,14 +143,14 @@ html {
 }
 
 .student-link.active {
-  @apply text-[#40A2E3] font-medium
+  @apply text-[#FC6736] font-medium
 }
 
 .student-link.active::after{
   content: '';
   height: 2px;
   width: 23px; 
-  background: #40A2E3;
+  background: #FC6736;
   position: absolute; top: 7px
   
 }

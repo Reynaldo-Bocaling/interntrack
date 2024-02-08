@@ -92,7 +92,7 @@ function StudentNavigation() {
   const mainBtns = [
     {
       label: 'Logout',
-      icon: <MdOutlinePowerSettingsNew size={20} className=" text-[#40A2E3]"/>,
+      icon: <MdOutlinePowerSettingsNew size={20} className=" text-[#ff7547]"/>,
       position: 'top-5 left-1/2 -translate-x-1/2',
       handleClick:()=>{
         handleLogout()
@@ -102,7 +102,7 @@ function StudentNavigation() {
     },
     {
       label: 'Settings',
-      icon: <MdOutlineSettings size={20} className=" text-[#40A2E3]"/>,
+      icon: <MdOutlineSettings size={20} className=" text-[#ff7547]"/>,
       position: 'top-16 left-8',
       handleClick:()=>{
         setIsOpen(false)
@@ -110,7 +110,7 @@ function StudentNavigation() {
     },
     {
       label: 'Security',
-      icon: <MdOutlineSecurity size={20} className=" text-[#40A2E3]"/>,
+      icon: <MdOutlineSecurity size={20} className=" text-[#ff7547]"/>,
       position: 'top-16 right-8',
       handleClick:()=>{
         setIsOpen(false)
@@ -131,7 +131,7 @@ function StudentNavigation() {
                 <div className=" relative">
                   <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="relative z-50 bg-[#53b9fc] p-3 rounded-full text-white"
+                    className="relative z-50 bg-[#ff7547] p-3 rounded-full text-white"
                   >
                     {isOpen ? _.closeIcon : _.openIcon}
                   </button>
@@ -141,7 +141,7 @@ function StudentNavigation() {
                     initial={{ scale: 0, x: '-50%', y: '0%' }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 0.3 }}
-                    className=" absolute -bottom-20 left-1/2 -translate-x-1/2 h-[250px] w-[250px] bg-[#40A2E3] rounded-full ">
+                    className=" absolute -bottom-20 left-1/2 -translate-x-1/2 h-[250px] w-[250px] bg-[#fa6534] rounded-full ">
                       <div className="relative h-full w-full bg-red-5002">
                         {
                           mainBtns.map(({label, icon, position, handleClick}, index) => (
