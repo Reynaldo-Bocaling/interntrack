@@ -146,7 +146,7 @@ const Dashboard = () => {
   console.log(totalHoursTakenPercentage);
   return (
     <div className="">
-      <h1 className="text-xl mt-1 font-bold tracking-tight capitalize">
+      <h1 className="text-xl font-bold tracking-tight capitalize">
         {`Good ${greetingTime} ${getStudentInfo?.firstname}!`}
       </h1>
 
