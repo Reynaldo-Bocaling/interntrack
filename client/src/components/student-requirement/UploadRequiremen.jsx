@@ -74,6 +74,7 @@ const BrgyCertificate = (props) => {
               color="primary"
               className="rounded-full w-full mt-7 py-5"
               size="lg"
+              isDisabled={isLoading}
             >
               {
                 isLoading ? <small>Uploading</small>:<small>Upload Brgy Certificate</small>

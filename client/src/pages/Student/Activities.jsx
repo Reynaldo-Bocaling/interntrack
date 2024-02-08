@@ -172,7 +172,6 @@ const Activities = () => {
             {
               isLoading ? <small>Uploading..</small>:<small>Upload Task</small>
             }
-            Upload Task
           </Button>
         </div>
       </Drawer>
