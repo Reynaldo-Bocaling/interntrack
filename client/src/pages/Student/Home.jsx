@@ -154,7 +154,7 @@ const Dashboard = () => {
           <small className="font-extrabold px-4"> Your weekly Hours</small>
           <LineChart data={graphData} sizeHeight={250} />
         </div>
-        <div className="w-[100%] flex flex-col lg:flex-row gap-1  p-2 relative mb-2">
+        <div className="w-[100%] flex flex-col lg:flex-row gap-1  py-2 relative mb-2">
           {/* count box */}
           <div className="relative  max-w-[450px] w-full pt-7 bg-white shadow-lg shadow-orange-50 rounded-lg">
             <PieChart
