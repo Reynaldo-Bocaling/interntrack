@@ -93,7 +93,7 @@ const Activities = () => {
   return (
     <div className="p-3">
       <div className="flex items-center justify-between">
-        <h1 className="pl-1 text-xl font-semibold">Upload task</h1>
+        <h1 className="pl-1 text-sm font-semibold">Upload task</h1>
         <Button
           onClick={() => setAddTask(true)}
           color="primary"

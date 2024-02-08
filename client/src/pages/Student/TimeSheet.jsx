@@ -103,7 +103,7 @@ const TimeSheet = () => {
   
   return (
     <div className="p-1">
-      <div className="text-xl text-gray-700 font-semibold tracking-wide mb-5">
+      <div className="text-sm text-gray-700 font-semibold mb-5">
         Timesheet
       </div>
 

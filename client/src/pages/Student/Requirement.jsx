@@ -82,7 +82,7 @@ const Requirements = () => {
   return (
     <div className="mt-3 mb-8">
       <div className="flex items-center justify-between">
-        <h1 className="pl-1 text-lg md:text-xl font-semibold">Requirements</h1>
+        <h1 className="pl-1 text-sm md:text-xl font-semibold">Requirements</h1>
         <Button 
         color="primary"
         onClick={()=>setIsAddRequirement(true)}
