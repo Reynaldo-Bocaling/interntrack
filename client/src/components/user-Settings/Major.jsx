@@ -28,7 +28,7 @@ const Major = () => {
     queryFn: getCampus,
   });
 
-  const { mutate } = useMutation(addMajor, {
+  const { mutate, isLoading:AddMajorLoading } = useMutation(addMajor, {
     onSuccess: () => {
       Swal.fire("Success", "Major has Major successfully added.", "success");
       queryClient.invalidateQueries("getCampuses");
@@ -275,8 +275,11 @@ const Major = () => {
                 color="primary"
                 size="lg"
                 className="max-w-[170px] mt-2 font-medium"
+                isDisabled={AddMajorLoading}
               >
-                Add Major
+                {
+                  AddMajorLoading ? <span>Adding..</span> : <span>Add Major</span>
+                }
               </Button>
             </div>
           </div>

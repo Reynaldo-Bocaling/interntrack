@@ -26,10 +26,11 @@ const Campus = () => {
     setValue(newValue);
   };
 
-  const { mutate } = useMutation(addCampus, {
+  const { mutate,  isLoading:AddCampusLoading } = useMutation(addCampus, {
     onSuccess: () => {
       Swal.fire("Success", "Campus has been successfully added.", "success");
       queryClient.invalidateQueries("getCampuses");
+      setCampus("")
     },
     onError: () => {
       Swal.fire(
@@ -74,7 +75,7 @@ const Campus = () => {
     },
   });
 
-  const { mutate: updateMutate } = useMutation(updateCampus, {
+  const { mutate: updateMutate} = useMutation(updateCampus, {
     onSuccess: () => {
       Swal.fire("Success", "Campus has been successfully updated.", "success");
       queryClient.invalidateQueries("getCampuses");
@@ -151,8 +152,11 @@ const Campus = () => {
               size="lg"
               color="primary"
               className="max-w-[170px] mt-2 font-medium"
+              isDisabled={AddCampusLoading}
             >
-              Add Campus
+              {
+                AddCampusLoading ? <span>Adding..</span>: <span>Add Campus</span>
+              }
             </Button>
           </div>
         </div>

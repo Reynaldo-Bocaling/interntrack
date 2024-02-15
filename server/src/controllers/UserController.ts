@@ -2235,6 +2235,8 @@ const generateTimeData = (start: any, end: any) => {
         date: formattedDate,
         logStatus: 0,
         week: weekCounter,
+        studentMark:0,
+        teacherMark:0
       });
 
       if (timeData.length % 5 === 0) {

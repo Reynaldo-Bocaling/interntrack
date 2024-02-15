@@ -29,7 +29,7 @@ const Program = () => {
     queryFn: getCampus,
   });
 
-  const { mutate } = useMutation(addProgram, {
+  const { mutate, isLoading:AddProgramLoading } = useMutation(addProgram, {
     onSuccess: () => {
       Swal.fire("Success", "Program has been successfully added.", "success");
       queryClient.invalidateQueries("GetProgram");
@@ -256,8 +256,11 @@ const Program = () => {
                 size="lg"
                 isRequired
                 className="max-w-[170px] mt-2 font-medium"
+                isDisabled={AddProgramLoading}
               >
-                Add Program
+                {
+                  AddProgramLoading ? <span>Adding..</span> : <span>Add Program</span>
+                }
               </Button>
             </div>
           </div>

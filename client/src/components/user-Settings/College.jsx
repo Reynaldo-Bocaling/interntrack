@@ -33,7 +33,7 @@ const College = () => {
     queryFn: getCampus,
   });
 
-  const { mutate } = useMutation(addCollege, {
+  const { mutate,  isLoading:AddCollegeLoading } = useMutation(addCollege, {
     onSuccess: () => {
       Swal.fire("Success", "College has been successfully added.", "success");
       setFormValues({ college_description: "", campus_id: 0 });
@@ -205,8 +205,11 @@ const College = () => {
               color="primary"
               size="lg"
               className="max-w-[170px] mt-2 font-medium"
+              isDisabled={AddCollegeLoading}
             >
-              Add College
+              {
+                AddCollegeLoading ? <span>Adding..</span> : <span>Add College</span>
+              }
             </Button>
           </div>
         </div>
