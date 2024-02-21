@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = "mysql://internTrackUser:internTrackAccessDB01@51.161.200.56:3306/InternTrackDB?allowPublicKeyRetrieval=true"
-  // url      = "mysql://root:admin071720:3306/interntrack"
+  // url      = "mysql://root:admin071720@localhost:3306/interntrack3"
 }
 
 
@@ -32,7 +32,7 @@ model SuperAdmin {
   middlename            String?
   lastname              String
   email                 String
-  contact               Int
+  contact               String
   profile               String?
   profile_url           String?
   accountStatus         Int
@@ -48,7 +48,7 @@ model Director {
   middlename            String?
   lastname              String
   email                 String
-  contact               Int
+  contact               String
   profile               String?
   profile_url           String?
   accountStatus         Int
@@ -64,7 +64,7 @@ model Coordinator {
   middlename            String?
   lastname              String
   email                 String
-  contact               Int
+  contact               String
   campus                String
   college               String
   program               String
@@ -84,7 +84,7 @@ model Teacher {
   middlename            String?
   lastname              String
   email                 String
-  contact               Int
+  contact               String
   campus                String
   college               String
   program               String
@@ -108,7 +108,7 @@ model Trainer {
   middlename            String?
   lastname              String
   email                 String
-  contact               Int
+  contact               String
   profile               String?
   profile_url           String?
   accountStatus         Int
@@ -127,13 +127,14 @@ model Student {
   middlename            String?
   lastname              String
   email                 String
-  contact               Int
+  contact               String
   address               String
   gender                String
   campus                String
   college               String
   program               String
   major                 String
+  section               String?
   accountStatus         Int
   profile               String?
   profile_url           String?
@@ -165,6 +166,7 @@ model Timesheet {
   logStatus             Int
   studentMark           Int?
   teacherMark           Int?
+  trainerMark           Int?
   dateSubmitted         String?
   student_id            Int
   student               Student  @relation(fields: [student_id], references: [id])

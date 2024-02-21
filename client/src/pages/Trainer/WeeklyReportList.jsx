@@ -1,6 +1,6 @@
 import React, { lazy, useState } from 'react'
-const ViewReport = lazy(()=> import('../../components/StudentWeeklyReport/TeacherViewReport'))
-const ReportRequest = lazy(()=> import('../../components/StudentWeeklyReport/ReportRequest_teacher'))
+const ViewReport = lazy(()=> import('../../components/StudentWeeklyReport/TrainerViewReport'))
+const ReportRequest = lazy(()=> import('../../components/StudentWeeklyReport/ReportRequest_trainer'))
 import { Tabs } from "@mantine/core";
 import { BiSearch } from 'react-icons/bi';
 

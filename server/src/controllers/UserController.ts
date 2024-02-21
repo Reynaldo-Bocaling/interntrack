@@ -81,7 +81,7 @@ export class UserController {
               middlename,
               lastname,
               email,
-              contact: Number(contact),
+              contact,
               campus,
               college,
               program,
@@ -147,7 +147,7 @@ export class UserController {
           middlename,
           lastname,
           email,
-          contact: Number(contact),
+          contact,
           campus,
           college,
           program,
@@ -219,7 +219,7 @@ export class UserController {
                 middlename,
                 lastname,
                 email,
-                contact: Number(contact),
+                contact,
                 areaAssign_id: Number(area_id),
                 accountStatus: 0,
               },
@@ -291,7 +291,7 @@ export class UserController {
             middlename,
             lastname,
             email,
-            contact: Number(contact),
+            contact,
             campus,
             college,
             program,
@@ -327,7 +327,7 @@ export class UserController {
                 middlename,
                 lastname,
                 email,
-                contact: Number(contact),
+                contact,
                 campus,
                 college,
                 program,
@@ -389,6 +389,7 @@ export class UserController {
       gender,
       major,
       address,
+      section
     } = req.body;
     try {
       const findTeacher = await prisma.teacher.findUnique({
@@ -423,7 +424,8 @@ export class UserController {
               gender,
               email,
               address,
-              contact: Number(contact),
+              section,
+              contact: contact,
               campus: findTeacher?.campus,
               college: findTeacher?.college,
               program: findTeacher?.program,
@@ -521,6 +523,7 @@ export class UserController {
             email: data.email,
             contact: data.contact,
             address: data.address,
+            section: data.section,
             gender: data.gender,
             campus: findTeacher?.campus,
             college: findTeacher?.college,
@@ -599,7 +602,7 @@ export class UserController {
               firstname,
               lastname,
               email,
-              contact: Number(contact),
+              contact,
               accountStatus: 0,
             },
           },
@@ -646,7 +649,7 @@ export class UserController {
               middlename,
               lastname,
               email,
-              contact: Number(contact),
+              contact,
               accountStatus: 0,
             },
           },
@@ -1471,6 +1474,12 @@ export class UserController {
     }
   }
 
+
+
+
+
+
+
   // update profile user
   // update coordinator
   static async EditCoordinatorProfile(req: any, res: Response) {
@@ -1625,6 +1634,34 @@ export class UserController {
       return res.status(500).json(error);
     }
   }
+
+
+
+  // edit timesheet student
+  static async EditTimesheet(req:any, res: Response) {
+    const {id, timeIn, timeOut, totalHours} = req.body;
+
+    try {
+      const response = await prisma.timesheet.update({
+        where: {
+          id
+        },
+        data: {
+          timeIn,
+          timeOut,
+          totalHours,
+          logStatus: 1
+        }
+      });
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+
+  }
+
+
+
 
   // change password
   //student
@@ -1984,7 +2021,7 @@ export class UserController {
   }
 
   // submit rerport
-  static async reportReport(req: any, res: Response) {
+  static async teacherAcceptReport(req: any, res: Response) {
     const { id, week, isStatus } = req.body;
     try {
       const response = await prisma.timesheet.updateMany({
@@ -1993,6 +2030,25 @@ export class UserController {
         },
         data: {
           teacherMark: isStatus ? 1 : 0,
+          studentMark: isStatus ? 1 : 0,
+        },
+      });
+
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json(error);
+    }
+  }
+  static async trainerAcceptReport(req: any, res: Response) {
+    const { id, week, isStatus } = req.body;
+    try {
+      const response = await prisma.timesheet.updateMany({
+        where: {
+          AND: [{ student_id: id, week }],
+        },
+        data: {
+          teacherMark: isStatus ? 1 : 0,
+          trainerMark: isStatus ? 1 : 0,
           studentMark: isStatus ? 1 : 0,
         },
       });
@@ -2236,7 +2292,8 @@ const generateTimeData = (start: any, end: any) => {
         logStatus: 0,
         week: weekCounter,
         studentMark:0,
-        teacherMark:0
+        teacherMark:0,
+        trainerMark: 0
       });
 
       if (timeData.length % 5 === 0) {

@@ -1,24 +1,31 @@
 import React, { useRef, useState } from "react";
 import { Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useReactToPrint } from "react-to-print"
+import { useReactToPrint } from "react-to-print"; 
 import logo from "../../assets/images/neust_logo-1.png";
 import {
-  getCoordinator,
   getStudentList,
-  getTeacher,
+  getTrainer,
   getTeacherList,
+  trainerAcceptReport,
 } from "../../api/Api";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
 import Report from "../print-layout/ViewWeeklyReport";
 import {MdKeyboardArrowRight } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 
+import Swal from "sweetalert2";
+
+
 const WeeklyReport = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchLength, setSearchLength] = useState(false);
+  const [messageSuccess, setMessageSuccess] = useState('');
+
+  const queryClient = useQueryClient();
+
 
   const [opened, { open, close }] = useDisclosure();
   const [weeklyReport, setWeeklyReport] = useState([]);
@@ -31,10 +38,10 @@ const WeeklyReport = () => {
     queryKey: ["teacherList22"],
     queryFn: getTeacherList,
   });
-  
+
   const { data: getMyId, isLoading: getMyIdLaoding } = useQuery({
-    queryKey: ["getMyId"],
-    queryFn: getTeacher,
+    queryKey: ["getMyIdRequest"],
+    queryFn: getTrainer,
   });
   
 
@@ -44,7 +51,7 @@ const WeeklyReport = () => {
   const newData = data
     ? data
         .flatMap(({ timesheet }) => timesheet)
-        .filter((item) => item.teacherMark === 1 && item.studentMark === 1 )
+        .filter((item) => item.teacherMark === 1 && item.studentMark === 1 && item.trainerMark===0 )
         .map(
           ({
             id,
@@ -85,7 +92,7 @@ const WeeklyReport = () => {
         )
         .filter(
           (item)=>
-            item.teacher === getMyId?.id
+            item.trainer_id === getMyId?.id
           )
         .filter(
           (item) =>
@@ -101,8 +108,7 @@ const WeeklyReport = () => {
         )
     : [];
 
-
-    console.log('week2',newData);
+    //  console.log('req',newData);
 
 
 
@@ -132,10 +138,81 @@ const WeeklyReport = () => {
     open();
   };
 
-  if (isLoading || teacherLoading) {
+
+
+
+
+  const {mutate} =useMutation({
+    mutationFn: trainerAcceptReport,
+    onSuccess: () => {
+        Swal.fire(
+            "Success",
+            messageSuccess,
+            "success"
+          );
+          queryClient.invalidateQueries({ queryKey: ["getStudentweeklyreport23"] });
+    },
+    onError: () => {
+        Swal.fire(
+            "Error",
+            "Oops! Something went wrong while processing your request to accept the weekly report.",
+            "error"
+          );
+    }
+  })
+
+  const handleAccept = (item) => {
+    const week = item[0]?.week;
+    const id = item[0]?.student_id;
+
+
+    
+
+    Swal.fire({
+        title: "Are you sure?",
+        text:"You want to accept this weekly report!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#49A6F3",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.isConfirmed) {
+            mutate({ id, week,  isStatus:true});
+        }
+      });
+
+    setMessageSuccess('Weekly report request accepted successfully!')
+  };
+
+
+  const handleDecline = (item) => {
+    const week = item[0]?.week;
+    const id = item[0]?.student_id;
+
+   
+    
+
+    Swal.fire({
+        title: "Are you sure?",
+        text:"You want to decline this weekly report request!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#49A6F3",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.isConfirmed) {
+            mutate({ id, week,  isStatus:false});
+        }
+      });
+      setMessageSuccess('The requested weekly report has been declined.')
+  };
+
+
+  if (isLoading || teacherLoading || getMyIdLaoding) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
-
   return (
     <div className="py-7">
       <div className="flex flex-col gap-4">
@@ -144,8 +221,7 @@ const WeeklyReport = () => {
           groupedTimeSheet.map((group, groupIndex) => (
             <div
               key={groupIndex}
-              className="relative py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
-              onClick={() => handleOpenWeeklyReport(group)}
+              className="relative py-5 px-4 rounded-lg bg-white flex items-center justify-between border bg-gray-5 hover:bg-slate-50"
             >
               <div className="flex items-center gap-3">
                 <span className="capitalize font-medium">
@@ -156,7 +232,7 @@ const WeeklyReport = () => {
                 </span>
               </div>
 
-              <div className="absolute top-1/2 left-1/2 -translate-y-1/2 flex flex-col items-center">
+              <div className="absolute top-1/2 left-1/3 -translate-y-1/2 flex flex-col items-center">
                 <small className="text-green-500">
                   {format(new Date(group[0].dateSubmitted), "MMMM dd, yyyy")}
                 </small>
@@ -179,12 +255,17 @@ const WeeklyReport = () => {
                   </span>
                 </div>
 
-                <MdKeyboardArrowRight size={23} className="text-blue-500" />
+               <div className="flex items-center gap-3 pr-2 pl-3">
+                <button onClick={()=> handleDecline(group)} className="text-[0.7rem] font-medium py-[5px] px-5 bg-red-500 text-white rounded-full">Decline</button>
+                <button onClick={()=> handleAccept(group)} className="text-[0.7rem] font-medium py-[5px] px-5 bg-green-500 text-white rounded-full">Accept</button>
+                <button onClick={() => handleOpenWeeklyReport(group)} className="text-sm py-1 px-2 text-blue-500 font-medium rounded-lg tracking-wide">Check</button>
+               </div>
+                {/* <MdKeyboardArrowRight size={23} className="text-blue-500" /> */}
               </div>
             </div>
           ))
         ) : (
-          <h1 className="text-center py-4">No Weekly Report</h1>
+          <h1 className="text-center py-4">No Request</h1>
         )}
       </div>
 
@@ -195,11 +276,25 @@ const WeeklyReport = () => {
         onClose={close}
         title={
           <header className="mt-2 ">
-            <span className="text-xl font-semibold">Weekly report</span>
+            <span className="text-xl font-semibold">Request Report</span>
+           
+           <div className="absolute top-10 right-14 flex flex-col items-center gap-4">
+           <div className=" flex items-center gap-2 font-semibold">
+                <span>{format(new Date(weeklyReport.length > 0 && weeklyReport[weeklyReport.length - 1]?.date), 'MMMM dd')}</span>-
+                <span>{format(new Date(weeklyReport.length > 0 && weeklyReport[0]?.date), "MMMM dd")}</span>
+            </div>
+            <small>
+            Report Period
+            </small>
+           </div>
+           
           </header>
         }
       >
+         
+
         <div className="weekly-report-container  sm:px-10 mx-auto max-w-[550px] w-full border rounded-lg shadow-sm ">
+            
           <div className="m-4 border-b-2 border-black flex items-center justify-between pb-2 mx-10">
             <img src={logo} alt="" className="w-20 md:w-16" />
             <div className="mt-4 flex flex-col items-end text-[10px] sm:text-[12px]">
@@ -362,7 +457,7 @@ const WeeklyReport = () => {
           </div>
         </div>
 
-        <div className="my-5  flex items-center justify-center  mx-auto w-[40%]">
+        {/* <div className="my-5  flex items-center justify-center  mx-auto w-[40%]">
           <Button
             color="primary"
             size="lg"
@@ -371,7 +466,7 @@ const WeeklyReport = () => {
           >
             Print
           </Button>
-        </div>
+        </div> */}
       </Drawer>
     </div>
   );

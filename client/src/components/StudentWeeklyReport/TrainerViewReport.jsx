@@ -6,7 +6,7 @@ import logo from "../../assets/images/neust_logo-1.png";
 import {
   getCoordinator,
   getStudentList,
-  getTeacher,
+  getTrainer,
   getTeacherList,
 } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
@@ -33,10 +33,12 @@ const WeeklyReport = () => {
   });
   
   const { data: getMyId, isLoading: getMyIdLaoding } = useQuery({
-    queryKey: ["getMyId"],
-    queryFn: getTeacher,
+    queryKey: ["getMyId2"],
+    queryFn: getTrainer,
   });
   
+
+  console.log(getMyId, 'd');
 
 
   const studentInfo = data ? data : [];
@@ -44,7 +46,7 @@ const WeeklyReport = () => {
   const newData = data
     ? data
         .flatMap(({ timesheet }) => timesheet)
-        .filter((item) => item.teacherMark === 1 && item.studentMark === 1 )
+        .filter((item) => item.teacherMark === 1 && item.studentMark === 1 && item.trainerMark===1 )
         .map(
           ({
             id,
@@ -80,12 +82,11 @@ const WeeklyReport = () => {
             name: `${data?.find((item) => item.id === student_id)?.firstname} ${
               data?.find((item) => item.id === student_id)?.lastname
             }`,
-            teacher:data?.find((item) => item.id === student_id)?.teacher_id
           })
         )
         .filter(
           (item)=>
-            item.teacher === getMyId?.id
+            item.trainer_id === getMyId?.id
           )
         .filter(
           (item) =>
@@ -132,7 +133,7 @@ const WeeklyReport = () => {
     open();
   };
 
-  if (isLoading || teacherLoading) {
+  if (isLoading || teacherLoading ||getMyIdLaoding) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
 
@@ -144,7 +145,7 @@ const WeeklyReport = () => {
           groupedTimeSheet.map((group, groupIndex) => (
             <div
               key={groupIndex}
-              className="relative py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50 hover:border-blue-400 cursor-pointer"
+              className="relative py-5 px-4 rounded-lg flex items-center justify-between border bg-gray-5 hover:bg-slate-50  cursor-pointer"
               onClick={() => handleOpenWeeklyReport(group)}
             >
               <div className="flex items-center gap-3">

@@ -60,7 +60,7 @@ const Profile = () => {
     },
   });
 
-  const { mutate: editProfile } = useMutation(updateStudentProfilePicture, {
+  const { mutate: editProfile, isLoading } = useMutation(updateStudentProfilePicture, {
     onSuccess: () => {
       Swal.fire("Success", "Update Successful", "success");
       queryClient.invalidateQueries("getstudentInfo");
@@ -178,8 +178,10 @@ const Profile = () => {
                         className=" rounded-full flex items-center justify-center gap-2 font-medium tracking-wider overflow-hidden "
                         size="lg"
                         onClick={handleEditProfile}
+                        isDisabled={isLoading}
                       >
-                        Upload Profile
+                        {isLoading ? <span>Uplaoding..</span> : <span> Upload Profile</span>}
+                       
                       </Button>
                     ) : (
                       <Button

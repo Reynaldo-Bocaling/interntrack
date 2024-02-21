@@ -5,13 +5,14 @@ import { useReactToPrint } from "react-to-print";
 import logo from "../../assets/images/neust_logo-1.png";
 import {
   getStudentList,
+  getTeacher,
   getTeacherList,
-  reportReport,
+  teacherAcceptReport,
 } from "../../api/Api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@nextui-org/react";
 import { format } from "date-fns";
-import Report from "../../components/print-layout/ViewWeeklyReport";
+import Report from "../print-layout/ViewWeeklyReport";
 import {MdKeyboardArrowRight } from "react-icons/md";
 import { BiSearch } from "react-icons/bi";
 
@@ -37,13 +38,20 @@ const WeeklyReport = () => {
     queryKey: ["teacherList22"],
     queryFn: getTeacherList,
   });
+
+  const { data: getMyId, isLoading: getMyIdLaoding } = useQuery({
+    queryKey: ["getMyIdRequest"],
+    queryFn: getTeacher,
+  });
   
+
+
   const studentInfo = data ? data : [];
 
   const newData = data
     ? data
         .flatMap(({ timesheet }) => timesheet)
-        .filter((item) => item.teacherMark === 0 && item.studentMark === 1)
+        .filter((item) => item.teacherMark === 0 && item.studentMark === 1 )
         .map(
           ({
             id,
@@ -79,8 +87,13 @@ const WeeklyReport = () => {
             name: `${data?.find((item) => item.id === student_id)?.firstname} ${
               data?.find((item) => item.id === student_id)?.lastname
             }`,
+            teacher:data?.find((item) => item.id === student_id)?.teacher_id
           })
         )
+        .filter(
+          (item)=>
+            item.teacher === getMyId?.id
+          )
         .filter(
           (item) =>
             item.deletedStatus === 0 &&
@@ -94,6 +107,10 @@ const WeeklyReport = () => {
               .includes(searchInput.toLowerCase())
         )
     : [];
+
+     console.log('req',newData);
+
+
 
   const groupedTimeSheet = [];
   for (let i = 0; i < newData.length; i += 5) {
@@ -126,7 +143,7 @@ const WeeklyReport = () => {
 
 
   const {mutate} =useMutation({
-    mutationFn: reportReport,
+    mutationFn: teacherAcceptReport,
     onSuccess: () => {
         Swal.fire(
             "Success",
@@ -193,7 +210,7 @@ const WeeklyReport = () => {
   };
 
 
-  if (isLoading || teacherLoading) {
+  if (isLoading || teacherLoading || getMyIdLaoding) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
   return (

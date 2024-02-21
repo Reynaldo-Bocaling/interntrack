@@ -104,6 +104,7 @@ routes.put('/editProfileTeacher' ,verifyToken, UserController.editTeacherProfile
 routes.put('/editProfileTrainer' ,verifyToken,UserController.EditTrainerProfile);
 routes.put('/editProfileDirector' ,verifyToken,UserController.EditDirectorProfile);
 routes.put('/editProfileStudent' ,verifyToken,UserController.EditStudentProfile);
+routes.put('/EditTimesheet',UserController.EditTimesheet);
 
 
 
@@ -118,7 +119,8 @@ routes.put('/changeStudentPassword' ,verifyToken,UserController.changeStudentPas
 
 //submit report
 routes.put('/submitReport',UserController.submitReport);
-routes.put('/reportReport',UserController.reportReport);
+routes.put('/teacherAcceptReport',UserController.teacherAcceptReport);
+routes.put('/trainerAcceptReport',UserController.trainerAcceptReport);
 
 
 

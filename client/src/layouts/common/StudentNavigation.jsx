@@ -123,7 +123,7 @@ function StudentNavigation() {
 
   return (
     <div>
-      <div className="studentNav fixed bottom-0 left-0 w-full  items-center justify-between bg-white  z-50 px-8 flex text-slate-500 pt-5 pb-6 ">
+      <div className="studentNav fixed bottom-0 left-0 w-full lg:max-w-[350px] lg:left-1/2 lg:-translate-x-1/2  items-center justify-between bg-white  z-50 px-8 flex text-slate-500 pt-5 pb-6 ">
         {userLink.map((_, i) => {
           return (
             <div key={i}>

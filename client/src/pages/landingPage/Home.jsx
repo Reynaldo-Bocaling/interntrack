@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import homeModel from "../../assets/images/homeImage.png";
+import homeModel from "../../assets/images/homeImage.webp";
 import { Button } from "@nextui-org/react";
 import { BsPlayFill } from "react-icons/bs";
 import { GrMail } from "react-icons/gr";

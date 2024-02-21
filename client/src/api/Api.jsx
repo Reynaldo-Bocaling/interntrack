@@ -761,6 +761,8 @@ export const uploadRequirement = async (formData) => {
   }
 };
 
+
+
 export const deleteRequirement = async (id) => {
   try {
     const response = await axios.delete(`${url}deleteRequirement/${id}`);
@@ -768,6 +770,16 @@ export const deleteRequirement = async (id) => {
   } catch (error) {
     throw error
   }
+}
+
+export const EditTimesheet = async (items) => {
+  try {
+    const response = await axios.put(`${url}EditTimesheet`, {id:items?.id, timeIn:items?.timeIn, timeOut: items?.timeOut, totalHours: Number(items?.totalHours)});
+    return response.data;
+  } catch (error) {
+    throw error
+  }
+  console.log(items);
 }
 
 // add date range and get
@@ -815,9 +827,17 @@ export const submitReport = async (item) => {
     throw new Error(error.message);
   }
 };
-export const reportReport = async (item) => {
+export const teacherAcceptReport = async (item) => {
   try {
-    const response = await axios.put(`${url}reportReport`, item);
+    const response = await axios.put(`${url}teacherAcceptReport`, item);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+export const trainerAcceptReport = async (item) => {
+  try {
+    const response = await axios.put(`${url}trainerAcceptReport`, item);
     return response.data;
   } catch (error) {
     throw new Error(error.message);

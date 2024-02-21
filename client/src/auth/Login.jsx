@@ -3,7 +3,7 @@ import Img from "../assets/icons/logo.png";
 import { AiOutlineUser } from "react-icons/ai";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { LiaTimesSolid } from "react-icons/lia";
-import model from "../assets/images/homeModel.png";
+import model from "../assets/images/homeModel.webp";
 import unlockIcon from "../assets/images/unlock-vector-icon.jpg";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarGroup } from "@nextui-org/react";

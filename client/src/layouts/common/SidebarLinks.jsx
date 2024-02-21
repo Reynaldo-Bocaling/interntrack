@@ -171,6 +171,7 @@ export const SidebarData = {
         { label: "Student list", url: "/student-list" },
         { label: "Timesheet", url: "/timeSheet" },
         { label: "Task uploads", url: "/StudentTask" },
+        { label: "Weekly Report", url: "/weekly-report" },
       ],
     },
     

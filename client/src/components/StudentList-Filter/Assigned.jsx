@@ -53,7 +53,7 @@ const Student_list = ({ data, isLoading, isError }) => {
         <span
           className={`${
             info.getValue() == "Not Assigned" && "text-red-500"
-          } text-xs`}
+          } text-xs uppercase`}
         >
           {info.getValue()}
         </span>
@@ -66,12 +66,25 @@ const Student_list = ({ data, isLoading, isError }) => {
         <span
           className={`${
             info.getValue() == "Not Assigned" && "text-red-500"
-          } text-xs`}
+          } text-xs uppercase`}
         >
           {info.getValue()}
         </span>
       ),
-      header: "major",
+      header: "Major",
+    }),
+    columnHelper.accessor("section", {
+      id: "section",
+      cell: (info) => (
+        <span
+          className={`${
+            info.getValue() == "Not Assigned" && "text-red-500"
+          } text-xs uppercase`}
+        >
+          4-{info.getValue() ?? "?"}
+        </span>
+      ),
+      header: "Section",
     }),
     columnHelper.accessor("company", {
       id: "company",

@@ -83,7 +83,9 @@ const TrainerAnnouncement = lazy(() => import("../pages/Trainer/Announcement"));
 const TrainerMyProfile = lazy(() => import("../pages/Trainer/MyProfile"));
 const TrainerSettings = lazy(() => import("../pages/Trainer/Settings"));
 const TrainerOldStudent = lazy(() => import("../pages/Trainer/OldStudent"));
-
+const TrainerWeeklyReportList = lazy(() =>
+  import("../pages/Trainer/WeeklyReportList")
+);
 // Teacher pages
 const TeacherDashboard = lazy(() => import("../pages/Teacher/Dashboard"));
 const TeacherrCompanies = lazy(() => import("../pages/Teacher/Companies"));
@@ -504,6 +506,10 @@ const PrivateRoutes = () => {
       {
         path: "/old-students",
         element: <TrainerOldStudent />,
+      },
+      {
+        path: "/weekly-report",
+        element: <TrainerWeeklyReportList />,
       },
     ],
 

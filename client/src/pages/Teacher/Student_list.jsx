@@ -95,6 +95,7 @@ const Student_list = () => {
             trainer,
             AreaOfAssignment,
             deletedStatus,
+            section
           }) => ({
             id,
             middlename,
@@ -106,6 +107,7 @@ const Student_list = () => {
             campus,
             college,
             program,
+            section,
             major,
             url: profile_url,
             picture: picture,
@@ -213,6 +215,7 @@ const Student_list = () => {
     }
   };
 
+  
   const handleImportExcel = () => {
     if (ImportData) {
       mutate(ImportData);
@@ -228,6 +231,7 @@ const Student_list = () => {
 
     const firstnameRegex = /^[A-Za-z\s]+$/;
     const lastnameRegex = /^[A-Za-z\s]+$/;
+    const sectionRegex = /^[A-Z]{1}$/;
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
     const mobileRegex =/^[0-9]/;
     const addressRegex =/^[A-Za-z\s]+$/;
@@ -253,6 +257,8 @@ const Student_list = () => {
         throw new Error("Gender is empty");
       } else if (!row.major) {
         throw new Error("Major is empty");
+      } else if (!row.section) {
+        throw new Error("Section is empty");
       }
 
       //invalid type
@@ -263,6 +269,10 @@ const Student_list = () => {
       } else if (!lastnameRegex.test(row.lastname)) {
         throw new Error(
           `"${row.lastname}" is invalid for a lastname. \nPlease enter a valid lastname`
+        );
+      } else if (!sectionRegex.test(row.section)) {
+        throw new Error(
+          `"${row.section}" is invalid for a section. \nPlease enter a valid section`
         );
       } else if (!emailRegex.test(row.email)) {
         throw new Error(

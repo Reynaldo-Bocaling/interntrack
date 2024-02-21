@@ -1,19 +1,21 @@
-import React, { useRef, useState } from "react";
-import { Drawer } from "@mantine/core";
+import React, { lazy, useRef, useState } from "react";
+import { Card, Text, Badge, Group, Drawer } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useReactToPrint } from "react-to-print"
+import { useReactToPrint } from "react-to-print"; // Import ng React-to-Print library
 import logo from "../../assets/images/neust_logo-1.png";
 import {
   getCoordinator,
+  getStudentInfo,
   getStudentList,
-  getTeacher,
   getTeacherList,
 } from "../../api/Api";
 import { useQuery } from "@tanstack/react-query";
-import { Button } from "@nextui-org/react";
+import { Button, Avatar } from "@nextui-org/react";
 import { format } from "date-fns";
-import Report from "../print-layout/ViewWeeklyReport";
-import {MdKeyboardArrowRight } from "react-icons/md";
+const Report = lazy(() => import("../../components/print-layout/ViewWeeklyReport"));
+import { Link, NavLink, useParams } from "react-router-dom";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import pic from "../../assets/images/emptyProfile.png";
 import { BiSearch } from "react-icons/bi";
 
 const WeeklyReport = () => {
@@ -28,23 +30,20 @@ const WeeklyReport = () => {
     queryFn: getStudentList,
   });
   const { data: teacherList, isLoading: teacherLoading } = useQuery({
-    queryKey: ["teacherList22"],
+    queryKey: ["coordinator_teacherList2"],
     queryFn: getTeacherList,
   });
-  
-  const { data: getMyId, isLoading: getMyIdLaoding } = useQuery({
-    queryKey: ["getMyId"],
-    queryFn: getTeacher,
+  const { data: coordinator, isLoading: coordinatorLoading } = useQuery({
+    queryKey: ["coordinator_coordinatorList2"],
+    queryFn: getCoordinator,
   });
-  
-
-
   const studentInfo = data ? data : [];
+  const coordinatorInfo = coordinator ? coordinator : [];
 
   const newData = data
     ? data
         .flatMap(({ timesheet }) => timesheet)
-        .filter((item) => item.teacherMark === 1 && item.studentMark === 1 )
+        .filter((item) => item.teacherMark === 1 && item.studentMark === 1)
         .map(
           ({
             id,
@@ -80,17 +79,13 @@ const WeeklyReport = () => {
             name: `${data?.find((item) => item.id === student_id)?.firstname} ${
               data?.find((item) => item.id === student_id)?.lastname
             }`,
-            teacher:data?.find((item) => item.id === student_id)?.teacher_id
           })
         )
         .filter(
-          (item)=>
-            item.teacher === getMyId?.id
-          )
-        .filter(
           (item) =>
             item.deletedStatus === 0 &&
-            item.trainer_id != null 
+            item.trainer_id != null &&
+            item.coordinator_id == coordinatorInfo?.id
         )
         .filter(
           (item) =>
@@ -100,11 +95,6 @@ const WeeklyReport = () => {
               .includes(searchInput.toLowerCase())
         )
     : [];
-
-
-    console.log('week2',newData);
-
-
 
   const groupedTimeSheet = [];
   for (let i = 0; i < newData.length; i += 5) {
@@ -132,14 +122,40 @@ const WeeklyReport = () => {
     open();
   };
 
-  if (isLoading || teacherLoading) {
+  if (isLoading || teacherLoading || coordinatorLoading) {
     return <center className="my-5 text-lg">Computing..</center>;
   }
 
+  // console.log(groupedTimeSheet);
   return (
-    <div className="py-7">
-      <div className="flex flex-col gap-4">
-       
+    <>
+      <div className="flex flex-col gap-5">
+        <div className="flex items-center justify-between w-full pr-5">
+          <h2 className="text-xl font-semibold mb-3">Weekly Reports</h2>
+
+          <div className="flex items-center gap-3">
+            <div
+              className={`${
+                searchLength ? "w-[250px]" : "w-[40px]"
+              } h-10  flex items-center gap-2 bg-white rounded-full px-3 shadow-md shadow-slate-200 duration-300`}
+            >
+              <BiSearch
+                onClick={() => setSearchLength(!searchLength)}
+                className={`${
+                  searchLength ? "text-blue-500" : "text-gray-600"
+                } cursor-pointer`}
+              />
+              {searchLength && (
+                <input
+                  type="text"
+                  placeholder="Search.."
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="outline-none text-sm"
+                />
+              )}
+            </div>
+          </div>
+        </div>
         {groupedTimeSheet.length > 0 ? (
           groupedTimeSheet.map((group, groupIndex) => (
             <div
@@ -373,7 +389,7 @@ const WeeklyReport = () => {
           </Button>
         </div>
       </Drawer>
-    </div>
+    </>
   );
 };
 

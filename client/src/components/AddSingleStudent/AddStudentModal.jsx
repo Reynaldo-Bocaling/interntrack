@@ -28,6 +28,7 @@ const AddSingStudent = ({
     middlename: "",
     lastname: "",
     email: "",
+    section: "",
     contact: 0,
     address: "",
     major: "",
@@ -55,6 +56,7 @@ const AddSingStudent = ({
   const addressRegex = /^[A-Za-z\s]+$/;
   const genderRegex = /^(male|female)$/i;
   const majorRegex = /^[A-Za-z\s]+$/;
+  const sectionRegex = /^[A-Z]{1}$/;
 
   const validateField = (name, value) => {
     switch (name) {
@@ -70,6 +72,8 @@ const AddSingStudent = ({
         return addressRegex.test(value);
       case "major":
         return majorRegex.test(value);
+      case "section":
+        return sectionRegex.test(value);
       case "gender":
         return genderRegex.test(value.toLowerCase());
       default:
@@ -212,6 +216,7 @@ const AddSingStudent = ({
                       </RadioGroup>
                     </div>
 
+                    <div className="flex flex-col md:flex-row md:items-center gap-12">
                     <Input
                       type="text"
                       label="Major"
@@ -222,6 +227,21 @@ const AddSingStudent = ({
                       className="w-full md:w-[40%]"
                       errorMessage={errors.major}
                     />
+                    <Input
+                      type="text"
+                      label="Section"
+                      name="section"
+                      onChange={handleChange}
+                      size="sm"
+                      isRequired
+                      className="w-full md:w-[40%]"
+                      errorMessage={errors.section}
+                      maxLength={1}
+                      placeholder="Section 4-?(A-Z)"
+                    />
+                    </div>
+
+                   
 
                     <div className="mt-5 mb-2 flex items-center gap-3 justify-end">
                       <Button
