@@ -18,7 +18,6 @@ const CustmTimeModal = lazy(() => import("./DailyLogModal"));
 
 const DailyLogs = () => {
   const queryClient = useQueryClient();
-  const timeOfDay = useMemo(() => format(new Date(), "aa"), []);
   const formattedDate = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
   const timeFormat = useMemo(() => format(new Date(), "HH:mm"), []);
   const [totalHours, setTotalHours] = useState(0);
@@ -27,7 +26,7 @@ const DailyLogs = () => {
   const [currentTime, setCurrrentTime] = useState(new Date());
   const [isOpen, setIopen] = useState(false);
 
-  
+
 
   const { mutate: mutateTimeIn, isLoading: timelogLoading } = useMutation({
     mutationFn: addTimeIn,
@@ -184,6 +183,7 @@ const DailyLogs = () => {
     },
   ];
   
+  
   return (
     <div className="mt-2 border-r">
       <div className="flex items-center justify-between mb-8 px-3">
@@ -224,8 +224,8 @@ const DailyLogs = () => {
                 Time Now
               </span>
               <h1 className="text-2xl font-semibold">
-                {format(timeNow, "hh:mm")} 
-                <small className="text-sm text-blue-500">{timeOfDay}</small>
+                {format(currentTime, "hh:mm")} 
+                <small className="text-sm text-blue-500">{format(currentTime, 'aa')}</small>
               </h1>
           </div>
           

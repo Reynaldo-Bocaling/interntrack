@@ -198,7 +198,7 @@ model Company {
   companyName           String
   address               String
   email                 String
-  contact               Int
+  contact               String
   moaUpload             String
   moaUrl                String?
   profile               String?

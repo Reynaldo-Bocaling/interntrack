@@ -38,7 +38,7 @@ export class UserController {
           companyName,
           address,
           email,
-          contact: Number(contact),
+          contact: contact,
           moaUpload: moaFilename,
           moaUrl: moaUrl,
           director_id: Number(director_id),

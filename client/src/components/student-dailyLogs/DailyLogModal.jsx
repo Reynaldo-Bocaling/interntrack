@@ -13,11 +13,7 @@ const formattedTime = format(currentTime, "EEE MMM d yyyy");
 
 const handleSubmit = ()=> {
     handleCustom(customtTime)
-    Swal.fire(
-        "Success",
-        "successfully Change time \n Lets start to time log!",
-        "success"
-      ).then(()=> onClose());
+     onClose();
 
     
 }

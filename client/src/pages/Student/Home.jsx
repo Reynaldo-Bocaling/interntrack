@@ -130,7 +130,7 @@ const Dashboard = () => {
   const graphData = [
     {
       name: "Hours",
-      data: [8, 6, 7, 8, 5],
+      data: lineGraphData,
       color: "#ff7547",
       fillColor: "rgba(255, 0, 0, 0.3)",
     },
