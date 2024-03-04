@@ -207,7 +207,7 @@ const Login = () => {
               </div>
               <Button
                 onClick={handleLogin}
-                color="primary"
+                color="danger"
                 size="lg"
                 className="font-medium tracking-wide"
               >
