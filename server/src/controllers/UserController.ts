@@ -521,7 +521,7 @@ export class UserController {
             middlename: data.middlename,
             lastname: data.lastname,
             email: data.email,
-            contact: data.contact,
+            contact: data.contact.toString(),
             address: data.address,
             section: data.section,
             gender: data.gender,
