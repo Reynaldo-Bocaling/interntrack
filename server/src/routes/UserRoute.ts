@@ -44,6 +44,7 @@ routes.post('/addProgram' ,UserController.addProgram);
 routes.post('/addMajor' ,UserController.addMajor);
 
 //campuses delete
+routes.delete('/deleteDirector/:id' ,UserController.deleteDirector);
 routes.delete('/deleteCampus/:id' ,UserController.deleteCampus);
 routes.delete('/deleteCollege/:id' ,UserController.deleteCollege);
 routes.delete('/deleteProgram/:id' ,UserController.deleteProgram);
@@ -98,6 +99,7 @@ routes.get('/getAnnouncement' ,UserController.getAnnouncement);
 
 
 // edit profile
+
 routes.put('/editSuperAdminProfile' ,verifyToken,UserController.editSuperAdminProfile);
 routes.put('/editProfileCoordinator' ,verifyToken,UserController.EditCoordinatorProfile);
 routes.put('/editProfileTeacher' ,verifyToken, UserController.editTeacherProfile);
@@ -105,6 +107,7 @@ routes.put('/editProfileTrainer' ,verifyToken,UserController.EditTrainerProfile)
 routes.put('/editProfileDirector' ,verifyToken,UserController.EditDirectorProfile);
 routes.put('/editProfileStudent' ,verifyToken,UserController.EditStudentProfile);
 routes.put('/EditTimesheet',UserController.EditTimesheet);
+routes.put('/updateDirect' ,UserController.updateDirect);
 
 
 

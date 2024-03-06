@@ -45,18 +45,21 @@ const Timesheet = () => {
             )?.trainingHours,
             timeSheet: timesheet
               ? timesheet.map(
-                  ({ id, timeIn, timeOut, totalHours, date, logStatus }) => ({
+                  ({ id, timeIn, timeOut, totalHours, date, logStatus,teacherMark, trainerMark }) => ({
                     id,
-                    timeIn: logStatus !== 0 ? timeIn : "0:00",
-                    timeOut: logStatus !== 0 ? timeOut : "0:00",
-                    totalHours: logStatus !== 0 ? totalHours : 0,
+                    timeIn: logStatus !== 0 && teacherMark!==0 && trainerMark!==0? timeIn : "0:00",
+                    timeOut: logStatus !== 0 && teacherMark!==0 && trainerMark!==0? timeOut : "0:00",
+                    totalHours: logStatus !== 0 && teacherMark!==0 && trainerMark!==0? totalHours : 0,
                     date,
+                    trainerMark,
+                teacherMark,
+                logStatus
                   })
                 )
               : [],
             deletedStatus,
             totalHours: timesheet
-              .filter((item) => item.logStatus)
+              .filter((item) => item.logStatus&& item.teacherMark!==0 && item.trainerMark!==0)
               .reduce((total, item) => total + item.totalHours, 0),
           })
         )

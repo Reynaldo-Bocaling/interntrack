@@ -425,7 +425,7 @@ export class UserController {
               email,
               address,
               section,
-              contact: contact,
+              contact: contact.toString(),
               campus: findTeacher?.campus,
               college: findTeacher?.college,
               program: findTeacher?.program,
@@ -694,6 +694,26 @@ export class UserController {
   }
 
 
+  static async updateDirect(req:any, res: Response){
+    const {id,firstname, lastname, contact, email} =req.body;
+
+    try {
+      const response = await  prisma.director.update({
+        data: {
+          firstname,
+          lastname,
+          contact,
+          email
+        },
+        where: {id}
+      });
+
+      res.status(200).json( response)
+    } catch (error) {
+      res.status(500).json(error)
+    }
+  }
+
 
   // assign Students
   static async assignStudent(req: any, res: Response) {
@@ -863,6 +883,23 @@ export class UserController {
     } catch (error) {
       return res.status(500).json(error);
     }
+  }
+
+
+  //delete
+  static async deleteDirector(req:any, res:Response){
+    const id = req.params.id;
+
+    try {
+      const response = await prisma.director.delete({
+        where: {id}
+      });
+
+      return res.status(200).json(response)
+    } catch (error) {
+      return res.status(500).json(error)
+    }
+    
   }
 
   //delete campuses

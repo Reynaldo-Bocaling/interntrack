@@ -28,16 +28,7 @@ const StudentTask = ({ data }) => {
                 Task
               </span>
 
-              <div className="bg-white p-1 px-3 py-2 flex items-center gap-2 rounded-full shadow-md shadow-slate-200 border border-gray-100">
-                <select className="w-[220px] outline-none">
-                  <option value="">Select Date</option>
-                  <option value="">January 1</option>
-                  <option value="">January 2</option>
-                  <option value="">January 3</option>
-                  <option value="">January 4</option>
-                  <option value="">January 5</option>
-                </select>
-              </div>
+              
             </header>
             <section className={`flex flex-wrap justify-between gap-5`}>
               {data.map((item, index) => (

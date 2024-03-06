@@ -1,14 +1,16 @@
-import React, { lazy } from "react";
+import React, { lazy, useState } from "react";
 import picture from "../../assets/images/dp.png";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AddDirectorAccount, getDirectorList } from "../../api/Api";
+import { AddDirectorAccount, deleteDirector, getDirectorList } from "../../api/Api";
 const AddDirector = lazy(()=> import("../../components/addDirector/AddDirector"));
 import { Avatar, Button, useDisclosure } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import UpdateDictor from "../../components/edit-director/UpdateDirector";
 
 const Director = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(false)
   const {
     isOpen: AddIsOpen,
     onOpen: AddOnOpen,
@@ -26,6 +28,16 @@ const Director = () => {
     },
   });
 
+  const{mutate: deleteMutate, isLoading: deleteLoading} = useMutation({
+    mutationFn: deleteDirector,
+    onSuccess: ()=>{
+      alert('success');
+    },
+    onError: ()=> {
+      alert('error')
+    }
+  })
+
   const handleSubmit = (directorData) => {
     mutate(directorData);
   };
@@ -35,15 +47,23 @@ const Director = () => {
     queryFn: getDirectorList,
   });
 
+
+  const handleDelete = (e)=> {
+    e.preventDefault();
+    deleteMutate(data[0]?.id)
+
+  }
   if (isLoading) {
     return <span>Loading</span>;
   }
+
+  console.log('s', data[0]);
 
   return (
     <>
       {data.length > 0 ? (
         <div className="max-w-[900px] mx-auto py-12 flex flex-col md:flex-row items-center justify-center gap-7">
-          <Avatar src={data[0].profile_url?data[0].profile_url : picture} className="bg-blue-500 w-[300px] h-[300px]" />
+          <Avatar src={data[0].profile_url} className="bg-blue-500 w-[300px] h-[300px]" />
 
           <div className="max-w-[420px] w-full grid gap-7">
             <div>
@@ -61,12 +81,12 @@ const Director = () => {
                 <p>Contact:</p> <span>{data[0].contact}</span>
               </div>
               <div className="mt-5 flex items-center gap-3">
-                <Button color="primary" className="w-[130px]">
+                <Button onClick={()=> setIsEdit(true)} color="primary" className="w-[130px]">
                   Edit
                 </Button>
-                <Button color="danger" className="w-[130px]">
+                {/* <Button color="danger" className="w-[130px]" onClick={handleDelete}>
                   Drop
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -88,6 +108,9 @@ const Director = () => {
           />
         </div>
       )}
+
+
+      <UpdateDictor isOpen={isEdit} isClose={()=> setIsEdit(false)} data={data[0]}/>
     </>
   );
 };

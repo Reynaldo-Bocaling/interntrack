@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const url = "http://localhost:3001/";
- const url = "https://server.interntrack.link/";
+const url = "http://localhost:3001/";
+//  const url = "https://server.interntrack.link/";
 
 // POST Request
 
@@ -762,6 +762,24 @@ export const uploadRequirement = async (formData) => {
 };
 
 
+
+export const updateDirect = async (data) => {
+  try {
+    const response = await axios.put(`${url}updateDirect`, data);
+    return response.data
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const deleteDirector = async (id)=> {
+  try {
+    const response = await axios.delete(`${url}deleteDirector/${id}`);
+    return response.data
+  } catch (error) {
+    throw error;
+  }
+}
 
 export const deleteRequirement = async (id) => {
   try {

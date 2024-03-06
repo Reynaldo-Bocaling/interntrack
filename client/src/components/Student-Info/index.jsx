@@ -102,15 +102,22 @@ const StudentViewInfo = () => {
           logStatus,
           student_id,
           week,
+          teacherMark,
+          trainerMark,
+          studentMark
         }) => ({
           id,
-          timeIn: logStatus !== 0 ? timeIn : "0:00",
-          timeOut: logStatus !== 0 ? timeOut : "0:00",
-          totalHours: logStatus !== 0 ? totalHours : 0,
+          timeIn: logStatus !== 0  && teacherMark!==0 && trainerMark!==0 ? timeIn : "0:00",
+          timeOut: logStatus !== 0  && teacherMark!==0 && trainerMark!==0 ? timeOut : "0:00",
+          totalHours: logStatus !== 0  && teacherMark!==0 && trainerMark!==0 ? totalHours : 0,
           date,
           logStatus,
           student_id,
           week,
+          teacherMark,
+          trainerMark,
+          studentMark,
+          hours: totalHours
         })
       );
   const pieChartData = {
@@ -122,6 +129,8 @@ const StudentViewInfo = () => {
     ),
   };
 
+
+  console.log(timesheet,'ddd');
   const requirementData = studentlist ? studentlist.requirement : null;
 
   const taskData = studentlist ? studentlist.task : null;

@@ -4,6 +4,7 @@ import { getCampus, getStudent, getTimesheet } from "../../api/Api";
 import { format } from "date-fns";
 import { Button } from "@nextui-org/react";
 import { DotLoading } from "../../components/spinners-loading/Spinner";
+import { FaHourglassHalf } from "react-icons/fa";
 const PieChart = lazy(() => import("../../components/charts/PieChart"));
 
 const TimeSheet = () => {
@@ -52,15 +53,19 @@ const TimeSheet = () => {
           logStatus,
           student_id,
           week,
+          teacherMark,
+          trainerMark,
         }) => ({
           id,
-          timeIn: logStatus !== 0 ? timeIn : "0:00",
-          timeOut: logStatus !== 0 ? timeOut : "0:00",
-          totalHours: logStatus !== 0 ? totalHours : 0,
+          timeIn: logStatus !== 0  && teacherMark!==0 && trainerMark!==0? timeIn : "0:00",
+          timeOut: logStatus !== 0 && teacherMark!==0 && trainerMark!==0 ? timeOut : "0:00",
+          totalHours: logStatus !== 0 && teacherMark!==0 && trainerMark!==0 ? totalHours : 0,
           date,
           logStatus,
           student_id,
           week,
+          teacherMark,
+          trainerMark,
         })
       );
   }, [timesheet, currentDate]);
@@ -200,7 +205,10 @@ const TimeSheet = () => {
                       : "0"}
                   </td>
                   <td className="text-xs  tracking-wide text-center w-[25%]">
-                    {entry.totalHours} hrs
+                  <div className="w-full flex items-center justify-center">
+                  {entry.logStatus === 0 || entry.teacherMark !== 0 || entry.trainerMark !== 0 || entry.totalHours !==0
+            ?  `${entry.totalHours}hrs` : <FaHourglassHalf size={16} className=" text-orange-500"/>}
+                  </div>
                   </td>
                 </tr>
               ))}

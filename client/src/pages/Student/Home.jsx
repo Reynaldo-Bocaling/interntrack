@@ -53,18 +53,23 @@ const Dashboard = () => {
         date,
         logStatus,
         student_id,
+        teacherMark,
+        trainerMark,
         week,
       }) => ({
         id,
-        timeIn: logStatus !== 0 ? timeIn : "0:00",
-        timeOut: logStatus !== 0 ? timeOut : "0:00",
-        totalHours: logStatus !== 0 ? totalHours : 0,
+        timeIn: logStatus !== 0 && teacherMark!==0 && trainerMark!==0  ? timeIn : "0:00",
+        timeOut: logStatus !== 0 && teacherMark!==0 && trainerMark!==0 ? timeOut : "0:00",
+        totalHours: logStatus !== 0 && teacherMark!==0 && trainerMark!==0 ? totalHours : 0,
         date,
         logStatus,
         student_id,
         week,
+        teacherMark,
+        trainerMark,
       })
     );
+
 
   const hoursTaken = useMemo(
     () =>
@@ -127,6 +132,7 @@ const Dashboard = () => {
     ?.filter((item) => item.week == getWeekNumber)
     ?.map(({ totalHours }) => totalHours);
 
+    console.log('d', lineGraphData);    
   const graphData = [
     {
       name: "Hours",
@@ -136,6 +142,8 @@ const Dashboard = () => {
     },
   ];
 
+
+
   const totalHoursTaken = getStudentTimesheet
     ?.filter((item) => item.week === getWeekNumber)
     .reduce((acc, item) => acc + item.totalHours, 0);
@@ -143,7 +151,7 @@ const Dashboard = () => {
   const totalHoursTakenFormula = (totalHoursTaken / 40) * 100;
   const totalHoursTakenPercentage =
     Math.round(totalHoursTakenFormula / 10) * 10 + "%";
-  console.log(totalHoursTakenPercentage);
+  // console.log(totalHoursTakenPercentage);
   return (
     <div className="">
       <h1 className="text-xl font-bold tracking-tight capitalize">

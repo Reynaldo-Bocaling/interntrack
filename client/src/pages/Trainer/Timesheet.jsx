@@ -35,15 +35,18 @@ const Timesheet = () => {
         name: `${firstname} ${lastname}`,
         program,
         trainingHours: programList.find((item) => item.program_description ==program)?.trainingHours,
-        totalHours: timesheet?.filter((item)=> item.logStatus === 1)?.reduce((total, item) => total + item.totalHours, 0),
+        totalHours: timesheet?.filter((item)=> item.logStatus === 1 && item.teacherMark!==0 && item.trainerMark!==0)?.reduce((total, item) => total + item.totalHours, 0),
         timeSheet: timesheet
           ? timesheet.map(
-              ({ id, timeIn, timeOut, totalHours, date, logStatus }) => ({
+              ({ id, timeIn, timeOut, totalHours, date, logStatus ,trainerMark, teacherMark}) => ({
                 id,
-                timeIn: logStatus !== 0 ? timeIn : '0:00',
-                timeOut: logStatus !== 0 ? timeOut : '0:00',
-                totalHours: logStatus !== 0 ? totalHours : 0,
+                timeIn: logStatus !== 0 && teacherMark!==0 && trainerMark!==0 ? timeIn : '0:00',
+                timeOut: logStatus !== 0 && teacherMark!==0 && trainerMark!==0 ? timeOut : '0:00',
+                totalHours: logStatus !== 0 && teacherMark!==0 && trainerMark!==0 ? totalHours : 0,
                 date,
+                trainerMark,
+                teacherMark,
+                logStatus
               })
             )
           : [],

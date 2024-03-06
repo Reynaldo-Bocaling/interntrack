@@ -7,6 +7,8 @@ import PieChart from "../../components/charts/PieChart";
 import { Button } from "@nextui-org/react";
 import CustomizeTimesheet from "./CustomizeTimesheet";
 import { IoMdAdd } from "react-icons/io";
+import { FaHourglassHalf } from "react-icons/fa";
+
 const WeeklyReport = () => {
   const currentDate = new Date();
   const location = useLocation();
@@ -86,6 +88,8 @@ const WeeklyReport = () => {
   //   ({ date }) => date == timeInDate
   // )[0]?.id;
 
+
+  console.log(newData, 'd');
  const  timesheetId = groupedTimeSheet.flatMap((item) => item).filter((item) => item.date == timeInDate)[0]?.id;
 
   return (
@@ -221,11 +225,8 @@ const WeeklyReport = () => {
                     onClick={() => alert(entry.id)}
                     className="text-sm  tracking-widetext-left"
                   >
-                    {entry.totalHours}
-                    {/* {`${Math.floor(entry.totalHours)}:${Math.round(
-                            (entry.totalHours % 1) * 60
-                          )}`} */}
-                    hrs
+                   {entry.logStatus === 0 || entry.teacherMark !== 0 || entry.trainerMark !== 0 || entry.totalHours !==0
+            ?  `${entry.totalHours}hrs` : <FaHourglassHalf size={16} className=" text-orange-500"/>}
                   </td>
                 </tr>
               ))}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@nextui-org/react";
 import PieChart from "../../components/charts/PieChart";
+import { FaHourglassHalf } from "react-icons/fa";
 
 const StudentTimesheet = ({ data, isLoading, pieChartData }) => {
   const [showAllTables, setShowAllTables] = useState(false);
@@ -34,7 +35,6 @@ const StudentTimesheet = ({ data, isLoading, pieChartData }) => {
   const visibleGroups = showAllTables
     ? groupedTimeSheet
     : groupedTimeSheet.slice(0, 1);
-
 
     console.log({totalHours, hoursRemaining, hoursTaken});
   return (
@@ -136,7 +136,12 @@ const StudentTimesheet = ({ data, isLoading, pieChartData }) => {
                       : "0"}
                   </td>
                   <td className="text-sm  tracking-widetext-left">
-                    {entry.totalHours} hrs
+                    {/* {entry.totalHours} hrs */}
+
+                    {entry.logStatus === 0 || entry.teacherMark !== 0 || entry.trainerMark !== 0 || entry.totalHours !==0
+            ?  `${entry.totalHours}hrs` : <FaHourglassHalf size={16} className=" text-orange-500"/>}
+
+                    
                   </td>
                 </tr>
               ))}
